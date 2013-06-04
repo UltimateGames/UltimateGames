@@ -13,46 +13,46 @@ public class MessageConfig {
 	private final JavaPlugin plugin;
 	private final String fileName;
 
-	private FileConfiguration MC;
-	private File MCFile;
+	private FileConfiguration msgConfig;
+	private File msgConfigFile;
 
 	public MessageConfig(JavaPlugin plugin, String fileName) {
 		this.plugin = plugin;
 		this.fileName = fileName;
 		File dataFolder = plugin.getDataFolder();
-		this.MCFile = new File(dataFolder, fileName);
+		this.msgConfigFile = new File(dataFolder, fileName);
 		reloadMC();
 	}
 
 	public void reloadMC() {
-		MC = YamlConfiguration.loadConfiguration(MCFile);
+		msgConfig = YamlConfiguration.loadConfiguration(msgConfigFile);
 		InputStream defConfigStream = plugin.getResource(fileName);
 		if (defConfigStream != null) {
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			MC.setDefaults(defConfig);
+			msgConfig.setDefaults(defConfig);
 		}
 	}
 
 	public FileConfiguration getMC() {
-		if (MC == null) {
+		if (msgConfig == null) {
 			this.reloadMC();
 		}
-		return MC;
+		return msgConfig;
 	}
 
 	public void saveMC() {
-		if (MC == null || MCFile == null) {
+		if (msgConfig == null || msgConfigFile == null) {
 			return;
 		}
 		try {
-			getMC().save(MCFile);
+			getMC().save(msgConfigFile);
 		} catch (IOException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Could not save config to " + MCFile + ".");
+			plugin.getLogger().log(Level.SEVERE, "Could not save config to " + msgConfigFile + ".");
 		}
 	}
 
 	public void saveDefaultMC() {
-		if (!MCFile.exists()) {
+		if (!msgConfigFile.exists()) {
 			this.plugin.saveResource(fileName, false);
 		}
 	}

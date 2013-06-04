@@ -3,15 +3,15 @@ package me.ampayne2.UltimateGames;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class UltimateGames extends JavaPlugin {
-	private JavaPlugin Plugin;
-	private MessageConfig MessageConfig;
-	private Message Message;
+	private JavaPlugin plugin;
+	private MessageConfig msgConfig;
+	private Message msg;
 
 	public void onEnable() {
-		Plugin = this;
-		MessageConfig = new MessageConfig(this, "MessageConfig.yml");
-		MessageConfig.saveMC();
-		Message = new Message(this);
+		plugin = this;
+		msgConfig = new MessageConfig(this, "MessageConfig.yml");
+		msgConfig.saveMC();
+		msg = new Message(this);
 		
 		getConfig().options().copyDefaults(true);
 		saveConfig();
@@ -22,14 +22,14 @@ public class UltimateGames extends JavaPlugin {
 	}
 	
 	public JavaPlugin getPlugin(){
-		return Plugin;
+		return plugin;
 	}
 	
 	public Message getMessage() {
-		return Message;
+		return msg;
 	}
 	
 	public MessageConfig getMessageConfig() {
-		return MessageConfig;
+		return msgConfig;
 	}
 }
