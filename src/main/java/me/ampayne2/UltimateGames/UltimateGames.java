@@ -10,7 +10,7 @@ public class UltimateGames extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		msgConfig = new MessageConfig(this, "MessageConfig.yml");
-		msgConfig.saveMC();
+		msgConfig.saveMessageConfig();
 		msg = new Message(this);
 		
 		getConfig().options().copyDefaults(true);

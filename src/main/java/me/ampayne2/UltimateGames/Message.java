@@ -15,8 +15,8 @@ public class Message {
 
 	// Gets the messages from MessageConfig.yml
 	public Message(UltimateGames UltimateGames) {
-		for (String key : UltimateGames.getMessageConfig().getMC().getConfigurationSection("messages").getKeys(false)) {
-			messages.put(key.replace("messages.", ""), UltimateGames.getMessageConfig().getMC().getString("messages." + key));
+		for (String key : UltimateGames.getMessageConfig().getMessageConfig().getConfigurationSection("messages").getKeys(false)) {
+			messages.put(key.replace("messages.", ""), UltimateGames.getMessageConfig().getMessageConfig().getString("messages." + key));
 		}
 	}
 

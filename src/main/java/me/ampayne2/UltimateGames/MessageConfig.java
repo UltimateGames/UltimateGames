@@ -21,10 +21,10 @@ public class MessageConfig {
 		this.fileName = fileName;
 		File dataFolder = plugin.getDataFolder();
 		this.msgConfigFile = new File(dataFolder, fileName);
-		reloadMC();
+		reloadMessageConfig();
 	}
 
-	public void reloadMC() {
+	public void reloadMessageConfig() {
 		msgConfig = YamlConfiguration.loadConfiguration(msgConfigFile);
 		InputStream defConfigStream = plugin.getResource(fileName);
 		if (defConfigStream != null) {
@@ -33,25 +33,25 @@ public class MessageConfig {
 		}
 	}
 
-	public FileConfiguration getMC() {
+	public FileConfiguration getMessageConfig() {
 		if (msgConfig == null) {
-			this.reloadMC();
+			this.reloadMessageConfig();
 		}
 		return msgConfig;
 	}
 
-	public void saveMC() {
+	public void saveMessageConfig() {
 		if (msgConfig == null || msgConfigFile == null) {
 			return;
 		}
 		try {
-			getMC().save(msgConfigFile);
+			getMessageConfig().save(msgConfigFile);
 		} catch (IOException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Could not save config to " + msgConfigFile + ".");
 		}
 	}
 
-	public void saveDefaultMC() {
+	public void saveDefaultMessageConfig() {
 		if (!msgConfigFile.exists()) {
 			this.plugin.saveResource(fileName, false);
 		}
