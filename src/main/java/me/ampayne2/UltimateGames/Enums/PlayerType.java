@@ -1,4 +1,4 @@
-package me.ampayne2.UltimateGames.Games;
+package me.ampayne2.UltimateGames.Enums;
 
 public enum PlayerType {
 	SINGLE_PLAYER,
