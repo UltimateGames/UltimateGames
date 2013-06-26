@@ -2,7 +2,10 @@ package me.ampayne2.UltimateGames.Listeners;
 
 import me.ampayne2.UltimateGames.LobbySign;
 import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.UltimateGames.Enums.ArenaStatus;
+import me.ampayne2.UltimateGames.Events.GameJoinEvent;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -11,7 +14,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class SignListener implements Listener {
 
@@ -36,45 +38,56 @@ public class SignListener implements Listener {
 				return;
 			}
 			//adds the sign to the LobbySignManager
-			ultimateGames.getLobbySignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getGameManager().getGame(gameName), ultimateGames.getArenaManager().getArena(arenaName));
+			ultimateGames.getLobbySignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
 		}
 	}
 	
 	@EventHandler
 	public void onSignClick(PlayerInteractEvent event) {
-		//checks to see if right click
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+			//not right click
 			return;
-		//checks to see if clicked block is a sign
-		}else if (event.getClickedBlock().getType() != Material.WALL_SIGN || event.getClickedBlock().getType() != Material.SIGN_POST) {
+		}else if (event.getClickedBlock().getType() != Material.WALL_SIGN && event.getClickedBlock().getType() != Material.SIGN_POST) {
+			//not a sign
 			return;
-		//checks to see if clicking player has permission
-		}else if (!event.getPlayer().hasPermission("permission for clicking signs")) {
+		}else if (!event.getPlayer().hasPermission("permission for right clicking lobby signs")) {
+			//no permission
 			return;
-		//checks to see if the clicked sign is a LobbySign
 		}else if (!ultimateGames.getLobbySignManager().isLobbySign((Sign) event.getClickedBlock().getState())) {
+			//not a lobby sign
 			return;
 		}
+		//gets the lobby sign clicked
+		LobbySign lobbySign = ultimateGames.getLobbySignManager().getLobbySign((Sign) event.getClickedBlock().getState());
+		if (lobbySign.getArena().getStatus() != ArenaStatus.OPEN) {
+			//arena not open
+			return;
+		}
+		lobbySign.updateSign();
 		
+		//TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
 		
-		//check if arena is open
-		//save player inventory to yml
-		//clear player inventory
-		//fire GameJoinEvent
+		//fires a GameJoinEvent
+		GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), lobbySign.getArena());
+		Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
 	}
 	
 	@EventHandler
 	public void onSignBreak(BlockBreakEvent event) {
-		if (event.getBlock().getType() != Material.WALL_SIGN || event.getBlock().getType() != Material.SIGN_POST) {
+		if (event.getBlock().getType() != Material.WALL_SIGN && event.getBlock().getType() != Material.SIGN_POST) {
+			//not a sign
 			return;
 		}
 		Sign sign = (Sign) event.getBlock().getState();
 		if (!ultimateGames.getLobbySignManager().isLobbySign(sign)) {
+			//not a lobby sign
 			return;
 		}else if (!event.getPlayer().hasPermission("permission for breaking lobby signs")) {
+			//no permission to break lobby signs
 			event.setCancelled(true);
 			return;
 		}
+		//removes sign
 		ultimateGames.getLobbySignManager().removeLobbySign(sign);
 	}
 

@@ -1,12 +1,12 @@
 package me.ampayne2.UltimateGames.Enums;
 
 public enum ArenaStatus {
-	OPEN,
-	STARTING,
-	RUNNING,
-	ENDING,
-	RESETTING,
-	RESET_FAILED,
-	GAME_STOPPED,
-	ARENA_STOPPED
+	OPEN, //green
+	STARTING, //green
+	RUNNING, //green
+	ENDING, //green
+	RESETTING, //green
+	RESET_FAILED, //red
+	GAME_STOPPED, //grey
+	ARENA_STOPPED //grey
 }

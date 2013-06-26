@@ -1,13 +1,9 @@
 package me.ampayne2.UltimateGames;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import me.ampayne2.UltimateGames.Games.Arena;
-import me.ampayne2.UltimateGames.Games.Game;
 
-import org.bukkit.Location;
 import org.bukkit.block.Sign;
 
 public class LobbySignManager {
@@ -17,40 +13,46 @@ public class LobbySignManager {
 
 	public LobbySignManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
+		lobbySigns = new ArrayList<LobbySign>();
 	}
 
 	public boolean isLobbySign(Sign sign) {
-		Iterator<LobbySign> it = lobbySigns.iterator();
-		while (it.hasNext()) {
-			if (sign.getLocation().equals(it.next().getSign().getLocation())) {
-				return true;
-			}
+		if (getLobbySign(sign) == null) {
+			return false;
+		} else {
+			return true;
 		}
-		return false;
 	}
 
-	public void createLobbySign(Sign sign, Game game, Arena arena) {
-		Iterator<LobbySign> it = lobbySigns.iterator();
-		while (it.hasNext()) {
-			LobbySign nextLobbySign = it.next();
-			if (sign.getLocation().equals(nextLobbySign.getSign().getLocation())) {
-				// already a lobby sign here
+	public LobbySign getLobbySign(Sign sign) {
+		for (LobbySign ssign : lobbySigns) {
+			if (sign.equals(ssign.getSign())) {
+				return ssign;
 			}
 		}
-		lobbySigns.add(new LobbySign(sign, game, arena));
+		return null;
 	}
 
-	public void removeLobbySign(Sign sign) {
-		Iterator<LobbySign> it = lobbySigns.iterator();
-		while (it.hasNext()) {
-			LobbySign nextLobbySign = it.next();
-			if (sign.getLocation().equals(nextLobbySign.getSign().getLocation())){
-				it.remove();
-			}
+	public boolean createLobbySign(Sign sign, Arena arena) {
+		if (isLobbySign(sign)) {
+			// already a lobby sign here
+			return false;
+		}
+		// lobby sign created
+		LobbySign lobbySign = new LobbySign(sign, arena);
+		lobbySigns.add(lobbySign);
+		return true;
+	}
+
+	public boolean removeLobbySign(Sign sign) {
+		if (isLobbySign(sign) && lobbySigns.remove(getLobbySign(sign))) {
+			return true;
+		} else {
+			return false;
+			// isn't lobby sign
 		}
 	}
-	
-	
+
 	/*
 	 * public HashMap<Location, LobbySign> getLobbySigns() { return lobbySigns;
 	 * } public void updateSigns() { } public void updateSign() { }

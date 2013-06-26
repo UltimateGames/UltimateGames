@@ -3,7 +3,7 @@ package me.ampayne2.UltimateGames;
 import me.ampayne2.UltimateGames.Games.Game;
 
 
-public class GameManager {
+public class GameManager{
 	
 	private UltimateGames ultimateGames;
 	
