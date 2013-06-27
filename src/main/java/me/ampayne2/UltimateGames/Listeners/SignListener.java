@@ -38,7 +38,11 @@ public class SignListener implements Listener {
 				return;
 			}
 			//adds the sign to the LobbySignManager
-			ultimateGames.getLobbySignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
+			LobbySign lobbySign = ultimateGames.getLobbySignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
+			String[] lines = lobbySign.getUpdatedLines();
+			for (int i = 0; i < 4; i++) {
+				event.setLine(i, lines[i]);
+			}
 		}
 	}
 	

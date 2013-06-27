@@ -3,7 +3,6 @@ package me.ampayne2.UltimateGames;
 import java.util.ArrayList;
 
 import me.ampayne2.UltimateGames.Games.Arena;
-
 import org.bukkit.block.Sign;
 
 public class LobbySignManager {
@@ -32,16 +31,26 @@ public class LobbySignManager {
 		}
 		return null;
 	}
+	
+	/*
+	public LobbySign[] getLobbySignsOfArena(Arena arena) {
+	
+	}
+	
+	public LobbySign[] getLobbySignsOfGame(Game Game) {
+	
+	}
+	*/
 
-	public boolean createLobbySign(Sign sign, Arena arena) {
+	public LobbySign createLobbySign(Sign sign, Arena arena) {
 		if (isLobbySign(sign)) {
 			// already a lobby sign here
-			return false;
+			return null;
 		}
 		// lobby sign created
 		LobbySign lobbySign = new LobbySign(sign, arena);
 		lobbySigns.add(lobbySign);
-		return true;
+		return lobbySign;
 	}
 
 	public boolean removeLobbySign(Sign sign) {

@@ -9,6 +9,32 @@ public class GameDescription {
 	private PlayerType playerType;
 
 	/**
+	 * Creates a new Game Description
+	 * @param name
+	 * @param description
+	 * @param version
+	 * @param author
+	 * @param pack
+	 * @param scoreTypeName
+	 * @param secondaryScoreTypeName
+	 * @param scoreType
+	 * @param secondaryScoreType
+	 * @param playerType
+	 */
+	public GameDescription(String name, String description, String version, String author, String pack, String scoreTypeName, String secondaryScoreTypeName, ScoreType scoreType, ScoreType secondaryScoreType, PlayerType playerType) {
+		this.name = name;
+		this.description = description;
+		this.version = version;
+		this.author = author;
+		this.pack = pack;
+		this.scoreTypeName = scoreTypeName;
+		this.secondaryScoreTypeName = secondaryScoreTypeName;
+		this.scoreType = scoreType;
+		this.secondaryScoreType = secondaryScoreType;
+		this.playerType = playerType;
+	}
+	
+	/**
 	 * Gets the name of the game
 	 * 
 	 * @return the name
@@ -96,45 +122,5 @@ public class GameDescription {
 	 */
 	public PlayerType getPlayerType() {
 		return playerType;
-	}
-
-	protected void setName(String name) {
-		this.name = name;
-	}
-
-	protected void setPackage(String pack) {
-		this.pack = pack;
-	}
-
-	protected void setVersion(String version) {
-		this.version = version;
-	}
-
-	protected void setDescription(String description) {
-		this.description = description;
-	}
-
-	protected void setAuthor(String author) {
-		this.author = author;
-	}
-
-	protected void setScoreType(ScoreType scoreType) {
-		this.scoreType = scoreType;
-	}
-
-	protected void setSecondaryScoreType(ScoreType secondaryScoreType) {
-		this.secondaryScoreType = secondaryScoreType;
-	}
-	
-	protected void setScoreTypeName(String scoreTypeName) {
-		this.scoreTypeName = scoreTypeName;
-	}
-	
-	protected void setSecondaryScoreTypeName(String secondaryScoreTypeName) {
-		this.secondaryScoreTypeName = secondaryScoreTypeName;
-	}
-
-	protected void setPlayerType(PlayerType playerType) {
-		this.playerType = playerType;
 	}
 }
