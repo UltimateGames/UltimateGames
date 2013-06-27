@@ -1,7 +1,8 @@
-package me.ampayne2.UltimateGames.Games;
+package me.ampayne2.UltimateGames.Arenas;
 
 import java.util.ArrayList;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
+import me.ampayne2.UltimateGames.Games.Game;
 
 public class Arena {
 	private String arenaName;

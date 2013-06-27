@@ -1,6 +1,7 @@
 package me.ampayne2.UltimateGames.Events;
 
-import me.ampayne2.UltimateGames.Games.Arena;
+import me.ampayne2.UltimateGames.Arenas.Arena;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

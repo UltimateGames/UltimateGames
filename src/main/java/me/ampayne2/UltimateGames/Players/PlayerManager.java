@@ -1,4 +1,4 @@
-package me.ampayne2.UltimateGames;
+package me.ampayne2.UltimateGames.Players;
 
 public class PlayerManager {
 	

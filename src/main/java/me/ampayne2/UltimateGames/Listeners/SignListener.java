@@ -1,9 +1,9 @@
 package me.ampayne2.UltimateGames.Listeners;
 
-import me.ampayne2.UltimateGames.LobbySign;
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Events.GameJoinEvent;
+import me.ampayne2.UltimateGames.LobbySigns.LobbySign;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -33,7 +33,7 @@ public class SignListener implements Listener {
 		if (event.getLine(0).equals(ultimateGames.getConfig().getString("SignPrefix")) && !event.getLine(1).isEmpty() && !event.getLine(2).isEmpty() && event.getLine(3).isEmpty()) {
 			String gameName = event.getLine(1);
 			String arenaName = event.getLine(2);
-			if(!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName)){
+			if(!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)){
 				//game or arena doesn't exist, do stuff
 				return;
 			}
@@ -67,7 +67,6 @@ public class SignListener implements Listener {
 			//arena not open
 			return;
 		}
-		lobbySign.updateSign();
 		
 		//TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
 		

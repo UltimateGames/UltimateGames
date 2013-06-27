@@ -11,13 +11,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Message {
+	private UltimateGames ultimateGames;
 	private Map<String, String> messages = new HashMap<String, String>();
 
-	// Gets the messages from MessageConfig.yml
-	public Message(UltimateGames UltimateGames) {
+	public Message(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+		/*
 		for (String key : UltimateGames.getMessageConfig().getMessageConfig().getConfigurationSection("messages").getKeys(false)) {
 			messages.put(key.replace("messages.", ""), UltimateGames.getMessageConfig().getMessageConfig().getString("messages." + key));
 		}
+		*/
 	}
 
 	/**

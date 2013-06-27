@@ -1,11 +1,11 @@
-package me.ampayne2.UltimateGames;
+package me.ampayne2.UltimateGames.LobbySigns;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 
+import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Enums.PlayerType;
-import me.ampayne2.UltimateGames.Games.Arena;
 
 public class LobbySign {
 
@@ -88,7 +88,7 @@ public class LobbySign {
 	/**
 	 * Updates the Lobby Sign
 	 */
-	public void updateSign() {
+	public void update() {
 		String[] lines = getUpdatedLines();
 		for (int i = 0; i < 4; i++) {
 			sign.setLine(i, lines[i]);
