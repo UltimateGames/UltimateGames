@@ -40,4 +40,16 @@ public class ArenaManager {
 		return null;
 	}
 	
+	public void addArena(Arena arena) {
+		if (arenas.containsKey(arena.getGame())) {
+			ArrayList<Arena> gameArenas = arenas.get(arena.getGame());
+			for (Arena gameArena : gameArenas) {
+				if (arena.getName().equals(gameArena.getName())) {
+					return;
+				}
+			}
+			gameArenas.add(arena);
+		}
+	}
+	
 }

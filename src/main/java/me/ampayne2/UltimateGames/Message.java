@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Message {
@@ -16,11 +17,10 @@ public class Message {
 
 	public Message(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
-		/*
-		for (String key : UltimateGames.getMessageConfig().getMessageConfig().getConfigurationSection("messages").getKeys(false)) {
-			messages.put(key.replace("messages.", ""), UltimateGames.getMessageConfig().getMessageConfig().getString("messages." + key));
+		FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
+		for (String key : messageConfig.getConfigurationSection("messages").getKeys(false)) {
+			messages.put(key.replace("messages.", ""), messageConfig.getString("messages." + key));
 		}
-		*/
 	}
 
 	/**
@@ -134,6 +134,17 @@ public class Message {
 			}
 			message = prefix.concat(" " + message);
 			Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
+		}
+	}
+
+	/**
+	 * Decides whether or not to print the stack trace of an exception
+	 * 
+	 * @param e the exception to debug
+	 */
+	public void debug(Exception e) {
+		if (ultimateGames.getConfig().getBoolean("debug")) {
+			e.printStackTrace();
 		}
 	}
 }

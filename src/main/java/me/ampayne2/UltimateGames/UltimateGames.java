@@ -1,7 +1,7 @@
 package me.ampayne2.UltimateGames;
 
 import me.ampayne2.UltimateGames.Arenas.ArenaManager;
-import me.ampayne2.UltimateGames.Configs.ConfigManager;
+import me.ampayne2.UltimateGames.Files.ConfigManager;
 import me.ampayne2.UltimateGames.Games.GameManager;
 import me.ampayne2.UltimateGames.Listeners.SignListener;
 import me.ampayne2.UltimateGames.LobbySigns.LobbySignManager;

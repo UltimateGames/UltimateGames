@@ -1,4 +1,4 @@
-package me.ampayne2.UltimateGames.Configs;
+package me.ampayne2.UltimateGames.Files;
 
 import java.io.File;
 import java.io.IOException;
