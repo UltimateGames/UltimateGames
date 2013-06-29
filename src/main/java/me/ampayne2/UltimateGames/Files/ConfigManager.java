@@ -12,6 +12,8 @@ public class ConfigManager {
 	private ConfigAccessor messageConfig;
 	private ConfigAccessor gamesConfig;
 	private ConfigAccessor arenaConfig;
+	private ConfigAccessor lobbyConfig;
+	private ConfigAccessor lobbySignConfig;
 	private HashMap<Game, ConfigAccessor> gameConfigs;
 	
 	public ConfigManager(UltimateGames ultimateGames) {
@@ -22,6 +24,10 @@ public class ConfigManager {
 		gamesConfig.saveDefaultConfig();
 		arenaConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Arenas.yml", ultimateGames.getPlugin().getDataFolder());
 		arenaConfig.saveDefaultConfig();
+		lobbyConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Lobbies.yml", ultimateGames.getPlugin().getDataFolder());
+		lobbyConfig.saveDefaultConfig();
+		lobbySignConfig = new ConfigAccessor(ultimateGames.getPlugin(), "LobbySigns.yml", ultimateGames.getPlugin().getDataFolder());
+		lobbySignConfig.saveDefaultConfig();
 		gameConfigs = new HashMap<Game, ConfigAccessor>();
 	}
 	
@@ -35,6 +41,14 @@ public class ConfigManager {
 	
 	public ConfigAccessor getArenaConfig() {
 		return arenaConfig;
+	}
+	
+	public ConfigAccessor getLobbyConfig() {
+		return lobbyConfig;
+	}
+	
+	public ConfigAccessor getLobbySignConfig() {
+		return lobbySignConfig;
 	}
 	
 	public ConfigAccessor getGameConfig(Game game) {

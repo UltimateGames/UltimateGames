@@ -1,5 +1,7 @@
 package me.ampayne2.UltimateGames.Listeners;
 
+import java.util.logging.Level;
+
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Events.GameJoinEvent;
@@ -73,6 +75,7 @@ public class SignListener implements Listener {
 		//fires a GameJoinEvent
 		GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), lobbySign.getArena());
 		Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
+		ultimateGames.getMessageManager().log(Level.INFO, "gameJoinEvent fired for game '"+gameJoinEvent.getArena().getGame().getGameDescription().getName()+"' and arena '"+gameJoinEvent.getArena().getName()+"'.");
 	}
 	
 	@EventHandler

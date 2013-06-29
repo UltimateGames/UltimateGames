@@ -19,7 +19,7 @@ public class Message {
 		this.ultimateGames = ultimateGames;
 		FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
 		for (String key : messageConfig.getConfigurationSection("messages").getKeys(false)) {
-			messages.put(key.replace("messages.", ""), messageConfig.getString("messages." + key));
+			messages.put(key, messageConfig.getString("messages."+key));
 		}
 	}
 
