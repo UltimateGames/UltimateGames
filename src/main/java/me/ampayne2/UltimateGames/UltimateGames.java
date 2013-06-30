@@ -1,6 +1,7 @@
 package me.ampayne2.UltimateGames;
 
 import me.ampayne2.UltimateGames.Arenas.ArenaManager;
+import me.ampayne2.UltimateGames.Command.CommandController;
 import me.ampayne2.UltimateGames.Files.ConfigManager;
 import me.ampayne2.UltimateGames.Games.GameManager;
 import me.ampayne2.UltimateGames.Listeners.SignListener;
@@ -26,6 +27,7 @@ public class UltimateGames extends JavaPlugin {
 		arenaManager = new ArenaManager(this);
 		lobbySignManager = new LobbySignManager(this);
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
+		getCommand("ultimategames").setExecutor(new CommandController());
 	}
 
 	public JavaPlugin getPlugin() {

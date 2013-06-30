@@ -1,5 +1,7 @@
 package me.ampayne2.UltimateGames.Listeners;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import me.ampayne2.UltimateGames.UltimateGames;
@@ -9,6 +11,7 @@ import me.ampayne2.UltimateGames.LobbySigns.LobbySign;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -80,21 +83,34 @@ public class SignListener implements Listener {
 	
 	@EventHandler
 	public void onSignBreak(BlockBreakEvent event) {
-		if (event.getBlock().getType() != Material.WALL_SIGN && event.getBlock().getType() != Material.SIGN_POST) {
-			//not a sign
-			return;
+		List<Sign> signs = new ArrayList<Sign>();
+		if (event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST) {
+			signs.add((Sign) event.getBlock().getState());
 		}
-		Sign sign = (Sign) event.getBlock().getState();
-		if (!ultimateGames.getLobbySignManager().isLobbySign(sign)) {
-			//not a lobby sign
-			return;
-		}else if (!event.getPlayer().hasPermission("permission for breaking lobby signs")) {
-			//no permission to break lobby signs
-			event.setCancelled(true);
-			return;
+		if (event.getBlock().getRelative(BlockFace.UP).getType() == Material.SIGN_POST) {
+			signs.add((Sign) event.getBlock().getRelative(BlockFace.UP).getState());
 		}
-		//removes sign
-		ultimateGames.getLobbySignManager().removeLobbySign(sign);
+		if (event.getBlock().getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN) {
+			signs.add((Sign) event.getBlock().getRelative(BlockFace.EAST).getState());
+		}
+		if (event.getBlock().getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN) {
+			signs.add((Sign) event.getBlock().getRelative(BlockFace.NORTH).getState());
+		}
+		if (event.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN) {
+			signs.add((Sign) event.getBlock().getRelative(BlockFace.SOUTH).getState());
+		}
+		if (event.getBlock().getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN) {
+			signs.add((Sign) event.getBlock().getRelative(BlockFace.WEST).getState());
+		}
+		for (Sign sign : signs) {
+			if (ultimateGames.getLobbySignManager().isLobbySign(sign)) {
+				if (event.getPlayer().hasPermission("permission for breaking lobby signs")) {
+					ultimateGames.getLobbySignManager().removeLobbySign(sign);
+				} else {
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
 	}
-
 }
