@@ -45,7 +45,7 @@ public class UltimateGames extends JavaPlugin {
 		arenaManager = new ArenaManager(this);
 		lobbySignManager = new LobbySignManager(this);
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
-		getCommand("ultimategames").setExecutor(new CommandController());
+		getCommand("ultimategames").setExecutor(new CommandController(this));
 	}
 
 	public JavaPlugin getPlugin() {

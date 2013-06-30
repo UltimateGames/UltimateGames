@@ -29,33 +29,29 @@ import me.ampayne2.UltimateGames.Command.SubCommand;
 import me.ampayne2.UltimateGames.Command.interfaces.Command;
 import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
 
-public class SubCommand implements Command{
-	
+public class SubCommand implements Command {
+
 	private Map<String, Command> commandList = new HashMap<String, Command>();
 	private Map<String, String> permissionList = new HashMap<String, String>();
 
 	public void addCommand(String name, String permission, Command command) {
 		commandList.put(name, command);
-		permissionList.put(name, permission);
+		if (command instanceof UGCommand) {
+			permissionList.put(name, permission);
+		}
 	}
 
 	public boolean commandExist(String name) {
 		return commandList.containsKey(name);
-	}
-	
-	public boolean hasCommandPermission(CommandSender sender, String command) {
-		if (sender.hasPermission(permissionList.get(command))) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public void execute(String command, CommandSender sender, String[] args) {
 		if (commandExist(command)) {
 			Command entry = commandList.get(command);
 			if (entry instanceof UGCommand) {
-				((UGCommand) entry).execute(sender, args);
+				if (sender.hasPermission(permissionList.get(command))) {
+					((UGCommand) entry).execute(sender, args);
+				}
 			} else if (entry instanceof SubCommand) {
 				SubCommand subCommand = (SubCommand) entry;
 
