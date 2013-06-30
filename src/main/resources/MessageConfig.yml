@@ -1,2 +1,5 @@
 messages:
   prefix: "&8[&bUltimateGames&8]"
+  
+  arenas:
+    create: "Punch two corners of a cuboid to create the arena '%ArenaName%' for game '%GameName%'."
