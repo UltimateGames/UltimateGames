@@ -1,5 +1,25 @@
 messages:
   prefix: "&8[&bUltimateGames&8]"
   
+  #All messages associated with arenas
   arenas:
-    create: "Punch two corners of a cuboid to create the arena '%ArenaName%' for game '%GameName%'."
+    #admin:
+    select: "Punch two corners of a cuboid to create the Arena '%ArenaName%' of Game '%GameName%'."
+    create: "Created Arena '%ArenaName%' of Game '%GameName%'."
+    delete: "Removed Arena '%ArenaName%' of Game '%GameName%'."
+    forceload: ""
+    forceunload: ""
+    setstatus: "Set the status of Arena '%ArenaName%' of Game '%GameName%' to '%Status%'."
+    forcestart: "Force started the Arena '%ArenaName%' of Game '%GameName%'."
+    forcestop: "Force stopped the Arena '%ArenaName%' of Game '%GameName%'."
+    
+    #player:
+    join: "Joined Arena '%ArenaName%' of Game '%GameName%'."
+    leave: "Left Arena '%ArenaName%' of Game '%GameName%'."
+    
+    #errors:
+    alreadyexists: "Arena already exists."
+    doesntexit: "Arena doesn't exist."
+    failedtocreate: "Failed to create Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
+    failedtojoin: "Failed to join Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
+    

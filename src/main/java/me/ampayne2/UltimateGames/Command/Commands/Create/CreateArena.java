@@ -27,9 +27,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-
 import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
+import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Games.Game;
 
 public class CreateArena implements UGCommand, Listener {
@@ -45,8 +46,6 @@ public class CreateArena implements UGCommand, Listener {
 		this.ultimateGames = ultimateGames;
 	}
 	
-	
-	// TO BE FINISHED
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length != 2) {
@@ -63,14 +62,49 @@ public class CreateArena implements UGCommand, Listener {
 		HashMap<String, String> replace = new HashMap<String, String>();
 		replace.put("%ArenaName%", arena);
 		replace.put("%GameName%", gameName);
-		ultimateGames.getMessageManager().send(sender.getName(), replace, "arenas.create");
+		ultimateGames.getMessageManager().send(sender.getName(), replace, "arenas.select");
 	}
 
 	@EventHandler
-	public void onPunch(PlayerInteractEvent event) {
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK && playersSelecting.contains(event.getPlayer().getName())) {
-			
+	public void onSelect(PlayerInteractEvent event) {
+		String name;
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK && playersSelecting.contains(name = event.getPlayer().getName())) {
+			if (!corner1.containsKey(name)) {
+				corner1.put(name, event.getClickedBlock().getLocation());
+				event.setCancelled(true);
+			} else if (corner1.containsKey(name) && !corner2.containsKey(name)) {
+				corner2.put(name, event.getClickedBlock().getLocation());
+				event.setCancelled(true);
+				createArena(name);
+			}
 		}
+	}
+	
+	public void createArena(String playerName) {
+		String arena = arenaName.get(playerName);
+		String gameName = game.get(playerName).getGameDescription().getName();
+		if (ultimateGames.getArenaManager().arenaExists(arena, gameName)) {
+			HashMap<String, String> replace = new HashMap<String, String>();
+			replace.put("%ArenaName%", arena);
+			replace.put("%GameName%", gameName);
+			replace.put("%Reason%", ultimateGames.getMessageManager().getMessageWithoutPrefix("arenas.alreadyexists"));
+			ultimateGames.getMessageManager().send(playerName, replace, "arenas.failedtocreate");
+			return;
+		} else {
+			Arena newArena =  new Arena(ultimateGames, game.get(playerName), arenaName.get(playerName), corner1.get(playerName), corner2.get(playerName));
+			newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getArenaConfig().getConfig().getString("Arenas."+newArena.getGame().getGameDescription().getName()+"."+newArena.getName()+".Status")));
+			ultimateGames.getArenaManager().addArena(newArena);
+			playersSelecting.remove(playerName);
+			corner1.remove(playerName);
+			corner2.remove(playerName);
+			game.remove(playerName);
+			arenaName.remove(playerName);
+			HashMap<String, String> replace = new HashMap<String, String>();
+			replace.put("%ArenaName%", newArena.getName());
+			replace.put("%GameName%", newArena.getGame().getGameDescription().getName());
+			ultimateGames.getMessageManager().send(playerName, replace, "arenas.create");
+		}
+
 	}
 
 }

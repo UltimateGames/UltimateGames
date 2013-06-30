@@ -19,11 +19,15 @@ import java.util.HashMap;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
+import me.ampayne2.UltimateGames.Enums.PlayerType;
 import me.ampayne2.UltimateGames.Games.Game;
 
 public class Arena {
+	private UltimateGames ultimateGames;
 	private String arenaName;
 	private Game game;
 	private ArrayList<String> players = new ArrayList<String>();
@@ -34,11 +38,27 @@ public class Arena {
 	private Location maxLocation;
 	private World arenaWorld;
 
-	public Arena(Game game, String arenaName, Integer maxPlayers, Boolean storeInventory, Boolean storeArmor, Boolean storeExp, Boolean storeEffects, Boolean storeGamemode, Boolean resetAfterMatch,
-			Boolean allowExplosionDamage, Boolean allowExplosionBlockBreaking, Boolean allowBuilding, Boolean allowBreaking, Location corner1, Location corner2) {
+	public Arena(UltimateGames ultimateGames, Game game, String arenaName, Location corner1, Location corner2) {
+		this.ultimateGames = ultimateGames;
 		this.arenaName = arenaName;
 		this.game = game;
-		this.maxPlayers = maxPlayers;
+		arenaStatus = ArenaStatus.ARENA_STOPPED;
+		FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGamesConfig().getConfig();
+		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+		String gamePath = "Games."+game.getGameDescription().getName();
+		String arenaPath = "Arenas."+game.getGameDescription().getName()+"."+arenaName;
+		//Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
+		Boolean storeInventory = arenaConfig.getBoolean(arenaPath+".Players.Store-Inventory", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Inventory", true));
+		Boolean storeArmor = arenaConfig.getBoolean(arenaPath+".Players.Store-Armor", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Armor", true));
+		Boolean storeExp = arenaConfig.getBoolean(arenaPath+".Players.Store-Exp", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Exp", true));
+		Boolean storeEffects = arenaConfig.getBoolean(arenaPath+".Players.Store-Effects", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Effects", true));
+		Boolean storeGamemode = arenaConfig.getBoolean(arenaPath+".Players.Store-Gamemode", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Gamemode", true));
+		Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath+".Reset-After-Match", gamesConfig.getBoolean(gamePath+".DefaultSettings.Reset-After-Match", true));
+		Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Damage", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Explosion-Damage", true));
+		Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Explosion-Block-Breaking", true));
+		Boolean allowBuilding = arenaConfig.getBoolean(arenaPath+".Allow-Building", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Building", true));
+		Boolean allowBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Breaking", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Breaking", true));
+		//Put all the arena information into the arenaSettings hashmap
 		arenaSettings.put("storeInventory", storeInventory);
 		arenaSettings.put("storeArmor", storeArmor);
 		arenaSettings.put("storeExp", storeExp);
@@ -49,6 +69,14 @@ public class Arena {
 		arenaSettings.put("allowExplosionBlockBreaking", allowExplosionBlockBreaking);
 		arenaSettings.put("allowBuilding", allowBuilding);
 		arenaSettings.put("allowBreaking", allowBreaking);
+		if (game.getGameDescription().getPlayerType() == PlayerType.SINGLE_PLAYER) {
+			maxPlayers = 1;
+		} else if (game.getGameDescription().getPlayerType() == PlayerType.TWO_PLAYER) {
+			maxPlayers = 2;
+		} else if (game.getGameDescription().getPlayerType() == PlayerType.CONFIGUREABLE) {
+			maxPlayers = gamesConfig.getInt(gamePath+".DefaultSettings.MaxPlayers", 8);
+		}
+		//takes the 2 corners and turns them into minLocation and maxLocation
 		Integer minx;
 		Integer miny;
 		Integer minz;
@@ -81,6 +109,31 @@ public class Arena {
 			minLocation = new Location(arenaWorld, minx, miny, minz);
 			maxLocation = new Location(arenaWorld, maxx, maxy, maxz);
 		}
+		
+		//create the arena in the config if it doesn't exist
+		if (arenaConfig.getConfigurationSection(arenaPath) == null) {
+			arenaConfig.set(arenaPath + ".Status", "ARENA_STOPPED");
+			arenaConfig.set(arenaPath + ".MaxPlayers", maxPlayers);
+			arenaConfig.set(arenaPath + ".Players.Store-Inventory", storeInventory);
+			arenaConfig.set(arenaPath + ".Players.Store-Armor", storeArmor);
+			arenaConfig.set(arenaPath + ".Players.Store-Exp", storeExp);
+			arenaConfig.set(arenaPath + ".Players.Store-Effects", storeEffects);
+			arenaConfig.set(arenaPath + ".Players.Store-Gamemode", storeGamemode);
+			arenaConfig.set(arenaPath + ".Reset-After-Match", resetAfterMatch);
+			arenaConfig.set(arenaPath + ".Allow-Explosion-Damage", allowExplosionDamage);
+			arenaConfig.set(arenaPath + ".Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
+			arenaConfig.set(arenaPath + ".Allow-Building", allowBuilding);
+			arenaConfig.set(arenaPath + ".Allow-Breaking", allowBreaking);
+			arenaConfig.set(arenaPath + ".Arena-Location.world", arenaWorld.getName());
+			arenaConfig.set(arenaPath + ".Arena-Location.minx", minLocation.getBlockX());
+			arenaConfig.set(arenaPath + ".Arena-Location.miny", minLocation.getBlockY());
+			arenaConfig.set(arenaPath + ".Arena-Location.minz", minLocation.getBlockZ());
+			arenaConfig.set(arenaPath + ".Arena-Location.maxx", maxLocation.getBlockX());
+			arenaConfig.set(arenaPath + ".Arena-Location.maxy", maxLocation.getBlockY());
+			arenaConfig.set(arenaPath + ".Arena-Location.maxz", maxLocation.getBlockZ());
+		}
+		ultimateGames.getConfigManager().getGamesConfig().saveConfig();
+		ultimateGames.getConfigManager().getArenaConfig().saveConfig();
 	}
 
 	public String getName() {

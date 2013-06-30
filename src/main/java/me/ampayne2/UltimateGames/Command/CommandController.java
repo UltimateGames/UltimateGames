@@ -36,7 +36,9 @@ public class CommandController extends JavaPlugin {
 		this.ultimateGames = ultimateGames;
 
 		SubCommand create = new SubCommand();
-		create.addCommand("arena", "ultimategames.create.arena", new CreateArena(ultimateGames));
+		CreateArena createArena = new CreateArena(ultimateGames);
+		ultimateGames.getServer().getPluginManager().registerEvents(createArena, ultimateGames);
+		create.addCommand("arena", "ultimategames.create.arena", createArena);
 		mainCommand.addCommand("create", null, create);
 	}
 

@@ -55,7 +55,7 @@ public class GameManager {
 					byte[] buffer = new byte[1024];
 					
 					FileOutputStream output = new FileOutputStream(config);
-					InputStream input = zip.getInputStream(zip.getEntry("config.yml"));
+					InputStream input = zip.getInputStream(zip.getEntry("gameconfig.yml"));
 					
 					int realLength;
 
@@ -79,13 +79,34 @@ public class GameManager {
 				ScoreType scoreType = ScoreType.valueOf(gameConfig.getString("ScoreType"));
 				ScoreType secondaryScoreType = ScoreType.valueOf(gameConfig.getString("SecondaryScoreType"));
 				PlayerType playerType = PlayerType.valueOf(gameConfig.getString("PlayerType"));
+				Integer maxPlayers = gameConfig.getInt("DefaultSettings.MaxPlayers", 8);
+				Boolean storeInventory = gameConfig.getBoolean("DefaultSettings.Store-Inventory", true);
+				Boolean storeArmor = gameConfig.getBoolean("DefaultSettings.Store-Armor", true);
+				Boolean storeExp = gameConfig.getBoolean("DefaultSettings.Store-Exp", true);
+				Boolean storeEffects = gameConfig.getBoolean("DefaultSettings.Store-Effects", true);
+				Boolean storeGamemode = gameConfig.getBoolean("DefaultSettings.Store-Gamemode", true);
+				Boolean resetAfterMatch = gameConfig.getBoolean("DefaultSettings.Reset-After-Match", true);
+				Boolean allowExplosionDamage = gameConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", true);
+				Boolean allowExplosionBlockBreaking = gameConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false);
+				Boolean allowBuilding = gameConfig.getBoolean("DefaultSettings.Allow-Building", false);
+				Boolean allowBreaking = gameConfig.getBoolean("DefaultSettings.Allow-Breaking", false);
 				
 				if (!gameExists(name)) {
 					FileConfiguration games = ultimateGames.getConfigManager().getGamesConfig().getConfig();
-					if (!games.contains("Games." + name)) {
-						games.createSection("Games." + name);
-						games.createSection("Games." + name + ".enabled");
-						games.set("Games." + name + ".enabled", true);
+					String gamePath = "Games."+name;
+					if (!games.contains(gamePath)) {
+						games.set(gamePath + ".enabled", true);
+						games.set(gamePath + ".DefaultSettings.MaxPlayers", maxPlayers);
+						games.set(gamePath + ".DefaultSettings.Store-Inventory", storeInventory);
+						games.set(gamePath + ".DefaultSettings.Store-Armor", storeArmor);
+						games.set(gamePath + ".DefaultSettings.Store-Exp", storeExp);
+						games.set(gamePath + ".DefaultSettings.Store-Effects", storeEffects);
+						games.set(gamePath + ".DefaultSettings.Store-Gamemode", storeGamemode);
+						games.set(gamePath + ".DefaultSettings.Reset-After-Match", resetAfterMatch);
+						games.set(gamePath + ".DefaultSettings.Allow-Explosion-Damage", allowExplosionDamage);
+						games.set(gamePath + ".DefaultSettings.Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
+						games.set(gamePath + ".DefaultSettings.Allow-Building", allowBuilding);
+						games.set(gamePath + ".DefaultSettings.Allow-Breaking", allowBreaking);
 						ultimateGames.getConfigManager().getGamesConfig().saveConfig();
 					}
 					if (games.getBoolean("Games." + name + ".enabled", false)) {

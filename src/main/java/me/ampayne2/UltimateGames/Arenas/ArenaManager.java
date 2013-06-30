@@ -16,6 +16,8 @@ package me.ampayne2.UltimateGames.Arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,24 +42,13 @@ public class ArenaManager {
 				String gamePath = "Arenas." + gameKey;
 				for (String arenaKey : arenaConfig.getConfigurationSection(gamePath).getKeys(false)) {
 					if (!arenaExists(arenaKey, gameKey)) {
-						String arenaPath = gamePath + "." + arenaKey;
-						Boolean storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", true);
-						Boolean storeArmor = arenaConfig.getBoolean(arenaPath + ".Players.Store-Armor", true);
-						Boolean storeExp = arenaConfig.getBoolean(arenaPath + ".Players.Store-Exp", true);
-						Boolean storeEffects = arenaConfig.getBoolean(arenaPath + ".Players.Store-Effects", true);
-						Boolean storeGamemode = arenaConfig.getBoolean(arenaPath + ".Players.Store-Gamemode", true);
-						Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath + ".Reset-After-Match", true);
-						Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", false);
-						Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", false);
-						Boolean allowBuilding = arenaConfig.getBoolean(arenaPath + ".Allow-Building", false);
-						Boolean allowBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Breaking", false);
+						String arenaPath = gamePath+"."+arenaKey;
 						World world = Bukkit.getWorld(arenaConfig.getString(arenaPath + ".Arena-Location.world"));
 						Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), arenaConfig.getInt(arenaPath + ".Arena-Location.miny"), arenaConfig
 								.getInt(arenaPath + ".Arena-Location.minz"));
 						Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), arenaConfig.getInt(arenaPath + ".Arena-Location.maxy"), arenaConfig
 								.getInt(arenaPath + ".Arena-Location.maxz"));
-						Arena arena = new Arena(ultimateGames.getGameManager().getGame(gameKey), arenaKey, arenaConfig.getInt(arenaPath + ".MaxPlayers"), storeInventory, storeArmor, storeExp,
-								storeEffects, storeGamemode, resetAfterMatch, allowExplosionDamage, allowExplosionBlockBreaking, allowBuilding, allowBreaking, minLocation, maxLocation);
+						Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, minLocation, maxLocation);
 						arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
 						addArena(arena);
 					}
@@ -76,6 +67,27 @@ public class ArenaManager {
 			}
 		}
 		return false;
+	}
+	
+	public Boolean isInArena(Location location) {
+		if (getLocationArena(location) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public Arena getLocationArena(Location location) {
+		Iterator<Entry<Game, ArrayList<Arena>>> it = arenas.entrySet().iterator();
+		while (it.hasNext()) {
+			ArrayList<Arena> gameArenas = it.next().getValue();
+			for (Arena arena : gameArenas) {
+				if (arena.isInArena(location)) {
+					return arena;
+				}
+			}
+		}
+		return null;
 	}
 
 	public Arena getArena(String arenaName, String gameName) {
