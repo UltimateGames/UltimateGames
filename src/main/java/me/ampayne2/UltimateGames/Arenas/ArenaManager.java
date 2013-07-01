@@ -82,7 +82,7 @@ public class ArenaManager {
 		while (it.hasNext()) {
 			ArrayList<Arena> gameArenas = it.next().getValue();
 			for (Arena arena : gameArenas) {
-				if (arena.isInArena(location)) {
+				if (arena.locationIsInArena(location)) {
 					return arena;
 				}
 			}
@@ -117,6 +117,7 @@ public class ArenaManager {
 			gameArenas.add(arena);
 			arenas.put(arena.getGame(), gameArenas);
 		}
+		ultimateGames.getQueueManager().createQueue(arena);
 	}
 
 }

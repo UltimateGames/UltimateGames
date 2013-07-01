@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.UltimateGames.API.GamePlugin;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Events.GameJoinEvent;
 import me.ampayne2.UltimateGames.LobbySigns.LobbySign;
@@ -90,12 +91,14 @@ public class SignListener implements Listener {
 		if (arenaStatus == ArenaStatus.OPEN) {
 			//TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
 			
+			// add player to arena, run a game's player join method
+			
 			//fires a GameJoinEvent
 			GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), lobbySign.getArena());
 			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
 			ultimateGames.getMessageManager().log(Level.INFO, "gameJoinEvent fired for game '"+gameJoinEvent.getArena().getGame().getGameDescription().getName()+"' and arena '"+gameJoinEvent.getArena().getName()+"'.");
 			return;
-		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING) {
+		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || lobbySign.getArena().getPlayers().size() >= lobbySign.getArena().getMaxPlayers()) {
 			// add player to queue
 		}
 		

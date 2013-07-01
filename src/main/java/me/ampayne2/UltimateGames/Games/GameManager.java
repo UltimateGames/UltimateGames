@@ -34,7 +34,7 @@ import me.ampayne2.UltimateGames.Enums.PlayerType;
 import me.ampayne2.UltimateGames.Enums.ScoreType;
 
 public class GameManager {
-
+	
 	private UltimateGames ultimateGames;
 	private ArrayList<Game> games;
 	private File gameFolder;

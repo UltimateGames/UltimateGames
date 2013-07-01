@@ -1,6 +1,9 @@
 messages:
   prefix: "&8[&bUltimateGames&8]"
   
+  #All messages associated with games
+  games: {}
+  
   #All messages associated with arenas
   arenas:
     #admin:
@@ -22,4 +25,11 @@ messages:
     doesntexit: "Arena doesn't exist."
     failedtocreate: "Failed to create Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
     failedtojoin: "Failed to join Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
+    
+  #All messages associated with queues
+  queues:
+    join: "Joined queue for Arena '%ArenaName%' of Game '%GameName%'. You are %Position% in line and will be able to join %GamePosition%."
+    leave: "Left queue for Arena '%ArenaName%' of Game '%GameName%'."
+    arenacleared: "Queue for Arena '%ArenaName%' of Game '%GameName%' has been cleared."
+    queuecleared: "All queues cleared."
     

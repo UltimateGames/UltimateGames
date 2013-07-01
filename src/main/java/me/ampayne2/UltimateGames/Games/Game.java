@@ -20,7 +20,7 @@ package me.ampayne2.UltimateGames.Games;
 
 import java.io.File;
 
-public class Game {
+public class Game{
 	
 	private File file;
 	private GameDescription gameDescription;

@@ -186,7 +186,7 @@ public class Arena {
 		}
 	}
 
-	public Boolean isInArena(Location location) {
+	public Boolean locationIsInArena(Location location) {
 		if (location.getWorld().equals(minLocation.getWorld())) {
 			if (location.getX() >= minLocation.getX() && location.getX() <= maxLocation.getX()) {
 				if (location.getY() >= minLocation.getY() && location.getY() <= maxLocation.getY()) {
