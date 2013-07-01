@@ -86,17 +86,20 @@ public class SignListener implements Listener {
 		}
 		//gets the lobby sign clicked
 		LobbySign lobbySign = ultimateGames.getLobbySignManager().getLobbySign((Sign) event.getClickedBlock().getState());
-		if (lobbySign.getArena().getStatus() != ArenaStatus.OPEN) {
-			//arena not open
+		ArenaStatus arenaStatus = lobbySign.getArena().getStatus();
+		if (arenaStatus == ArenaStatus.OPEN) {
+			//TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
+			
+			//fires a GameJoinEvent
+			GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), lobbySign.getArena());
+			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
+			ultimateGames.getMessageManager().log(Level.INFO, "gameJoinEvent fired for game '"+gameJoinEvent.getArena().getGame().getGameDescription().getName()+"' and arena '"+gameJoinEvent.getArena().getName()+"'.");
 			return;
+		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING) {
+			// add player to queue
 		}
 		
-		//TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-		
-		//fires a GameJoinEvent
-		GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), lobbySign.getArena());
-		Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
-		ultimateGames.getMessageManager().log(Level.INFO, "gameJoinEvent fired for game '"+gameJoinEvent.getArena().getGame().getGameDescription().getName()+"' and arena '"+gameJoinEvent.getArena().getName()+"'.");
+
 	}
 	
 	@EventHandler
