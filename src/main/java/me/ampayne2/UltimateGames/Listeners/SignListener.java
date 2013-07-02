@@ -23,10 +23,11 @@ import java.util.List;
 import java.util.logging.Level;
 
 import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.API.GamePlugin;
+import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Events.GameJoinEvent;
 import me.ampayne2.UltimateGames.LobbySigns.LobbySign;
+import me.ampayne2.UltimateGames.Players.QueueManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -50,18 +51,18 @@ public class SignListener implements Listener {
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
 		if (!event.getPlayer().hasPermission("permission for setting signs")) {
-			//player doesn't have permission, do stuff
+			// player doesn't have permission, do stuff
 			return;
 		}
-		//if first line is prefix, and 2nd/3rd line aren't empty
+		// if first line is prefix, and 2nd/3rd line aren't empty
 		if (event.getLine(0).equals(ultimateGames.getConfig().getString("SignPrefix")) && !event.getLine(1).isEmpty() && !event.getLine(2).isEmpty() && event.getLine(3).isEmpty()) {
 			String gameName = event.getLine(1);
 			String arenaName = event.getLine(2);
-			if(!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)){
-				//game or arena doesn't exist, do stuff
+			if (!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+				// game or arena doesn't exist, do stuff
 				return;
 			}
-			//adds the sign to the LobbySignManager
+			// adds the sign to the LobbySignManager
 			LobbySign lobbySign = ultimateGames.getLobbySignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
 			String[] lines = lobbySign.getUpdatedLines();
 			for (int i = 0; i < 4; i++) {
@@ -69,42 +70,50 @@ public class SignListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onSignClick(PlayerInteractEvent event) {
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-			//not right click
+			// not right click
 			return;
-		}else if (event.getClickedBlock().getType() != Material.WALL_SIGN && event.getClickedBlock().getType() != Material.SIGN_POST) {
-			//not a sign
+		} else if (event.getClickedBlock().getType() != Material.WALL_SIGN && event.getClickedBlock().getType() != Material.SIGN_POST) {
+			// not a sign
 			return;
-		}else if (!event.getPlayer().hasPermission("permission for right clicking lobby signs")) {
-			//no permission
+		} else if (!event.getPlayer().hasPermission("permission for right clicking lobby signs")) {
+			// no permission
 			return;
-		}else if (!ultimateGames.getLobbySignManager().isLobbySign((Sign) event.getClickedBlock().getState())) {
-			//not a lobby sign
+		} else if (!ultimateGames.getLobbySignManager().isLobbySign((Sign) event.getClickedBlock().getState())) {
+			// not a lobby sign
 			return;
 		}
-		//gets the lobby sign clicked
+		// gets the lobby sign clicked
 		LobbySign lobbySign = ultimateGames.getLobbySignManager().getLobbySign((Sign) event.getClickedBlock().getState());
-		ArenaStatus arenaStatus = lobbySign.getArena().getStatus();
+		Arena arena = lobbySign.getArena();
+		ArenaStatus arenaStatus = arena.getStatus();
 		if (arenaStatus == ArenaStatus.OPEN) {
-			//TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-			
+			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
+
 			// add player to arena, run a game's player join method
-			
-			//fires a GameJoinEvent
+
+			// fires a GameJoinEvent
 			GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), lobbySign.getArena());
 			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
-			ultimateGames.getMessageManager().log(Level.INFO, "gameJoinEvent fired for game '"+gameJoinEvent.getArena().getGame().getGameDescription().getName()+"' and arena '"+gameJoinEvent.getArena().getName()+"'.");
+			ultimateGames.getMessageManager().log(Level.INFO,
+					"gameJoinEvent fired for game '" + gameJoinEvent.getArena().getGame().getGameDescription().getName() + "' and arena '" + gameJoinEvent.getArena().getName() + "'.");
 			return;
-		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || lobbySign.getArena().getPlayers().size() >= lobbySign.getArena().getMaxPlayers()) {
-			// add player to queue
+		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
+				|| arena.getPlayers().size() >= arena.getMaxPlayers()) {
+			QueueManager queue = ultimateGames.getQueueManager();
+			String playerName = event.getPlayer().getName();
+			if (queue.isPlayerInQueue(playerName, arena)) {
+				queue.removePlayerFromQueues(playerName);
+			} else {
+				queue.addPlayerToQueue(playerName, arena);
+			}
 		}
-		
 
 	}
-	
+
 	@EventHandler
 	public void onSignBreak(BlockBreakEvent event) {
 		List<Sign> signs = new ArrayList<Sign>();

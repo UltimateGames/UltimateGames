@@ -39,6 +39,7 @@ public class LobbySign {
 	public LobbySign(Sign sign, Arena arena) {
 		this.sign = sign;
 		this.arena = arena;
+		update();
 	}
 
 	/**

@@ -26,6 +26,7 @@ import me.ampayne2.UltimateGames.Listeners.ArenaListener;
 import me.ampayne2.UltimateGames.Listeners.SignListener;
 import me.ampayne2.UltimateGames.LobbySigns.LobbySignManager;
 import me.ampayne2.UltimateGames.Players.QueueManager;
+import me.ampayne2.UltimateGames.Utils.Utils;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,6 +38,7 @@ public class UltimateGames extends JavaPlugin {
 	private LobbySignManager lobbySignManager;
 	private QueueManager queueManager;
 	private Message messageManager;
+	private Utils utils;
 
 	public void onEnable() {
 		plugin = this;
@@ -45,9 +47,10 @@ public class UltimateGames extends JavaPlugin {
 		configManager = new ConfigManager(this);
 		messageManager = new Message(this);
 		gameManager = new GameManager(this);
+		queueManager = new QueueManager(this);
 		arenaManager = new ArenaManager(this);
 		lobbySignManager = new LobbySignManager(this);
-		queueManager = new QueueManager(this);
+		utils = new Utils();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
 		getCommand("ultimategames").setExecutor(new CommandController(this));
@@ -79,5 +82,9 @@ public class UltimateGames extends JavaPlugin {
 	
 	public QueueManager getQueueManager() {
 		return queueManager;
+	}
+	
+	public Utils getUtils() {
+		return utils;
 	}
 }
