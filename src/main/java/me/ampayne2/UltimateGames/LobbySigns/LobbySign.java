@@ -79,6 +79,8 @@ public class LobbySign {
 			statusColor = ChatColor.DARK_RED;
 		} else if (arenaStatus == ArenaStatus.OPEN) {
 			statusColor = ChatColor.GREEN;
+		} else if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
+			statusColor = ChatColor.BLACK;
 		} else {
 			statusColor = ChatColor.GRAY;
 		}
