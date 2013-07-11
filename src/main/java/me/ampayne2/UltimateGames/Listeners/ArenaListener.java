@@ -18,12 +18,14 @@
  */
 package me.ampayne2.UltimateGames.Listeners;
 
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import me.ampayne2.UltimateGames.UltimateGames;
@@ -62,12 +64,21 @@ public class ArenaListener implements Listener{
 		if (event.getEntity() instanceof TNTPrimed) {
 			Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getLocation());
 			if (arena != null) {
-				if (!arena.getArenaSetting("allowExplosionDamage") && !arena.getArenaSetting("allowExplosionBlockBreaking")) {
+				if (!arena.getArenaSetting("allowExplosionDamage") && !arena.getArenaSetting("allowExplosionBlockBreaking")) { //neither allowed, cancel both
 					event.setCancelled(true);
-				} else if (!arena.getArenaSetting("allowExplosionDamage")) {
-					event.blockList().clear();
 				} else if (!arena.getArenaSetting("allowExplosionBlockBreaking")) {
-					event.getLocation().getWorld().createExplosion(event.getLocation().getX(), event.getLocation().getY(), event.getLocation().getZ(), 4F, false, false);
+					event.blockList().clear();
+				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onTntDamage(EntityDamageByEntityEvent event) {
+		if (event.getDamager() instanceof TNTPrimed && event.getEntity() instanceof Player) {
+			Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getEntity().getLocation());
+			if (arena != null) {
+				if (!arena.getArenaSetting("allowExplosionDamage")) {
 					event.setCancelled(true);
 				}
 			}
