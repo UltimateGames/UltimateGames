@@ -8,8 +8,8 @@ import java.net.URLClassLoader;
  */
 public class PluginClassLoader extends URLClassLoader{
 
-	public PluginClassLoader() {
-		super(new URL[] {});
+	public PluginClassLoader(URLClassLoader ultimateGamesClassLoader) {
+		super(ultimateGamesClassLoader.getURLs());
 	}
 
 	public void addUrl(URL url) {

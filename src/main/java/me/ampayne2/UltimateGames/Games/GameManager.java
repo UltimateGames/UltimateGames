@@ -23,6 +23,7 @@ import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -41,8 +42,7 @@ import me.ampayne2.UltimateGames.Enums.ScoreType;
 public class GameManager {
 	
 	private UltimateGames ultimateGames;
-	private ArrayList<Game> games;
-	private PluginClassLoader pluginClassLoader = new PluginClassLoader();
+	private ArrayList<Game> games = new ArrayList<Game>();
 	private File gameFolder;
 
 	public GameManager(UltimateGames ultimateGames) {
@@ -72,7 +72,7 @@ public class GameManager {
 				jarFile = new JarFile(file);
 
 				//We load the basic game Plugin configuration
-				File configFile = new File(ultimateGames.getPlugin().getDataFolder() + "/Games", file.getName().replace(".jar", "") + ".yml");
+				File configFile = new File(ultimateGames.getPlugin().getDataFolder() + "/Games", file.getName().replace(".jar", ".yml"));
 				if (!configFile.exists()){
 					ZipFile zip = new ZipFile(file);
 					byte[] buffer = new byte[1024];
@@ -158,8 +158,8 @@ public class GameManager {
 					}
 					
 					//We try to load the main class..
-					pluginClassLoader.addUrl(file.toURI().toURL());
-					Class<?> clazz = pluginClassLoader.loadClass(gamePlugin.getString("main-class"));
+					ultimateGames.getPluginClassLoader().addUrl(file.toURI().toURL());
+					Class<?> clazz = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
 
 					//Is the class a valid game plugin?
 					if (GamePlugin.class.isAssignableFrom(clazz)) {
@@ -170,7 +170,7 @@ public class GameManager {
 						GameDescription gameDescription = new GameDescription(gameName, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType);
 						Game game = new Game(file, gameDescription);
 						//We load the game
-						plugin.loadGame();
+						plugin.loadGame(ultimateGames);
 						addGame(game);
 						ultimateGames.getPlugin().getServer().getPluginManager().registerEvents(plugin, ultimateGames);
 

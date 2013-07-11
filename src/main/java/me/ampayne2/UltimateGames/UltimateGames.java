@@ -18,10 +18,13 @@
  */
 package me.ampayne2.UltimateGames;
 
+import java.net.URLClassLoader;
+
 import me.ampayne2.UltimateGames.Arenas.ArenaManager;
 import me.ampayne2.UltimateGames.Command.CommandController;
 import me.ampayne2.UltimateGames.Files.ConfigManager;
 import me.ampayne2.UltimateGames.Games.GameManager;
+import me.ampayne2.UltimateGames.Games.Plugin.PluginClassLoader;
 import me.ampayne2.UltimateGames.Listeners.ArenaListener;
 import me.ampayne2.UltimateGames.Listeners.SignListener;
 import me.ampayne2.UltimateGames.LobbySigns.LobbySignManager;
@@ -38,6 +41,7 @@ public class UltimateGames extends JavaPlugin {
 	private LobbySignManager lobbySignManager;
 	private QueueManager queueManager;
 	private Message messageManager;
+	private PluginClassLoader pluginClassLoader;
 	private Utils utils;
 
 	public void onEnable() {
@@ -46,6 +50,7 @@ public class UltimateGames extends JavaPlugin {
 		saveConfig();
 		configManager = new ConfigManager(this);
 		messageManager = new Message(this);
+		pluginClassLoader = new PluginClassLoader((URLClassLoader) this.getClassLoader());
 		gameManager = new GameManager(this);
 		queueManager = new QueueManager(this);
 		arenaManager = new ArenaManager(this);
@@ -82,6 +87,10 @@ public class UltimateGames extends JavaPlugin {
 	
 	public QueueManager getQueueManager() {
 		return queueManager;
+	}
+	
+	public PluginClassLoader getPluginClassLoader() {
+		return pluginClassLoader;
 	}
 	
 	public Utils getUtils() {

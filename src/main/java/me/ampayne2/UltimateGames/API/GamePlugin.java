@@ -29,11 +29,7 @@ public abstract class GamePlugin implements Listener{
 
 	private UltimateGames ultimateGames;
 	
-	public GamePlugin(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
-	
-	public abstract Boolean loadGame();
+	public abstract Boolean loadGame(UltimateGames ultimateGames);
 	public abstract Boolean unloadGame();
 	public abstract Boolean stopGame();
 	public abstract Boolean loadArena(Arena arena);
