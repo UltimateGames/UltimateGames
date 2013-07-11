@@ -1,13 +1,15 @@
 package me.ampayne2.UltimateGames.Database.Tables;
 
+import java.util.HashMap;
+
 import com.alta189.simplesave.Field;
 import com.alta189.simplesave.Id;
 import com.alta189.simplesave.Table;
 
 import org.bukkit.inventory.ItemStack;
 
-@Table("playerInv")
-public class PlayerInventory {
+@Table("playerData")
+public class PlayerData {
 
 	@Id
 	public int id;
@@ -20,5 +22,14 @@ public class PlayerInventory {
 
 	@Field
 	public ItemStack[] armorInventory;
+	
+	@Field
+	public Integer gamemode;
+	
+	@Field
+	public Integer experience;
+	
+	@Field
+	public HashMap<String, Integer> effects;
 
 }

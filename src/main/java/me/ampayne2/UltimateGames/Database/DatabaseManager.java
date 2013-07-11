@@ -7,7 +7,7 @@ import com.alta189.simplesave.exceptions.TableRegistrationException;
 import com.alta189.simplesave.mysql.MySQLConfiguration;
 import com.alta189.simplesave.sqlite.SQLiteConfiguration;
 
-import me.ampayne2.UltimateGames.Database.Tables.PlayerInventory;
+import me.ampayne2.UltimateGames.Database.Tables.PlayerData;
 import me.ampayne2.UltimateGames.UltimateGames;
 
 public class DatabaseManager {
@@ -37,7 +37,7 @@ public class DatabaseManager {
 			throw new ConnectionException("Invalid database configuration!");
 		}
 
-		db.registerTable(PlayerInventory.class);
+		db.registerTable(PlayerData.class);
 		db.connect();
 	}
 
