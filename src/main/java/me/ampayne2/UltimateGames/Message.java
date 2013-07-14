@@ -18,10 +18,13 @@
  */
 package me.ampayne2.UltimateGames;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
+
+import me.ampayne2.UltimateGames.Games.Game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,12 +34,32 @@ import org.bukkit.entity.Player;
 public class Message {
 	private UltimateGames ultimateGames;
 	private Map<String, String> messages = new HashMap<String, String>();
+	private Map<String, String> gameMessages = new HashMap<String, String>();
 
 	public Message(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
+		loadMessages();
+	}
+	
+	public void loadMessages() {
+		if (!messages.isEmpty()) {
+			messages.clear();
+		}
 		FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
 		for (String key : messageConfig.getConfigurationSection("messages").getKeys(true)) {
 			messages.put(key, messageConfig.getString("messages."+key));
+		}
+	}
+	
+	public void loadGameMessages() {
+		if (!gameMessages.isEmpty()) {
+			gameMessages.clear();
+		}
+		for (Game game : ultimateGames.getGameManager().getGames()) {
+			FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+			for (String key : gameConfig.getConfigurationSection("messages").getKeys(true)) {
+				gameMessages.put(game.getGameDescription().getName()+"."+key, gameConfig.getString("messages."+key));
+			}
 		}
 	}
 
@@ -46,12 +69,17 @@ public class Message {
 	 * @param messagetype Path to the message in the message config, without "Messages."
 	 * @return The message.
 	 */
-	public String getMessage(String messagetype) {
+	public String getMessage(String messagetype, String gameName) {
 		String prefix = messages.get("prefix");
 		if (prefix == null) {
 			prefix = "&8[&bUltimateGames&8]";
 		}
-		String message = messages.get(messagetype);
+		String message;
+		if (gameName == null) {
+			message = messages.get(messagetype);
+		} else {
+			message = gameMessages.get(gameName+"."+messagetype);
+		}
 		if (message == null) {
 			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
 		}
@@ -65,8 +93,13 @@ public class Message {
 	 * @param messagetype Path to the message in the message config, without "Messages."
 	 * @return The message.
 	 */
-	public String getMessageWithoutPrefix(String messagetype) {
-		String message = messages.get(messagetype);
+	public String getMessageWithoutPrefix(String messagetype, String gameName) {
+		String message;
+		if (gameName == null) {
+			message = messages.get(messagetype);
+		} else {
+			message = gameMessages.get(gameName+"."+messagetype);
+		}
 		if (message == null) {
 			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
 		}
@@ -80,12 +113,17 @@ public class Message {
 	 * @param messagetype Path to the message in the message config, without "Messages."
 	 * @return The message.
 	 */
-	public String getReplacedMessage(HashMap<String, String> replace, String messagetype) {
+	public String getReplacedMessage(HashMap<String, String> replace, String messagetype, String gameName) {
 		String prefix = messages.get("prefix");
 		if (prefix == null) {
 			prefix = "&8[&bUltimateGames&8]";
 		}
-		String message = messages.get(messagetype);
+		String message;
+		if (gameName == null) {
+			message = messages.get(messagetype);
+		} else {
+			message = gameMessages.get(gameName+"."+messagetype);
+		}
 		if (message == null) {
 			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
 		}
@@ -103,8 +141,13 @@ public class Message {
 	 * @param messagetype Path to the message in the message config, without "Messages."
 	 * @return The message.
 	 */
-	public String getReplacedMessageWithoutPrefix(HashMap<String, String> replace, String messagetype) {
-		String message = messages.get(messagetype);
+	public String getReplacedMessageWithoutPrefix(HashMap<String, String> replace, String messagetype, String gameName) {
+		String message;
+		if (gameName == null) {
+			message = messages.get(messagetype);
+		} else {
+			message = gameMessages.get(gameName+"."+messagetype);
+		}
 		if (message == null) {
 			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
 		}
@@ -138,7 +181,7 @@ public class Message {
 			return;
 		}
 		for (String messagetype : messagetypes) {
-			player.sendMessage(getMessage(messagetype));
+			player.sendMessage(getMessage(messagetype, null));
 		}
 	}
 
@@ -155,7 +198,42 @@ public class Message {
 			return;
 		}
 		for (String messagetype : messagetypes) {
-			player.sendMessage(getReplacedMessage(replace, messagetype));
+			player.sendMessage(getReplacedMessage(replace, messagetype, null));
+		}
+	}
+	
+	/**
+	 * Sends one or more game messages to a specific player.
+	 * 
+	 * @param gameName name of the game to get the message(s) from.
+	 * @param playerName name of the player to send the message(s) to.
+	 * @param messagetypes the path(s) to the message(s), without "messages."
+	 */
+	public void send(String gameName, String playerName, String... messagetypes) {
+		Player player = Bukkit.getPlayer(playerName);
+		if (player == null) {
+			return;
+		}
+		for (String messagetype : messagetypes) {
+			player.sendMessage(getMessage(messagetype, gameName));
+		}
+	}
+	
+	/**
+	 * Sends one or more game messages to a specific player, replacing certain strings.
+	 * 
+	 * @param gameName name of the game to get the message(s) from.
+	 * @param playername name of the player to send the message(s) to.
+	 * @param replace hashmap that replaces all keys in a message with a value.
+	 * @param messagetypes the path(s) to the message(s), without "messages."
+	 */
+	public void send(String gameName, String playerName, HashMap<String, String> replace, String... messagetypes) {
+		Player player = Bukkit.getPlayer(playerName);
+		if (player == null) {
+			return;
+		}
+		for (String messagetype : messagetypes) {
+			player.sendMessage(getReplacedMessage(replace, messagetype, gameName));
 		}
 	}
 
@@ -166,7 +244,7 @@ public class Message {
 	 */
 	public void broadcast(String... messagetypes) {
 		for (String messagetype : messagetypes) {
-			Bukkit.getServer().broadcastMessage(getMessage(messagetype));
+			Bukkit.getServer().broadcastMessage(getMessage(messagetype, null));
 		}
 	}
 
@@ -178,7 +256,46 @@ public class Message {
 	 */
 	public void broadcast(HashMap<String, String> replace, String... messagetypes) {
 		for (String messagetype : messagetypes) {
-			Bukkit.getServer().broadcastMessage(getReplacedMessage(replace, messagetype));
+			Bukkit.getServer().broadcastMessage(getReplacedMessage(replace, messagetype, null));
+		}
+	}
+	
+	/**
+	 * Broadcasts one or more messages to the players in an arena.
+	 * 
+	 * @param arenaName Name of the arena.
+	 * @param gameName Name of the game.
+	 * @param messagetypes the path(s) to the message(s), without "message."
+	 */
+	public void broadcast(String arenaName, String gameName, String... messagetypes) {
+		ArrayList<String> playerNames = ultimateGames.getArenaManager().getArena(arenaName, gameName).getPlayers();
+		for (String messagetype : messagetypes) {
+			for (String playerName : playerNames) {
+				Player player = Bukkit.getPlayer(playerName);
+				if (player != null) {
+					player.sendMessage(getMessage(messagetype, gameName));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Broadcasts one or more messages to the players in an arena.
+	 * 
+	 * @param arenaName Name of the arena.
+	 * @param gameName Name of the game.
+	 * @param replace hashmap that replaces all keys in a message with a value.
+	 * @param messagetypes the path(s) to the message(s), without "message."
+	 */
+	public void broadcast(String arenaName, String gameName, HashMap<String, String> replace, String... messagetypes) {
+		ArrayList<String> playerNames = ultimateGames.getArenaManager().getArena(arenaName, gameName).getPlayers();
+		for (String messagetype: messagetypes) {
+			for (String playerName : playerNames) {
+				Player player = Bukkit.getPlayer(playerName);
+				if (player != null) {
+					player.sendMessage(getReplacedMessage(replace, messagetype, gameName));
+				}
+			}
 		}
 	}
 

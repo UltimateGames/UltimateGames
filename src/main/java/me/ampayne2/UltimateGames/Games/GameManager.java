@@ -23,20 +23,16 @@ import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.ampayne2.UltimateGames.API.GamePlugin;
-import me.ampayne2.UltimateGames.Games.Plugin.PluginClassLoader;
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Enums.PlayerType;
 import me.ampayne2.UltimateGames.Enums.ScoreType;
@@ -122,31 +118,6 @@ public class GameManager {
 
 					//We retrieve the PlayerType
 					playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
-
-					/* Will be used in Arena loading, not needed for Game loading
-					//Does the game have a flexible amount of players? If so, collect the max players amount
-					if (playerType.equals(PlayerType.CONFIGUREABLE)) {
-						if (gamePlugin.contains("defaultSettings.maxPlayers")) {
-							maxPlayers = gamePlugin.getInt("defaultSettings.MaxPlayers");
-						} else {
-							ultimateGames.getMessageManager().log(Level.SEVERE, "Game " + file.getAbsolutePath() + " contains a invalid gameplugin.yml file!");
-							jarFile.close();
-							continue;
-						}
-					}
-
-					//Let's retrieve the rest in bulk since it's not obligatory
-					boolean storeInventory = gamePlugin.getBoolean("DefaultSettings.Store-Inventory", true);
-					boolean storeArmor = gamePlugin.getBoolean("DefaultSettings.Store-Armor", true);
-					boolean storeExp = gamePlugin.getBoolean("DefaultSettings.Store-Exp", true);
-					boolean storeEffects = gamePlugin.getBoolean("DefaultSettings.Store-Effects", true);
-					boolean storeGamemode = gamePlugin.getBoolean("DefaultSettings.Store-Gamemode", true);
-					boolean resetAfterMatch = gamePlugin.getBoolean("DefaultSettings.Reset-After-Match", true);
-					boolean allowExplosionDamage = gamePlugin.getBoolean("DefaultSettings.Allow-Explosion-Damage", true);
-					boolean allowExplosionBlockBreaking = gamePlugin.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false);
-					boolean allowBuilding = gamePlugin.getBoolean("DefaultSettings.Allow-Building", false);
-					boolean allowBreaking = gamePlugin.getBoolean("DefaultSettings.Allow-Breaking", false);
-					*/
 					
 					version = gamePlugin.getString("version");
 					String gameName = file.getName().replace(".jar", "");
@@ -170,100 +141,15 @@ public class GameManager {
 
 						//Well, everything loaded.
 						GameDescription gameDescription = new GameDescription(gameName, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType);
-						Game game = new Game(file, gameDescription);
+						Game game = new Game(plugin, gameDescription);
 						//We load the game
 						plugin.loadGame(ultimateGames);
 						addGame(game);
 						ultimateGames.getPlugin().getServer().getPluginManager().registerEvents(plugin, ultimateGames);
 					} else {
-						ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + gameName + " have a invalid main class!");
+						ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + gameName + " has an invalid main class!");
 					}
-
-
 				}
-
-		/*games = new ArrayList<Game>();
-		gameFolder = new File(ultimateGames.getPlugin().getDataFolder(), "Games");
-		if (!gameFolder.exists()) {
-			gameFolder.mkdirs();
-		}
-
-		for (File file : gameFolder.listFiles(new GameFileFilter())) {
-			try {
-				ZipFile zip = new ZipFile(file);
-				File config = new File(ultimateGames.getPlugin().getDataFolder() + "/Games", file.getName().replace(".jar", "") + ".yml");
-				if (!config.exists()){
-					byte[] buffer = new byte[1024];
-					
-					FileOutputStream output = new FileOutputStream(config);
-					InputStream input = zip.getInputStream(zip.getEntry("gameconfig.yml"));
-					
-					int realLength;
-
-			        while ((realLength = input.read(buffer)) > 0) {
-			            output.write(buffer, 0, realLength);
-			        }
-			 
-			        output.flush();
-			        output.close();
-				}
-
-				YamlConfiguration gameConfig = YamlConfiguration.loadConfiguration(config);
-				
-				String name = gameConfig.getString("Name");
-				String description = gameConfig.getString("Description");
-				String version = gameConfig.getString("Version");
-				String author = gameConfig.getString("Author");
-				String pack = gameConfig.getString("Package");
-				String scoreTypeName = gameConfig.getString("ScoreTypeName");
-				String secondaryScoreTypeName = gameConfig.getString("SecondaryScoreTypeName");
-				ScoreType scoreType = ScoreType.valueOf(gameConfig.getString("ScoreType"));
-				ScoreType secondaryScoreType = ScoreType.valueOf(gameConfig.getString("SecondaryScoreType"));
-				PlayerType playerType = PlayerType.valueOf(gameConfig.getString("PlayerType"));
-				Integer maxPlayers = gameConfig.getInt("DefaultSettings.MaxPlayers", 8);
-				Boolean storeInventory = gameConfig.getBoolean("DefaultSettings.Store-Inventory", true);
-				Boolean storeArmor = gameConfig.getBoolean("DefaultSettings.Store-Armor", true);
-				Boolean storeExp = gameConfig.getBoolean("DefaultSettings.Store-Exp", true);
-				Boolean storeEffects = gameConfig.getBoolean("DefaultSettings.Store-Effects", true);
-				Boolean storeGamemode = gameConfig.getBoolean("DefaultSettings.Store-Gamemode", true);
-				Boolean resetAfterMatch = gameConfig.getBoolean("DefaultSettings.Reset-After-Match", true);
-				Boolean allowExplosionDamage = gameConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", true);
-				Boolean allowExplosionBlockBreaking = gameConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false);
-				Boolean allowBuilding = gameConfig.getBoolean("DefaultSettings.Allow-Building", false);
-				Boolean allowBreaking = gameConfig.getBoolean("DefaultSettings.Allow-Breaking", false);
-				
-				if (!gameExists(name)) {
-					FileConfiguration games = ultimateGames.getConfigManager().getGamesConfig().getConfig();
-					String gamePath = "Games."+name;
-					if (!games.contains(gamePath)) {
-						games.set(gamePath + ".enabled", true);
-						games.set(gamePath + ".DefaultSettings.MaxPlayers", maxPlayers);
-						games.set(gamePath + ".DefaultSettings.Store-Inventory", storeInventory);
-						games.set(gamePath + ".DefaultSettings.Store-Armor", storeArmor);
-						games.set(gamePath + ".DefaultSettings.Store-Exp", storeExp);
-						games.set(gamePath + ".DefaultSettings.Store-Effects", storeEffects);
-						games.set(gamePath + ".DefaultSettings.Store-Gamemode", storeGamemode);
-						games.set(gamePath + ".DefaultSettings.Reset-After-Match", resetAfterMatch);
-						games.set(gamePath + ".DefaultSettings.Allow-Explosion-Damage", allowExplosionDamage);
-						games.set(gamePath + ".DefaultSettings.Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
-						games.set(gamePath + ".DefaultSettings.Allow-Building", allowBuilding);
-						games.set(gamePath + ".DefaultSettings.Allow-Breaking", allowBreaking);
-						ultimateGames.getConfigManager().getGamesConfig().saveConfig();
-					}
-					if (games.getBoolean("Games." + name + ".enabled", false)) {
-						GameDescription gameDescription = new GameDescription(name, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType);
-						Game game = new Game(file, gameDescription);
-						addGame(game);
-					}
-				} else {
-					ultimateGames.getMessageManager().log(Level.WARNING, "The game " + name + " failed to load. A game with the same name is already loaded.");
-				}
-				
-				
-				
-
-				zip.close();
-				*/
 			} catch (Exception e) {
 				ultimateGames.getMessageManager().log(Level.WARNING, "An error occurred whilst loading the game " + file.getName() + ".");
 				e.printStackTrace();
@@ -274,9 +160,12 @@ public class GameManager {
 						e1.printStackTrace();
 					}
 				}
-
 			}
 		}
+	}
+	
+	public ArrayList<Game> getGames() {
+		return games;
 	}
 
 	public boolean gameExists(String gameName) {

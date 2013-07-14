@@ -47,21 +47,20 @@ public class Arena {
 		this.arenaName = arenaName;
 		this.game = game;
 		arenaStatus = ArenaStatus.ARENA_STOPPED;
-		FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGamesConfig().getConfig();
+		FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
 		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-		String gamePath = "Games."+game.getGameDescription().getName();
 		String arenaPath = "Arenas."+game.getGameDescription().getName()+"."+arenaName;
 		//Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
-		Boolean storeInventory = arenaConfig.getBoolean(arenaPath+".Players.Store-Inventory", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Inventory", true));
-		Boolean storeArmor = arenaConfig.getBoolean(arenaPath+".Players.Store-Armor", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Armor", true));
-		Boolean storeExp = arenaConfig.getBoolean(arenaPath+".Players.Store-Exp", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Exp", true));
-		Boolean storeEffects = arenaConfig.getBoolean(arenaPath+".Players.Store-Effects", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Effects", true));
-		Boolean storeGamemode = arenaConfig.getBoolean(arenaPath+".Players.Store-Gamemode", gamesConfig.getBoolean(gamePath+".DefaultSettings.Store-Gamemode", true));
-		Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath+".Reset-After-Match", gamesConfig.getBoolean(gamePath+".DefaultSettings.Reset-After-Match", true));
-		Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Damage", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Explosion-Damage", true));
-		Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Explosion-Block-Breaking", true));
-		Boolean allowBuilding = arenaConfig.getBoolean(arenaPath+".Allow-Building", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Building", true));
-		Boolean allowBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Breaking", gamesConfig.getBoolean(gamePath+".DefaultSettings.Allow-Breaking", true));
+		Boolean storeInventory = arenaConfig.getBoolean(arenaPath+".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
+		Boolean storeArmor = arenaConfig.getBoolean(arenaPath+".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
+		Boolean storeExp = arenaConfig.getBoolean(arenaPath+".Players.Store-Exp", gamesConfig.getBoolean("DefaultSettings.Store-Exp", true));
+		Boolean storeEffects = arenaConfig.getBoolean(arenaPath+".Players.Store-Effects", gamesConfig.getBoolean("DefaultSettings.Store-Effects", true));
+		Boolean storeGamemode = arenaConfig.getBoolean(arenaPath+".Players.Store-Gamemode", gamesConfig.getBoolean("DefaultSettings.Store-Gamemode", true));
+		Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath+".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
+		Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", true));
+		Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", true));
+		Boolean allowBuilding = arenaConfig.getBoolean(arenaPath+".Allow-Building", gamesConfig.getBoolean("DefaultSettings.Allow-Building", true));
+		Boolean allowBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Breaking", true));
 		//Put all the arena information into the arenaSettings hashmap
 		arenaSettings.put("storeInventory", storeInventory);
 		arenaSettings.put("storeArmor", storeArmor);
@@ -78,7 +77,7 @@ public class Arena {
 		} else if (game.getGameDescription().getPlayerType() == PlayerType.TWO_PLAYER) {
 			maxPlayers = 2;
 		} else if (game.getGameDescription().getPlayerType() == PlayerType.CONFIGUREABLE) {
-			maxPlayers = gamesConfig.getInt(gamePath+".DefaultSettings.MaxPlayers", 8);
+			maxPlayers = gamesConfig.getInt("DefaultSettings.MaxPlayers", 8);
 		}
 		//takes the 2 corners and turns them into minLocation and maxLocation
 		Integer minx;
@@ -136,7 +135,7 @@ public class Arena {
 			arenaConfig.set(arenaPath + ".Arena-Location.maxy", maxLocation.getBlockY());
 			arenaConfig.set(arenaPath + ".Arena-Location.maxz", maxLocation.getBlockZ());
 		}
-		ultimateGames.getConfigManager().getGamesConfig().saveConfig();
+		ultimateGames.getConfigManager().getGameConfig(game).saveConfig();
 		ultimateGames.getConfigManager().getArenaConfig().saveConfig();
 	}
 
@@ -146,6 +145,32 @@ public class Arena {
 
 	public Game getGame() {
 		return game;
+	}
+	
+	public boolean addPlayer(String playerName) {
+		if(game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() >= maxPlayers) {
+			// makes sure arena has room
+			setStatus(ArenaStatus.STARTING);
+			return false;
+		} else if(players.contains(playerName)) {
+			// player already in arena
+			return false;
+		} else {
+			// player joined successfully
+			players.add(playerName);
+			if(game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() == maxPlayers) {
+				setStatus(ArenaStatus.STARTING);
+			}
+			return true;
+		}
+	}
+	
+	public boolean hasPlayer(String playerName) {
+		if(!players.isEmpty() && players.contains(playerName)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public ArrayList<String> getPlayers() {

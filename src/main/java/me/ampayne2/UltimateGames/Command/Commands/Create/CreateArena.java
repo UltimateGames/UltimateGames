@@ -87,7 +87,7 @@ public class CreateArena implements UGCommand, Listener {
 			HashMap<String, String> replace = new HashMap<String, String>();
 			replace.put("%ArenaName%", arena);
 			replace.put("%GameName%", gameName);
-			replace.put("%Reason%", ultimateGames.getMessageManager().getMessageWithoutPrefix("arenas.alreadyexists"));
+			replace.put("%Reason%", ultimateGames.getMessageManager().getMessageWithoutPrefix("arenas.alreadyexists", null));
 			ultimateGames.getMessageManager().send(playerName, replace, "arenas.failedtocreate");
 			return;
 		} else {

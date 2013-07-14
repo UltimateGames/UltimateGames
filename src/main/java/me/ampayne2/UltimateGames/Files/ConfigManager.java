@@ -28,7 +28,6 @@ public class ConfigManager {
 
 	private UltimateGames ultimateGames;
 	private ConfigAccessor messageConfig;
-	private ConfigAccessor gamesConfig;
 	private ConfigAccessor arenaConfig;
 	private ConfigAccessor lobbyConfig;
 	private ConfigAccessor lobbySignConfig;
@@ -38,8 +37,6 @@ public class ConfigManager {
 		this.ultimateGames = ultimateGames;
 		messageConfig = new ConfigAccessor(ultimateGames.getPlugin(), "MessageConfig.yml", ultimateGames.getPlugin().getDataFolder());
 		messageConfig.saveDefaultConfig();
-		gamesConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Games.yml", ultimateGames.getPlugin().getDataFolder());
-		gamesConfig.saveDefaultConfig();
 		arenaConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Arenas.yml", ultimateGames.getPlugin().getDataFolder());
 		arenaConfig.saveDefaultConfig();
 		lobbyConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Lobbies.yml", ultimateGames.getPlugin().getDataFolder());
@@ -51,10 +48,6 @@ public class ConfigManager {
 	
 	public ConfigAccessor getMessageConfig() {
 		return messageConfig;
-	}
-	
-	public ConfigAccessor getGamesConfig() {
-		return gamesConfig;
 	}
 	
 	public ConfigAccessor getArenaConfig() {

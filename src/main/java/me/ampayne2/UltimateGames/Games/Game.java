@@ -18,20 +18,20 @@
  */
 package me.ampayne2.UltimateGames.Games;
 
-import java.io.File;
+import me.ampayne2.UltimateGames.API.GamePlugin;
 
 public class Game{
 	
-	private File file;
+	private GamePlugin gamePlugin;
 	private GameDescription gameDescription;
 	
-	public Game(File file, GameDescription gameDescription) {
-		this.file = file;
+	public Game(GamePlugin gamePlugin, GameDescription gameDescription) {
+		this.gamePlugin = gamePlugin;
 		this.gameDescription = gameDescription;
 	}
 	
-	public File getFile() {
-		return file;
+	public GamePlugin getGamePlugin() {
+		return gamePlugin;
 	}
 	
 	public GameDescription getGameDescription() {

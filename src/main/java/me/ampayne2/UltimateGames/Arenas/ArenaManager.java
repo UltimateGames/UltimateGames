@@ -73,7 +73,7 @@ public class ArenaManager {
 		return false;
 	}
 	
-	public Boolean isInArena(Location location) {
+	public Boolean isLocationInArena(Location location) {
 		if (getLocationArena(location) == null) {
 			return false;
 		} else {
@@ -87,6 +87,27 @@ public class ArenaManager {
 			ArrayList<Arena> gameArenas = it.next().getValue();
 			for (Arena arena : gameArenas) {
 				if (arena.locationIsInArena(location)) {
+					return arena;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean isPlayerInArena(String playerName) {
+		if (getPlayerArena(playerName) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public Arena getPlayerArena(String playerName) {
+		Iterator<Entry<Game, ArrayList<Arena>>> it = arenas.entrySet().iterator();
+		while (it.hasNext()) {
+			ArrayList<Arena> gameArenas = it.next().getValue();
+			for (Arena arena : gameArenas) {
+				if(arena.hasPlayer(playerName)) {
 					return arena;
 				}
 			}
