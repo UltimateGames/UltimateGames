@@ -24,6 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -158,13 +160,13 @@ public class GameManager {
 					}
 					
 					//We try to load the main class..
-					ultimateGames.getPluginClassLoader().addUrl(file.toURI().toURL());
-					Class<?> clazz = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
-
+					URLClassLoader loader = new URLClassLoader(new URL[] {file.toURI().toURL()}, this.getClass().getClassLoader());
+					Class<?> aclass = loader.loadClass(gamePlugin.getString("main-class"));
+					Object object = aclass.newInstance();
 					//Is the class a valid game plugin?
-					if (GamePlugin.class.isAssignableFrom(clazz)) {
+					if (object instanceof GamePlugin) {
 						ultimateGames.getMessageManager().log(Level.INFO, "Loading " + gameName);
-						GamePlugin plugin = (GamePlugin) clazz.newInstance();
+						GamePlugin plugin = (GamePlugin) object;
 
 						//Well, everything loaded.
 						GameDescription gameDescription = new GameDescription(gameName, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType);
@@ -173,12 +175,11 @@ public class GameManager {
 						plugin.loadGame(ultimateGames);
 						addGame(game);
 						ultimateGames.getPlugin().getServer().getPluginManager().registerEvents(plugin, ultimateGames);
-
 					} else {
-						ultimateGames.getMessageManager().log(Level.SEVERE, "Game " + gameName + " has an invalid main class!");
-						jarFile.close();
-						continue;
+						ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + gameName + " have a invalid main class!");
 					}
+
+
 				}
 
 		/*games = new ArrayList<Game>();
@@ -265,7 +266,7 @@ public class GameManager {
 				*/
 			} catch (Exception e) {
 				ultimateGames.getMessageManager().log(Level.WARNING, "An error occurred whilst loading the game " + file.getName() + ".");
-				ultimateGames.getMessageManager().debug(e);
+				e.printStackTrace();
 				if (jarFile != null) {
 					try {
 						jarFile.close();
