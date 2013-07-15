@@ -32,4 +32,3 @@ messages:
     leave: "Left queue for Arena '%ArenaName%' of Game '%GameName%'."
     arenacleared: "Queue for Arena '%ArenaName%' of Game '%GameName%' has been cleared."
     queuecleared: "All queues cleared."
-    

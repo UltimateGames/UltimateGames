@@ -92,10 +92,10 @@ public class SignListener implements Listener {
 		ArenaStatus arenaStatus = arena.getStatus();
 		if (arenaStatus == ArenaStatus.OPEN) {
 			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-			if(arena.addPlayer(event.getPlayer().getName())) {
+			if(arena.addPlayer(event.getPlayer().getName()) && arena.getGame().getGamePlugin().addPlayer(arena, event.getPlayer().getName())) {
 				GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), lobbySign.getArena());
 				Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
-				arena.getGame().getGamePlugin().addPlayer(arena, event.getPlayer().getName());
+				ultimateGames.getLobbySignManager().updateLobbySignsOfArena(arena);
 			}
 			return;
 		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING

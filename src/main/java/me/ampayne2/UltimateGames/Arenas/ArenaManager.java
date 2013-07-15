@@ -135,12 +135,14 @@ public class ArenaManager {
 	}
 
 	public void addArena(Arena arena) {
-		if (arenas.containsKey(arena.getGame())) {
-			arenas.get(arena.getGame()).add(arena);
-		} else {
-			ArrayList<Arena> gameArenas = new ArrayList<Arena>();
-			gameArenas.add(arena);
-			arenas.put(arena.getGame(), gameArenas);
+		if (arena.getGame().getGamePlugin().loadArena(arena)) {
+			if (arenas.containsKey(arena.getGame())) {
+				arenas.get(arena.getGame()).add(arena);
+			} else {
+				ArrayList<Arena> gameArenas = new ArrayList<Arena>();
+				gameArenas.add(arena);
+				arenas.put(arena.getGame(), gameArenas);
+			}
 		}
 	}
 }

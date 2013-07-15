@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import me.ampayne2.UltimateGames.Games.Game;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -52,6 +50,11 @@ public class Message {
 	}
 	
 	public void loadGameMessages() {
+		gameMessages.put("ClickingGame.join", "&3%Player% joined the game. %Amount%");
+		gameMessages.put("ClickingGame.countdown", "&4Game starting in %Time% seconds!");
+	    gameMessages.put("ClickingGame.start", "&4Start clicking! You have 30 seconds!");
+		gameMessages.put("ClickingGame.score", "&3%Name% clicked %Clicks% times!");
+		/*
 		if (!gameMessages.isEmpty()) {
 			gameMessages.clear();
 		}
@@ -61,6 +64,7 @@ public class Message {
 				gameMessages.put(game.getGameDescription().getName()+"."+key, gameConfig.getString("messages."+key));
 			}
 		}
+		*/
 	}
 
 	/**

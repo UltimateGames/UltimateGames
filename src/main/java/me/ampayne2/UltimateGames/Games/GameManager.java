@@ -143,7 +143,7 @@ public class GameManager {
 						GameDescription gameDescription = new GameDescription(gameName, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType);
 						Game game = new Game(plugin, gameDescription);
 						//We load the game
-						plugin.loadGame(ultimateGames);
+						plugin.loadGame(ultimateGames, game);
 						addGame(game);
 						ultimateGames.getPlugin().getServer().getPluginManager().registerEvents(plugin, ultimateGames);
 					} else {

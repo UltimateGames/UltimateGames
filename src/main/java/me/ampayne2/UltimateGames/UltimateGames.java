@@ -47,7 +47,7 @@ public class UltimateGames extends JavaPlugin {
 		configManager = new ConfigManager(this);
 		messageManager = new Message(this);
 		gameManager = new GameManager(this);
-		//messageManager.loadGameMessages();
+		messageManager.loadGameMessages();
 		queueManager = new QueueManager(this);
 		arenaManager = new ArenaManager(this);
 		lobbySignManager = new LobbySignManager(this);
