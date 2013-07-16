@@ -168,7 +168,7 @@ public class Arena {
 	public boolean removePlayer(String playerName) {
 		if (players.contains(playerName)) {
 			players.remove(playerName);
-			ultimateGames.getLobbySignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
 			return true;
 		} else {
 			return false;
@@ -178,7 +178,7 @@ public class Arena {
 	public void removePlayers() {
 		if (!players.isEmpty()) {
 			players.clear();
-			ultimateGames.getLobbySignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
 		}
 	}
 	

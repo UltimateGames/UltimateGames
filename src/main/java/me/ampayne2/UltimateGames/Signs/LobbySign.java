@@ -16,59 +16,56 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.LobbySigns;
+package me.ampayne2.UltimateGames.Signs;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
 
+import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Enums.PlayerType;
+import me.ampayne2.UltimateGames.Events.GameJoinEvent;
+import me.ampayne2.UltimateGames.Players.QueueManager;
 
-public class LobbySign {
-
-	private Sign sign;
+public class LobbySign extends UGSign{
+	
+	private UltimateGames ultimateGames;
 	private Arena arena;
-
-	/**
-	 * Creates a new lobby sign
-	 * 
-	 * @param sign Sign to be turned into lobby sign
-	 * @param arena Arena of the lobby sign
-	 */
-	public LobbySign(Sign sign, Arena arena) {
-		this.sign = sign;
+	
+	public LobbySign(UltimateGames ultimateGames, Sign sign, Arena arena) {
+		super(sign, arena);
+		this.ultimateGames = ultimateGames;
 		this.arena = arena;
-		update();
+	}
+	
+	@Override
+	public void onSignClick(PlayerInteractEvent event) {
+		//TODO: Permission check
+		ArenaStatus arenaStatus = arena.getStatus();
+		if (arenaStatus == ArenaStatus.OPEN) {
+			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
+			if(arena.addPlayer(event.getPlayer().getName()) && arena.getGame().getGamePlugin().addPlayer(arena, event.getPlayer().getName())) {
+				GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), arena);
+				Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
+				ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			}
+			return;
+		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
+				|| arena.getPlayers().size() >= arena.getMaxPlayers()) {
+			QueueManager queue = ultimateGames.getQueueManager();
+			String playerName = event.getPlayer().getName();
+			if (queue.isPlayerInQueue(playerName, arena)) {
+				queue.removePlayerFromQueues(playerName);
+			} else {
+				queue.addPlayerToQueue(playerName, arena);
+			}
+		}
 	}
 
-	/**
-	 * Gets the Lobby Sign's Sign
-	 * 
-	 * @return sign The Lobby Sign's Sign
-	 */
-	public Sign getSign() {
-		return sign;
-	}
-
-	/**
-	 * Gets the Lobby Sign's Arena
-	 * 
-	 * @return arena The Lobby Sign's Arena
-	 */
-	public Arena getArena() {
-		return arena;
-	}
-
-	/**
-	 * Gets the updated lines for the sign</br> 
-	 * line[0] is the Arena Status</br> 
-	 * line[1] is the Game Name</br> 
-	 * line[2] is the Arena Name</br> 
-	 * line[3] is Current Players / Max Players (Blank if infinite)
-	 * 
-	 * @return lines the updated lines for the sign
-	 */
+	@Override
 	public String[] getUpdatedLines() {
 
 		String[] lines = new String[4];
@@ -103,18 +100,5 @@ public class LobbySign {
 		}
 
 		return lines;
-
 	}
-
-	/**
-	 * Updates the Lobby Sign
-	 */
-	public void update() {
-		String[] lines = getUpdatedLines();
-		for (int i = 0; i < 4; i++) {
-			sign.setLine(i, lines[i]);
-		}
-		sign.update();
-	}
-
 }

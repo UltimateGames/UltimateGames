@@ -18,8 +18,10 @@
  */
 package me.ampayne2.UltimateGames.API;
 
+import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
@@ -27,9 +29,6 @@ import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Games.Game;
 
 public abstract class GamePlugin implements Listener{
-
-	private UltimateGames ultimateGames;
-	
 	public abstract Boolean loadGame(UltimateGames ultimateGames, Game game);
 	public abstract Boolean unloadGame();
 	public abstract Boolean stopGame();
@@ -40,4 +39,5 @@ public abstract class GamePlugin implements Listener{
 	public abstract Boolean removePlayer(Arena arena, String playerName);
 	public abstract void onGameCommand(String command, CommandSender sender, String[] args);
 	public abstract void onArenaCommand(Arena arena, String command, CommandSender sender, String[] args);
+	public abstract void handleInputSignClick(Arena arena, Sign sign, PlayerInteractEvent event);
 }

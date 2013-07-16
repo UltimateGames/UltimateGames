@@ -1,4 +1,5 @@
-SignPrefix: "[ultimategames]"
+LobbySignPrefix: "[ug lobbysign]"
+InputSignPrefix: "[ug inputsign]"
 
 Database:
   Type: "sqlite"
