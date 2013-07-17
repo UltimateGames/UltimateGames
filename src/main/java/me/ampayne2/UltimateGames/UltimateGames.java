@@ -25,6 +25,7 @@ import me.ampayne2.UltimateGames.Games.GameManager;
 import me.ampayne2.UltimateGames.Listeners.ArenaListener;
 import me.ampayne2.UltimateGames.Listeners.SignListener;
 import me.ampayne2.UltimateGames.Players.QueueManager;
+import me.ampayne2.UltimateGames.Players.SpawnpointManager;
 import me.ampayne2.UltimateGames.Signs.UGSignManager;
 import me.ampayne2.UltimateGames.Utils.Utils;
 
@@ -38,6 +39,7 @@ public class UltimateGames extends JavaPlugin {
 	private UGSignManager ugSignManager;
 	private QueueManager queueManager;
 	private Message messageManager;
+	private SpawnpointManager spawnpointManager;
 	private Utils utils;
 
 	public void onEnable() {
@@ -51,6 +53,7 @@ public class UltimateGames extends JavaPlugin {
 		queueManager = new QueueManager(this);
 		arenaManager = new ArenaManager(this);
 		ugSignManager = new UGSignManager(this);
+		spawnpointManager = new SpawnpointManager(this);
 		utils = new Utils();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
@@ -83,6 +86,10 @@ public class UltimateGames extends JavaPlugin {
 	
 	public QueueManager getQueueManager() {
 		return queueManager;
+	}
+	
+	public SpawnpointManager getSpawnpointManager() {
+		return spawnpointManager;
 	}
 	
 	public Utils getUtils() {

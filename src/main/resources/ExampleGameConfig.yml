@@ -22,6 +22,7 @@ SecondaryScoreType: "GOOD_BAD"
 PlayerType: "CONFIGUREABLE"
 # Default settings an arena of the game will have when created.
 DefaultSettings:
+  MinPlayers: 2
   MaxPlayers: 8
   # Player management settings. Should certain data be stored and returned to players after a match?
   Players:

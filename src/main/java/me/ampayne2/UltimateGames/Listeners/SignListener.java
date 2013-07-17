@@ -54,7 +54,8 @@ public class SignListener implements Listener {
 		String signPrefix = event.getLine(0);
 		String gameName = event.getLine(1);
 		String arenaName = event.getLine(2);
-		if (signPrefix.equals("") || gameName.equals("") || arenaName.equals("") || !event.getLine(3).equals("")) {
+		String label = event.getLine(3);
+		if (signPrefix.equals("") || gameName.equals("") || arenaName.equals("")) {
 			return;
 		}
 		if (!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
@@ -65,8 +66,8 @@ public class SignListener implements Listener {
 			LobbySign lobbySign = ultimateGames.getUGSignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
 			lines = lobbySign.getUpdatedLines();
 		} else if (signPrefix.equalsIgnoreCase(ultimateGames.getConfig().getString("InputSignPrefix"))) {
-			InputSign inputSign = ultimateGames.getUGSignManager().createInputSign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
-			String[] inputSignLines = {"","","",""};
+			InputSign inputSign = ultimateGames.getUGSignManager().createInputSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
+			String[] inputSignLines = {"",label,"",""};
 			inputSign.setLines(inputSignLines);
 			lines = inputSign.getUpdatedLines();
 		} else {

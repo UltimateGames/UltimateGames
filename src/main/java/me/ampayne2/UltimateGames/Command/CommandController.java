@@ -20,7 +20,8 @@ package me.ampayne2.UltimateGames.Command;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Command.SubCommand;
-import me.ampayne2.UltimateGames.Command.Commands.Create.CreateArena;
+import me.ampayne2.UltimateGames.Command.Commands.AddSpawn;
+import me.ampayne2.UltimateGames.Command.Commands.CreateArena;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,6 +41,10 @@ public class CommandController extends JavaPlugin {
 		ultimateGames.getServer().getPluginManager().registerEvents(createArena, ultimateGames);
 		create.addCommand("arena", "ultimategames.create.arena", createArena);
 		mainCommand.addCommand("create", null, create);
+		
+		SubCommand add = new SubCommand();
+		add.addCommand("spawn", "ultimategames.add.spawn", new AddSpawn(ultimateGames));
+		mainCommand.addCommand("add", null, add);
 	}
 
 	@Override

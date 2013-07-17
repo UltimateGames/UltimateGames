@@ -79,7 +79,7 @@ public class LobbySign extends UGSign{
 		} else if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
 			statusColor = ChatColor.BLACK;
 		} else {
-			statusColor = ChatColor.GRAY;
+			statusColor = ChatColor.DARK_GRAY;
 		}
 		
 		if(arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {

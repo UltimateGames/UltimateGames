@@ -363,12 +363,12 @@ public class UGSignManager {
 	 * @param arena The arena the Input Sign will be created for.
 	 * @return The Input Sign created.
 	 */
-	public InputSign createInputSign(Sign sign, Arena arena) {
+	public InputSign createInputSign(String label, Sign sign, Arena arena) {
 		if (isInputSign(sign)) {
 			// already an input sign here
 			return null;
 		}
-		InputSign inputSign = new InputSign(sign, arena);
+		InputSign inputSign = new InputSign(label, sign, arena);
 		addInputSign(inputSign);
 
 		FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
@@ -378,6 +378,7 @@ public class UGSignManager {
 		signInfo.add(1, Integer.toString(sign.getX()));
 		signInfo.add(2, Integer.toString(sign.getY()));
 		signInfo.add(3, Integer.toString(sign.getZ()));
+		signInfo.add(4, label);
 		List<List<String>> inputSigns;
 		if (ugSignConfig.contains(arenaPath)) {
 			inputSigns = (List<List<String>>) ugSignConfig.getList(arenaPath);
@@ -539,12 +540,13 @@ public class UGSignManager {
 							String x = signInfo.get(1);
 							String y = signInfo.get(2);
 							String z = signInfo.get(3);
-							if (world != null && x != null && y != null && z != null) {
+							String label = signInfo.get(4);
+							if (world != null && x != null && y != null && z != null && label != null) {
 								World signWorld;
 								if ((signWorld = Bukkit.getWorld(world)) != null) {
 									Block locBlock = new Location(signWorld, Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z)).getBlock();
 									if (locBlock.getType() == Material.WALL_SIGN || locBlock.getType() == Material.SIGN_POST) {
-										addInputSign(new InputSign((Sign) locBlock.getState(), ultimateGames.getArenaManager().getArena(arenaKey, gameKey)));
+										addInputSign(new InputSign(label, (Sign) locBlock.getState(), ultimateGames.getArenaManager().getArena(arenaKey, gameKey)));
 									}
 								}
 							}

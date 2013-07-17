@@ -35,6 +35,7 @@ public class Arena {
 	private String arenaName;
 	private Game game;
 	private ArrayList<String> players = new ArrayList<String>();
+	private Integer minPlayers;
 	private Integer maxPlayers;
 	private ArenaStatus arenaStatus;
 	private HashMap<String, Boolean> arenaSettings = new HashMap<String, Boolean>();
@@ -72,12 +73,13 @@ public class Arena {
 		arenaSettings.put("allowExplosionBlockBreaking", allowExplosionBlockBreaking);
 		arenaSettings.put("allowBuilding", allowBuilding);
 		arenaSettings.put("allowBreaking", allowBreaking);
+		minPlayers = arenaConfig.getInt(arenaPath+".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", 8));
 		if (game.getGameDescription().getPlayerType() == PlayerType.SINGLE_PLAYER) {
 			maxPlayers = 1;
 		} else if (game.getGameDescription().getPlayerType() == PlayerType.TWO_PLAYER) {
 			maxPlayers = 2;
 		} else if (game.getGameDescription().getPlayerType() == PlayerType.CONFIGUREABLE) {
-			maxPlayers = gamesConfig.getInt("DefaultSettings.MaxPlayers", 8);
+			maxPlayers = arenaConfig.getInt(arenaPath+".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", 8));
 		}
 		//takes the 2 corners and turns them into minLocation and maxLocation
 		Integer minx;
@@ -116,7 +118,8 @@ public class Arena {
 		//create the arena in the config if it doesn't exist
 		if (arenaConfig.getConfigurationSection(arenaPath) == null) {
 			arenaConfig.set(arenaPath + ".Status", "ARENA_STOPPED");
-			arenaConfig.set(arenaPath + ".MaxPlayers", maxPlayers);
+			arenaConfig.set(arenaPath + ".Max-Players", maxPlayers);
+			arenaConfig.set(arenaPath + ".Min-Players", minPlayers);
 			arenaConfig.set(arenaPath + ".Players.Store-Inventory", storeInventory);
 			arenaConfig.set(arenaPath + ".Players.Store-Armor", storeArmor);
 			arenaConfig.set(arenaPath + ".Players.Store-Exp", storeExp);
