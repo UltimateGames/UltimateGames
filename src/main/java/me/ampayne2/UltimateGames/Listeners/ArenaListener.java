@@ -27,7 +27,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 
@@ -84,4 +83,5 @@ public class ArenaListener implements Listener{
 			}
 		}
 	}
+	
 }

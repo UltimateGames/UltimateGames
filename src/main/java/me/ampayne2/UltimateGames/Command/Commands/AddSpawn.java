@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-import me.ampayne2.UltimateGames.Utils.SpawnPoint;
+import me.ampayne2.UltimateGames.Players.SpawnPoint;
 
 public class AddSpawn implements UGCommand{
 

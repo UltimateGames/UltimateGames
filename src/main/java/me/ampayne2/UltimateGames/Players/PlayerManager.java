@@ -18,10 +18,58 @@
  */
 package me.ampayne2.UltimateGames.Players;
 
-public class PlayerManager {
+import java.util.HashMap;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.UltimateGames.Arenas.Arena;
+
+public class PlayerManager implements Listener{
 	
-	public PlayerManager() {
-		
+	private UltimateGames ultimateGames;
+	private HashMap<String, Arena> playerArenas = new HashMap<String, Arena>();
+	private HashMap<String, Boolean> playerInArena = new HashMap<String, Boolean>();
+	
+	public PlayerManager(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		String playerName = event.getPlayer().getName();
+		playerInArena.put(playerName, false);
+	}
+	
+	@EventHandler
+	public void onPlayerLeave(PlayerQuitEvent event) {
+		String playerName = event.getPlayer().getName();
+		// if player is in arena
+		if (playerArenas.containsKey(playerName)) {
+			Arena arena = playerArenas.get(playerName);
+			// remove player from arena's personal player list
+			arena.removePlayer(playerName);
+			// let game handle the removal
+			arena.getGame().getGamePlugin().removePlayer(arena, playerName);
+			// removes from manager
+			playerArenas.remove(playerName);
+			// removes player from any spawnpoints
+			for (SpawnPoint spawnPoint : ultimateGames.getSpawnpointManager().getSpawnPointsOfArena(arena)) {
+				if (spawnPoint.getPlayer() != null && spawnPoint.getPlayer().equals(playerName)) {
+					spawnPoint.lock(false);
+					spawnPoint.lock(true);
+				}
+			}
+		}
+		if (playerInArena.containsKey(playerName)) {
+			// removes from manager
+			playerInArena.remove(playerName);
+		}
+		// removes player from queues
+		ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
 	}
 	
 }

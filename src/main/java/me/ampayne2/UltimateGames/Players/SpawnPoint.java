@@ -1,4 +1,4 @@
-package me.ampayne2.UltimateGames.Utils;
+package me.ampayne2.UltimateGames.Players;
 
 import me.ampayne2.UltimateGames.Arenas.Arena;
 
@@ -36,6 +36,9 @@ public class SpawnPoint implements Listener{
 	
 	public void lock(Boolean enabled) {
 		this.locked = enabled;
+		if (enabled == false) {
+			this.playerName = null;
+		}
 	}
 	
 	public void teleportPlayer(String playerName) {
@@ -44,6 +47,10 @@ public class SpawnPoint implements Listener{
 		if (locked) {
 			this.playerName = playerName;
 		}
+	}
+	
+	public String getPlayer() {
+		return playerName;
 	}
 	
 	@EventHandler

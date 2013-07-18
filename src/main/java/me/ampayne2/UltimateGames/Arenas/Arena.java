@@ -24,13 +24,17 @@ import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Enums.PlayerType;
 import me.ampayne2.UltimateGames.Games.Game;
 
-public class Arena {
+public class Arena implements Listener{
 	private UltimateGames ultimateGames;
 	private String arenaName;
 	private Game game;
@@ -247,4 +251,12 @@ public class Arena {
 		}
 		return false;
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerMove(PlayerMoveEvent event) {
+		if (players.contains(event.getPlayer().getName()) && !locationIsInArena(event.getTo())) {
+			event.setCancelled(true);
+		}
+	}
+	
 }
