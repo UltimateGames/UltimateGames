@@ -18,7 +18,6 @@
  */
 package me.ampayne2.UltimateGames.Signs;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,7 +26,6 @@ import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Enums.PlayerType;
-import me.ampayne2.UltimateGames.Events.GameJoinEvent;
 import me.ampayne2.UltimateGames.Players.QueueManager;
 
 public class LobbySign extends UGSign{
@@ -47,11 +45,7 @@ public class LobbySign extends UGSign{
 		ArenaStatus arenaStatus = arena.getStatus();
 		if (arenaStatus == ArenaStatus.OPEN) {
 			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-			if(arena.addPlayer(event.getPlayer().getName()) && arena.getGame().getGamePlugin().addPlayer(arena, event.getPlayer().getName())) {
-				GameJoinEvent gameJoinEvent = new GameJoinEvent(event.getPlayer(), arena);
-				Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
-				ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-			}
+			ultimateGames.getPlayerManager().addPlayerToArena(event.getPlayer().getName(), arena);
 			return;
 		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
 				|| arena.getPlayers().size() >= arena.getMaxPlayers()) {
@@ -101,4 +95,5 @@ public class LobbySign extends UGSign{
 
 		return lines;
 	}
+	
 }

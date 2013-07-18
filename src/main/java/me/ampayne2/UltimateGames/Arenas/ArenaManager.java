@@ -31,6 +31,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Games.Game;
+import me.ampayne2.UltimateGames.Players.SpawnPoint;
 
 public class ArenaManager {
 
@@ -56,12 +57,39 @@ public class ArenaManager {
 						arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
 						addArena(arena);
 						Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
+						if (arenaConfig.contains(arenaPath+".SpawnPoints")) {
+							@SuppressWarnings("unchecked")
+							ArrayList<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
+							if (!spawnPoints.isEmpty()) {
+								for (ArrayList<String> spawnPoint : spawnPoints) {
+									if (!spawnPoints.isEmpty()) {
+										Double x = Double.valueOf(spawnPoint.get(0));
+										Double y = Double.valueOf(spawnPoint.get(1));
+										Double z = Double.valueOf(spawnPoint.get(2));
+										Float pitch = Float.valueOf(spawnPoint.get(3));
+										Float yaw = Float.valueOf(spawnPoint.get(4));
+										Location location = new Location(world, x, y, z);
+										location.setPitch(pitch);
+										location.setYaw(yaw);
+										SpawnPoint newSpawnPoint = new SpawnPoint(getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(5)));
+										ultimateGames.getSpawnpointManager().addSpawnPoint(newSpawnPoint);
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Checks to see if an arena exists.
+	 * 
+	 * @param arenaName The arena's name.
+	 * @param gameName The arena's game's name.
+	 * @return If the arena exists or not.
+	 */
 	public boolean arenaExists(String arenaName, String gameName) {
 		if (ultimateGames.getGameManager().gameExists(gameName) && arenas.containsKey(ultimateGames.getGameManager().getGame(gameName))) {
 			ArrayList<Arena> gameArenas = arenas.get(ultimateGames.getGameManager().getGame(gameName));
@@ -74,6 +102,11 @@ public class ArenaManager {
 		return false;
 	}
 	
+	/**
+	 * Checks to see if a location is inside an arena.
+	 * @param location The location.
+	 * @return If the location is inside an arena or not.
+	 */
 	public Boolean isLocationInArena(Location location) {
 		if (getLocationArena(location) == null) {
 			return false;
@@ -82,6 +115,12 @@ public class ArenaManager {
 		}
 	}
 	
+	/**
+	 * Gets the arena a location is inside of.
+	 * 
+	 * @param location The location.
+	 * @return The arena. Null if location isn't inside arena.
+	 */
 	public Arena getLocationArena(Location location) {
 		Iterator<Entry<Game, ArrayList<Arena>>> it = arenas.entrySet().iterator();
 		while (it.hasNext()) {
@@ -94,28 +133,14 @@ public class ArenaManager {
 		}
 		return null;
 	}
-	
-	public boolean isPlayerInArena(String playerName) {
-		if (getPlayerArena(playerName) == null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	public Arena getPlayerArena(String playerName) {
-		Iterator<Entry<Game, ArrayList<Arena>>> it = arenas.entrySet().iterator();
-		while (it.hasNext()) {
-			ArrayList<Arena> gameArenas = it.next().getValue();
-			for (Arena arena : gameArenas) {
-				if(arena.hasPlayer(playerName)) {
-					return arena;
-				}
-			}
-		}
-		return null;
-	}
 
+	/**
+	 * Gets the arena from its name and its game's name.
+	 * 
+	 * @param arenaName The arena's name.
+	 * @param gameName The game's name.
+	 * @return The arena. Null if the arena doesn't exist.
+	 */
 	public Arena getArena(String arenaName, String gameName) {
 		if (ultimateGames.getGameManager().gameExists(gameName)) {
 			for (Arena arena : arenas.get(ultimateGames.getGameManager().getGame(gameName))) {
@@ -127,6 +152,12 @@ public class ArenaManager {
 		return null;
 	}
 
+	/**
+	 * Gets the arenas of a specific game.
+	 * 
+	 * @param gameName The game's name.
+	 * @return The arenas. Null if the game doesn't exist or if the game has no arenas.
+	 */
 	public ArrayList<Arena> getArenasOfGame(String gameName) {
 		if (ultimateGames.getGameManager().gameExists(gameName) && arenas.containsKey(ultimateGames.getGameManager().getGame(gameName))) {
 			return arenas.get(ultimateGames.getGameManager().getGame(gameName));
@@ -135,6 +166,11 @@ public class ArenaManager {
 		}
 	}
 
+	/**
+	 * Adds an arena to the manager.
+	 * 
+	 * @param arena The arena.
+	 */
 	public void addArena(Arena arena) {
 		if (arena.getGame().getGamePlugin().loadArena(arena)) {
 			if (arenas.containsKey(arena.getGame())) {

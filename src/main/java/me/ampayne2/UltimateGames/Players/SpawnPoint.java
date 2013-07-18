@@ -44,9 +44,7 @@ public class SpawnPoint implements Listener{
 	public void teleportPlayer(String playerName) {
 		Player player = Bukkit.getPlayer(playerName);
 		player.teleport(location);
-		if (locked) {
-			this.playerName = playerName;
-		}
+		this.playerName = playerName;
 	}
 	
 	public String getPlayer() {
@@ -55,18 +53,12 @@ public class SpawnPoint implements Listener{
 	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (playerName != null && event.getPlayer().getName().equals(playerName)) {
-			if ((event.getTo().getX()-1 >= location.getX() || event.getTo().getX()+1 <= location.getX()) && locked) {
-				event.setCancelled(true);
-				return;
-			}
-			if ((event.getTo().getY()-1 >= location.getY() || event.getTo().getY()+1 <= location.getY()) && locked) {
-				event.setCancelled(true);
-				return;
-			}
-			if ((event.getTo().getZ()-1 >= location.getZ() || event.getTo().getZ()+1 <= location.getZ()) && locked) {
-				event.setCancelled(true);
-				return;
+		if (locked && playerName != null && event.getPlayer().getName().equals(playerName)) {
+			if (Math.abs(event.getTo().getX() - location.getX()) >= 1 || Math.abs(event.getTo().getZ() - location.getZ()) >= 1) {
+				Location location = new Location(this.location.getWorld(), this.location.getX(), this.location.getY(), this.location.getZ());
+				location.setPitch(event.getFrom().getPitch());
+				location.setYaw(event.getFrom().getYaw());
+				Bukkit.getPlayer(playerName).teleport(location);
 			}
 		}
 	}

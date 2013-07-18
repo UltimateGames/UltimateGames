@@ -30,6 +30,7 @@ import me.ampayne2.UltimateGames.UltimateGames;
 
 public class DatabaseManager {
 
+	@SuppressWarnings("unused")
 	private final UltimateGames plugin;
 	private final Database db;
 	public DatabaseManager(UltimateGames plugin) throws ConnectionException, TableRegistrationException {

@@ -38,6 +38,9 @@ public class ArenaListener implements Listener{
 		this.ultimateGames = ultimateGames;
 	}
 	
+	/**
+	 * Blocks block breaking in arenas when not allowed.
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
@@ -46,8 +49,19 @@ public class ArenaListener implements Listener{
 				event.setCancelled(true);
 			}
 		}
+		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
+			arena = ultimateGames.getPlayerManager().getPlayerArena(event.getPlayer().getName());
+			if (arena != null) {
+				if (!arena.getArenaSetting("allowBreaking")) {
+					event.setCancelled(true);
+				}
+			}
+		}
 	}
 	
+	/**
+	 * Blocks block placing in arenas when not allowed.
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
@@ -56,8 +70,19 @@ public class ArenaListener implements Listener{
 				event.setCancelled(true);
 			}
 		}
+		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
+			arena = ultimateGames.getPlayerManager().getPlayerArena(event.getPlayer().getName());
+			if (arena != null) {
+				if (!arena.getArenaSetting("allowBuilding")) {
+					event.setCancelled(true);
+				}
+			}
+		}
 	}
 	
+	/**
+	 * Blocks tnt breaking blocks in arenas when not allowed.
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onTntExplode(EntityExplodeEvent event) {
 		if (event.getEntity() instanceof TNTPrimed) {
@@ -72,6 +97,9 @@ public class ArenaListener implements Listener{
 		}
 	}
 	
+	/**
+	 * Blocks tnt damaging entities in arenas when not allowed.
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onTntDamage(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof TNTPrimed && event.getEntity() instanceof Player) {

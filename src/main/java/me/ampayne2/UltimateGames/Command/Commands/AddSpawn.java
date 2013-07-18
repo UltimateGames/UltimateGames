@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-import me.ampayne2.UltimateGames.Players.SpawnPoint;
 
 public class AddSpawn implements UGCommand{
 
@@ -27,8 +26,7 @@ public class AddSpawn implements UGCommand{
 			return; //game or arena doesn't exist
 		}
 		Player player = (Player) sender;
-		SpawnPoint spawnPoint = ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), player.getLocation(), locked);
-		ultimateGames.getSpawnpointManager().addSpawnPoint(spawnPoint);
+		ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), player.getLocation(), locked);
 	}
 
 }

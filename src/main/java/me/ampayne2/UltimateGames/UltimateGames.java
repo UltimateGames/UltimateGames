@@ -53,10 +53,10 @@ public class UltimateGames extends JavaPlugin {
 		gameManager = new GameManager(this);
 		messageManager.loadGameMessages();
 		queueManager = new QueueManager(this);
+		spawnpointManager = new SpawnpointManager(this);
 		arenaManager = new ArenaManager(this);
 		ugSignManager = new UGSignManager(this);
 		playerManager = new PlayerManager(this);
-		spawnpointManager = new SpawnpointManager(this);
 		utils = new Utils();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);

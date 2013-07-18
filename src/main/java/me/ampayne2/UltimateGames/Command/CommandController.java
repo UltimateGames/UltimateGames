@@ -30,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class CommandController extends JavaPlugin {
 
+	@SuppressWarnings("unused")
 	private UltimateGames ultimateGames;
 	private final SubCommand mainCommand = new SubCommand();
 

@@ -20,6 +20,7 @@ package me.ampayne2.UltimateGames.Players;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
+import me.ampayne2.UltimateGames.Events.GameJoinEvent;
 
 public class PlayerManager implements Listener{
 	
@@ -38,6 +40,73 @@ public class PlayerManager implements Listener{
 		this.ultimateGames = ultimateGames;
 	}
 	
+	/**
+	 * Checks to see if a player is in an arena.
+	 * 
+	 * @param playerName The player's name.
+	 * @return If the player is in an arena or not.
+	 */
+	public Boolean isPlayerInArena(String playerName) {
+		if (playerInArena.containsKey(playerName)) {
+			return playerInArena.get(playerName);
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Gets the arena a player is in.
+	 * 
+	 * @param playerName The player's name.
+	 * @return The arena a player is in. Null if the player isn't in an arena.
+	 */
+	public Arena getPlayerArena(String playerName) {
+		if (playerArenas.containsKey(playerName)) {
+			return playerArenas.get(playerName);
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Adds a player to an arena.
+	 * 
+	 * @param playerName The player's name.
+	 * @param arena The arena.
+	 */
+	public void addPlayerToArena(String playerName, Arena arena) {
+		if (!isPlayerInArena(playerName) && getPlayerArena(playerName) == null) {
+			playerInArena.put(playerName, true);
+			playerArenas.put(playerName, arena);
+			arena.addPlayer(playerName);
+			arena.getGame().getGamePlugin().addPlayer(arena, playerName);
+			GameJoinEvent gameJoinEvent = new GameJoinEvent(Bukkit.getPlayer(playerName), arena);
+			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
+			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+		}
+	}
+	
+	/**
+	 * Removes a player from an arena.
+	 * 
+	 * @param playerName The player's name.
+	 * @param arena The arena.
+	 */
+	public void removePlayerFromArena(String playerName, Arena arena) {
+		if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
+			playerInArena.remove(playerName);
+			playerArenas.remove(playerName);
+			arena.removePlayer(playerName);
+			arena.getGame().getGamePlugin().removePlayer(arena, playerName);
+			for (SpawnPoint spawnPoint : ultimateGames.getSpawnpointManager().getSpawnPointsOfArena(arena)) {
+				if (spawnPoint.getPlayer() != null && spawnPoint.getPlayer().equals(playerName)) {
+					spawnPoint.lock(false);
+					spawnPoint.lock(true);
+				}
+			}
+		}
+	}
+	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		String playerName = event.getPlayer().getName();
@@ -47,28 +116,10 @@ public class PlayerManager implements Listener{
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
 		String playerName = event.getPlayer().getName();
-		// if player is in arena
-		if (playerArenas.containsKey(playerName)) {
-			Arena arena = playerArenas.get(playerName);
-			// remove player from arena's personal player list
-			arena.removePlayer(playerName);
-			// let game handle the removal
-			arena.getGame().getGamePlugin().removePlayer(arena, playerName);
-			// removes from manager
-			playerArenas.remove(playerName);
-			// removes player from any spawnpoints
-			for (SpawnPoint spawnPoint : ultimateGames.getSpawnpointManager().getSpawnPointsOfArena(arena)) {
-				if (spawnPoint.getPlayer() != null && spawnPoint.getPlayer().equals(playerName)) {
-					spawnPoint.lock(false);
-					spawnPoint.lock(true);
-				}
-			}
+		if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
+			Arena arena = getPlayerArena(playerName);
+			removePlayerFromArena(playerName, arena);
 		}
-		if (playerInArena.containsKey(playerName)) {
-			// removes from manager
-			playerInArena.remove(playerName);
-		}
-		// removes player from queues
 		ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
 	}
 	

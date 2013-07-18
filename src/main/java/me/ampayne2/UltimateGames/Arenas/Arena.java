@@ -146,14 +146,30 @@ public class Arena implements Listener{
 		ultimateGames.getConfigManager().getArenaConfig().saveConfig();
 	}
 
+	/**
+	 * Gets the name of an arena.
+	 * 
+	 * @return The name.
+	 */
 	public String getName() {
 		return arenaName;
 	}
 
+	/**
+	 * Gets the game of an arena.
+	 * 
+	 * @return The game.
+	 */
 	public Game getGame() {
 		return game;
 	}
 	
+	/**
+	 * Adds a player to the arena's player list.
+	 * 
+	 * @param playerName The player's name.
+	 * @return If it was successful.
+	 */
 	public boolean addPlayer(String playerName) {
 		if(game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() >= maxPlayers) {
 			// makes sure arena has room
@@ -172,6 +188,12 @@ public class Arena implements Listener{
 		}
 	}
 	
+	/**
+	 * Removes a player from the arena's player list.
+	 * 
+	 * @param playerName The player's name.
+	 * @return If it was successful.
+	 */
 	public boolean removePlayer(String playerName) {
 		if (players.contains(playerName)) {
 			players.remove(playerName);
@@ -182,6 +204,9 @@ public class Arena implements Listener{
 		}
 	}
 	
+	/**
+	 * Removes all of the arena's players.
+	 */
 	public void removePlayers() {
 		if (!players.isEmpty()) {
 			players.clear();
@@ -189,6 +214,11 @@ public class Arena implements Listener{
 		}
 	}
 	
+	/**
+	 * Checks to see if the arena has a certain player.
+	 * @param playerName The player's name.
+	 * @return If the arena has the player.
+	 */
 	public boolean hasPlayer(String playerName) {
 		if(!players.isEmpty() && players.contains(playerName)) {
 			return true;
@@ -197,18 +227,48 @@ public class Arena implements Listener{
 		}
 	}
 
+	/**
+	 * Gets the players in the arena.
+	 * 
+	 * @return The players.
+	 */
 	public ArrayList<String> getPlayers() {
 		return players;
 	}
+	
+	/**
+	 * Gets the min players of the arena.
+	 * 
+	 * @return The minimum amount of players.
+	 */
+	public Integer getMinPlayers() {
+		return minPlayers;
+	}
 
+	/**
+	 * Gets the max players of the arena.
+	 * 
+	 * @return The maximum amount of players.
+	 */
 	public Integer getMaxPlayers() {
 		return maxPlayers;
 	}
 
+	/**
+	 * Gets the status of the arena.
+	 * 
+	 * @return The status.
+	 */
 	public ArenaStatus getStatus() {
 		return arenaStatus;
 	}
 
+	/**
+	 * Gets a certain boolean setting of the arena.
+	 * 
+	 * @param setting The setting.
+	 * @return Whether the setting is true or false.
+	 */
 	public Boolean getArenaSetting(String setting) {
 		if (arenaSettings.containsKey(setting)) {
 			return arenaSettings.get(setting);
@@ -217,28 +277,61 @@ public class Arena implements Listener{
 		}
 	}
 
+	/**
+	 * Gets the min location of the arena.
+	 * 
+	 * @return The minimum location.
+	 */
 	public Location getMinLocation() {
 		return minLocation;
 	}
 
+	/**
+	 * Gets the max location of the arena.
+	 * 
+	 * @return The maximum location.
+	 */
 	public Location getMaxLocation() {
 		return maxLocation;
 	}
 
+	/**
+	 * Gets the world of the arena.
+	 * 
+	 * @return The world.
+	 */
 	public World getWorld() {
 		return arenaWorld;
 	}
 
+	/**
+	 * Sets the status of the arena.
+	 * 
+	 * @param status The status.
+	 */
 	public void setStatus(ArenaStatus status) {
 		arenaStatus = status;
 	}
 
+	/**
+	 * Sets a certain boolean setting of the arena.
+	 * 
+	 * @param setting The setting.
+	 * @param value The value.
+	 */
 	public void setArenaSetting(String setting, Boolean value) {
 		if (arenaSettings.containsKey(setting)) {
 			arenaSettings.put(setting, value);
 		}
+		//TODO: save setting to config
 	}
 
+	/**
+	 * Checks to see if a location is inside the arena.
+	 * 
+	 * @param location The location.
+	 * @return If the location is inside the arena or not.
+	 */
 	public Boolean locationIsInArena(Location location) {
 		if (location.getWorld().equals(minLocation.getWorld())) {
 			if (location.getX() >= minLocation.getX() && location.getX() <= maxLocation.getX()) {

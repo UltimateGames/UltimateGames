@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
@@ -19,9 +20,24 @@ public class SpawnpointManager {
 	}
 	
 	/**
+	 * Checks if an arena has a spawnpoint at the index.
+	 * @param arena The arena.
+	 * @param index The index.
+	 * @return If the arena has a spawnpoint at the index or not.
+	 */
+	public Boolean hasSpawnPointAtIndex(Arena arena, Integer index) {
+		if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= index) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * Adds a spawnpoint to the manager.
 	 * 
 	 * @param spawnPoint The spawnpoint.
+	 * @param addToConfig Should it be added to the config?
 	 */
 	public void addSpawnPoint(SpawnPoint spawnPoint) {
 		if (spawnPoints.containsKey(spawnPoint.getArena())) {
@@ -31,11 +47,12 @@ public class SpawnpointManager {
 			spawn.add(spawnPoint);
 			spawnPoints.put(spawnPoint.getArena(), spawn);
 		}
+		ultimateGames.getServer().getPluginManager().registerEvents(spawnPoint, ultimateGames);
 	}
 	
 	/**
 	 * Creates a spawnpoint.
-	 * The spawnpoint is not added to the manager.
+	 * The spawnpoint is added to the manager and config.
 	 * 
 	 * @param arena The Arena.
 	 * @param location The location.
@@ -43,7 +60,29 @@ public class SpawnpointManager {
 	 * @return The spawnpoint created.
 	 */
 	public SpawnPoint createSpawnPoint(Arena arena, Location location, Boolean locked) {
-		return new SpawnPoint(arena, location, locked);
+		ArrayList<String> newSpawnPoint = new ArrayList<String>();
+		newSpawnPoint.add(String.valueOf(location.getX()));
+		newSpawnPoint.add(String.valueOf(location.getY()));
+		newSpawnPoint.add(String.valueOf(location.getZ()));
+		newSpawnPoint.add(String.valueOf(location.getPitch()));
+		newSpawnPoint.add(String.valueOf(location.getYaw()));
+		newSpawnPoint.add(String.valueOf(locked));
+		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+		String path = "Arenas."+arena.getGame().getGameDescription().getName()+"."+arena.getName()+".SpawnPoints";
+		if (ultimateGames.getConfigManager().getArenaConfig().getConfig().contains(path)) {
+			@SuppressWarnings("unchecked")
+			 ArrayList<ArrayList<String>> arenaSpawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(path);
+			arenaSpawnPoints.add(newSpawnPoint);
+			arenaConfig.set(path, arenaSpawnPoints);
+		} else {
+			ArrayList<ArrayList<String>> arenaSpawnPoints = new ArrayList<ArrayList<String>>();
+			arenaSpawnPoints.add(newSpawnPoint);
+			arenaConfig.set(path, arenaSpawnPoints);
+		}
+		ultimateGames.getConfigManager().getArenaConfig().saveConfig();
+		SpawnPoint spawnPoint = new SpawnPoint(arena, location, locked);
+		addSpawnPoint(spawnPoint);
+		return spawnPoint;
 	}
 	
 	/**
@@ -157,6 +196,7 @@ public class SpawnpointManager {
 	public void removeSpawnPoint(Arena arena, Integer index) {
 		if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= index) {
 			spawnPoints.get(arena).remove(index);
+			//TODO: Remove spawnpoint from arena config.
 		}
 	}
 	
@@ -177,6 +217,7 @@ public class SpawnpointManager {
 			if (remove != null) {
 				spawnPoints.get(arena).removeAll(remove);
 			}
+			//TODO: Remove spawnpoints from arena config.
 		}
 	}
 	
@@ -188,6 +229,7 @@ public class SpawnpointManager {
 	public void removeAllSpawnPoints(Arena arena) {
 		if (spawnPoints.containsKey(arena)) {
 			spawnPoints.remove(arena);
+			//TODO: Remove spawnpoints from arena config.
 		}
 	}
 	
