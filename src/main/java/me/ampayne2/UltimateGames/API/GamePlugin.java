@@ -35,6 +35,7 @@ public abstract class GamePlugin implements Listener{
 	public abstract Boolean loadArena(Arena arena); // Setup anything needed for the game to function.
 	public abstract Boolean unloadArena(Arena arena); // Called when removing the arena from the arena manager.
 	
+	public abstract Boolean isStartPossible(Arena arena); // Checks to see if a start is possible. Used in force starting etc.
 	public abstract Boolean startArena(Arena arena); // Sets to ArenaStatus.STARTING, called at countdown start. Should be used for preparing an arena.
 	public abstract Boolean beginArena(Arena arena); // Sets to ArenaStatus.RUNNING, called at countdown end.
 	public abstract Boolean endArena(Arena arena); // Sets to ArenaStatus.ENDING.

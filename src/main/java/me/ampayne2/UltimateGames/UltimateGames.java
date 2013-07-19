@@ -20,6 +20,7 @@ package me.ampayne2.UltimateGames;
 
 import me.ampayne2.UltimateGames.Arenas.ArenaManager;
 import me.ampayne2.UltimateGames.Command.CommandController;
+import me.ampayne2.UltimateGames.Countdowns.CountdownManager;
 import me.ampayne2.UltimateGames.Files.ConfigManager;
 import me.ampayne2.UltimateGames.Games.GameManager;
 import me.ampayne2.UltimateGames.Listeners.ArenaListener;
@@ -42,6 +43,7 @@ public class UltimateGames extends JavaPlugin {
 	private Message messageManager;
 	private SpawnpointManager spawnpointManager;
 	private PlayerManager playerManager;
+	private CountdownManager countdownManager;
 	private Utils utils;
 
 	public void onEnable() {
@@ -57,6 +59,7 @@ public class UltimateGames extends JavaPlugin {
 		arenaManager = new ArenaManager(this);
 		ugSignManager = new UGSignManager(this);
 		playerManager = new PlayerManager(this);
+		countdownManager = new CountdownManager(this);
 		utils = new Utils();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
@@ -98,6 +101,10 @@ public class UltimateGames extends JavaPlugin {
 	
 	public PlayerManager getPlayerManager() {
 		return playerManager;
+	}
+	
+	public CountdownManager getCountdownManager() {
+		return countdownManager;
 	}
 	
 	public Utils getUtils() {
