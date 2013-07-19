@@ -74,7 +74,7 @@ public class PlayerManager implements Listener{
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 */
-	public void addPlayerToArena(String playerName, Arena arena) {
+	public void addPlayerToArena(String playerName, Arena arena, Boolean sendMessage) {
 		if (!isPlayerInArena(playerName) && getPlayerArena(playerName) == null) {
 			playerInArena.put(playerName, true);
 			playerArenas.put(playerName, arena);
@@ -83,10 +83,12 @@ public class PlayerManager implements Listener{
 			GameJoinEvent gameJoinEvent = new GameJoinEvent(Bukkit.getPlayer(playerName), arena);
 			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-			HashMap<String, String> replace = new HashMap<String, String>();
-			replace.put("%Player%", playerName);
-			replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
-			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.join");
+			if (sendMessage) {
+				HashMap<String, String> replace = new HashMap<String, String>();
+				replace.put("%Player%", playerName);
+				replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.join");
+			}
 		}
 	}
 	
@@ -96,7 +98,7 @@ public class PlayerManager implements Listener{
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 */
-	public void removePlayerFromArena(String playerName, Arena arena) {
+	public void removePlayerFromArena(String playerName, Arena arena, Boolean sendMessage) {
 		if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
 			playerInArena.remove(playerName);
 			playerArenas.remove(playerName);
@@ -108,10 +110,12 @@ public class PlayerManager implements Listener{
 					spawnPoint.lock(true);
 				}
 			}
-			HashMap<String, String> replace = new HashMap<String, String>();
-			replace.put("%Player%", playerName);
-			replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
-			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.leave");
+			if (sendMessage) {
+				HashMap<String, String> replace = new HashMap<String, String>();
+				replace.put("%Player%", playerName);
+				replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.leave");	
+			}
 		}
 	}
 	
@@ -126,7 +130,7 @@ public class PlayerManager implements Listener{
 		String playerName = event.getPlayer().getName();
 		if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
 			Arena arena = getPlayerArena(playerName);
-			removePlayerFromArena(playerName, arena);
+			removePlayerFromArena(playerName, arena, true);
 		}
 		ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
 	}
