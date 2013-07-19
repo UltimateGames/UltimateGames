@@ -29,6 +29,7 @@ import me.ampayne2.UltimateGames.Players.PlayerManager;
 import me.ampayne2.UltimateGames.Players.QueueManager;
 import me.ampayne2.UltimateGames.Players.SpawnpointManager;
 import me.ampayne2.UltimateGames.Signs.UGSignManager;
+import me.ampayne2.UltimateGames.Utils.GhostFactory;
 import me.ampayne2.UltimateGames.Utils.Utils;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,6 +45,7 @@ public class UltimateGames extends JavaPlugin {
 	private SpawnpointManager spawnpointManager;
 	private PlayerManager playerManager;
 	private CountdownManager countdownManager;
+	private GhostFactory ghostFactory;
 	private Utils utils;
 
 	public void onEnable() {
@@ -60,6 +62,8 @@ public class UltimateGames extends JavaPlugin {
 		ugSignManager = new UGSignManager(this);
 		playerManager = new PlayerManager(this);
 		countdownManager = new CountdownManager(this);
+		ghostFactory = new GhostFactory(this, true);
+		ghostFactory.create();
 		utils = new Utils();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
@@ -105,6 +109,10 @@ public class UltimateGames extends JavaPlugin {
 	
 	public CountdownManager getCountdownManager() {
 		return countdownManager;
+	}
+	
+	public GhostFactory getGhostFactory() {
+		return ghostFactory;
 	}
 	
 	public Utils getUtils() {

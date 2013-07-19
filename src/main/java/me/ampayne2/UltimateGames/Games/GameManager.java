@@ -43,6 +43,7 @@ public class GameManager {
 	private ArrayList<Game> games = new ArrayList<Game>();
 	private File gameFolder;
 
+	@SuppressWarnings("unchecked")
 	public GameManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 
@@ -56,6 +57,7 @@ public class GameManager {
 		PlayerType playerType = null;
 		JarFile jarFile = null;
 		String description, author, version, pack, secondaryScoreTypeName, scoreTypeName;
+		ArrayList<String> instructionPages;
 		for (File file : gameFolder.listFiles(new GameFileFilter())) {
 			scoreType = null;
 			secondaryScoreType = null;
@@ -65,6 +67,7 @@ public class GameManager {
 			version = null;
 			secondaryScoreTypeName = null;
 			scoreTypeName = null;
+			instructionPages = null;
 			try {
 
 				jarFile = new JarFile(file);
@@ -119,6 +122,9 @@ public class GameManager {
 					//We retrieve the PlayerType
 					playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
 					
+					//We retrieve the instruction pages
+					instructionPages = (ArrayList<String>) gamePlugin.getList("Instructions");
+					
 					version = gamePlugin.getString("version");
 					String gameName = file.getName().replace(".jar", "");
 					pack = gamePlugin.getString("pack");
@@ -141,7 +147,7 @@ public class GameManager {
 						GamePlugin plugin = (GamePlugin) object;
 
 						//Well, everything loaded.
-						GameDescription gameDescription = new GameDescription(gameName, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType);
+						GameDescription gameDescription = new GameDescription(gameName, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType, instructionPages);
 						Game game = new Game(plugin, gameDescription);
 						//We load the game
 						plugin.loadGame(ultimateGames, game);

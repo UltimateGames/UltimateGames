@@ -18,6 +18,8 @@
  */
 package me.ampayne2.UltimateGames.Games;
 
+import java.util.ArrayList;
+
 import me.ampayne2.UltimateGames.Enums.PlayerType;
 import me.ampayne2.UltimateGames.Enums.ScoreType;
 
@@ -25,9 +27,11 @@ public class GameDescription {
 	private String name, description, version, author, pack, scoreTypeName, secondaryScoreTypeName;
 	private ScoreType scoreType, secondaryScoreType;
 	private PlayerType playerType;
+	private ArrayList<String> instructionPages;
 
 	/**
-	 * Creates a new Game Description
+	 * Creates a new Game Description.
+	 * 
 	 * @param name
 	 * @param description
 	 * @param version
@@ -38,8 +42,9 @@ public class GameDescription {
 	 * @param scoreType
 	 * @param secondaryScoreType
 	 * @param playerType
+	 * @param instructionPages
 	 */
-	public GameDescription(String name, String description, String version, String author, String pack, String scoreTypeName, String secondaryScoreTypeName, ScoreType scoreType, ScoreType secondaryScoreType, PlayerType playerType) {
+	public GameDescription(String name, String description, String version, String author, String pack, String scoreTypeName, String secondaryScoreTypeName, ScoreType scoreType, ScoreType secondaryScoreType, PlayerType playerType, ArrayList<String> instructionPages) {
 		this.name = name;
 		this.description = description;
 		this.version = version;
@@ -50,95 +55,105 @@ public class GameDescription {
 		this.scoreType = scoreType;
 		this.secondaryScoreType = secondaryScoreType;
 		this.playerType = playerType;
+		this.instructionPages = instructionPages;
 	}
 	
 	/**
-	 * Gets the name of the game
+	 * Gets the name of the game.
 	 * 
-	 * @return the name
+	 * @return The name.
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Gets the description of the game
+	 * Gets the description of the game.
 	 * 
-	 * @return the description
+	 * @return The description.
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * Gets the version string of the game
+	 * Gets the version string of the game.
 	 * 
-	 * @return the version
+	 * @return The version.
 	 */
 	public String getVersion() {
 		return version;
 	}
 
 	/**
-	 * Gets the author of the game
+	 * Gets the author of the game.
 	 * 
-	 * @return the author
+	 * @return The author.
 	 */
 	public String getAuthor() {
 		return author;
 	}
 
 	/**
-	 * Gets the main class of the game
+	 * Gets the main class of the game.
 	 * 
-	 * @return the main class
+	 * @return The main class.
 	 */
 	public String getPackage() {
 		return pack;
 	}
 
 	/**
-	 * Gets the main ScoreType of the game
+	 * Gets the main ScoreType of the game.
 	 * 
-	 * @return
+	 * @return The main score type.
 	 */
 	public ScoreType getScoreType() {
 		return scoreType;
 	}
 
 	/**
-	 * Gets the secondary ScoreType of the game
+	 * Gets the secondary ScoreType of the game.
 	 * 
-	 * @return
+	 * @return The secondary score type.
 	 */
 	public ScoreType getSecondaryScoreType() {
 		return secondaryScoreType;
 	}
 
 	/**
-	 * Gets the name of the main ScoreType of the game
+	 * Gets the name of the main ScoreType of the game.
 	 * 
-	 * @return
+	 * @return The name of the main score type.
 	 */
 	public String getScoreTypeName() {
 		return scoreTypeName;
 	}
 
 	/**
-	 * Gets the name of the secondary ScoreType of the game
+	 * Gets the name of the secondary ScoreType of the game.
 	 * 
-	 * @return
+	 * @return The name of the secondary score type.
 	 */
 	public String getSecondaryScoreTypeName() {
 		return secondaryScoreTypeName;
 	}
 
 	/**
-	 * Gets the PlayerType of the game
+	 * Gets the PlayerType of the game.
 	 * 
-	 * @return
+	 * @return The player type.
 	 */
 	public PlayerType getPlayerType() {
 		return playerType;
+	}
+	
+	/**
+	 * Gets the instruction pages of the game.
+	 * 
+	 * @return The instruction pages.
+	 */
+	public ArrayList<String> getInstructionPages() {
+		return instructionPages;
 	}
 }

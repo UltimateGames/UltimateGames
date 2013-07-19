@@ -18,12 +18,24 @@
  */
 package me.ampayne2.UltimateGames.Utils;
 
+import me.ampayne2.UltimateGames.Games.Game;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+
 public class Utils {
 	
 	public Utils() {
 		
 	}
 	
+	/**
+	 * Gets the ordinal suffix of an integer.
+	 * 
+	 * @param value The integer.
+	 * @return The ordinal suffix.
+	 */
 	public String getOrdinalSuffix(int value) {
 		value = Math.abs(value);
 		final int lastDigit = value % 10;
@@ -42,4 +54,25 @@ public class Utils {
 			return "th";
 		}
 	}
+	
+	/**
+	 * Creates an instruction book for a game.
+	 * 
+	 * @param title The book's title.
+	 * @param author The book's author.
+	 * @param pages The book's pages.
+	 * @return The book.
+	 */
+	public ItemStack createInstructionBook(Game game) {
+		ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+		BookMeta meta = (BookMeta) book.getItemMeta();
+		meta.setTitle(game.getGameDescription().getName() + " Instructions");
+		meta.setAuthor(game.getGameDescription().getAuthor());
+		for (String page : game.getGameDescription().getInstructionPages()) {
+			meta.addPage(String.format("%n", page));
+		}
+		book.setItemMeta(meta);
+		return book;
+	}
+	
 }
