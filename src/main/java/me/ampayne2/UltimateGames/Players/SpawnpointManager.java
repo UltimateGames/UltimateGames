@@ -98,7 +98,7 @@ public class SpawnpointManager {
 			arenaConfig.set(path, arenaSpawnPoints);
 		}
 		ultimateGames.getConfigManager().getArenaConfig().saveConfig();
-		SpawnPoint spawnPoint = new SpawnPoint(arena, location, locked);
+		SpawnPoint spawnPoint = new SpawnPoint(ultimateGames, arena, location, locked);
 		addSpawnPoint(spawnPoint);
 		return spawnPoint;
 	}

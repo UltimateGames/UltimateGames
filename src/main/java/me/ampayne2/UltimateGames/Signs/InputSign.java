@@ -36,6 +36,7 @@ public class InputSign extends UGSign{
 		this.sign = sign;
 		this.arena = arena;
 		arena.getGame().getGamePlugin().handleInputSignCreate(arena, sign, label);
+		update();
 	}
 	
 	@Override

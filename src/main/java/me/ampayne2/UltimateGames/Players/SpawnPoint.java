@@ -18,6 +18,7 @@
  */
 package me.ampayne2.UltimateGames.Players;
 
+import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 
 import org.bukkit.Bukkit;
@@ -29,15 +30,17 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class SpawnPoint implements Listener{
 
+	private UltimateGames ultimateGames;
 	private Arena arena;
 	private Location location;
 	private Boolean locked;
 	private String playerName;
 	
-	public SpawnPoint(Arena arena, Location location, Boolean locked) {
+	public SpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, Boolean locked) {
 		this.arena = arena;
 		this.location = location;
 		this.locked = locked;
+		this.ultimateGames = ultimateGames;
 	}
 	
 	public Arena getArena() {
@@ -77,6 +80,7 @@ public class SpawnPoint implements Listener{
 				location.setPitch(event.getFrom().getPitch());
 				location.setYaw(event.getFrom().getYaw());
 				Bukkit.getPlayer(playerName).teleport(location);
+				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), false, "spawnpoints.leave");
 			}
 		}
 	}

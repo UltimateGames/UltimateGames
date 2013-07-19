@@ -83,6 +83,10 @@ public class PlayerManager implements Listener{
 			GameJoinEvent gameJoinEvent = new GameJoinEvent(Bukkit.getPlayer(playerName), arena);
 			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			HashMap<String, String> replace = new HashMap<String, String>();
+			replace.put("%Player%", playerName);
+			replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.join");
 		}
 	}
 	
@@ -104,6 +108,10 @@ public class PlayerManager implements Listener{
 					spawnPoint.lock(true);
 				}
 			}
+			HashMap<String, String> replace = new HashMap<String, String>();
+			replace.put("%Player%", playerName);
+			replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.leave");
 		}
 	}
 	

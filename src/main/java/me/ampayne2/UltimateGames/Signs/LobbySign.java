@@ -37,17 +37,18 @@ public class LobbySign extends UGSign{
 		super(sign, arena);
 		this.ultimateGames = ultimateGames;
 		this.arena = arena;
+		update();
 	}
 	
 	@Override
 	public void onSignClick(PlayerInteractEvent event) {
 		//TODO: Permission check
 		ArenaStatus arenaStatus = arena.getStatus();
-		if (arenaStatus == ArenaStatus.OPEN) {
+		if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
 			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
 			ultimateGames.getPlayerManager().addPlayerToArena(event.getPlayer().getName(), arena);
 			return;
-		} else if (arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
+		} else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
 				|| arena.getPlayers().size() >= arena.getMaxPlayers()) {
 			QueueManager queue = ultimateGames.getQueueManager();
 			String playerName = event.getPlayer().getName();

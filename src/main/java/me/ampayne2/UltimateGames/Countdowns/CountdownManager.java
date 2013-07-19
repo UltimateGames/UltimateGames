@@ -19,7 +19,6 @@
 package me.ampayne2.UltimateGames.Countdowns;
 
 import java.util.ArrayList;
-
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 
@@ -64,7 +63,7 @@ public class CountdownManager {
 			if (!starting.contains(arena)) {
 				starting.add(arena);
 			}
-			new StartingCountdown(ultimateGames, arena, seconds, seconds);
+			new StartingCountdown(ultimateGames, arena, seconds, seconds).runTask(ultimateGames);
 		}
 	}
 	
@@ -91,7 +90,7 @@ public class CountdownManager {
 			if (!ending.contains(arena)) {
 				ending.add(arena);
 			}
-			new EndingCountdown(ultimateGames, arena, seconds, seconds, expDisplay);
+			new EndingCountdown(ultimateGames, arena, seconds, seconds, expDisplay).runTask(ultimateGames);
 		}
 	}
 	

@@ -71,7 +71,7 @@ public class ArenaManager {
 										Location location = new Location(world, x, y, z);
 										location.setPitch(pitch);
 										location.setYaw(yaw);
-										SpawnPoint newSpawnPoint = new SpawnPoint(getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(5)));
+										SpawnPoint newSpawnPoint = new SpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(5)));
 										ultimateGames.getSpawnpointManager().addSpawnPoint(newSpawnPoint);
 									}
 								}

@@ -18,6 +18,8 @@
  */
 package me.ampayne2.UltimateGames.Countdowns;
 
+import java.util.HashMap;
+
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.ampayne2.UltimateGames.UltimateGames;
@@ -40,14 +42,18 @@ public class StartingCountdown extends BukkitRunnable{
 
 	@Override
 	public void run() {
-		if (initialSeconds == secondsLeft) {
-			// send countdown start message
+		if (secondsLeft > 0 && initialSeconds == secondsLeft) {
+			HashMap<String, String> replace = new HashMap<String, String>();
+			replace.put("%Time%", Integer.toString(secondsLeft));
+			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "countdowns.timeleftstart");
 			arena.setStatus(ArenaStatus.STARTING);
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-		} else if (secondsLeft <= 10) {
-			// send last 10 seconds message
+		} else if (secondsLeft > 0 && secondsLeft <= 10) {
+			HashMap<String, String> replace = new HashMap<String, String>();
+			replace.put("%Time%", Integer.toString(secondsLeft));
+			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "countdowns.timeleftstart");
 		} else if (secondsLeft == 0) {
-			// send game start message
+			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), false, "arenas.start");
 			arena.setStatus(ArenaStatus.RUNNING);
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
 			arena.getGame().getGamePlugin().beginArena(arena);

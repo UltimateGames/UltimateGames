@@ -47,6 +47,8 @@ public class ArenaListener implements Listener{
 		if (arena != null) {
 			if (!arena.getArenaSetting("allowBreaking")) {
 				event.setCancelled(true);
+				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), "protections.break");
+				return;
 			}
 		}
 		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
@@ -54,6 +56,8 @@ public class ArenaListener implements Listener{
 			if (arena != null) {
 				if (!arena.getArenaSetting("allowBreaking")) {
 					event.setCancelled(true);
+					ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), "protections.break");
+					return;
 				}
 			}
 		}
@@ -68,6 +72,8 @@ public class ArenaListener implements Listener{
 		if (arena != null) {
 			if (!arena.getArenaSetting("allowBuilding")) {
 				event.setCancelled(true);
+				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), "protections.place");
+				return;
 			}
 		}
 		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
@@ -75,6 +81,7 @@ public class ArenaListener implements Listener{
 			if (arena != null) {
 				if (!arena.getArenaSetting("allowBuilding")) {
 					event.setCancelled(true);
+					ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), "protections.place");
 				}
 			}
 		}

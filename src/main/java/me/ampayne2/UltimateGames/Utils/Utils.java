@@ -69,7 +69,7 @@ public class Utils {
 		meta.setTitle(game.getGameDescription().getName() + " Instructions");
 		meta.setAuthor(game.getGameDescription().getAuthor());
 		for (String page : game.getGameDescription().getInstructionPages()) {
-			meta.addPage(String.format("%n", page));
+			meta.addPage(page);
 		}
 		book.setItemMeta(meta);
 		return book;

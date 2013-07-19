@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import me.ampayne2.UltimateGames.Games.Game;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,21 +52,15 @@ public class Message {
 	}
 	
 	public void loadGameMessages() {
-		gameMessages.put("ClickingGame.join", "&3%Player% joined the game. %Amount%");
-		gameMessages.put("ClickingGame.countdown", "&4Game starting in %Time% seconds!");
-	    gameMessages.put("ClickingGame.start", "&4Start clicking! You have 30 seconds!");
-		gameMessages.put("ClickingGame.score", "&3%Name% clicked %Clicks% times!");
-		/*
 		if (!gameMessages.isEmpty()) {
 			gameMessages.clear();
 		}
 		for (Game game : ultimateGames.getGameManager().getGames()) {
 			FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
-			for (String key : gameConfig.getConfigurationSection("messages").getKeys(true)) {
-				gameMessages.put(game.getGameDescription().getName()+"."+key, gameConfig.getString("messages."+key));
+			for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
+				gameMessages.put(game.getGameDescription().getName()+"."+key, gameConfig.getString("Messages."+key));
 			}
 		}
-		*/
 	}
 
 	/**
@@ -269,10 +265,15 @@ public class Message {
 	 * 
 	 * @param arenaName Name of the arena.
 	 * @param gameName Name of the game.
+	 * @param gameMessage If the message is a game message.
 	 * @param messagetypes the path(s) to the message(s), without "message."
 	 */
-	public void broadcast(String arenaName, String gameName, String... messagetypes) {
+	public void broadcast(String arenaName, String gameName, Boolean gameMessage, String... messagetypes) {
 		ArrayList<String> playerNames = ultimateGames.getArenaManager().getArena(arenaName, gameName).getPlayers();
+		if (!gameMessage) {
+			arenaName = null;
+			gameName = null;
+		}
 		for (String messagetype : messagetypes) {
 			for (String playerName : playerNames) {
 				Player player = Bukkit.getPlayer(playerName);
@@ -289,10 +290,15 @@ public class Message {
 	 * @param arenaName Name of the arena.
 	 * @param gameName Name of the game.
 	 * @param replace hashmap that replaces all keys in a message with a value.
+	 * @param gameMessage If the message is a game message.
 	 * @param messagetypes the path(s) to the message(s), without "message."
 	 */
-	public void broadcast(String arenaName, String gameName, HashMap<String, String> replace, String... messagetypes) {
+	public void broadcast(String arenaName, String gameName, HashMap<String, String> replace, Boolean gameMessage, String... messagetypes) {
 		ArrayList<String> playerNames = ultimateGames.getArenaManager().getArena(arenaName, gameName).getPlayers();
+		if (!gameMessage) {
+			arenaName = null;
+			gameName = null;
+		}
 		for (String messagetype: messagetypes) {
 			for (String playerName : playerNames) {
 				Player player = Bukkit.getPlayer(playerName);

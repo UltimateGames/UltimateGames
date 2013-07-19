@@ -1,34 +1,44 @@
 messages:
   prefix: "&8[&bUltimateGames&8]"
   
-  #All messages associated with games
   games: {}
   
-  #All messages associated with arenas
   arenas:
-    #admin:
     select: "Punch two corners of a cuboid to create the Arena '%ArenaName%' of Game '%GameName%'."
     create: "Created Arena '%ArenaName%' of Game '%GameName%'."
     delete: "Removed Arena '%ArenaName%' of Game '%GameName%'."
     forceload: ""
     forceunload: ""
+    start: "The game has started!"
+    end: "The game has ended!"
     setstatus: "Set the status of Arena '%ArenaName%' of Game '%GameName%' to '%Status%'."
     forcestart: "Force started the Arena '%ArenaName%' of Game '%GameName%'."
     forcestop: "Force stopped the Arena '%ArenaName%' of Game '%GameName%'."
-    
-    #player:
-    join: "Joined Arena '%ArenaName%' of Game '%GameName%'."
-    leave: "Left Arena '%ArenaName%' of Game '%GameName%'."
-    
-    #errors:
+
+    join: "%Player% joined the game! %Amount%"
+    leave: "%Player% left the game! %Amount%"
+
     alreadyexists: "Arena already exists."
     doesntexit: "Arena doesn't exist."
     failedtocreate: "Failed to create Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
     failedtojoin: "Failed to join Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
-    
-  #All messages associated with queues
+
   queues:
     join: "Joined queue for Arena '%ArenaName%' of Game '%GameName%'. You are %Position% in line and will be able to join %GamePosition%."
     leave: "Left queue for Arena '%ArenaName%' of Game '%GameName%'."
     arenacleared: "Queue for Arena '%ArenaName%' of Game '%GameName%' has been cleared."
     queuecleared: "All queues cleared."
+    
+  spawnpoints:
+    create: "Created SpawnPoint for Arena '%ArenaName%' of Game '%GameName%'"
+    leave: "You are not allowed to leave the spawnpoint."
+  
+  countdowns:
+    timeleftstart: "The game starts in %Time% seconds!"
+    timeleftend: "The game ends in %Time% seconds!"
+    aborted: "Countdown aborted."
+    
+  protections:
+    place: "You are not allowed to place blocks in the arena."
+    break: "You are not allowed to break blocks in the arena."
+    leave: "You are not allowed to go outside the arena."
