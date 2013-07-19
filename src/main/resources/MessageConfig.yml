@@ -6,27 +6,27 @@ messages:
   arenas:
     select: "Punch two corners of a cuboid to create the Arena '%s' of Game '%s'."
     create: "Created Arena '%s' of Game '%s'."
-    delete: "Removed Arena '%ArenaName%' of Game '%GameName%'."
+    delete: "Removed Arena '%s' of Game '%s'."
     forceload: ""
     forceunload: ""
     start: "The game has started!"
     end: "The game has ended!"
-    setstatus: "Set the status of Arena '%ArenaName%' of Game '%GameName%' to '%Status%'."
+    setstatus: "Set the status of Arena '%s' of Game '%s' to '%s'."
     forcestart: "Force started the Arena '%s' of Game '%s'."
-    forcestop: "Force stopped the Arena '%ArenaName%' of Game '%GameName%'."
+    forcestop: "Force stopped the Arena '%s' of Game '%s'."
 
-    join: "%Player% joined the game! %Amount%"
-    leave: "%Player% left the game! %Amount%"
+    join: "%s joined the game! %s"
+    leave: "%s left the game! %s"
 
     alreadyexists: "Arena already exists."
     doesntexit: "Arena doesn't exist."
     failedtocreate: "Failed to create Arena '%s' of Game '%s'. %s"
-    failedtojoin: "Failed to join Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
+    failedtojoin: "Failed to join Arena '%s' of Game '%s'. %s"
 
   queues:
     join: "Joined queue for Arena '%s' of Game '%s'. You are %s in line and will be able to join %s."
     leave: "Left queue for Arena '%s' of Game '%s'."
-    arenacleared: "Queue for Arena '%ArenaName%' of Game '%GameName%' has been cleared."
+    arenacleared: "Queue for Arena '%s' of Game '%s' has been cleared."
     queuecleared: "All queues cleared."
     
   spawnpoints:

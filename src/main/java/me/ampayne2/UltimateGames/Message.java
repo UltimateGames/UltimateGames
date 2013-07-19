@@ -72,7 +72,7 @@ public class Message {
 		if (prefix == null) {
 			prefix = "&8[&bUltimateGames&8]";
 		}
-		return prefix;
+		return ChatColor.translateAlternateColorCodes('&', prefix);
 	}
 
 	/**
