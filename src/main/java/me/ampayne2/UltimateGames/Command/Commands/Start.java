@@ -18,8 +18,6 @@
  */
 package me.ampayne2.UltimateGames.Command.Commands;
 
-import java.util.HashMap;
-
 import org.bukkit.command.CommandSender;
 
 import me.ampayne2.UltimateGames.UltimateGames;
@@ -45,10 +43,7 @@ public class Start implements UGCommand{
 			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
 			if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
 				ultimateGames.getCountdownManager().createStartingCountdown(arena, 5);
-				HashMap<String, String> replace = new HashMap<String, String>();
-				replace.put("%ArenaName%", arenaName);
-				replace.put("%GameName%", gameName);
-				ultimateGames.getMessageManager().send(sender.getName(), replace, "arenas.forcestart");
+				ultimateGames.getMessageManager().sendReplacedMessage(sender.getName(), "arenas.forcestart", arenaName, gameName);
 			}
 		}
 	}

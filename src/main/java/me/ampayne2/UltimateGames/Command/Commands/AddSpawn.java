@@ -18,8 +18,6 @@
  */
 package me.ampayne2.UltimateGames.Command.Commands;
 
-import java.util.HashMap;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -47,10 +45,7 @@ public class AddSpawn implements UGCommand{
 		}
 		Player player = (Player) sender;
 		ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), player.getLocation(), locked);
-		HashMap<String, String> replace = new HashMap<String, String>();
-		replace.put("%ArenaName%", arenaName);
-		replace.put("%GameName%", gameName);
-		ultimateGames.getMessageManager().send(player.getName(), replace, "spawnpoints.create");
+		ultimateGames.getMessageManager().sendReplacedMessage(player.getName(), "spawnpoints.create", arenaName, gameName);
 	}
 
 }

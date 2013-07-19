@@ -59,10 +59,7 @@ public class CreateArena implements UGCommand, Listener {
 		arenaName.put(sender.getName(), arena);
 		game.put(sender.getName(), ultimateGames.getGameManager().getGame(gameName));
 		playersSelecting.add(sender.getName());
-		HashMap<String, String> replace = new HashMap<String, String>();
-		replace.put("%ArenaName%", arena);
-		replace.put("%GameName%", gameName);
-		ultimateGames.getMessageManager().send(sender.getName(), replace, "arenas.select");
+		ultimateGames.getMessageManager().sendReplacedMessage(sender.getName(), "arenas.select", arena, gameName);
 	}
 
 	@EventHandler
@@ -84,11 +81,7 @@ public class CreateArena implements UGCommand, Listener {
 		String arena = arenaName.get(playerName);
 		String gameName = game.get(playerName).getGameDescription().getName();
 		if (ultimateGames.getArenaManager().arenaExists(arena, gameName)) {
-			HashMap<String, String> replace = new HashMap<String, String>();
-			replace.put("%ArenaName%", arena);
-			replace.put("%GameName%", gameName);
-			replace.put("%Reason%", ultimateGames.getMessageManager().getMessageWithoutPrefix("arenas.alreadyexists", null));
-			ultimateGames.getMessageManager().send(playerName, replace, "arenas.failedtocreate");
+			ultimateGames.getMessageManager().sendReplacedMessage(playerName, "arenas.failedtocreate", arena, gameName, ultimateGames.getMessageManager().getMessage("arenas.alreadyexists"));
 			return;
 		} else {
 			Arena newArena =  new Arena(ultimateGames, game.get(playerName), arenaName.get(playerName), corner1.get(playerName), corner2.get(playerName));
@@ -99,10 +92,7 @@ public class CreateArena implements UGCommand, Listener {
 			corner2.remove(playerName);
 			game.remove(playerName);
 			arenaName.remove(playerName);
-			HashMap<String, String> replace = new HashMap<String, String>();
-			replace.put("%ArenaName%", newArena.getName());
-			replace.put("%GameName%", newArena.getGame().getGameDescription().getName());
-			ultimateGames.getMessageManager().send(playerName, replace, "arenas.create");
+			ultimateGames.getMessageManager().sendReplacedMessage(playerName, "arenas.create", newArena.getName(), newArena.getGame().getGameDescription().getName());
 		}
 
 	}

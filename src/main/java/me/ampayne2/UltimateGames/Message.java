@@ -18,12 +18,11 @@
  */
 package me.ampayne2.UltimateGames;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Games.Game;
 
 import org.bukkit.Bukkit;
@@ -40,17 +39,17 @@ public class Message {
 		this.ultimateGames = ultimateGames;
 		loadMessages();
 	}
-	
+
 	public void loadMessages() {
 		if (!messages.isEmpty()) {
 			messages.clear();
 		}
 		FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
 		for (String key : messageConfig.getConfigurationSection("messages").getKeys(true)) {
-			messages.put(key, messageConfig.getString("messages."+key));
+			messages.put(key, messageConfig.getString("messages." + key));
 		}
 	}
-	
+
 	public void loadGameMessages() {
 		if (!gameMessages.isEmpty()) {
 			gameMessages.clear();
@@ -58,254 +57,228 @@ public class Message {
 		for (Game game : ultimateGames.getGameManager().getGames()) {
 			FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
 			for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
-				gameMessages.put(game.getGameDescription().getName()+"."+key, gameConfig.getString("Messages."+key));
+				gameMessages.put(game.getGameDescription().getName() + "." + key, gameConfig.getString("Messages." + key));
 			}
 		}
 	}
 
 	/**
-	 * Gets the message, adds the prefix, and translates the color codes.
+	 * Gets the message prefix.
 	 * 
-	 * @param messagetype Path to the message in the message config, without "Messages."
-	 * @return The message.
+	 * @return The message prefix.
 	 */
-	public String getMessage(String messagetype, String gameName) {
+	public String getMessagePrefix() {
 		String prefix = messages.get("prefix");
 		if (prefix == null) {
 			prefix = "&8[&bUltimateGames&8]";
 		}
-		String message;
-		if (gameName == null) {
-			message = messages.get(messagetype);
-		} else {
-			message = gameMessages.get(gameName+"."+messagetype);
-		}
-		if (message == null) {
-			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
-		}
-		message = prefix+"  "+message;
-		return ChatColor.translateAlternateColorCodes('&', message);
+		return prefix;
 	}
-	
+
 	/**
-	 * Gets the message, and translates the color codes.
+	 * Gets a message with translated color codes.
 	 * 
-	 * @param messagetype Path to the message in the message config, without "Messages."
+	 * @param messageType Path to the message in the message config, without "Messages."
 	 * @return The message.
 	 */
-	public String getMessageWithoutPrefix(String messagetype, String gameName) {
-		String message;
-		if (gameName == null) {
-			message = messages.get(messagetype);
-		} else {
-			message = gameMessages.get(gameName+"."+messagetype);
-		}
+	public String getMessage(String messageType) {
+		String message = messages.get(messageType);
 		if (message == null) {
-			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
+			message = ChatColor.DARK_RED + "No configured message for " + messageType;
 		}
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
-	
+
 	/**
-	 * Gets the message, replaces the keys, adds the prefix, and translates the color codes.
+	 * Gets a game message with translated color codes.
 	 * 
-	 * @param replace hashmap that replaces all keys in a message with a value.
-	 * @param messagetype Path to the message in the message config, without "Messages."
+	 * @param game The game.
+	 * @param messageType Path to the message in the game's config, without "Messages."
 	 * @return The message.
 	 */
-	public String getReplacedMessage(HashMap<String, String> replace, String messagetype, String gameName) {
-		String prefix = messages.get("prefix");
-		if (prefix == null) {
-			prefix = "&8[&bUltimateGames&8]";
-		}
-		String message;
-		if (gameName == null) {
-			message = messages.get(messagetype);
-		} else {
-			message = gameMessages.get(gameName+"."+messagetype);
-		}
+	public String getGameMessage(Game game, String messageType) {
+		String message = gameMessages.get(game.getGameDescription().getName() + "." + messageType);
 		if (message == null) {
-			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
+			message = ChatColor.DARK_RED + "No configured message for " + messageType;
 		}
-		for(Entry<String, String> it : replace.entrySet()) {
-			message = message.replace(it.getKey(), it.getValue());
-		}
-		message = prefix+"  "+message;
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
-	
+
 	/**
-	 * Gets the message, replaces the keys, and translates the color codes.
+	 * Sends a message to a specific player.
 	 * 
-	 * @param replace hashmap that replaces all keys in a message with a value.
-	 * @param messagetype Path to the message in the message config, without "Messages."
-	 * @return The message.
+	 * @param playerName Name of the player to send the message to.
+	 * @param messageType Path to the message, without "Messages."
 	 */
-	public String getReplacedMessageWithoutPrefix(HashMap<String, String> replace, String messagetype, String gameName) {
-		String message;
-		if (gameName == null) {
-			message = messages.get(messagetype);
-		} else {
-			message = gameMessages.get(gameName+"."+messagetype);
+	public void sendMessage(String playerName, String messageType) {
+		Player player = Bukkit.getPlayer(playerName);
+		if (player == null) {
+			return;
 		}
-		if (message == null) {
-			message = ChatColor.DARK_RED + "  No configured message for " + messagetype;
-		}
-		for(Entry<String, String> it : replace.entrySet()) {
-			message = message.replace(it.getKey(), it.getValue());
-		}
-		return ChatColor.translateAlternateColorCodes('&', message);
+		player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
 	}
-	
+
+	/**
+	 * Sends a message to a specific player, replacing certain strings.
+	 * 
+	 * @param playerName Name of the player to send the message to.
+	 * @param messageType Path to the message, without "Messages."
+	 * @param replace Strings to replace %s with.
+	 */
+	public void sendReplacedMessage(String playerName, String messageType, String... replace) {
+		Player player = Bukkit.getPlayer(playerName);
+		if (player == null) {
+			return;
+		}
+		player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
+	}
+
+	/**
+	 * Sends a game message to a specific player.
+	 * 
+	 * @param game The game.
+	 * @param playerName Name of the player to send the message to.
+	 * @param messageType Path to the message in the game's config, without "Messages."
+	 */
+	public void sendGameMessage(Game game, String playerName, String messageType) {
+		Player player = Bukkit.getPlayer(playerName);
+		if (player == null) {
+			return;
+		}
+		player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
+	}
+
+	/**
+	 * Sends a message to a specific player, replacing certain strings.
+	 * 
+	 * @param game The game.
+	 * @param playerName Name of the player to send the message to.
+	 * @param messageType Path to the message, without "Messages."
+	 * @param replace Strings to replace %s with.
+	 */
+	public void sendReplacedGameMessage(Game game, String playerName, String messageType, String... replace) {
+		Player player = Bukkit.getPlayer(playerName);
+		if (player == null) {
+			return;
+		}
+		player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
+	}
+
+	/**
+	 * Broadcasts a message to the server.
+	 * 
+	 * @param messageType Path to the message, without "Messages."
+	 */
+	public void broadcastMessage(String messageType) {
+		Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getMessage(messageType));
+	}
+
+	/**
+	 * Broadcasts a message to the server, replacing certain strings.
+	 * 
+	 * @param messageType Path to the message, without "Messages."
+	 * @param replace Strings to replace %s with.
+	 */
+	public void broadcastReplacedMessage(String messageType, String... replace) {
+		Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
+	}
+
+	/**
+	 * Broadcasts a game's message to the server.
+	 * @param game The game.
+	 * @param messageType Path to the message, without "Messages."
+	 */
+	public void broadcastGameMessage(Game game, String messageType) {
+		Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
+	}
+
+	/**
+	 * Broadcasts a game's message to the server, replacing certain strings.
+	 * @param game The game.
+	 * @param messageType Path to the message, without "Messages."
+	 * @param replace Strings to replace %s with.
+	 */
+	public void broadcastReplacedGameMessage(Game game, String messageType, String... replace) {
+		Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
+	}
+
+	/**
+	 * Broadcasts a message to an arena.
+	 * 
+	 * @param arena Arena to broadcast the message to.
+	 * @param messageType Path to the message, without "Messages."
+	 */
+	public void broadcastMessageToArena(Arena arena, String messageType) {
+		for (String playerName : arena.getPlayers()) {
+			Player player = Bukkit.getPlayer(playerName);
+			if (player == null) {
+				return;
+			}
+			player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
+		}
+	}
+
+	/**
+	 * Broadcasts a message to an arena, replacing certain strings.
+	 * 
+	 * @param arena Arena to broadcast the message to.
+	 * @param messageType Path to the message, without "Messages."
+	 * @param replace Strings to replace %s with.
+	 */
+	public void broadcastReplacedMessageToArena(Arena arena, String messageType, String... replace) {
+		for (String playerName : arena.getPlayers()) {
+			Player player = Bukkit.getPlayer(playerName);
+			if (player == null) {
+				return;
+			}
+			player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
+		}
+	}
+
+	/**
+	 * Broadcasts a game's message to an arena.
+	 * 
+	 * @param game The game.
+	 * @param arena Arena to broadcast the message to.
+	 * @param messageType Path to the message, without "Messages."
+	 */
+	public void broadcastGameMessageToArena(Game game, Arena arena, String messageType) {
+		for (String playerName : arena.getPlayers()) {
+			Player player = Bukkit.getPlayer(playerName);
+			if (player == null) {
+				return;
+			}
+			player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
+		}
+	}
+
+	/**
+	 * Broadcasts a game's message to an arena, replacing certain strings.
+	 * 
+	 * @param game The game.
+	 * @param arena Arena to broadcast the message to.
+	 * @param messageType Path to the message, without "Messages."
+	 * @param replace Strings to replace %s with.
+	 */
+	public void broadcastReplacedGameMessageToArena(Game game, Arena arena, String messageType, String... replace) {
+		for (String playerName : arena.getPlayers()) {
+			Player player = Bukkit.getPlayer(playerName);
+			if (player == null) {
+				return;
+			}
+			player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
+		}
+	}
+
 	/**
 	 * Logs one or more messages to the console.
-	 * 
+	 *
 	 * @param level the level to log the message at.
 	 * @param messages the message(s) to log.
-	 */
+	*/
 	public void log(Level level, String... messages) {
 		for (String message : messages) {
 			Bukkit.getLogger().log(level, "[UltimateGames] " + message);
-		}
-	}
-
-	/**
-	 * Sends one or more messages to a specific player.
-	 * 
-	 * @param playername name of the player to send the message(s) to.
-	 * @param messagetypes the path(s) to the message(s), without "messages."
-	 */
-	public void send(String playername, String... messagetypes) {
-		Player player = Bukkit.getPlayer(playername);
-		if (player == null) {
-			return;
-		}
-		for (String messagetype : messagetypes) {
-			player.sendMessage(getMessage(messagetype, null));
-		}
-	}
-
-	/**
-	 * Sends one or more messages to a specific player, replacing certain strings.
-	 * 
-	 * @param playername name of the player to send the message(s) to.
-	 * @param replace hashmap that replaces all keys in a message with a value.
-	 * @param messagetypes the path(s) to the message(s), without "messages."
-	 */
-	public void send(String playername, HashMap<String, String> replace, String... messagetypes) {
-		Player player = Bukkit.getPlayer(playername);
-		if (player == null) {
-			return;
-		}
-		for (String messagetype : messagetypes) {
-			player.sendMessage(getReplacedMessage(replace, messagetype, null));
-		}
-	}
-	
-	/**
-	 * Sends one or more game messages to a specific player.
-	 * 
-	 * @param gameName name of the game to get the message(s) from.
-	 * @param playerName name of the player to send the message(s) to.
-	 * @param messagetypes the path(s) to the message(s), without "messages."
-	 */
-	public void send(String gameName, String playerName, String... messagetypes) {
-		Player player = Bukkit.getPlayer(playerName);
-		if (player == null) {
-			return;
-		}
-		for (String messagetype : messagetypes) {
-			player.sendMessage(getMessage(messagetype, gameName));
-		}
-	}
-	
-	/**
-	 * Sends one or more game messages to a specific player, replacing certain strings.
-	 * 
-	 * @param gameName name of the game to get the message(s) from.
-	 * @param playername name of the player to send the message(s) to.
-	 * @param replace hashmap that replaces all keys in a message with a value.
-	 * @param messagetypes the path(s) to the message(s), without "messages."
-	 */
-	public void send(String gameName, String playerName, HashMap<String, String> replace, String... messagetypes) {
-		Player player = Bukkit.getPlayer(playerName);
-		if (player == null) {
-			return;
-		}
-		for (String messagetype : messagetypes) {
-			player.sendMessage(getReplacedMessage(replace, messagetype, gameName));
-		}
-	}
-
-	/**
-	 * Broadcasts one or more messages to the server.
-	 * 
-	 * @param messagetypes the path(s) to the message(s), without "messages."
-	 */
-	public void broadcast(String... messagetypes) {
-		for (String messagetype : messagetypes) {
-			Bukkit.getServer().broadcastMessage(getMessage(messagetype, null));
-		}
-	}
-
-	/**
-	 * Broadcasts one or more messages to the server, replacing certain strings.
-	 * 
-	 * @param replace hashmap that replaces all keys in a message with a value.
-	 * @param messagetypes the path(s) to the message(s), without "messages."
-	 */
-	public void broadcast(HashMap<String, String> replace, String... messagetypes) {
-		for (String messagetype : messagetypes) {
-			Bukkit.getServer().broadcastMessage(getReplacedMessage(replace, messagetype, null));
-		}
-	}
-	
-	/**
-	 * Broadcasts one or more messages to the players in an arena.
-	 * 
-	 * @param arenaName Name of the arena.
-	 * @param gameName Name of the game.
-	 * @param gameMessage If the message is a game message.
-	 * @param messagetypes the path(s) to the message(s), without "message."
-	 */
-	public void broadcast(String arenaName, String gameName, Boolean gameMessage, String... messagetypes) {
-		ArrayList<String> playerNames = ultimateGames.getArenaManager().getArena(arenaName, gameName).getPlayers();
-		if (!gameMessage) {
-			arenaName = null;
-			gameName = null;
-		}
-		for (String messagetype : messagetypes) {
-			for (String playerName : playerNames) {
-				Player player = Bukkit.getPlayer(playerName);
-				if (player != null) {
-					player.sendMessage(getMessage(messagetype, gameName));
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Broadcasts one or more messages to the players in an arena.
-	 * 
-	 * @param arenaName Name of the arena.
-	 * @param gameName Name of the game.
-	 * @param replace hashmap that replaces all keys in a message with a value.
-	 * @param gameMessage If the message is a game message.
-	 * @param messagetypes the path(s) to the message(s), without "message."
-	 */
-	public void broadcast(String arenaName, String gameName, HashMap<String, String> replace, Boolean gameMessage, String... messagetypes) {
-		ArrayList<String> playerNames = ultimateGames.getArenaManager().getArena(arenaName, gameName).getPlayers();
-		if (!gameMessage) {
-			arenaName = null;
-			gameName = null;
-		}
-		for (String messagetype: messagetypes) {
-			for (String playerName : playerNames) {
-				Player player = Bukkit.getPlayer(playerName);
-				if (player != null) {
-					player.sendMessage(getReplacedMessage(replace, messagetype, gameName));
-				}
-			}
 		}
 	}
 

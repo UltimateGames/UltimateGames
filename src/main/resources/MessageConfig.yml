@@ -4,15 +4,15 @@ messages:
   games: {}
   
   arenas:
-    select: "Punch two corners of a cuboid to create the Arena '%ArenaName%' of Game '%GameName%'."
-    create: "Created Arena '%ArenaName%' of Game '%GameName%'."
+    select: "Punch two corners of a cuboid to create the Arena '%s' of Game '%s'."
+    create: "Created Arena '%s' of Game '%s'."
     delete: "Removed Arena '%ArenaName%' of Game '%GameName%'."
     forceload: ""
     forceunload: ""
     start: "The game has started!"
     end: "The game has ended!"
     setstatus: "Set the status of Arena '%ArenaName%' of Game '%GameName%' to '%Status%'."
-    forcestart: "Force started the Arena '%ArenaName%' of Game '%GameName%'."
+    forcestart: "Force started the Arena '%s' of Game '%s'."
     forcestop: "Force stopped the Arena '%ArenaName%' of Game '%GameName%'."
 
     join: "%Player% joined the game! %Amount%"
@@ -20,22 +20,22 @@ messages:
 
     alreadyexists: "Arena already exists."
     doesntexit: "Arena doesn't exist."
-    failedtocreate: "Failed to create Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
+    failedtocreate: "Failed to create Arena '%s' of Game '%s'. %s"
     failedtojoin: "Failed to join Arena '%ArenaName%' of Game '%GameName%'. %Reason%"
 
   queues:
-    join: "Joined queue for Arena '%ArenaName%' of Game '%GameName%'. You are %Position% in line and will be able to join %GamePosition%."
-    leave: "Left queue for Arena '%ArenaName%' of Game '%GameName%'."
+    join: "Joined queue for Arena '%s' of Game '%s'. You are %s in line and will be able to join %s."
+    leave: "Left queue for Arena '%s' of Game '%s'."
     arenacleared: "Queue for Arena '%ArenaName%' of Game '%GameName%' has been cleared."
     queuecleared: "All queues cleared."
     
   spawnpoints:
-    create: "Created SpawnPoint for Arena '%ArenaName%' of Game '%GameName%'"
+    create: "Created SpawnPoint for Arena '%s' of Game '%s'"
     leave: "You are not allowed to leave the spawnpoint."
   
   countdowns:
-    timeleftstart: "The game starts in %Time% seconds!"
-    timeleftend: "The game ends in %Time% seconds!"
+    timeleftstart: "The game starts in %s seconds!"
+    timeleftend: "The game ends in %s seconds!"
     aborted: "Countdown aborted."
     
   protections:

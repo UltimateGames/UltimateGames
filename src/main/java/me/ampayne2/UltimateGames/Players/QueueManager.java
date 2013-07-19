@@ -79,19 +79,16 @@ public class QueueManager {
 	 * @param arena The arena.
 	 */
 	public void sendJoinMessage(String playerName, Arena arena) {
-		HashMap<String, String> replace = new HashMap<String, String>();
-		replace.put("%ArenaName%", arena.getName());
-		replace.put("%GameName%", arena.getGame().getGameDescription().getName());
 		Integer queuePosition = queue.get(arena).size();
 		String position = queuePosition.toString() + ultimateGames.getUtils().getOrdinalSuffix(queuePosition);
-		replace.put("%Position%", position);
 		Integer gamePosition = (int) Math.ceil((double) queue.get(arena).size() / arena.getMaxPlayers());
+		String wait;
 		if (gamePosition == 1) {
-			replace.put("%GamePosition%", "next game");
+			wait = "next game";
 		} else {
-			replace.put("%GamePosition%", gamePosition.toString() + " games from now");
+			wait = gamePosition.toString() + " games from now";
 		}
-		ultimateGames.getMessageManager().send(playerName, replace, "queues.join");
+		ultimateGames.getMessageManager().sendReplacedMessage(playerName, "queues.join", arena.getName(), arena.getGame().getGameDescription().getName(), position, wait);
 	}
 
 	/**
@@ -101,10 +98,7 @@ public class QueueManager {
 	 * @param arena The arena.
 	 */
 	public void sendLeaveMessage(String playerName, Arena arena) {
-		HashMap<String, String> replace = new HashMap<String, String>();
-		replace.put("%ArenaName%", arena.getName());
-		replace.put("%GameName%", arena.getGame().getGameDescription().getName());
-		ultimateGames.getMessageManager().send(playerName, replace, "queues.leave");
+		ultimateGames.getMessageManager().sendReplacedMessage(playerName, "queues.leave", arena.getName(), arena.getGame().getGameDescription().getName());
 	}
 
 	/**

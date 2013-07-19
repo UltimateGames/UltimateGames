@@ -80,7 +80,7 @@ public class SpawnPoint implements Listener{
 				location.setPitch(event.getFrom().getPitch());
 				location.setYaw(event.getFrom().getYaw());
 				Bukkit.getPlayer(playerName).teleport(location);
-				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), false, "spawnpoints.leave");
+				ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "spawnpoints.leave");
 			}
 		}
 	}

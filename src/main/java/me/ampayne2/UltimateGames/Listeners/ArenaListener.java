@@ -18,8 +18,6 @@
  */
 package me.ampayne2.UltimateGames.Listeners;
 
-import java.util.HashMap;
-
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -49,9 +47,7 @@ public class ArenaListener implements Listener{
 		if (arena != null) {
 			if (!arena.getArenaSetting("allowBreaking")) {
 				event.setCancelled(true);
-				HashMap<String, String> replace = new HashMap<String, String>();
-				replace.put(" ", " ");
-				ultimateGames.getMessageManager().send(event.getPlayer().getName(), replace, "protections.break");
+				ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.break");
 				return;
 			}
 		}
@@ -60,9 +56,7 @@ public class ArenaListener implements Listener{
 			if (arena != null) {
 				if (!arena.getArenaSetting("allowBreaking")) {
 					event.setCancelled(true);
-					HashMap<String, String> replace = new HashMap<String, String>();
-					replace.put(" ", " ");
-					ultimateGames.getMessageManager().send(event.getPlayer().getName(), replace, "protections.break");
+					ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.break");
 					return;
 				}
 			}
@@ -78,9 +72,7 @@ public class ArenaListener implements Listener{
 		if (arena != null) {
 			if (!arena.getArenaSetting("allowBuilding")) {
 				event.setCancelled(true);
-				HashMap<String, String> replace = new HashMap<String, String>();
-				replace.put(" ", " ");
-				ultimateGames.getMessageManager().send(event.getPlayer().getName(), replace, "protections.place");
+				ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.place");
 				return;
 			}
 		}
@@ -89,9 +81,7 @@ public class ArenaListener implements Listener{
 			if (arena != null) {
 				if (!arena.getArenaSetting("allowBuilding")) {
 					event.setCancelled(true);
-					HashMap<String, String> replace = new HashMap<String, String>();
-					replace.put(" ", " ");
-					ultimateGames.getMessageManager().send(event.getPlayer().getName(), replace, "protections.place");
+					ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.place");
 				}
 			}
 		}

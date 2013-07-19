@@ -18,8 +18,6 @@
  */
 package me.ampayne2.UltimateGames.Countdowns;
 
-import java.util.HashMap;
-
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
@@ -53,11 +51,9 @@ public class EndingCountdown extends BukkitRunnable{
 			}
 		}
 		if (secondsLeft > 0 && secondsLeft <= 10) {
-			HashMap<String, String> replace = new HashMap<String, String>();
-			replace.put("%Time%", Integer.toString(secondsLeft));
-			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "countdowns.timeleftend");
+			ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
 		} else if (secondsLeft == 0) {
-			ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), false, "arenas.end");
+			ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
 			arena.setStatus(ArenaStatus.ENDING);
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
 			arena.getGame().getGamePlugin().endArena(arena);

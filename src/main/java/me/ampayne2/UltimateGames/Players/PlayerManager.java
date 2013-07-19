@@ -84,10 +84,7 @@ public class PlayerManager implements Listener{
 			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
 			if (sendMessage) {
-				HashMap<String, String> replace = new HashMap<String, String>();
-				replace.put("%Player%", playerName);
-				replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
-				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.join");
+				ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.join", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
 			}
 		}
 	}
@@ -111,10 +108,7 @@ public class PlayerManager implements Listener{
 				}
 			}
 			if (sendMessage) {
-				HashMap<String, String> replace = new HashMap<String, String>();
-				replace.put("%Player%", playerName);
-				replace.put("%Amount%", String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
-				ultimateGames.getMessageManager().broadcast(arena.getName(), arena.getGame().getGameDescription().getName(), replace, false, "arenas.leave");	
+				ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.leave", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
 			}
 		}
 	}
