@@ -63,8 +63,10 @@ public class UltimateGames extends JavaPlugin {
 		ugSignManager = new UGSignManager(this);
 		playerManager = new PlayerManager(this);
 		countdownManager = new CountdownManager(this);
+		/*
 		ghostFactory = new GhostFactory(this, true);
 		ghostFactory.create();
+		*/
 		utils = new Utils();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
