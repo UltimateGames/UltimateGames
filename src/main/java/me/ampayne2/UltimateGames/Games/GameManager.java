@@ -56,7 +56,7 @@ public class GameManager {
 		ScoreType scoreType = null, secondaryScoreType = null;
 		PlayerType playerType = null;
 		JarFile jarFile = null;
-		String description, author, version, pack, secondaryScoreTypeName, scoreTypeName;
+		String description, author, version, secondaryScoreTypeName, scoreTypeName;
 		ArrayList<String> instructionPages;
 		for (File file : gameFolder.listFiles(new GameFileFilter())) {
 			scoreType = null;
@@ -97,7 +97,7 @@ public class GameManager {
 					YamlConfiguration gamePlugin = YamlConfiguration.loadConfiguration(configFile);
 
 					//Is the configuration a valid one?
-					if (!gamePlugin.contains("main-class") || !gamePlugin.contains("description") || !gamePlugin.contains("version") || !gamePlugin.contains("author") || !gamePlugin.contains("pack") || !gamePlugin.contains("scoreTypeName") || !gamePlugin.contains("playerType")) {
+					if (!gamePlugin.contains("main-class") || !gamePlugin.contains("description") || !gamePlugin.contains("version") || !gamePlugin.contains("author") || !gamePlugin.contains("scoreTypeName") || !gamePlugin.contains("playerType")) {
 						ultimateGames.getMessageManager().log(Level.SEVERE, "Game " + file.getAbsolutePath() + " contains an invalid gameplugin.yml file!");
 						jarFile.close();
 						continue;
@@ -127,7 +127,6 @@ public class GameManager {
 					
 					version = gamePlugin.getString("version");
 					String gameName = file.getName().replace(".jar", "");
-					pack = gamePlugin.getString("pack");
 					
 					//Is the game already loaded?
 					if (gameExists(gameName)) {
@@ -147,7 +146,7 @@ public class GameManager {
 						GamePlugin plugin = (GamePlugin) object;
 
 						//Well, everything loaded.
-						GameDescription gameDescription = new GameDescription(gameName, description, version, author, pack, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType, instructionPages);
+						GameDescription gameDescription = new GameDescription(gameName, description, version, author, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType, instructionPages);
 						Game game = new Game(plugin, gameDescription);
 						//We load the game
 						plugin.loadGame(ultimateGames, game);

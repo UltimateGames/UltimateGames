@@ -24,7 +24,7 @@ import me.ampayne2.UltimateGames.Enums.PlayerType;
 import me.ampayne2.UltimateGames.Enums.ScoreType;
 
 public class GameDescription {
-	private String name, description, version, author, pack, scoreTypeName, secondaryScoreTypeName;
+	private String name, description, version, author, scoreTypeName, secondaryScoreTypeName;
 	private ScoreType scoreType, secondaryScoreType;
 	private PlayerType playerType;
 	private ArrayList<String> instructionPages;
@@ -36,7 +36,6 @@ public class GameDescription {
 	 * @param description
 	 * @param version
 	 * @param author
-	 * @param pack
 	 * @param scoreTypeName
 	 * @param secondaryScoreTypeName
 	 * @param scoreType
@@ -44,12 +43,11 @@ public class GameDescription {
 	 * @param playerType
 	 * @param instructionPages
 	 */
-	public GameDescription(String name, String description, String version, String author, String pack, String scoreTypeName, String secondaryScoreTypeName, ScoreType scoreType, ScoreType secondaryScoreType, PlayerType playerType, ArrayList<String> instructionPages) {
+	public GameDescription(String name, String description, String version, String author, String scoreTypeName, String secondaryScoreTypeName, ScoreType scoreType, ScoreType secondaryScoreType, PlayerType playerType, ArrayList<String> instructionPages) {
 		this.name = name;
 		this.description = description;
 		this.version = version;
 		this.author = author;
-		this.pack = pack;
 		this.scoreTypeName = scoreTypeName;
 		this.secondaryScoreTypeName = secondaryScoreTypeName;
 		this.scoreType = scoreType;
@@ -92,15 +90,6 @@ public class GameDescription {
 	 */
 	public String getAuthor() {
 		return author;
-	}
-
-	/**
-	 * Gets the main class of the game.
-	 * 
-	 * @return The main class.
-	 */
-	public String getPackage() {
-		return pack;
 	}
 
 	/**

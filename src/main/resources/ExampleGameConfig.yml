@@ -3,13 +3,11 @@
 # To get this config file, use ultimateGames.getConfigManager().getGameConfig(Game game);
 
 # REQUIRED
-# Name of the game. Should be the same as the name of your .jar
-Name: "Game"
+# Path to the main class of your game.
+main-class: "me.ampayne2.Hunter.Hunter"
 Description: "Blank game used for testing purposes"
 Version: "1.0"
 Author: "ampayne2"
-# Path to the main class of your game.
-Package: "me.ampayne2.Game.Game"
 # Name of the main score type of the game. Will be used for stats, etc.
 ScoreTypeName: "Wins"
 # Name of the secondary score type of the game.
@@ -36,7 +34,9 @@ DefaultSettings:
   Allow-Explosion-Block-Breaking: false
   Allow-Building: false
   Allow-Breaking: false
-  
+# Game Instructions.
+Instructions:
+- "If you are a hunter, exterminate the civilians.\nIf you are a civilian, stay alive."
 # PUT YOUR GAME'S PERSONAL CONFIG VALUES HERE
 # Get the config with the config manager, then do .getWhatever(Path, default value);
 # Example value retrieval:
