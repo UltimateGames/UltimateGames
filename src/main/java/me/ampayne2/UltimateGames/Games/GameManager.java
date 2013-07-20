@@ -136,10 +136,10 @@ public class GameManager {
 					}
 					
 					//We try to load the main class..
-					URLClassLoader loader = new URLClassLoader(new URL[] {file.toURI().toURL()}, this.getClass().getClassLoader());
-					Class<?> aclass = loader.loadClass(gamePlugin.getString("main-class"));
+					ultimateGames.getPluginClassLoader().addURL(file.toURI().toURL());
+					Class<?> aclass = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
+
 					Object object = aclass.newInstance();
-					loader.close();
 					//Is the class a valid game plugin?
 					if (object instanceof GamePlugin) {
 						ultimateGames.getMessageManager().log(Level.INFO, "Loading " + gameName);

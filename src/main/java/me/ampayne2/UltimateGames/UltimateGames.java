@@ -33,6 +33,7 @@ import me.ampayne2.UltimateGames.Utils.GhostFactory;
 import me.ampayne2.UltimateGames.Utils.Utils;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.PluginClassLoader;
 
 public class UltimateGames extends JavaPlugin {
 	private JavaPlugin plugin;
@@ -117,5 +118,11 @@ public class UltimateGames extends JavaPlugin {
 	
 	public Utils getUtils() {
 		return utils;
+
+	}
+
+
+	public PluginClassLoader getPluginClassLoader() {
+		return (PluginClassLoader) getClassLoader();
 	}
 }
