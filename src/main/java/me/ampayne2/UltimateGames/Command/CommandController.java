@@ -22,6 +22,7 @@ import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Command.SubCommand;
 import me.ampayne2.UltimateGames.Command.Commands.AddSpawn;
 import me.ampayne2.UltimateGames.Command.Commands.CreateArena;
+import me.ampayne2.UltimateGames.Command.Commands.SpawnParticle;
 import me.ampayne2.UltimateGames.Command.Commands.Start;
 
 import org.bukkit.command.Command;
@@ -49,6 +50,8 @@ public class CommandController extends JavaPlugin {
 		mainCommand.addCommand("add", null, add);
 		
 		mainCommand.addCommand("start", "ultimategames.arena.start", new Start(ultimateGames));
+		
+		mainCommand.addCommand("SpawnParticle", "ultimategames.spawnparticle", new SpawnParticle());
 	}
 
 	@Override

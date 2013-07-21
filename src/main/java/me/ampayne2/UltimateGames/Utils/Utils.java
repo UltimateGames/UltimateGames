@@ -18,9 +18,14 @@
  */
 package me.ampayne2.UltimateGames.Utils;
 
+import java.util.ArrayList;
+
 import me.ampayne2.UltimateGames.Games.Game;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
@@ -73,6 +78,34 @@ public class Utils {
 		}
 		book.setItemMeta(meta);
 		return book;
+	}
+	
+	public void radarScan(String playerName, ArrayList<String> playersToScan) {
+		if (playersToScan != null && playerName != null) {
+			Player player = Bukkit.getPlayer(playerName);
+			Double playerX = player.getLocation().getX();
+			Double playerY = player.getLocation().getY();
+			Double playerZ = player.getLocation().getZ();
+			for (String nextPlayerToScan : playersToScan) {
+				Player playerToScan = Bukkit.getPlayer(nextPlayerToScan);
+				Double playerToScanX = playerToScan.getLocation().getX();
+				Double playerToScanY = playerToScan.getLocation().getY();
+				Double playerToScanZ = playerToScan.getLocation().getZ();
+				Double x = playerToScanX - playerX;
+				Double y = playerToScanY - playerY;
+				Double z = playerToScanZ - playerZ;
+				//THIS CODE IS FAIL. REDOING ALGORITHM TOMORROW CUZ MATH WAT.
+				Double angleX = z / x;
+				Double angleY = y / x;
+				Double angleZ = x / z;
+				Double particleX = angleX + playerX;
+				Double particleY = angleY + playerY;
+				Double particleZ = angleZ + playerZ;
+				Location particleLocation = new Location(player.getWorld(), particleX, particleY+1.5, particleZ);
+				ParticleEffect particleEffect = ParticleEffect.FIREWORKS_SPARK;
+				particleEffect.play(player, particleLocation, 0, 0, 0, 0, 1);
+			}
+		}
 	}
 	
 }
