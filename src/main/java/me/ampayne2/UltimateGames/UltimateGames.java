@@ -18,10 +18,13 @@
  */
 package me.ampayne2.UltimateGames;
 
+import java.io.IOException;
+
 import me.ampayne2.UltimateGames.Arenas.ArenaManager;
 import me.ampayne2.UltimateGames.Command.CommandController;
 import me.ampayne2.UltimateGames.Countdowns.CountdownManager;
 import me.ampayne2.UltimateGames.Files.ConfigManager;
+import me.ampayne2.UltimateGames.Games.Game;
 import me.ampayne2.UltimateGames.Games.GameManager;
 import me.ampayne2.UltimateGames.Listeners.ArenaListener;
 import me.ampayne2.UltimateGames.Listeners.SignListener;
@@ -34,6 +37,8 @@ import me.ampayne2.UltimateGames.Utils.Utils;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.PluginClassLoader;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
 
 public class UltimateGames extends JavaPlugin {
 	private JavaPlugin plugin;
@@ -69,6 +74,21 @@ public class UltimateGames extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
 		getServer().getPluginManager().registerEvents(playerManager, this);
 		getCommand("ultimategames").setExecutor(new CommandController(this));
+		try {
+		    Metrics metrics = new Metrics(this);
+		    Graph mostPopularGamesGraph = metrics.createGraph("Most Popular Games");
+		    for (Game game : gameManager.getGames()) {
+		    	mostPopularGamesGraph.addPlotter(new Metrics.Plotter(game.getGameDescription().getName()) {
+					@Override
+					public int getValue() {
+						return 1;
+					}
+				});
+		    }
+		    metrics.start();
+		} catch (IOException e) {
+			messageManager.debug(e);
+		}
 	}
 
 	public JavaPlugin getPlugin() {
