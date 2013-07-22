@@ -18,9 +18,11 @@
  */
 package me.ampayne2.UltimateGames.Players;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -35,9 +37,14 @@ public class PlayerManager implements Listener{
 	private UltimateGames ultimateGames;
 	private HashMap<String, Arena> playerArenas = new HashMap<String, Arena>();
 	private HashMap<String, Boolean> playerInArena = new HashMap<String, Boolean>();
+	private ArrayList<String> playersInLimbo = new ArrayList<String>();
 	
+	@SuppressWarnings("unchecked")
 	public PlayerManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
+		if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains("limbo")) {
+			playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList("limbo");
+		}
 	}
 	
 	/**
@@ -110,6 +117,10 @@ public class PlayerManager implements Listener{
 			if (sendMessage) {
 				ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.leave", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
 			}
+			Location location = ultimateGames.getLobbyManager().getLobby();
+			if (location != null) {
+				Bukkit.getPlayer(playerName).teleport(location);
+			}
 		}
 	}
 	
@@ -117,6 +128,12 @@ public class PlayerManager implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		String playerName = event.getPlayer().getName();
 		playerInArena.put(playerName, false);
+		if (playersInLimbo.contains(playerName)) {
+			Bukkit.getPlayer(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
+			playersInLimbo.remove(playerName);
+			ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
+			ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
+		}
 	}
 	
 	@EventHandler
@@ -125,6 +142,9 @@ public class PlayerManager implements Listener{
 		if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
 			Arena arena = getPlayerArena(playerName);
 			removePlayerFromArena(playerName, arena, true);
+			playersInLimbo.add(playerName);
+			ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
+			ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
 		}
 		ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
 	}

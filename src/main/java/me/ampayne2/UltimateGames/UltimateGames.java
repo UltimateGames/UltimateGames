@@ -25,6 +25,7 @@ import me.ampayne2.UltimateGames.Files.ConfigManager;
 import me.ampayne2.UltimateGames.Games.GameManager;
 import me.ampayne2.UltimateGames.Listeners.ArenaListener;
 import me.ampayne2.UltimateGames.Listeners.SignListener;
+import me.ampayne2.UltimateGames.Players.LobbyManager;
 import me.ampayne2.UltimateGames.Players.PlayerManager;
 import me.ampayne2.UltimateGames.Players.QueueManager;
 import me.ampayne2.UltimateGames.Players.SpawnpointManager;
@@ -46,6 +47,7 @@ public class UltimateGames extends JavaPlugin {
 	private SpawnpointManager spawnpointManager;
 	private PlayerManager playerManager;
 	private CountdownManager countdownManager;
+	private LobbyManager lobbyManager;
 	private GhostFactory ghostFactory;
 	private Utils utils;
 
@@ -55,14 +57,15 @@ public class UltimateGames extends JavaPlugin {
 		saveConfig();
 		configManager = new ConfigManager(this);
 		messageManager = new Message(this);
+		playerManager = new PlayerManager(this);
 		gameManager = new GameManager(this);
 		messageManager.loadGameMessages();
 		queueManager = new QueueManager(this);
 		spawnpointManager = new SpawnpointManager(this);
 		arenaManager = new ArenaManager(this);
 		ugSignManager = new UGSignManager(this);
-		playerManager = new PlayerManager(this);
 		countdownManager = new CountdownManager(this);
+		lobbyManager = new LobbyManager(this);
 		/*
 		ghostFactory = new GhostFactory(this, true);
 		ghostFactory.create();
@@ -112,6 +115,10 @@ public class UltimateGames extends JavaPlugin {
 	
 	public CountdownManager getCountdownManager() {
 		return countdownManager;
+	}
+	
+	public LobbyManager getLobbyManager() {
+		return lobbyManager;
 	}
 	
 	public GhostFactory getGhostFactory() {

@@ -51,7 +51,7 @@ public class Arena implements Listener{
 		this.ultimateGames = ultimateGames;
 		this.arenaName = arenaName;
 		this.game = game;
-		arenaStatus = ArenaStatus.ARENA_STOPPED;
+		arenaStatus = ArenaStatus.OPEN;
 		FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
 		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
 		String arenaPath = "Arenas."+game.getGameDescription().getName()+"."+arenaName;
