@@ -20,6 +20,7 @@ package me.ampayne2.UltimateGames.Utils;
 
 import java.util.ArrayList;
 
+import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Games.Game;
 
 import org.bukkit.Bukkit;
@@ -31,8 +32,10 @@ import org.bukkit.inventory.meta.BookMeta;
 
 public class Utils {
 	
-	public Utils() {
-		
+	private UltimateGames ultimateGames;
+	
+	public Utils(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
 	}
 	
 	/**
@@ -106,6 +109,30 @@ public class Utils {
 				particleEffect.play(player, particleLocation, 0, 0, 0, 0, 1);
 			}
 		}
+	}
+	
+	/**
+	 * Closes a player's respawn screen 1 tick after called.
+	 * 
+	 * @param player The player.
+	 */
+	public void autoRespawn(final Player player) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateGames, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Object nmsPlayer = player.getClass().getMethod("getHandle").invoke(player);
+
+					Object packet = Class.forName(nmsPlayer.getClass().getPackage().getName() + ".Packet205ClientCommand").newInstance();
+					packet.getClass().getField("a").set(packet, 1);
+
+					Object con = nmsPlayer.getClass().getField("playerConnection").get(nmsPlayer);
+					con.getClass().getMethod("a", packet.getClass()).invoke(con, packet);
+				} catch (Throwable e) {
+					ultimateGames.getMessageManager().debug((Exception) e);
+				}
+			}
+		}, 1L);
 	}
 	
 }

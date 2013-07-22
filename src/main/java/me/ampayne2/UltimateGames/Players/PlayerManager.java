@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -44,6 +45,9 @@ public class PlayerManager implements Listener{
 		this.ultimateGames = ultimateGames;
 		if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains("limbo")) {
 			playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList("limbo");
+		}
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			playerInArena.put(player.getName(), false);
 		}
 	}
 	
