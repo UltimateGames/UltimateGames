@@ -86,12 +86,10 @@ public class CountdownManager {
 	 * @param expDisplay Should the exp bar be used to display the countdown?
 	 */
 	public void createEndingCountdown(Arena arena, Integer seconds, Boolean expDisplay) {
-		if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
-			if (!ending.contains(arena)) {
-				ending.add(arena);
-			}
-			new EndingCountdown(ultimateGames, arena, seconds, seconds, expDisplay).runTask(ultimateGames);
+		if (!ending.contains(arena)) {
+			ending.add(arena);
 		}
+		new EndingCountdown(ultimateGames, arena, seconds, seconds, expDisplay).runTask(ultimateGames);
 	}
 	
 	/**
