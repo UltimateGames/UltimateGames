@@ -182,4 +182,75 @@ public class ArenaManager {
 			}
 		}
 	}
+	
+	/**
+	 * Opens an arena.
+	 * 
+	 * @param arena The arena.
+	 */
+	public void openArena(Arena arena) {
+		if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+			if (arena.getGame().getGamePlugin().openArena(arena)) {
+				arena.setStatus(ArenaStatus.OPEN);
+				ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			}
+		}
+	}
+	
+	/**
+	 * Starts the arena
+	 * 
+	 * @param arena
+	 */
+	public void startArena(Arena arena) {
+		if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+			if (arena.getGame().getGamePlugin().isStartPossible(arena) && arena.getGame().getGamePlugin().startArena(arena)) {
+				arena.setStatus(ArenaStatus.STARTING);
+				ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			}
+		}
+	}
+	
+	/**
+	 * Begins an arena.
+	 * 
+	 * @param arena The arena.
+	 */
+	public void beginArena(Arena arena) {
+		if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+			arena.setStatus(ArenaStatus.RUNNING);
+			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			if (arena.getGame().getGamePlugin().beginArena(arena)) {
+				ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.begin");
+			}
+		}
+	}
+	
+	/**
+	 * Ends an arena.
+	 * 
+	 * @param arena The arena.
+	 */
+	public void endArena(Arena arena) {
+		if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+			arena.setStatus(ArenaStatus.ENDING);
+			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			if (arena.getGame().getGamePlugin().endArena(arena)) {
+				ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
+			}
+		}
+	}
+	
+	/**
+	 * Stops an arena.
+	 * 
+	 * @param arena The arena.
+	 */
+	public void stopArena(Arena arena) {
+		if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+			arena.setStatus(ArenaStatus.ARENA_STOPPED);
+			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			arena.getGame().getGamePlugin().stopArena(arena);
+		}
+	}
 }

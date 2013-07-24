@@ -10,6 +10,7 @@ messages:
     forceload: ""
     forceunload: ""
     start: "The game has started!"
+    begin: "The game has begun!"
     end: "The game has ended!"
     setstatus: "Set the status of Arena '%s' of Game '%s' to '%s'."
     forcestart: "Force started the Arena '%s' of Game '%s'."

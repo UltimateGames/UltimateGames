@@ -20,8 +20,6 @@ package me.ampayne2.UltimateGames.Countdowns;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Enums.ArenaStatus;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -53,10 +51,7 @@ public class EndingCountdown extends BukkitRunnable{
 		if (secondsLeft > 0 && secondsLeft <= 10) {
 			ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
 		} else if (secondsLeft == 0) {
-			ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
-			arena.setStatus(ArenaStatus.ENDING);
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-			arena.getGame().getGamePlugin().endArena(arena);
+			ultimateGames.getArenaManager().endArena(arena);
 			ultimateGames.getCountdownManager().stopEndingCountdown(arena);
 		}
 		if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {

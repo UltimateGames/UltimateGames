@@ -16,36 +16,36 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.Commands;
+package me.ampayne2.UltimateGames.Command.Commands.Arenas;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
 
-public class AddSpawn implements UGCommand{
+public class Begin implements UGCommand{
 
 	private UltimateGames ultimateGames;
 	
-	public AddSpawn(UltimateGames ultimateGames) {
+	public Begin(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if (args.length != 3 || !(args[2].equals("true") || args[2].equals("false"))) {
+		if (args.length != 2) {
 			return;
 		}
-		String arenaName = args[0];
 		String gameName = args[1];
-		Boolean locked = Boolean.valueOf(args[2]);
-		if (!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			return; //game or arena doesn't exist
+		String arenaName = args[0];
+		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+			if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
+				ultimateGames.getCountdownManager().createStartingCountdown(arena, 5);
+				ultimateGames.getMessageManager().sendReplacedMessage(sender.getName(), "arenas.forcestart", arenaName, gameName);
+			}
 		}
-		Player player = (Player) sender;
-		ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), player.getLocation(), locked);
-		ultimateGames.getMessageManager().sendReplacedMessage(player.getName(), "spawnpoints.create", arenaName, gameName);
 	}
 
 }

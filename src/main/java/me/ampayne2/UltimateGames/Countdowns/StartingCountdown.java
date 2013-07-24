@@ -47,10 +47,7 @@ public class StartingCountdown extends BukkitRunnable{
 		} else if (secondsLeft > 0 && secondsLeft <= 10) {
 			ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
 		} else if (secondsLeft == 0) {
-			ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.start");
-			arena.setStatus(ArenaStatus.RUNNING);
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-			arena.getGame().getGamePlugin().beginArena(arena);
+			ultimateGames.getArenaManager().beginArena(arena);
 			ultimateGames.getCountdownManager().stopStartingCountdown(arena);
 		}
 		if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {

@@ -20,11 +20,13 @@ package me.ampayne2.UltimateGames.Command;
 
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Command.SubCommand;
-import me.ampayne2.UltimateGames.Command.Commands.AddSpawn;
-import me.ampayne2.UltimateGames.Command.Commands.CreateArena;
 import me.ampayne2.UltimateGames.Command.Commands.SetLobby;
 import me.ampayne2.UltimateGames.Command.Commands.SpawnParticle;
-import me.ampayne2.UltimateGames.Command.Commands.Start;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.AddSpawn;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.Create;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.Leave;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.Begin;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.End;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,22 +41,21 @@ public class CommandController extends JavaPlugin {
 
 	public CommandController(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
-
-		SubCommand create = new SubCommand();
-		CreateArena createArena = new CreateArena(ultimateGames);
-		ultimateGames.getServer().getPluginManager().registerEvents(createArena, ultimateGames);
-		create.addCommand("arena", "ultimategames.arena.create", createArena);
-		mainCommand.addCommand("create", null, create);
 		
-		SubCommand add = new SubCommand();
-		add.addCommand("spawn", "ultimategames.add.spawn", new AddSpawn(ultimateGames));
-		mainCommand.addCommand("add", null, add);
+		SubCommand arena = new SubCommand();
+		Create create = new Create(ultimateGames);
+		ultimateGames.getServer().getPluginManager().registerEvents(create, ultimateGames);
+		arena.addCommand("create", "ultimategames.create.arena", create);
+		arena.addCommand("addspawn", "ultimategames.arena.addspawn", new AddSpawn(ultimateGames));
+		arena.addCommand("begin", "ultimategames.arena.begin", new Begin(ultimateGames));
+		arena.addCommand("end", "ultimategames.arena.end", new End(ultimateGames));
+		mainCommand.addCommand("arena", null, arena);
 		
-		mainCommand.addCommand("start", "ultimategames.arena.start", new Start(ultimateGames));
-		
-		mainCommand.addCommand("SpawnParticle", "ultimategames.spawnparticle", new SpawnParticle());
+		mainCommand.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
 		
 		mainCommand.addCommand("setlobby", "ultimategames.setlobby", new SetLobby(ultimateGames));
+		
+		mainCommand.addCommand("SpawnParticle", "ultimategames.spawnparticle", new SpawnParticle());
 	}
 
 	@Override

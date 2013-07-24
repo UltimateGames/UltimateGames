@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.Commands;
+package me.ampayne2.UltimateGames.Command.Commands.Arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
 import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 import me.ampayne2.UltimateGames.Games.Game;
 
-public class CreateArena implements UGCommand, Listener {
+public class Create implements UGCommand, Listener {
 
 	private UltimateGames ultimateGames;
 	private ArrayList<String> playersSelecting = new ArrayList<String>();
@@ -42,7 +42,7 @@ public class CreateArena implements UGCommand, Listener {
 	private HashMap<String, Game> game = new HashMap<String, Game>();
 	private HashMap<String, String> arenaName =  new HashMap<String, String>();
 	
-	public CreateArena(UltimateGames ultimateGames) {
+	public Create(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
 	

@@ -20,6 +20,7 @@ package me.ampayne2.UltimateGames;
 
 import java.io.IOException;
 
+import me.ampayne2.UltimateGames.API.ScoreboardManager;
 import me.ampayne2.UltimateGames.Arenas.ArenaManager;
 import me.ampayne2.UltimateGames.Command.CommandController;
 import me.ampayne2.UltimateGames.Countdowns.CountdownManager;
@@ -52,6 +53,7 @@ public class UltimateGames extends JavaPlugin {
 	private PlayerManager playerManager;
 	private CountdownManager countdownManager;
 	private LobbyManager lobbyManager;
+	private ScoreboardManager scoreboardManager;
 	private Utils utils;
 
 	public void onEnable() {
@@ -69,6 +71,7 @@ public class UltimateGames extends JavaPlugin {
 		ugSignManager = new UGSignManager(this);
 		countdownManager = new CountdownManager(this);
 		lobbyManager = new LobbyManager(this);
+		scoreboardManager = new ScoreboardManager();
 		utils = new Utils(this);
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
@@ -133,6 +136,10 @@ public class UltimateGames extends JavaPlugin {
 	
 	public LobbyManager getLobbyManager() {
 		return lobbyManager;
+	}
+	
+	public ScoreboardManager getScoreboardManager() {
+		return scoreboardManager;
 	}
 	
 	public Utils getUtils() {

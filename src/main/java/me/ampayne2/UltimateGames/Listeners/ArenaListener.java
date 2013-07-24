@@ -27,6 +27,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
 import me.ampayne2.UltimateGames.UltimateGames;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 
@@ -116,6 +118,17 @@ public class ArenaListener implements Listener{
 					event.setCancelled(true);
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Stops death messages if player is in an arena.
+	 * @param event
+	 */
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getEntity().getName())) {
+			event.setDeathMessage("");
 		}
 	}
 	
