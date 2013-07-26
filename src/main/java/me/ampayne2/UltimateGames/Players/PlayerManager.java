@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.UltimateGames.API.ArenaScoreboard;
 import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Events.GameJoinEvent;
 
@@ -99,6 +100,9 @@ public class PlayerManager implements Listener{
 			if (sendMessage) {
 				ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.join", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
 			}
+			for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
+				scoreBoard.addPlayer(playerName);
+			}
 		}
 	}
 	
@@ -126,6 +130,9 @@ public class PlayerManager implements Listener{
 			Location location = ultimateGames.getLobbyManager().getLobby();
 			if (location != null) {
 				Bukkit.getPlayer(playerName).teleport(location);
+			}
+			for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
+				scoreBoard.removePlayer(playerName);
 			}
 		}
 	}

@@ -17,6 +17,7 @@ public class ArenaScoreboard {
 		Objective objective = scoreboard.registerNewObjective(name, "dummy");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		this.scoreboard = scoreboard;
+		this.name = name;
 	}
 	
 	public String getName() {
@@ -58,11 +59,11 @@ public class ArenaScoreboard {
 	}
 	
 	public Integer getScore(String name) {
-		return scoreboard.getObjective(name).getScore(Bukkit.getOfflinePlayer(name)).getScore();
+		return scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).getScore();
 	}
 	
 	public void setScore(String name, Integer score) {
-		scoreboard.getObjective(name).getScore(Bukkit.getOfflinePlayer(name)).setScore(score);
+		scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).setScore(score);
 	}
 	
 	public void resetScore(String name) {

@@ -13,7 +13,7 @@ public class ScoreboardManager {
 		if (scoreboards.containsKey(arena)) {
 			return scoreboards.get(arena);
 		} else {
-			return null;
+			return new ArrayList<ArenaScoreboard>();
 		}
 	}
 	
