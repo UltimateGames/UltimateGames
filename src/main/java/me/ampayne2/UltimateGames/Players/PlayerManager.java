@@ -91,9 +91,9 @@ public class PlayerManager implements Listener{
 			playerInArena.put(playerName, true);
 			playerArenas.put(playerName, arena);
 			arena.addPlayer(playerName);
-			arena.getGame().getGamePlugin().addPlayer(arena, playerName);
 			Player player = Bukkit.getPlayer(playerName);
 			player.getInventory().clear();
+			arena.getGame().getGamePlugin().addPlayer(arena, playerName);
 			GameJoinEvent gameJoinEvent = new GameJoinEvent(Bukkit.getPlayer(playerName), arena);
 			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);

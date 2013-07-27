@@ -311,6 +311,9 @@ public class Arena implements Listener{
 	 */
 	public void setStatus(ArenaStatus status) {
 		arenaStatus = status;
+		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+		arenaConfig.set("Arenas." + game.getGameDescription().getName() + "." + arenaName + ".Status", status.toString());
+		ultimateGames.getConfigManager().getArenaConfig().saveConfig();
 	}
 
 	/**
