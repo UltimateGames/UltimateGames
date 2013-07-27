@@ -23,6 +23,7 @@ messages:
     doesntexit: "Arena doesn't exist."
     failedtocreate: "Failed to create Arena '%s' of Game '%s'. %s"
     failedtojoin: "Failed to join Arena '%s' of Game '%s'. %s"
+    gamenotexist: "This gamemode doesn't exist!"
 
   queues:
     join: "Joined queue for Arena '%s' of Game '%s'. You are %s in line and will be able to join %s."
