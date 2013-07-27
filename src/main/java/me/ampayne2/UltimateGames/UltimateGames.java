@@ -76,7 +76,9 @@ public class UltimateGames extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
 		getServer().getPluginManager().registerEvents(playerManager, this);
-		getCommand("ultimategames").setExecutor(new CommandController(this));
+		CommandController commandController = new CommandController(this);
+		getServer().getPluginManager().registerEvents(commandController, this);
+		getCommand("ultimategames").setExecutor(commandController);
 		try {
 		    Metrics metrics = new Metrics(this);
 		    Graph mostPopularGamesGraph = metrics.createGraph("Most Popular Games");

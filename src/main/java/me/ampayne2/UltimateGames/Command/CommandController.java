@@ -19,23 +19,30 @@
 package me.ampayne2.UltimateGames.Command;
 
 import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Command.SubCommand;
 import me.ampayne2.UltimateGames.Command.Commands.SetLobby;
 import me.ampayne2.UltimateGames.Command.Commands.SpawnParticle;
 import me.ampayne2.UltimateGames.Command.Commands.Arenas.AddSpawn;
 import me.ampayne2.UltimateGames.Command.Commands.Arenas.Create;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.Join;
 import me.ampayne2.UltimateGames.Command.Commands.Arenas.Leave;
 import me.ampayne2.UltimateGames.Command.Commands.Arenas.Begin;
 import me.ampayne2.UltimateGames.Command.Commands.Arenas.End;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.Open;
+import me.ampayne2.UltimateGames.Command.Commands.Arenas.Stop;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CommandController extends JavaPlugin {
-
-	@SuppressWarnings("unused")
+public class CommandController extends JavaPlugin implements Listener{
+	
 	private UltimateGames ultimateGames;
 	private final SubCommand mainCommand = new SubCommand();
 
@@ -45,13 +52,15 @@ public class CommandController extends JavaPlugin {
 		SubCommand arena = new SubCommand();
 		Create create = new Create(ultimateGames);
 		ultimateGames.getServer().getPluginManager().registerEvents(create, ultimateGames);
-		arena.addCommand("create", "ultimategames.create.arena", create);
+		arena.addCommand("create", "ultimategames.arena.create", create);
 		arena.addCommand("addspawn", "ultimategames.arena.addspawn", new AddSpawn(ultimateGames));
+		arena.addCommand("open", "ultimategames.arena.open", new Open(ultimateGames));
 		arena.addCommand("begin", "ultimategames.arena.begin", new Begin(ultimateGames));
 		arena.addCommand("end", "ultimategames.arena.end", new End(ultimateGames));
+		arena.addCommand("stop", "ultimategames.arena.stop", new Stop(ultimateGames));
+		arena.addCommand("join", "ultimategames.arena.join", new Join(ultimateGames));
+		arena.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
 		mainCommand.addCommand("arena", null, arena);
-		
-		mainCommand.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
 		
 		mainCommand.addCommand("setlobby", "ultimategames.setlobby", new SetLobby(ultimateGames));
 		
@@ -96,5 +105,23 @@ public class CommandController extends JavaPlugin {
 			return true;
 		}
 
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onCommand(PlayerCommandPreprocessEvent event) {
+		Player player = event.getPlayer();
+		String playerName = player.getName();
+		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+			String[] command = event.getMessage().split(" ");
+			if (command.length > 0 && !command[0].equalsIgnoreCase("/ug") && !command[0].equalsIgnoreCase("/ultimategames") && !player.hasPermission("ultimategames.bypasscommandblock")) {
+				event.setCancelled(true);
+				Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+				String[] args = new String[command.length - 1];
+				System.arraycopy(command, 1, args, command.length - 1, command.length - 1);
+				if (!arena.getGame().getGamePlugin().onArenaCommand(arena, command[0].replace("/", ""), (CommandSender) player, args)) {
+					event.setCancelled(false);
+				}
+			}
+		}
 	}
 }

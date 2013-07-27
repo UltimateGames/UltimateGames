@@ -46,8 +46,7 @@ public abstract class GamePlugin implements Listener{
 	public abstract Boolean addPlayer(Arena arena, String playerName); // Handle player joining.
 	public abstract Boolean removePlayer(Arena arena, String playerName); // Handle player leaving.
 	
-	public abstract void onGameCommand(String command, CommandSender sender, String[] args); // Handle game command.
-	public abstract void onArenaCommand(Arena arena, String command, CommandSender sender, String[] args); // Handle arena command.
+	public abstract Boolean onArenaCommand(Arena arena, String command, CommandSender sender, String[] args); // Handle arena command.
 	
 	public abstract void handleInputSignCreate(Arena arena, Sign sign, String label); // Handle input sign creation.
 	public abstract void handleInputSignClick(Arena arena, Sign sign, String label, PlayerInteractEvent event); // Handle input sign click.

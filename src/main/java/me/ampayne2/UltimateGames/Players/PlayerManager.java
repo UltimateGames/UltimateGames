@@ -87,7 +87,7 @@ public class PlayerManager implements Listener{
 	 * @param arena The arena.
 	 */
 	public void addPlayerToArena(String playerName, Arena arena, Boolean sendMessage) {
-		if (!isPlayerInArena(playerName) && getPlayerArena(playerName) == null) {
+		if (!isPlayerInArena(playerName) && getPlayerArena(playerName) == null && arena.getPlayers().size() < arena.getMaxPlayers()) {
 			playerInArena.put(playerName, true);
 			playerArenas.put(playerName, arena);
 			arena.addPlayer(playerName);
@@ -133,6 +133,9 @@ public class PlayerManager implements Listener{
 			}
 			for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
 				scoreBoard.removePlayer(playerName);
+			}
+			if (arena.getPlayers().size() < arena.getMinPlayers()) {
+				ultimateGames.getArenaManager().endArena(arena);
 			}
 		}
 	}

@@ -19,16 +19,17 @@
 package me.ampayne2.UltimateGames.Command.Commands.Arenas;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
 import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
+import me.ampayne2.UltimateGames.Enums.ArenaStatus;
 
-public class Stop implements UGCommand{
-	
+public class Join implements UGCommand{
+
 	private UltimateGames ultimateGames;
 	
-	public Stop(UltimateGames ultimateGames) {
+	public Join(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
 	
@@ -39,9 +40,9 @@ public class Stop implements UGCommand{
 		}
 		String arenaName = args[0];
 		String gameName = args[1];
-		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-			ultimateGames.getArenaManager().stopArena(arena);
+		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName) && ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.OPEN || ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.STARTING) {
+			ultimateGames.getPlayerManager().addPlayerToArena(((Player) sender).getName(), ultimateGames.getArenaManager().getArena(arenaName, gameName), true);
 		}
 	}
+
 }
