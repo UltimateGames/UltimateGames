@@ -18,6 +18,8 @@
  */
 package me.ampayne2.ultimategames.signs;
 
+import java.util.Arrays;
+
 import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.block.Sign;
@@ -27,7 +29,7 @@ public class InputSign extends UGSign {
     private String label;
     private Sign sign;
     private Arena arena;
-    private String[] lines;
+    private String[] lines = new String[4];
 
     public InputSign(String label, Sign sign, Arena arena) {
         super(sign, arena);
@@ -40,7 +42,6 @@ public class InputSign extends UGSign {
 
     @Override
     public void onSignClick(PlayerInteractEvent event) {
-        //TODO: Permission Check
         arena.getGame().getGamePlugin().handleInputSignClick(arena, sign, label, event);
     }
 
@@ -50,6 +51,10 @@ public class InputSign extends UGSign {
     }
 
     public void setLines(String[] lines) {
-        this.lines = lines;
+        if (lines == null || lines.length != 4) {
+        	this.lines = new String[4];
+        } else {
+        	this.lines = Arrays.copyOf(lines, 4);
+        }
     }
 }
