@@ -19,7 +19,7 @@
 package me.ampayne2.ultimategames.enums;
 
 public enum EndType {
-	SUCCESSFUL,
-	FAILED,
-	STOPPED
+    SUCCESSFUL,
+    FAILED,
+    STOPPED
 }

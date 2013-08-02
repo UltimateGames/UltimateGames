@@ -29,70 +29,70 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class LobbySign extends UGSign {
-	private UltimateGames ultimateGames;
-	private Arena arena;
+    private UltimateGames ultimateGames;
+    private Arena arena;
 
-	public LobbySign(UltimateGames ultimateGames, Sign sign, Arena arena) {
-		super(sign, arena);
-		this.ultimateGames = ultimateGames;
-		this.arena = arena;
-		update();
-	}
+    public LobbySign(UltimateGames ultimateGames, Sign sign, Arena arena) {
+        super(sign, arena);
+        this.ultimateGames = ultimateGames;
+        this.arena = arena;
+        update();
+    }
 
-	@Override
-	public void onSignClick(PlayerInteractEvent event) {
-		//TODO: Permission check
-		ArenaStatus arenaStatus = arena.getStatus();
-		if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
-			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-			ultimateGames.getPlayerManager().addPlayerToArena(event.getPlayer().getName(), arena, true);
-			return;
-		} else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
-				|| arena.getPlayers().size() >= arena.getMaxPlayers()) {
-			QueueManager queue = ultimateGames.getQueueManager();
-			String playerName = event.getPlayer().getName();
-			if (queue.isPlayerInQueue(playerName, arena)) {
-				queue.removePlayerFromQueues(playerName);
-			} else {
-				queue.addPlayerToQueue(playerName, arena);
-			}
-		}
-	}
+    @Override
+    public void onSignClick(PlayerInteractEvent event) {
+        //TODO: Permission check
+        ArenaStatus arenaStatus = arena.getStatus();
+        if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
+            // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
+            ultimateGames.getPlayerManager().addPlayerToArena(event.getPlayer().getName(), arena, true);
+            return;
+        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
+                || arena.getPlayers().size() >= arena.getMaxPlayers()) {
+            QueueManager queue = ultimateGames.getQueueManager();
+            String playerName = event.getPlayer().getName();
+            if (queue.isPlayerInQueue(playerName, arena)) {
+                queue.removePlayerFromQueues(playerName);
+            } else {
+                queue.addPlayerToQueue(playerName, arena);
+            }
+        }
+    }
 
-	@Override
-	public String[] getUpdatedLines() {
+    @Override
+    public String[] getUpdatedLines() {
 
-		String[] lines = new String[4];
+        String[] lines = new String[4];
 
-		ArenaStatus arenaStatus = arena.getStatus();
-		ChatColor statusColor = ChatColor.BLACK;
-		if (arenaStatus == ArenaStatus.RESET_FAILED) {
-			statusColor = ChatColor.DARK_RED;
-		} else if (arenaStatus == ArenaStatus.OPEN) {
-			statusColor = ChatColor.GREEN;
-		} else if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
-			statusColor = ChatColor.BLACK;
-		} else {
-			statusColor = ChatColor.DARK_GRAY;
-		}
+        ArenaStatus arenaStatus = arena.getStatus();
+        ChatColor statusColor = ChatColor.BLACK;
+        if (arenaStatus == ArenaStatus.RESET_FAILED) {
+            statusColor = ChatColor.DARK_RED;
+        } else if (arenaStatus == ArenaStatus.OPEN) {
+            statusColor = ChatColor.GREEN;
+        } else if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
+            statusColor = ChatColor.BLACK;
+        } else {
+            statusColor = ChatColor.DARK_GRAY;
+        }
 
-		if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
-			lines[0] = statusColor + "[STOPPED]";
-		} else {
-			lines[0] = statusColor + "[" + arenaStatus.toString() + "]";
-		}
+        if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
+            lines[0] = statusColor + "[STOPPED]";
+        } else {
+            lines[0] = statusColor + "[" + arenaStatus.toString() + "]";
+        }
 
-		lines[1] = arena.getGame().getGameDescription().getName();
+        lines[1] = arena.getGame().getGameDescription().getName();
 
-		lines[2] = arena.getName();
+        lines[2] = arena.getName();
 
-		PlayerType playerType = arena.getGame().getGameDescription().getPlayerType();
-		if (playerType == PlayerType.INFINITE) {
-			lines[3] = "";
-		} else {
-			lines[3] = statusColor + Integer.toString(arena.getPlayers().size()) + " / " + Integer.toString(arena.getMaxPlayers());
-		}
+        PlayerType playerType = arena.getGame().getGameDescription().getPlayerType();
+        if (playerType == PlayerType.INFINITE) {
+            lines[3] = "";
+        } else {
+            lines[3] = statusColor + Integer.toString(arena.getPlayers().size()) + " / " + Integer.toString(arena.getMaxPlayers());
+        }
 
-		return lines;
-	}
+        return lines;
+    }
 }

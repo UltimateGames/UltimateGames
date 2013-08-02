@@ -25,18 +25,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Leave implements UGCommand {
-	private UltimateGames ultimateGames;
+    private UltimateGames ultimateGames;
 
-	public Leave(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public Leave(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		Player player = (Player) sender;
-		String playerName = player.getName();
-		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-			ultimateGames.getPlayerManager().removePlayerFromArena(playerName, ultimateGames.getPlayerManager().getPlayerArena(playerName), true);
-		}
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        Player player = (Player) sender;
+        String playerName = player.getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            ultimateGames.getPlayerManager().removePlayerFromArena(playerName, ultimateGames.getPlayerManager().getPlayerArena(playerName), true);
+        }
+    }
 }

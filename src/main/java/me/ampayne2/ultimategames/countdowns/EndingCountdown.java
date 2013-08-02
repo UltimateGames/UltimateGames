@@ -26,36 +26,36 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class EndingCountdown extends BukkitRunnable {
-	private UltimateGames ultimateGames;
-	private Arena arena;
-	private Integer initialSeconds;
-	private Integer secondsLeft;
-	private Boolean expDisplay;
+    private UltimateGames ultimateGames;
+    private Arena arena;
+    private Integer initialSeconds;
+    private Integer secondsLeft;
+    private Boolean expDisplay;
 
-	public EndingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft, Boolean expDisplay) {
-		this.ultimateGames = ultimateGames;
-		this.arena = arena;
-		this.initialSeconds = initialSeconds;
-		this.secondsLeft = secondsLeft;
-		this.expDisplay = expDisplay;
-	}
+    public EndingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft, Boolean expDisplay) {
+        this.ultimateGames = ultimateGames;
+        this.arena = arena;
+        this.initialSeconds = initialSeconds;
+        this.secondsLeft = secondsLeft;
+        this.expDisplay = expDisplay;
+    }
 
-	@Override
-	public void run() {
-		if (expDisplay) {
-			for (String playerName : arena.getPlayers()) {
-				Player player = Bukkit.getPlayer(playerName);
-				player.setLevel(secondsLeft);
-			}
-		}
-		if (secondsLeft > 0 && secondsLeft <= 10) {
-			ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
-		} else if (secondsLeft == 0) {
-			ultimateGames.getArenaManager().endArena(arena);
-			ultimateGames.getCountdownManager().stopEndingCountdown(arena);
-		}
-		if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
-			new EndingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1, expDisplay).runTaskLater(ultimateGames, 20L);
-		}
-	}
+    @Override
+    public void run() {
+        if (expDisplay) {
+            for (String playerName : arena.getPlayers()) {
+                Player player = Bukkit.getPlayer(playerName);
+                player.setLevel(secondsLeft);
+            }
+        }
+        if (secondsLeft > 0 && secondsLeft <= 10) {
+            ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
+        } else if (secondsLeft == 0) {
+            ultimateGames.getArenaManager().endArena(arena);
+            ultimateGames.getCountdownManager().stopEndingCountdown(arena);
+        }
+        if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
+            new EndingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1, expDisplay).runTaskLater(ultimateGames, 20L);
+        }
+    }
 }

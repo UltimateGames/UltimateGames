@@ -35,128 +35,128 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerManager implements Listener {
-	private UltimateGames ultimateGames;
-	private HashMap<String, Arena> playerArenas = new HashMap<String, Arena>();
-	private HashMap<String, Boolean> playerInArena = new HashMap<String, Boolean>();
-	private ArrayList<String> playersInLimbo = new ArrayList<String>();
+    private UltimateGames ultimateGames;
+    private HashMap<String, Arena> playerArenas = new HashMap<String, Arena>();
+    private HashMap<String, Boolean> playerInArena = new HashMap<String, Boolean>();
+    private ArrayList<String> playersInLimbo = new ArrayList<String>();
 
-	@SuppressWarnings("unchecked")
-	public PlayerManager(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-		if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains("limbo")) {
-			playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList("limbo");
-		}
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			playerInArena.put(player.getName(), false);
-		}
-	}
+    @SuppressWarnings("unchecked")
+    public PlayerManager(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+        if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains("limbo")) {
+            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList("limbo");
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            playerInArena.put(player.getName(), false);
+        }
+    }
 
-	/**
-	 * Checks to see if a player is in an arena.
-	 * @param playerName The player's name.
-	 * @return If the player is in an arena or not.
-	 */
-	public Boolean isPlayerInArena(String playerName) {
-		if (playerInArena.containsKey(playerName)) {
-			return playerInArena.get(playerName);
-		} else {
-			return false;
-		}
-	}
+    /**
+     * Checks to see if a player is in an arena.
+     * @param playerName The player's name.
+     * @return If the player is in an arena or not.
+     */
+    public Boolean isPlayerInArena(String playerName) {
+        if (playerInArena.containsKey(playerName)) {
+            return playerInArena.get(playerName);
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Gets the arena a player is in.
-	 * @param playerName The player's name.
-	 * @return The arena a player is in. Null if the player isn't in an arena.
-	 */
-	public Arena getPlayerArena(String playerName) {
-		if (playerArenas.containsKey(playerName)) {
-			return playerArenas.get(playerName);
-		} else {
-			return null;
-		}
-	}
+    /**
+     * Gets the arena a player is in.
+     * @param playerName The player's name.
+     * @return The arena a player is in. Null if the player isn't in an arena.
+     */
+    public Arena getPlayerArena(String playerName) {
+        if (playerArenas.containsKey(playerName)) {
+            return playerArenas.get(playerName);
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * Adds a player to an arena.
-	 * @param playerName The player's name.
-	 * @param arena The arena.
-	 */
-	public void addPlayerToArena(String playerName, Arena arena, Boolean sendMessage) {
-		if (!isPlayerInArena(playerName) && getPlayerArena(playerName) == null && arena.getPlayers().size() < arena.getMaxPlayers()) {
-			playerInArena.put(playerName, true);
-			playerArenas.put(playerName, arena);
-			arena.addPlayer(playerName);
-			Player player = Bukkit.getPlayer(playerName);
-			player.getInventory().clear();
-			arena.getGame().getGamePlugin().addPlayer(arena, playerName);
-			GameJoinEvent gameJoinEvent = new GameJoinEvent(Bukkit.getPlayer(playerName), arena);
-			Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-			if (sendMessage) {
-				ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.join", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
-			}
-			for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
-				scoreBoard.addPlayer(playerName);
-			}
-		}
-	}
+    /**
+     * Adds a player to an arena.
+     * @param playerName The player's name.
+     * @param arena The arena.
+     */
+    public void addPlayerToArena(String playerName, Arena arena, Boolean sendMessage) {
+        if (!isPlayerInArena(playerName) && getPlayerArena(playerName) == null && arena.getPlayers().size() < arena.getMaxPlayers()) {
+            playerInArena.put(playerName, true);
+            playerArenas.put(playerName, arena);
+            arena.addPlayer(playerName);
+            Player player = Bukkit.getPlayer(playerName);
+            player.getInventory().clear();
+            arena.getGame().getGamePlugin().addPlayer(arena, playerName);
+            GameJoinEvent gameJoinEvent = new GameJoinEvent(Bukkit.getPlayer(playerName), arena);
+            Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+            if (sendMessage) {
+                ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.join", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+            }
+            for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
+                scoreBoard.addPlayer(playerName);
+            }
+        }
+    }
 
-	/**
-	 * Removes a player from an arena.
-	 * @param playerName The player's name.
-	 * @param arena The arena.
-	 */
-	public void removePlayerFromArena(String playerName, Arena arena, Boolean sendMessage) {
-		if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
-			playerInArena.remove(playerName);
-			playerArenas.remove(playerName);
-			arena.removePlayer(playerName);
-			arena.getGame().getGamePlugin().removePlayer(arena, playerName);
-			for (SpawnPoint spawnPoint : ultimateGames.getSpawnpointManager().getSpawnPointsOfArena(arena)) {
-				if (spawnPoint.getPlayer() != null && spawnPoint.getPlayer().equals(playerName)) {
-					spawnPoint.lock(false);
-					spawnPoint.lock(true);
-				}
-			}
-			if (sendMessage) {
-				ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.leave", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
-			}
-			Location location = ultimateGames.getLobbyManager().getLobby();
-			if (location != null) {
-				Bukkit.getPlayer(playerName).teleport(location);
-			}
-			for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
-				scoreBoard.removePlayer(playerName);
-			}
-			if (arena.getPlayers().size() < arena.getMinPlayers()) {
-				ultimateGames.getArenaManager().endArena(arena);
-			}
-		}
-	}
+    /**
+     * Removes a player from an arena.
+     * @param playerName The player's name.
+     * @param arena The arena.
+     */
+    public void removePlayerFromArena(String playerName, Arena arena, Boolean sendMessage) {
+        if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
+            playerInArena.remove(playerName);
+            playerArenas.remove(playerName);
+            arena.removePlayer(playerName);
+            arena.getGame().getGamePlugin().removePlayer(arena, playerName);
+            for (SpawnPoint spawnPoint : ultimateGames.getSpawnpointManager().getSpawnPointsOfArena(arena)) {
+                if (spawnPoint.getPlayer() != null && spawnPoint.getPlayer().equals(playerName)) {
+                    spawnPoint.lock(false);
+                    spawnPoint.lock(true);
+                }
+            }
+            if (sendMessage) {
+                ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.leave", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+            }
+            Location location = ultimateGames.getLobbyManager().getLobby();
+            if (location != null) {
+                Bukkit.getPlayer(playerName).teleport(location);
+            }
+            for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
+                scoreBoard.removePlayer(playerName);
+            }
+            if (arena.getPlayers().size() < arena.getMinPlayers()) {
+                ultimateGames.getArenaManager().endArena(arena);
+            }
+        }
+    }
 
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		String playerName = event.getPlayer().getName();
-		playerInArena.put(playerName, false);
-		if (playersInLimbo.contains(playerName)) {
-			Bukkit.getPlayer(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
-			playersInLimbo.remove(playerName);
-			ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
-			ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
-		}
-	}
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        String playerName = event.getPlayer().getName();
+        playerInArena.put(playerName, false);
+        if (playersInLimbo.contains(playerName)) {
+            Bukkit.getPlayer(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
+            playersInLimbo.remove(playerName);
+            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
+            ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
+        }
+    }
 
-	@EventHandler
-	public void onPlayerLeave(PlayerQuitEvent event) {
-		String playerName = event.getPlayer().getName();
-		if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
-			Arena arena = getPlayerArena(playerName);
-			removePlayerFromArena(playerName, arena, true);
-			playersInLimbo.add(playerName);
-			ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
-			ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
-		}
-		ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
-	}
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (isPlayerInArena(playerName) && getPlayerArena(playerName) != null) {
+            Arena arena = getPlayerArena(playerName);
+            removePlayerFromArena(playerName, arena, true);
+            playersInLimbo.add(playerName);
+            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
+            ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
+        }
+        ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
+    }
 }

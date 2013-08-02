@@ -33,101 +33,101 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class ArenaListener implements Listener {
-	private UltimateGames ultimateGames;
+    private UltimateGames ultimateGames;
 
-	public ArenaListener(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public ArenaListener(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	/**
-	 * Blocks block breaking in arenas when not allowed.
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onBlockBreak(BlockBreakEvent event) {
-		Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
-		if (arena != null) {
-			if (!arena.getArenaSetting("allowBreaking")) {
-				event.setCancelled(true);
-				ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.break");
-				return;
-			}
-		}
-		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
-			arena = ultimateGames.getPlayerManager().getPlayerArena(event.getPlayer().getName());
-			if (arena != null) {
-				if (!arena.getArenaSetting("allowBreaking")) {
-					event.setCancelled(true);
-					ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.break");
-					return;
-				}
-			}
-		}
-	}
+    /**
+     * Blocks block breaking in arenas when not allowed.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockBreak(BlockBreakEvent event) {
+        Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
+        if (arena != null) {
+            if (!arena.getArenaSetting("allowBreaking")) {
+                event.setCancelled(true);
+                ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.break");
+                return;
+            }
+        }
+        if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
+            arena = ultimateGames.getPlayerManager().getPlayerArena(event.getPlayer().getName());
+            if (arena != null) {
+                if (!arena.getArenaSetting("allowBreaking")) {
+                    event.setCancelled(true);
+                    ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.break");
+                    return;
+                }
+            }
+        }
+    }
 
-	/**
-	 * Blocks block placing in arenas when not allowed.
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onBlockPlace(BlockPlaceEvent event) {
-		Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
-		if (arena != null) {
-			if (!arena.getArenaSetting("allowBuilding")) {
-				event.setCancelled(true);
-				ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.place");
-				return;
-			}
-		}
-		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
-			arena = ultimateGames.getPlayerManager().getPlayerArena(event.getPlayer().getName());
-			if (arena != null) {
-				if (!arena.getArenaSetting("allowBuilding")) {
-					event.setCancelled(true);
-					ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.place");
-				}
-			}
-		}
-	}
+    /**
+     * Blocks block placing in arenas when not allowed.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
+        if (arena != null) {
+            if (!arena.getArenaSetting("allowBuilding")) {
+                event.setCancelled(true);
+                ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.place");
+                return;
+            }
+        }
+        if (ultimateGames.getPlayerManager().isPlayerInArena(event.getPlayer().getName())) {
+            arena = ultimateGames.getPlayerManager().getPlayerArena(event.getPlayer().getName());
+            if (arena != null) {
+                if (!arena.getArenaSetting("allowBuilding")) {
+                    event.setCancelled(true);
+                    ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.place");
+                }
+            }
+        }
+    }
 
-	/**
-	 * Blocks tnt breaking blocks in arenas when not allowed.
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onTntExplode(EntityExplodeEvent event) {
-		if (event.getEntity() instanceof TNTPrimed) {
-			Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getLocation());
-			if (arena != null) {
-				if (!arena.getArenaSetting("allowExplosionDamage") && !arena.getArenaSetting("allowExplosionBlockBreaking")) { //neither allowed, cancel both
-					event.setCancelled(true);
-				} else if (!arena.getArenaSetting("allowExplosionBlockBreaking")) {
-					event.blockList().clear();
-				}
-			}
-		}
-	}
+    /**
+     * Blocks tnt breaking blocks in arenas when not allowed.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTntExplode(EntityExplodeEvent event) {
+        if (event.getEntity() instanceof TNTPrimed) {
+            Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getLocation());
+            if (arena != null) {
+                if (!arena.getArenaSetting("allowExplosionDamage") && !arena.getArenaSetting("allowExplosionBlockBreaking")) { //neither allowed, cancel both
+                    event.setCancelled(true);
+                } else if (!arena.getArenaSetting("allowExplosionBlockBreaking")) {
+                    event.blockList().clear();
+                }
+            }
+        }
+    }
 
-	/**
-	 * Blocks tnt damaging entities in arenas when not allowed.
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onTntDamage(EntityDamageByEntityEvent event) {
-		if (event.getDamager() instanceof TNTPrimed && event.getEntity() instanceof Player) {
-			Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getEntity().getLocation());
-			if (arena != null) {
-				if (!arena.getArenaSetting("allowExplosionDamage")) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
+    /**
+     * Blocks tnt damaging entities in arenas when not allowed.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTntDamage(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof TNTPrimed && event.getEntity() instanceof Player) {
+            Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getEntity().getLocation());
+            if (arena != null) {
+                if (!arena.getArenaSetting("allowExplosionDamage")) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Stops death messages if player is in an arena.
-	 * @param event
-	 */
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerDeath(PlayerDeathEvent event) {
-		if (ultimateGames.getPlayerManager().isPlayerInArena(event.getEntity().getName())) {
-			event.setDeathMessage("");
-		}
-	}
+    /**
+     * Stops death messages if player is in an arena.
+     * @param event
+     */
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        if (ultimateGames.getPlayerManager().isPlayerInArena(event.getEntity().getName())) {
+            event.setDeathMessage("");
+        }
+    }
 }

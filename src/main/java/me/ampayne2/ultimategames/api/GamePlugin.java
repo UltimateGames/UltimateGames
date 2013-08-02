@@ -28,37 +28,37 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class GamePlugin implements Listener {
-	public abstract Boolean loadGame(UltimateGames ultimateGames, Game game); // Setup anything needed for the game to function.
+    public abstract Boolean loadGame(UltimateGames ultimateGames, Game game); // Setup anything needed for the game to function.
 
-	public abstract Boolean unloadGame(); // Called when removing the game from the game manager.
+    public abstract Boolean unloadGame(); // Called when removing the game from the game manager.
 
-	public abstract Boolean stopGame(); // Sets all arenas to ArenaStatus.GAME_STOPPED. Disables the game.
+    public abstract Boolean stopGame(); // Sets all arenas to ArenaStatus.GAME_STOPPED. Disables the game.
 
-	public abstract Boolean loadArena(Arena arena); // Setup anything needed for the game to function.
+    public abstract Boolean loadArena(Arena arena); // Setup anything needed for the game to function.
 
-	public abstract Boolean unloadArena(Arena arena); // Called when removing the arena from the arena manager.
+    public abstract Boolean unloadArena(Arena arena); // Called when removing the arena from the arena manager.
 
-	public abstract Boolean isStartPossible(Arena arena); // Checks to see if a start is possible. Used in force starting etc.
+    public abstract Boolean isStartPossible(Arena arena); // Checks to see if a start is possible. Used in force starting etc.
 
-	public abstract Boolean startArena(Arena arena); // Sets to ArenaStatus.STARTING, called at countdown start. Should be used for preparing an arena.
+    public abstract Boolean startArena(Arena arena); // Sets to ArenaStatus.STARTING, called at countdown start. Should be used for preparing an arena.
 
-	public abstract Boolean beginArena(Arena arena); // Sets to ArenaStatus.RUNNING, called at countdown end.
+    public abstract Boolean beginArena(Arena arena); // Sets to ArenaStatus.RUNNING, called at countdown end.
 
-	public abstract Boolean endArena(Arena arena); // Sets to ArenaStatus.ENDING.
+    public abstract Boolean endArena(Arena arena); // Sets to ArenaStatus.ENDING.
 
-	public abstract Boolean resetArena(Arena arena); // Sets to ArenaStatus.RESETTING. Should be used to reset anything in the arena. If returns false, sets to ArenaStatus.RESET_FAILED.
+    public abstract Boolean resetArena(Arena arena); // Sets to ArenaStatus.RESETTING. Should be used to reset anything in the arena. If returns false, sets to ArenaStatus.RESET_FAILED.
 
-	public abstract Boolean openArena(Arena arena); // Sets to ArenaStatus.OPEN.
+    public abstract Boolean openArena(Arena arena); // Sets to ArenaStatus.OPEN.
 
-	public abstract Boolean stopArena(Arena arena); // Sets to ArenaStatus.ARENA_STOPPED. Disables the arena.
+    public abstract Boolean stopArena(Arena arena); // Sets to ArenaStatus.ARENA_STOPPED. Disables the arena.
 
-	public abstract Boolean addPlayer(Arena arena, String playerName); // Handle player joining.
+    public abstract Boolean addPlayer(Arena arena, String playerName); // Handle player joining.
 
-	public abstract Boolean removePlayer(Arena arena, String playerName); // Handle player leaving.
+    public abstract Boolean removePlayer(Arena arena, String playerName); // Handle player leaving.
 
-	public abstract Boolean onArenaCommand(Arena arena, String command, CommandSender sender, String[] args); // Handle arena command.
+    public abstract Boolean onArenaCommand(Arena arena, String command, CommandSender sender, String[] args); // Handle arena command.
 
-	public abstract void handleInputSignCreate(Arena arena, Sign sign, String label); // Handle input sign creation.
+    public abstract void handleInputSignCreate(Arena arena, Sign sign, String label); // Handle input sign creation.
 
-	public abstract void handleInputSignClick(Arena arena, Sign sign, String label, PlayerInteractEvent event); // Handle input sign click.
+    public abstract void handleInputSignClick(Arena arena, Sign sign, String label, PlayerInteractEvent event); // Handle input sign click.
 }

@@ -19,8 +19,8 @@
 package me.ampayne2.ultimategames.enums;
 
 public enum PlayerType {
-	SINGLE_PLAYER,
-	TWO_PLAYER,
-	CONFIGUREABLE,
-	INFINITE
+    SINGLE_PLAYER,
+    TWO_PLAYER,
+    CONFIGUREABLE,
+    INFINITE
 }

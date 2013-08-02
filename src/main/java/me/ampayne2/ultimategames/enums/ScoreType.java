@@ -19,9 +19,9 @@
 package me.ampayne2.ultimategames.enums;
 
 public enum ScoreType {
-	TIME_LONGER,
-	TIME_SHORTER,
-	POINTS_HIGHER,
-	POINTS_LOWER,
-	GOOD_BAD
+    TIME_LONGER,
+    TIME_SHORTER,
+    POINTS_HIGHER,
+    POINTS_LOWER,
+    GOOD_BAD
 }

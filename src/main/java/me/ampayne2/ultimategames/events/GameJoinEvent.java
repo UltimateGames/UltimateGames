@@ -25,28 +25,28 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class GameJoinEvent extends Event {
-	private static final HandlerList handlers = new HandlerList();
-	private Player player;
-	private Arena arena;
+    private static final HandlerList handlers = new HandlerList();
+    private Player player;
+    private Arena arena;
 
-	public GameJoinEvent(Player player, Arena arena) {
-		this.player = player;
-		this.arena = arena;
-	}
+    public GameJoinEvent(Player player, Arena arena) {
+        this.player = player;
+        this.arena = arena;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public Arena getArena() {
-		return arena;
-	}
+    public Arena getArena() {
+        return arena;
+    }
 
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

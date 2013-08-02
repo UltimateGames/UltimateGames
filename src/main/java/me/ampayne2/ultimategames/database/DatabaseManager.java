@@ -29,38 +29,38 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.database.tables.PlayerData;
 
 public class DatabaseManager {
-	@SuppressWarnings("unused")
-	private final UltimateGames plugin;
-	private final Database db;
+    @SuppressWarnings("unused")
+    private final UltimateGames plugin;
+    private final Database db;
 
-	public DatabaseManager(UltimateGames plugin) throws ConnectionException, TableRegistrationException {
-		this.plugin = plugin;
+    public DatabaseManager(UltimateGames plugin) throws ConnectionException, TableRegistrationException {
+        this.plugin = plugin;
 
-		String dbType = plugin.getConfig().getString("Database.Type");
+        String dbType = plugin.getConfig().getString("Database.Type");
 
-		if (dbType.equalsIgnoreCase("sqlite")) {
-			SQLiteConfiguration sqLiteConfiguration = new SQLiteConfiguration();
-			sqLiteConfiguration.setPath(plugin.getDataFolder() + "database.db");
-			sqLiteConfiguration.setPrefix(plugin.getConfig().getString("Database.Prefix"));
-			db = DatabaseFactory.createNewDatabase(sqLiteConfiguration);
-		} else if (dbType.equalsIgnoreCase("mysql")) {
-			MySQLConfiguration mySQLConfiguration = new MySQLConfiguration();
-			mySQLConfiguration.setHost(plugin.getConfig().getString("Database.Address"));
-			mySQLConfiguration.setPort(plugin.getConfig().getInt("Database.Port"));
-			mySQLConfiguration.setUser(plugin.getConfig().getString("Database.User"));
-			mySQLConfiguration.setPassword(plugin.getConfig().getString("Database.Password"));
-			mySQLConfiguration.setDatabase(plugin.getConfig().getString("Database.Database"));
-			mySQLConfiguration.setPrefix(plugin.getConfig().getString("Database.Prefix"));
-			db = DatabaseFactory.createNewDatabase(mySQLConfiguration);
-		} else {
-			throw new ConnectionException("Invalid database configuration!");
-		}
+        if (dbType.equalsIgnoreCase("sqlite")) {
+            SQLiteConfiguration sqLiteConfiguration = new SQLiteConfiguration();
+            sqLiteConfiguration.setPath(plugin.getDataFolder() + "database.db");
+            sqLiteConfiguration.setPrefix(plugin.getConfig().getString("Database.Prefix"));
+            db = DatabaseFactory.createNewDatabase(sqLiteConfiguration);
+        } else if (dbType.equalsIgnoreCase("mysql")) {
+            MySQLConfiguration mySQLConfiguration = new MySQLConfiguration();
+            mySQLConfiguration.setHost(plugin.getConfig().getString("Database.Address"));
+            mySQLConfiguration.setPort(plugin.getConfig().getInt("Database.Port"));
+            mySQLConfiguration.setUser(plugin.getConfig().getString("Database.User"));
+            mySQLConfiguration.setPassword(plugin.getConfig().getString("Database.Password"));
+            mySQLConfiguration.setDatabase(plugin.getConfig().getString("Database.Database"));
+            mySQLConfiguration.setPrefix(plugin.getConfig().getString("Database.Prefix"));
+            db = DatabaseFactory.createNewDatabase(mySQLConfiguration);
+        } else {
+            throw new ConnectionException("Invalid database configuration!");
+        }
 
-		db.registerTable(PlayerData.class);
-		db.connect();
-	}
+        db.registerTable(PlayerData.class);
+        db.connect();
+    }
 
-	public Database getDatabase() {
-		return db;
-	}
+    public Database getDatabase() {
+        return db;
+    }
 }

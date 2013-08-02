@@ -26,11 +26,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class SpawnParticle implements UGCommand {
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		ParticleEffect particleEffect = ParticleEffect.valueOf(args[0]);
-		Player player = (Player) sender;
-		//offset x offset y offset z speed amount
-		particleEffect.play(player.getLocation().add(new Vector(1, 1, 1)), Float.valueOf(args[1]), Float.valueOf(args[2]), Float.valueOf(args[3]), Float.valueOf(args[4]), Integer.valueOf(args[5]));
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        ParticleEffect particleEffect = ParticleEffect.valueOf(args[0]);
+        Player player = (Player) sender;
+        //offset x offset y offset z speed amount
+        particleEffect.play(player.getLocation().add(new Vector(1, 1, 1)), Float.valueOf(args[1]), Float.valueOf(args[2]), Float.valueOf(args[3]), Float.valueOf(args[4]), Integer.valueOf(args[5]));
+    }
 }

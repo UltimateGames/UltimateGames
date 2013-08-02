@@ -21,19 +21,19 @@ package me.ampayne2.ultimategames.games;
 import me.ampayne2.ultimategames.api.GamePlugin;
 
 public class Game {
-	private GamePlugin gamePlugin;
-	private GameDescription gameDescription;
+    private GamePlugin gamePlugin;
+    private GameDescription gameDescription;
 
-	public Game(GamePlugin gamePlugin, GameDescription gameDescription) {
-		this.gamePlugin = gamePlugin;
-		this.gameDescription = gameDescription;
-	}
+    public Game(GamePlugin gamePlugin, GameDescription gameDescription) {
+        this.gamePlugin = gamePlugin;
+        this.gameDescription = gameDescription;
+    }
 
-	public GamePlugin getGamePlugin() {
-		return gamePlugin;
-	}
+    public GamePlugin getGamePlugin() {
+        return gamePlugin;
+    }
 
-	public GameDescription getGameDescription() {
-		return gameDescription;
-	}
+    public GameDescription getGameDescription() {
+        return gameDescription;
+    }
 }

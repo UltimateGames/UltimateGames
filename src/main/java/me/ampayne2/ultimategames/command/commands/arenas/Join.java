@@ -26,21 +26,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Join implements UGCommand {
-	private UltimateGames ultimateGames;
+    private UltimateGames ultimateGames;
 
-	public Join(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public Join(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		if (args.length != 2) {
-			return;
-		}
-		String arenaName = args[0];
-		String gameName = args[1];
-		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName) && ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.OPEN || ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.STARTING) {
-			ultimateGames.getPlayerManager().addPlayerToArena(((Player) sender).getName(), ultimateGames.getArenaManager().getArena(arenaName, gameName), true);
-		}
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        if (args.length != 2) {
+            return;
+        }
+        String arenaName = args[0];
+        String gameName = args[1];
+        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName) && ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.OPEN || ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.STARTING) {
+            ultimateGames.getPlayerManager().addPlayerToArena(((Player) sender).getName(), ultimateGames.getArenaManager().getArena(arenaName, gameName), true);
+        }
+    }
 }

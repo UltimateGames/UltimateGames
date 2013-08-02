@@ -42,113 +42,113 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.PluginClassLoader;
 
 public class UltimateGames extends JavaPlugin {
-	private JavaPlugin plugin;
-	private ConfigManager configManager;
-	private GameManager gameManager;
-	private ArenaManager arenaManager;
-	private UGSignManager ugSignManager;
-	private QueueManager queueManager;
-	private Message messageManager;
-	private SpawnpointManager spawnpointManager;
-	private PlayerManager playerManager;
-	private CountdownManager countdownManager;
-	private LobbyManager lobbyManager;
-	private ScoreboardManager scoreboardManager;
-	private Utils utils;
+    private JavaPlugin plugin;
+    private ConfigManager configManager;
+    private GameManager gameManager;
+    private ArenaManager arenaManager;
+    private UGSignManager ugSignManager;
+    private QueueManager queueManager;
+    private Message messageManager;
+    private SpawnpointManager spawnpointManager;
+    private PlayerManager playerManager;
+    private CountdownManager countdownManager;
+    private LobbyManager lobbyManager;
+    private ScoreboardManager scoreboardManager;
+    private Utils utils;
 
-	public void onEnable() {
-		plugin = this;
-		getConfig().options().copyDefaults(true);
-		saveConfig();
-		configManager = new ConfigManager(this);
-		messageManager = new Message(this);
-		playerManager = new PlayerManager(this);
-		gameManager = new GameManager(this);
-		messageManager.loadGameMessages();
-		queueManager = new QueueManager(this);
-		spawnpointManager = new SpawnpointManager(this);
-		arenaManager = new ArenaManager(this);
-		ugSignManager = new UGSignManager(this);
-		countdownManager = new CountdownManager(this);
-		lobbyManager = new LobbyManager(this);
-		scoreboardManager = new ScoreboardManager();
-		utils = new Utils(this);
-		getServer().getPluginManager().registerEvents(new SignListener(this), this);
-		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
-		getServer().getPluginManager().registerEvents(playerManager, this);
-		CommandController commandController = new CommandController(this);
-		getServer().getPluginManager().registerEvents(commandController, this);
-		getCommand("ultimategames").setExecutor(commandController);
-		try {
-			Metrics metrics = new Metrics(this);
-			Graph mostPopularGamesGraph = metrics.createGraph("Most Popular Games");
-			for (Game game : gameManager.getGames()) {
-				mostPopularGamesGraph.addPlotter(new Metrics.Plotter(game.getGameDescription().getName()) {
-					@Override
-					public int getValue() {
-						return 1;
-					}
-				});
-			}
-			metrics.start();
-		} catch (IOException e) {
-			messageManager.debug(e);
-		}
-	}
+    public void onEnable() {
+        plugin = this;
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        configManager = new ConfigManager(this);
+        messageManager = new Message(this);
+        playerManager = new PlayerManager(this);
+        gameManager = new GameManager(this);
+        messageManager.loadGameMessages();
+        queueManager = new QueueManager(this);
+        spawnpointManager = new SpawnpointManager(this);
+        arenaManager = new ArenaManager(this);
+        ugSignManager = new UGSignManager(this);
+        countdownManager = new CountdownManager(this);
+        lobbyManager = new LobbyManager(this);
+        scoreboardManager = new ScoreboardManager();
+        utils = new Utils(this);
+        getServer().getPluginManager().registerEvents(new SignListener(this), this);
+        getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
+        getServer().getPluginManager().registerEvents(playerManager, this);
+        CommandController commandController = new CommandController(this);
+        getServer().getPluginManager().registerEvents(commandController, this);
+        getCommand("ultimategames").setExecutor(commandController);
+        try {
+            Metrics metrics = new Metrics(this);
+            Graph mostPopularGamesGraph = metrics.createGraph("Most Popular Games");
+            for (Game game : gameManager.getGames()) {
+                mostPopularGamesGraph.addPlotter(new Metrics.Plotter(game.getGameDescription().getName()) {
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+                });
+            }
+            metrics.start();
+        } catch (IOException e) {
+            messageManager.debug(e);
+        }
+    }
 
-	public JavaPlugin getPlugin() {
-		return plugin;
-	}
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
 
-	public ConfigManager getConfigManager() {
-		return configManager;
-	}
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
 
-	public Message getMessageManager() {
-		return messageManager;
-	}
+    public Message getMessageManager() {
+        return messageManager;
+    }
 
-	public GameManager getGameManager() {
-		return gameManager;
-	}
+    public GameManager getGameManager() {
+        return gameManager;
+    }
 
-	public ArenaManager getArenaManager() {
-		return arenaManager;
-	}
+    public ArenaManager getArenaManager() {
+        return arenaManager;
+    }
 
-	public UGSignManager getUGSignManager() {
-		return ugSignManager;
-	}
+    public UGSignManager getUGSignManager() {
+        return ugSignManager;
+    }
 
-	public QueueManager getQueueManager() {
-		return queueManager;
-	}
+    public QueueManager getQueueManager() {
+        return queueManager;
+    }
 
-	public SpawnpointManager getSpawnpointManager() {
-		return spawnpointManager;
-	}
+    public SpawnpointManager getSpawnpointManager() {
+        return spawnpointManager;
+    }
 
-	public PlayerManager getPlayerManager() {
-		return playerManager;
-	}
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
 
-	public CountdownManager getCountdownManager() {
-		return countdownManager;
-	}
+    public CountdownManager getCountdownManager() {
+        return countdownManager;
+    }
 
-	public LobbyManager getLobbyManager() {
-		return lobbyManager;
-	}
+    public LobbyManager getLobbyManager() {
+        return lobbyManager;
+    }
 
-	public ScoreboardManager getScoreboardManager() {
-		return scoreboardManager;
-	}
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
 
-	public Utils getUtils() {
-		return utils;
-	}
+    public Utils getUtils() {
+        return utils;
+    }
 
-	public PluginClassLoader getPluginClassLoader() {
-		return (PluginClassLoader) getClassLoader();
-	}
+    public PluginClassLoader getPluginClassLoader() {
+        return (PluginClassLoader) getClassLoader();
+    }
 }

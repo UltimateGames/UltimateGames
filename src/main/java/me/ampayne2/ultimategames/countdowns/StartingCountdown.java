@@ -25,32 +25,32 @@ import me.ampayne2.ultimategames.enums.ArenaStatus;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class StartingCountdown extends BukkitRunnable {
-	private UltimateGames ultimateGames;
-	private Arena arena;
-	private Integer initialSeconds;
-	private Integer secondsLeft;
+    private UltimateGames ultimateGames;
+    private Arena arena;
+    private Integer initialSeconds;
+    private Integer secondsLeft;
 
-	public StartingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft) {
-		this.ultimateGames = ultimateGames;
-		this.arena = arena;
-		this.initialSeconds = initialSeconds;
-		this.secondsLeft = secondsLeft;
-	}
+    public StartingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft) {
+        this.ultimateGames = ultimateGames;
+        this.arena = arena;
+        this.initialSeconds = initialSeconds;
+        this.secondsLeft = secondsLeft;
+    }
 
-	@Override
-	public void run() {
-		if (secondsLeft > 0 && initialSeconds == secondsLeft) {
-			ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-			arena.setStatus(ArenaStatus.STARTING);
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-		} else if (secondsLeft > 0 && secondsLeft <= 10) {
-			ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-		} else if (secondsLeft == 0) {
-			ultimateGames.getArenaManager().beginArena(arena);
-			ultimateGames.getCountdownManager().stopStartingCountdown(arena);
-		}
-		if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
-			new StartingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1).runTaskLater(ultimateGames, 20L);
-		}
-	}
+    @Override
+    public void run() {
+        if (secondsLeft > 0 && initialSeconds == secondsLeft) {
+            ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
+            arena.setStatus(ArenaStatus.STARTING);
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+        } else if (secondsLeft > 0 && secondsLeft <= 10) {
+            ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
+        } else if (secondsLeft == 0) {
+            ultimateGames.getArenaManager().beginArena(arena);
+            ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+        }
+        if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
+            new StartingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1).runTaskLater(ultimateGames, 20L);
+        }
+    }
 }
