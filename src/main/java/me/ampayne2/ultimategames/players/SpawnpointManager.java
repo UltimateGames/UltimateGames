@@ -43,17 +43,12 @@ public class SpawnpointManager {
      * @return If the arena has a spawnpoint at the index or not.
      */
     public Boolean hasSpawnPointAtIndex(Arena arena, Integer index) {
-        if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= index) {
-            return true;
-        } else {
-            return false;
-        }
+        return spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= index;
     }
 
     /**
      * Adds a spawnpoint to the manager.
      * @param spawnPoint The spawnpoint.
-     * @param addToConfig Should it be added to the config?
      */
     public void addSpawnPoint(SpawnPoint spawnPoint) {
         if (spawnPoints.containsKey(spawnPoint.getArena())) {

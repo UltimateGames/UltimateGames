@@ -106,11 +106,7 @@ public class ArenaManager {
      * @return If the location is inside an arena or not.
      */
     public Boolean isLocationInArena(Location location) {
-        if (getLocationArena(location) == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return getLocationArena(location) == null;
     }
 
     /**

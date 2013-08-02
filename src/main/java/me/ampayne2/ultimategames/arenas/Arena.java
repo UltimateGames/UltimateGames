@@ -216,11 +216,7 @@ public class Arena implements Listener {
      * @return If the arena has the player.
      */
     public boolean hasPlayer(String playerName) {
-        if (!players.isEmpty() && players.contains(playerName)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !players.isEmpty() && players.contains(playerName);
     }
 
     /**

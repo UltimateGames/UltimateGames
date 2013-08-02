@@ -50,11 +50,7 @@ public class UGSignManager {
      * @return If the sign is an Ultimate Game sign.
      */
     public boolean isUGSign(Sign sign) {
-        if (isLobbySign(sign) || isInputSign(sign)) {
-            return true;
-        } else {
-            return false;
-        }
+        return isLobbySign(sign) || isInputSign(sign);
     }
 
     /**
@@ -63,11 +59,7 @@ public class UGSignManager {
      * @return If the sign is a Lobby Sign.
      */
     public boolean isLobbySign(Sign sign) {
-        if (getLobbySign(sign) == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return getLobbySign(sign) == null;
     }
 
     /**
@@ -76,11 +68,7 @@ public class UGSignManager {
      * @return If the sign is an Input Sign.
      */
     public boolean isInputSign(Sign sign) {
-        if (getInputSign(sign) == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return getInputSign(sign) == null;
     }
 
     /**
