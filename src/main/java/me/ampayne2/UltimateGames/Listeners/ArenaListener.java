@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Listeners;
+package me.ampayne2.ultimategames.listeners;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -29,17 +32,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-
-public class ArenaListener implements Listener{
-
+public class ArenaListener implements Listener {
 	private UltimateGames ultimateGames;
-	
+
 	public ArenaListener(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	/**
 	 * Blocks block breaking in arenas when not allowed.
 	 */
@@ -64,7 +63,7 @@ public class ArenaListener implements Listener{
 			}
 		}
 	}
-	
+
 	/**
 	 * Blocks block placing in arenas when not allowed.
 	 */
@@ -88,7 +87,7 @@ public class ArenaListener implements Listener{
 			}
 		}
 	}
-	
+
 	/**
 	 * Blocks tnt breaking blocks in arenas when not allowed.
 	 */
@@ -105,7 +104,7 @@ public class ArenaListener implements Listener{
 			}
 		}
 	}
-	
+
 	/**
 	 * Blocks tnt damaging entities in arenas when not allowed.
 	 */
@@ -120,7 +119,7 @@ public class ArenaListener implements Listener{
 			}
 		}
 	}
-	
+
 	/**
 	 * Stops death messages if player is in an arena.
 	 * @param event
@@ -131,5 +130,4 @@ public class ArenaListener implements Listener{
 			event.setDeathMessage("");
 		}
 	}
-	
 }

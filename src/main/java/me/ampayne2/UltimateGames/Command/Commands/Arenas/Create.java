@@ -16,10 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.Commands.Arenas;
+package me.ampayne2.ultimategames.command.commands.arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.enums.ArenaStatus;
+import me.ampayne2.ultimategames.games.Game;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -27,25 +33,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-import me.ampayne2.UltimateGames.Enums.ArenaStatus;
-import me.ampayne2.UltimateGames.Games.Game;
 
 public class Create implements UGCommand, Listener {
-
 	private UltimateGames ultimateGames;
 	private ArrayList<String> playersSelecting = new ArrayList<String>();
 	private HashMap<String, Location> corner1 = new HashMap<String, Location>();
 	private HashMap<String, Location> corner2 = new HashMap<String, Location>();
 	private HashMap<String, Game> game = new HashMap<String, Game>();
-	private HashMap<String, String> arenaName =  new HashMap<String, String>();
-	
+	private HashMap<String, String> arenaName = new HashMap<String, String>();
+
 	public Create(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length != 2) {
@@ -77,7 +77,7 @@ public class Create implements UGCommand, Listener {
 			}
 		}
 	}
-	
+
 	public void createArena(String playerName) {
 		String arena = arenaName.get(playerName);
 		String gameName = game.get(playerName).getGameDescription().getName();
@@ -85,8 +85,8 @@ public class Create implements UGCommand, Listener {
 			ultimateGames.getMessageManager().sendReplacedMessage(playerName, "arenas.failedtocreate", arena, gameName, ultimateGames.getMessageManager().getMessage("arenas.alreadyexists"));
 			return;
 		} else {
-			Arena newArena =  new Arena(ultimateGames, game.get(playerName), arenaName.get(playerName), corner1.get(playerName), corner2.get(playerName));
-			newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getArenaConfig().getConfig().getString("Arenas."+newArena.getGame().getGameDescription().getName()+"."+newArena.getName()+".Status")));
+			Arena newArena = new Arena(ultimateGames, game.get(playerName), arenaName.get(playerName), corner1.get(playerName), corner2.get(playerName));
+			newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getArenaConfig().getConfig().getString("Arenas." + newArena.getGame().getGameDescription().getName() + "." + newArena.getName() + ".Status")));
 			ultimateGames.getArenaManager().addArena(newArena);
 			playersSelecting.remove(playerName);
 			corner1.remove(playerName);
@@ -95,7 +95,5 @@ public class Create implements UGCommand, Listener {
 			arenaName.remove(playerName);
 			ultimateGames.getMessageManager().sendReplacedMessage(playerName, "arenas.create", newArena.getName(), newArena.getGame().getGameDescription().getName());
 		}
-
 	}
-
 }

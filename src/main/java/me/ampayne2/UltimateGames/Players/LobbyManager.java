@@ -16,19 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Players;
+package me.ampayne2.ultimategames.players;
+
+import me.ampayne2.ultimategames.UltimateGames;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-
 public class LobbyManager {
-	
 	private UltimateGames ultimateGames;
 	private Location lobby;
-	
+
 	public LobbyManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 		FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getLobbyConfig().getConfig();
@@ -45,11 +44,11 @@ public class LobbyManager {
 			this.lobby = location;
 		}
 	}
-	
+
 	public Location getLobby() {
 		return this.lobby;
 	}
-	
+
 	public void setLobby(Location location) {
 		this.lobby = location;
 		FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getLobbyConfig().getConfig();
@@ -61,5 +60,4 @@ public class LobbyManager {
 		lobbyConfig.set("yaw", location.getYaw());
 		ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
 	}
-
 }

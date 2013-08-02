@@ -16,21 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command;
+package me.ampayne2.ultimategames.command;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.ampayne2.ultimategames.command.interfaces.Command;
+import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import me.ampayne2.UltimateGames.Command.SubCommand;
-import me.ampayne2.UltimateGames.Command.interfaces.Command;
-import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-
 public class SubCommand implements Command {
-
 	private Map<String, Command> commandList = new HashMap<String, Command>();
 	private Map<String, String> permissionList = new HashMap<String, String>();
 
@@ -72,14 +70,11 @@ public class SubCommand implements Command {
 				} else {
 					sender.sendMessage(ChatColor.DARK_RED + "Invalid argument. Valid arguments are: " + subCommand.getSubCommandList());
 				}
-
 			}
-
 		}
 	}
 
 	public String getSubCommandList() {
 		return Arrays.toString(commandList.keySet().toArray());
 	}
-
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.interfaces;
+package me.ampayne2.ultimategames.command.interfaces;
 
 import org.bukkit.command.CommandSender;
 
@@ -26,7 +26,6 @@ import org.bukkit.command.CommandSender;
 public interface UGCommand extends Command {
 	/**
 	 * The command executor
-	 * 
 	 * @param sender The sender of the command
 	 * @param args The arguments sent with the command
 	 */

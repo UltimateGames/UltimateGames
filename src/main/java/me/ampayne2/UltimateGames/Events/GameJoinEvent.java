@@ -16,38 +16,37 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Events;
+package me.ampayne2.ultimategames.events;
 
-import me.ampayne2.UltimateGames.Arenas.Arena;
+import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class GameJoinEvent extends Event{
+public class GameJoinEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 	private Player player;
 	private Arena arena;
-	
+
 	public GameJoinEvent(Player player, Arena arena) {
 		this.player = player;
 		this.arena = arena;
 	}
-	
+
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	public Arena getArena() {
 		return arena;
 	}
-	
+
 	public HandlerList getHandlers() {
 		return handlers;
 	}
-	
+
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
-
 }

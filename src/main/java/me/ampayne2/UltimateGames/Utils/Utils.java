@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Utils;
+package me.ampayne2.ultimategames.utils;
 
 import java.util.ArrayList;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Games.Game;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.games.Game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,16 +31,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
 public class Utils {
-	
 	private UltimateGames ultimateGames;
-	
+
 	public Utils(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	/**
 	 * Gets the ordinal suffix of an integer.
-	 * 
 	 * @param value The integer.
 	 * @return The ordinal suffix.
 	 */
@@ -49,23 +47,22 @@ public class Utils {
 		final int lastDigit = value % 10;
 		final int last2Digits = value % 100;
 		switch (lastDigit) {
-		case 1:
-			return last2Digits == 11 ? "th" : "st";
+			case 1:
+				return last2Digits == 11 ? "th" : "st";
 
-		case 2:
-			return last2Digits == 12 ? "th" : "nd";
+			case 2:
+				return last2Digits == 12 ? "th" : "nd";
 
-		case 3:
-			return last2Digits == 13 ? "th" : "rd";
+			case 3:
+				return last2Digits == 13 ? "th" : "rd";
 
-		default:
-			return "th";
+			default:
+				return "th";
 		}
 	}
-	
+
 	/**
 	 * Creates an instruction book for a game.
-	 * 
 	 * @param title The book's title.
 	 * @param author The book's author.
 	 * @param pages The book's pages.
@@ -82,10 +79,9 @@ public class Utils {
 		book.setItemMeta(meta);
 		return book;
 	}
-	
+
 	/**
 	 * Creates purple particles floating around a player pointing to each player on their radar.
-	 * 
 	 * @param playerName The player.
 	 * @param playersToScan Players to 'point' to.
 	 */
@@ -101,19 +97,18 @@ public class Utils {
 				Double playerToScanZ = playerToScan.getLocation().getZ();
 				Double x = playerToScanX - playerX;
 				Double z = playerToScanZ - playerZ;
-				Double divisor = Math.sqrt((x*x)+(z*z)) / 2;
+				Double divisor = Math.sqrt((x * x) + (z * z)) / 2;
 				Double relativeX = x / divisor;
 				Double relativeZ = z / divisor;
-				Location particleLocation = new Location(player.getWorld(), playerX+relativeX, playerY+1, playerZ+relativeZ);
+				Location particleLocation = new Location(player.getWorld(), playerX + relativeX, playerY + 1, playerZ + relativeZ);
 				ParticleEffect particleEffect = ParticleEffect.WITCH_MAGIC;
 				particleEffect.play(player, particleLocation, 0, 0, 0, 0, 1);
 			}
 		}
 	}
-	
+
 	/**
 	 * Closes a player's respawn screen 1 tick after called.
-	 * 
 	 * @param player The player.
 	 */
 	public void autoRespawn(final Player player) {
@@ -134,5 +129,4 @@ public class Utils {
 			}
 		}, 1L);
 	}
-	
 }

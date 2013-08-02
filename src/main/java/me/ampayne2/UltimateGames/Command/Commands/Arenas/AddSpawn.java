@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.Commands.Arenas;
+package me.ampayne2.ultimategames.command.commands.arenas;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-
-public class AddSpawn implements UGCommand{
-
+public class AddSpawn implements UGCommand {
 	private UltimateGames ultimateGames;
-	
+
 	public AddSpawn(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length != 3 || !(args[2].equals("true") || args[2].equals("false"))) {
@@ -47,5 +46,4 @@ public class AddSpawn implements UGCommand{
 		ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), player.getLocation(), locked);
 		ultimateGames.getMessageManager().sendReplacedMessage(player.getName(), "spawnpoints.create", arenaName, gameName);
 	}
-
 }

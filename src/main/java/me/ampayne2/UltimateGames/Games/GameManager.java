@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Games;
+package me.ampayne2.ultimategames.games;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -28,15 +28,14 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.zip.ZipFile;
 
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.api.GamePlugin;
+import me.ampayne2.ultimategames.enums.PlayerType;
+import me.ampayne2.ultimategames.enums.ScoreType;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.ampayne2.UltimateGames.API.GamePlugin;
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Enums.PlayerType;
-import me.ampayne2.UltimateGames.Enums.ScoreType;
-
 public class GameManager {
-	
 	private UltimateGames ultimateGames;
 	private ArrayList<Game> games = new ArrayList<Game>();
 	private File gameFolder;
@@ -44,7 +43,6 @@ public class GameManager {
 	@SuppressWarnings("unchecked")
 	public GameManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
-
 
 		gameFolder = new File(ultimateGames.getPlugin().getDataFolder(), "Games");
 		if (!gameFolder.exists()) {
@@ -72,22 +70,22 @@ public class GameManager {
 
 				//We load the basic game Plugin configuration
 				File configFile = new File(ultimateGames.getPlugin().getDataFolder() + "/Games", file.getName().replace(".jar", ".yml"));
-				if (!configFile.exists()){
+				if (!configFile.exists()) {
 					ZipFile zip = new ZipFile(file);
 					byte[] buffer = new byte[1024];
-					
+
 					FileOutputStream output = new FileOutputStream(configFile);
 					InputStream input = zip.getInputStream(zip.getEntry("gameplugin.yml"));
-					
+
 					int realLength;
 
-			        while ((realLength = input.read(buffer)) > 0) {
-			            output.write(buffer, 0, realLength);
-			        }
-			 
-			        output.flush();
-			        output.close();
-			        zip.close();
+					while ((realLength = input.read(buffer)) > 0) {
+						output.write(buffer, 0, realLength);
+					}
+
+					output.flush();
+					output.close();
+					zip.close();
 				}
 
 				//Does the config file exist?
@@ -119,20 +117,20 @@ public class GameManager {
 
 					//We retrieve the PlayerType
 					playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
-					
+
 					//We retrieve the instruction pages
 					instructionPages = (ArrayList<String>) gamePlugin.getList("Instructions");
-					
+
 					version = gamePlugin.getString("version");
 					String gameName = file.getName().replace(".jar", "");
-					
+
 					//Is the game already loaded?
 					if (gameExists(gameName)) {
 						ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + gameName + " already exists!");
 						jarFile.close();
 						continue;
 					}
-					
+
 					//We try to load the main class..
 					ultimateGames.getPluginClassLoader().addURL(file.toURI().toURL());
 					Class<?> aclass = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
@@ -167,7 +165,7 @@ public class GameManager {
 			}
 		}
 	}
-	
+
 	public ArrayList<Game> getGames() {
 		return games;
 	}
@@ -205,13 +203,11 @@ public class GameManager {
 		//TODO: The logic
 		//for ()
 	}
-	
-	private class GameFileFilter implements FileFilter {
 
+	private class GameFileFilter implements FileFilter {
 		@Override
 		public boolean accept(File pathname) {
 			return !pathname.isDirectory() && pathname.getName().endsWith(".jar");
 		}
-
 	}
 }

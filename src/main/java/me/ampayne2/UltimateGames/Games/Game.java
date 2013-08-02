@@ -16,26 +16,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Games;
+package me.ampayne2.ultimategames.games;
 
-import me.ampayne2.UltimateGames.API.GamePlugin;
+import me.ampayne2.ultimategames.api.GamePlugin;
 
-public class Game{
-	
+public class Game {
 	private GamePlugin gamePlugin;
 	private GameDescription gameDescription;
-	
+
 	public Game(GamePlugin gamePlugin, GameDescription gameDescription) {
 		this.gamePlugin = gamePlugin;
 		this.gameDescription = gameDescription;
 	}
-	
+
 	public GamePlugin getGamePlugin() {
 		return gamePlugin;
 	}
-	
+
 	public GameDescription getGameDescription() {
 		return gameDescription;
 	}
-	
 }

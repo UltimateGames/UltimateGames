@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Enums;
+package me.ampayne2.ultimategames.enums;
 
 public enum EndType {
 	SUCCESSFUL,

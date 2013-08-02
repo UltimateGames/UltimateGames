@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Signs;
+package me.ampayne2.ultimategames.signs;
 
-import me.ampayne2.UltimateGames.Arenas.Arena;
+import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class InputSign extends UGSign{
-
+public class InputSign extends UGSign {
 	private String label;
 	private Sign sign;
 	private Arena arena;
 	private String[] lines;
-	
+
 	public InputSign(String label, Sign sign, Arena arena) {
 		super(sign, arena);
 		this.label = label;
@@ -38,7 +37,7 @@ public class InputSign extends UGSign{
 		arena.getGame().getGamePlugin().handleInputSignCreate(arena, sign, label);
 		update();
 	}
-	
+
 	@Override
 	public void onSignClick(PlayerInteractEvent event) {
 		//TODO: Permission Check
@@ -49,9 +48,8 @@ public class InputSign extends UGSign{
 	public String[] getUpdatedLines() {
 		return lines;
 	}
-	
+
 	public void setLines(String[] lines) {
 		this.lines = lines;
 	}
-
 }

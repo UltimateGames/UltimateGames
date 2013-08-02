@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Files;
+package me.ampayne2.ultimategames.files;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MessageConfig {
 	private final JavaPlugin plugin;
 	private final String fileName;
-
 	private FileConfiguration msgConfig;
 	private File msgConfigFile;
 

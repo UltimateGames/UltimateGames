@@ -12,11 +12,11 @@ Author: "ampayne2"
 ScoreTypeName: "Wins"
 # Name of the secondary score type of the game.
 SecondaryScoreTypeName: "Kills:Deaths"
-# The main score type of the game. Choices found in the me.ampayne2.UltimateGames.Enums.ScoreType enumeration.
+# The main score type of the game. Choices found in the me.ampayne2.ultimategames.Enums.ScoreType enumeration.
 ScoreType: "POINTS_HIGHER"
 # The secondary score type of the game.
 SecondaryScoreType: "GOOD_BAD"
-# The player type of the game. Choices found in the me.ampayne2.UltimateGames.Enums.PlayerType enumeration.
+# The player type of the game. Choices found in the me.ampayne2.ultimategames.Enums.PlayerType enumeration.
 PlayerType: "CONFIGUREABLE"
 # Default settings an arena of the game will have when created.
 DefaultSettings:

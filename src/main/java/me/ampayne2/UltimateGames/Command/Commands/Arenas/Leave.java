@@ -16,18 +16,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.Commands.Arenas;
+package me.ampayne2.ultimategames.command.commands.arenas;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-
-public class Leave implements UGCommand{
-	
+public class Leave implements UGCommand {
 	private UltimateGames ultimateGames;
-	
+
 	public Leave(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
@@ -40,5 +39,4 @@ public class Leave implements UGCommand{
 			ultimateGames.getPlayerManager().removePlayerFromArena(playerName, ultimateGames.getPlayerManager().getPlayerArena(playerName), true);
 		}
 	}
-
 }

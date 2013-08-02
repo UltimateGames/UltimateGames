@@ -16,30 +16,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Signs;
+package me.ampayne2.ultimategames.signs;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.ArenaStatus;
+import me.ampayne2.ultimategames.enums.PlayerType;
+import me.ampayne2.ultimategames.players.QueueManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Enums.ArenaStatus;
-import me.ampayne2.UltimateGames.Enums.PlayerType;
-import me.ampayne2.UltimateGames.Players.QueueManager;
-
-public class LobbySign extends UGSign{
-	
+public class LobbySign extends UGSign {
 	private UltimateGames ultimateGames;
 	private Arena arena;
-	
+
 	public LobbySign(UltimateGames ultimateGames, Sign sign, Arena arena) {
 		super(sign, arena);
 		this.ultimateGames = ultimateGames;
 		this.arena = arena;
 		update();
 	}
-	
+
 	@Override
 	public void onSignClick(PlayerInteractEvent event) {
 		//TODO: Permission check
@@ -76,10 +75,10 @@ public class LobbySign extends UGSign{
 		} else {
 			statusColor = ChatColor.DARK_GRAY;
 		}
-		
-		if(arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
+
+		if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
 			lines[0] = statusColor + "[STOPPED]";
-		}else{
+		} else {
 			lines[0] = statusColor + "[" + arenaStatus.toString() + "]";
 		}
 
@@ -96,5 +95,4 @@ public class LobbySign extends UGSign{
 
 		return lines;
 	}
-	
 }

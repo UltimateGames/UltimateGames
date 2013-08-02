@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Listeners;
+package me.ampayne2.ultimategames.listeners;
 
 import java.util.ArrayList;
 import java.util.List;
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Signs.InputSign;
-import me.ampayne2.UltimateGames.Signs.LobbySign;
-import me.ampayne2.UltimateGames.Signs.UGSign;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.signs.InputSign;
+import me.ampayne2.ultimategames.signs.LobbySign;
+import me.ampayne2.ultimategames.signs.UGSign;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -36,7 +37,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
-
 	private UltimateGames ultimateGames;
 
 	public SignListener(UltimateGames ultimateGames) {
@@ -45,7 +45,6 @@ public class SignListener implements Listener {
 
 	/**
 	 * Handles UGSign Creation.
-	 * 
 	 * @param event The event thrown when a sign is written on.
 	 */
 	@EventHandler
@@ -67,7 +66,7 @@ public class SignListener implements Listener {
 			lines = lobbySign.getUpdatedLines();
 		} else if (signPrefix.equalsIgnoreCase(ultimateGames.getConfig().getString("InputSignPrefix"))) {
 			InputSign inputSign = ultimateGames.getUGSignManager().createInputSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
-			String[] inputSignLines = {"",label,"",""};
+			String[] inputSignLines = {"", label, "", ""};
 			inputSign.setLines(inputSignLines);
 			lines = inputSign.getUpdatedLines();
 		} else {
@@ -80,7 +79,6 @@ public class SignListener implements Listener {
 
 	/**
 	 * Handles UGSign Clicking.
-	 * 
 	 * @param event The event thrown when a sign is right or left clicked.
 	 */
 	@EventHandler
@@ -109,7 +107,6 @@ public class SignListener implements Listener {
 
 	/**
 	 * Handles UGSign Breaking.
-	 * 
 	 * @param event The event thrown when a sign is broken.
 	 */
 	@EventHandler

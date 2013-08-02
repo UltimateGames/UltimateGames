@@ -16,28 +16,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Players;
+package me.ampayne2.ultimategames.players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
 
 public class QueueManager {
-
 	private UltimateGames ultimateGames;
 	private HashMap<Arena, ArrayList<String>> queue = new HashMap<Arena, ArrayList<String>>();
 
 	public QueueManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	/**
 	 * Checks to see if a player is in the queue of an arena.
-	 * 
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 * @return If the player is in the arena's queue or not.
@@ -74,7 +72,6 @@ public class QueueManager {
 
 	/**
 	 * Sends the player a queue join message.
-	 * 
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 */
@@ -93,7 +90,6 @@ public class QueueManager {
 
 	/**
 	 * Sends the player a queue leave message.
-	 * 
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 */
@@ -103,7 +99,6 @@ public class QueueManager {
 
 	/**
 	 * Adds a player to an arena's queue.
-	 * 
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 */
@@ -121,7 +116,6 @@ public class QueueManager {
 
 	/**
 	 * Removes a player from all queues.
-	 * 
 	 * @param playerName The player's name.
 	 */
 	public void removePlayerFromQueues(String playerName) {
@@ -147,7 +141,6 @@ public class QueueManager {
 
 	/**
 	 * Clears an arena's queue.
-	 * 
 	 * @param arena The arena.
 	 */
 	public void clearArenaQueue(Arena arena) {

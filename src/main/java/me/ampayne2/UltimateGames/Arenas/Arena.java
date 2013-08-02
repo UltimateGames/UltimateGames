@@ -16,10 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Arenas;
+package me.ampayne2.ultimategames.arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.enums.ArenaStatus;
+import me.ampayne2.ultimategames.enums.PlayerType;
+import me.ampayne2.ultimategames.games.Game;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,12 +34,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Enums.ArenaStatus;
-import me.ampayne2.UltimateGames.Enums.PlayerType;
-import me.ampayne2.UltimateGames.Games.Game;
-
-public class Arena implements Listener{
+public class Arena implements Listener {
 	private UltimateGames ultimateGames;
 	private String arenaName;
 	private Game game;
@@ -54,18 +54,18 @@ public class Arena implements Listener{
 		arenaStatus = ArenaStatus.OPEN;
 		FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
 		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-		String arenaPath = "Arenas."+game.getGameDescription().getName()+"."+arenaName;
+		String arenaPath = "Arenas." + game.getGameDescription().getName() + "." + arenaName;
 		//Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
-		Boolean storeInventory = arenaConfig.getBoolean(arenaPath+".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
-		Boolean storeArmor = arenaConfig.getBoolean(arenaPath+".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
-		Boolean storeExp = arenaConfig.getBoolean(arenaPath+".Players.Store-Exp", gamesConfig.getBoolean("DefaultSettings.Store-Exp", true));
-		Boolean storeEffects = arenaConfig.getBoolean(arenaPath+".Players.Store-Effects", gamesConfig.getBoolean("DefaultSettings.Store-Effects", true));
-		Boolean storeGamemode = arenaConfig.getBoolean(arenaPath+".Players.Store-Gamemode", gamesConfig.getBoolean("DefaultSettings.Store-Gamemode", true));
-		Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath+".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
-		Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", true));
-		Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", true));
-		Boolean allowBuilding = arenaConfig.getBoolean(arenaPath+".Allow-Building", gamesConfig.getBoolean("DefaultSettings.Allow-Building", true));
-		Boolean allowBreaking = arenaConfig.getBoolean(arenaPath+".Allow-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Breaking", true));
+		Boolean storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
+		Boolean storeArmor = arenaConfig.getBoolean(arenaPath + ".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
+		Boolean storeExp = arenaConfig.getBoolean(arenaPath + ".Players.Store-Exp", gamesConfig.getBoolean("DefaultSettings.Store-Exp", true));
+		Boolean storeEffects = arenaConfig.getBoolean(arenaPath + ".Players.Store-Effects", gamesConfig.getBoolean("DefaultSettings.Store-Effects", true));
+		Boolean storeGamemode = arenaConfig.getBoolean(arenaPath + ".Players.Store-Gamemode", gamesConfig.getBoolean("DefaultSettings.Store-Gamemode", true));
+		Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath + ".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
+		Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", true));
+		Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", true));
+		Boolean allowBuilding = arenaConfig.getBoolean(arenaPath + ".Allow-Building", gamesConfig.getBoolean("DefaultSettings.Allow-Building", true));
+		Boolean allowBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Breaking", true));
 		//Put all the arena information into the arenaSettings hashmap
 		arenaSettings.put("storeInventory", storeInventory);
 		arenaSettings.put("storeArmor", storeArmor);
@@ -77,13 +77,13 @@ public class Arena implements Listener{
 		arenaSettings.put("allowExplosionBlockBreaking", allowExplosionBlockBreaking);
 		arenaSettings.put("allowBuilding", allowBuilding);
 		arenaSettings.put("allowBreaking", allowBreaking);
-		minPlayers = arenaConfig.getInt(arenaPath+".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", 8));
+		minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", 8));
 		if (game.getGameDescription().getPlayerType() == PlayerType.SINGLE_PLAYER) {
 			maxPlayers = 1;
 		} else if (game.getGameDescription().getPlayerType() == PlayerType.TWO_PLAYER) {
 			maxPlayers = 2;
 		} else if (game.getGameDescription().getPlayerType() == PlayerType.CONFIGUREABLE) {
-			maxPlayers = arenaConfig.getInt(arenaPath+".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", 8));
+			maxPlayers = arenaConfig.getInt(arenaPath + ".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", 8));
 		}
 		//takes the 2 corners and turns them into minLocation and maxLocation
 		Integer minx;
@@ -118,7 +118,7 @@ public class Arena implements Listener{
 			minLocation = new Location(arenaWorld, minx, miny, minz);
 			maxLocation = new Location(arenaWorld, maxx, maxy, maxz);
 		}
-		
+
 		//create the arena in the config if it doesn't exist
 		if (arenaConfig.getConfigurationSection(arenaPath) == null) {
 			arenaConfig.set(arenaPath + ".Status", "ARENA_STOPPED");
@@ -148,7 +148,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the name of an arena.
-	 * 
 	 * @return The name.
 	 */
 	public String getName() {
@@ -157,40 +156,37 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the game of an arena.
-	 * 
 	 * @return The game.
 	 */
 	public Game getGame() {
 		return game;
 	}
-	
+
 	/**
 	 * Adds a player to the arena's player list.
-	 * 
 	 * @param playerName The player's name.
 	 * @return If it was successful.
 	 */
 	public boolean addPlayer(String playerName) {
-		if(game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() >= maxPlayers) {
+		if (game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() >= maxPlayers) {
 			// makes sure arena has room
 			setStatus(ArenaStatus.STARTING);
 			return false;
-		} else if(players.contains(playerName)) {
+		} else if (players.contains(playerName)) {
 			// player already in arena
 			return false;
 		} else {
 			// player joined successfully
 			players.add(playerName);
-			if(game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() == maxPlayers) {
+			if (game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() == maxPlayers) {
 				setStatus(ArenaStatus.STARTING);
 			}
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Removes a player from the arena's player list.
-	 * 
 	 * @param playerName The player's name.
 	 * @return If it was successful.
 	 */
@@ -203,7 +199,7 @@ public class Arena implements Listener{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Removes all of the arena's players.
 	 */
@@ -213,14 +209,14 @@ public class Arena implements Listener{
 			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
 		}
 	}
-	
+
 	/**
 	 * Checks to see if the arena has a certain player.
 	 * @param playerName The player's name.
 	 * @return If the arena has the player.
 	 */
 	public boolean hasPlayer(String playerName) {
-		if(!players.isEmpty() && players.contains(playerName)) {
+		if (!players.isEmpty() && players.contains(playerName)) {
 			return true;
 		} else {
 			return false;
@@ -229,16 +225,14 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the players in the arena.
-	 * 
 	 * @return The players.
 	 */
 	public ArrayList<String> getPlayers() {
 		return players;
 	}
-	
+
 	/**
 	 * Gets the min players of the arena.
-	 * 
 	 * @return The minimum amount of players.
 	 */
 	public Integer getMinPlayers() {
@@ -247,7 +241,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the max players of the arena.
-	 * 
 	 * @return The maximum amount of players.
 	 */
 	public Integer getMaxPlayers() {
@@ -256,7 +249,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the status of the arena.
-	 * 
 	 * @return The status.
 	 */
 	public ArenaStatus getStatus() {
@@ -265,7 +257,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets a certain boolean setting of the arena.
-	 * 
 	 * @param setting The setting.
 	 * @return Whether the setting is true or false.
 	 */
@@ -279,7 +270,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the min location of the arena.
-	 * 
 	 * @return The minimum location.
 	 */
 	public Location getMinLocation() {
@@ -288,7 +278,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the max location of the arena.
-	 * 
 	 * @return The maximum location.
 	 */
 	public Location getMaxLocation() {
@@ -297,7 +286,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Gets the world of the arena.
-	 * 
 	 * @return The world.
 	 */
 	public World getWorld() {
@@ -306,7 +294,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Sets the status of the arena.
-	 * 
 	 * @param status The status.
 	 */
 	public void setStatus(ArenaStatus status) {
@@ -318,7 +305,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Sets a certain boolean setting of the arena.
-	 * 
 	 * @param setting The setting.
 	 * @param value The value.
 	 */
@@ -331,7 +317,6 @@ public class Arena implements Listener{
 
 	/**
 	 * Checks to see if a location is inside the arena.
-	 * 
 	 * @param location The location.
 	 * @return If the location is inside the arena or not.
 	 */
@@ -347,12 +332,11 @@ public class Arena implements Listener{
 		}
 		return false;
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (players.contains(event.getPlayer().getName()) && !locationIsInArena(event.getTo())) {
 			event.setCancelled(true);
 		}
 	}
-	
 }

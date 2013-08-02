@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames;
+package me.ampayne2.ultimategames;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Games.Game;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.games.Game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,7 +64,6 @@ public class Message {
 
 	/**
 	 * Gets the message prefix.
-	 * 
 	 * @return The message prefix.
 	 */
 	public String getMessagePrefix() {
@@ -77,7 +76,6 @@ public class Message {
 
 	/**
 	 * Gets a message with translated color codes.
-	 * 
 	 * @param messageType Path to the message in the message config, without "Messages."
 	 * @return The message.
 	 */
@@ -91,7 +89,6 @@ public class Message {
 
 	/**
 	 * Gets a game message with translated color codes.
-	 * 
 	 * @param game The game.
 	 * @param messageType Path to the message in the game's config, without "Messages."
 	 * @return The message.
@@ -106,7 +103,6 @@ public class Message {
 
 	/**
 	 * Sends a message to a specific player.
-	 * 
 	 * @param playerName Name of the player to send the message to.
 	 * @param messageType Path to the message, without "Messages."
 	 */
@@ -120,7 +116,6 @@ public class Message {
 
 	/**
 	 * Sends a message to a specific player, replacing certain strings.
-	 * 
 	 * @param playerName Name of the player to send the message to.
 	 * @param messageType Path to the message, without "Messages."
 	 * @param replace Strings to replace %s with.
@@ -135,7 +130,6 @@ public class Message {
 
 	/**
 	 * Sends a game message to a specific player.
-	 * 
 	 * @param game The game.
 	 * @param playerName Name of the player to send the message to.
 	 * @param messageType Path to the message in the game's config, without "Messages."
@@ -150,7 +144,6 @@ public class Message {
 
 	/**
 	 * Sends a message to a specific player, replacing certain strings.
-	 * 
 	 * @param game The game.
 	 * @param playerName Name of the player to send the message to.
 	 * @param messageType Path to the message, without "Messages."
@@ -166,7 +159,6 @@ public class Message {
 
 	/**
 	 * Broadcasts a message to the server.
-	 * 
 	 * @param messageType Path to the message, without "Messages."
 	 */
 	public void broadcastMessage(String messageType) {
@@ -175,7 +167,6 @@ public class Message {
 
 	/**
 	 * Broadcasts a message to the server, replacing certain strings.
-	 * 
 	 * @param messageType Path to the message, without "Messages."
 	 * @param replace Strings to replace %s with.
 	 */
@@ -204,7 +195,6 @@ public class Message {
 
 	/**
 	 * Broadcasts a message to an arena.
-	 * 
 	 * @param arena Arena to broadcast the message to.
 	 * @param messageType Path to the message, without "Messages."
 	 */
@@ -220,7 +210,6 @@ public class Message {
 
 	/**
 	 * Broadcasts a message to an arena, replacing certain strings.
-	 * 
 	 * @param arena Arena to broadcast the message to.
 	 * @param messageType Path to the message, without "Messages."
 	 * @param replace Strings to replace %s with.
@@ -237,7 +226,6 @@ public class Message {
 
 	/**
 	 * Broadcasts a game's message to an arena.
-	 * 
 	 * @param game The game.
 	 * @param arena Arena to broadcast the message to.
 	 * @param messageType Path to the message, without "Messages."
@@ -254,7 +242,6 @@ public class Message {
 
 	/**
 	 * Broadcasts a game's message to an arena, replacing certain strings.
-	 * 
 	 * @param game The game.
 	 * @param arena Arena to broadcast the message to.
 	 * @param messageType Path to the message, without "Messages."
@@ -272,19 +259,17 @@ public class Message {
 
 	/**
 	 * Logs one or more messages to the console.
-	 *
 	 * @param level the level to log the message at.
 	 * @param messages the message(s) to log.
-	*/
+	 */
 	public void log(Level level, String... messages) {
 		for (String message : messages) {
-			Bukkit.getLogger().log(level, "[UltimateGames] " + message);
+			Bukkit.getLogger().log(level, "[ultimategames] " + message);
 		}
 	}
 
 	/**
 	 * Decides whether or not to print the stack trace of an exception.
-	 * 
 	 * @param e the exception to debug.
 	 */
 	public void debug(Exception e) {

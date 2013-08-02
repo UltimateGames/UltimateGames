@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Games;
+package me.ampayne2.ultimategames.games;
 
 import java.util.ArrayList;
 
-import me.ampayne2.UltimateGames.Enums.PlayerType;
-import me.ampayne2.UltimateGames.Enums.ScoreType;
+import me.ampayne2.ultimategames.enums.PlayerType;
+import me.ampayne2.ultimategames.enums.ScoreType;
 
 public class GameDescription {
 	private String name, description, version, author, scoreTypeName, secondaryScoreTypeName;
@@ -31,7 +31,6 @@ public class GameDescription {
 
 	/**
 	 * Creates a new Game Description.
-	 * 
 	 * @param name
 	 * @param description
 	 * @param version
@@ -55,10 +54,9 @@ public class GameDescription {
 		this.playerType = playerType;
 		this.instructionPages = instructionPages;
 	}
-	
+
 	/**
 	 * Gets the name of the game.
-	 * 
 	 * @return The name.
 	 */
 	public String getName() {
@@ -67,7 +65,6 @@ public class GameDescription {
 
 	/**
 	 * Gets the description of the game.
-	 * 
 	 * @return The description.
 	 */
 	public String getDescription() {
@@ -76,7 +73,6 @@ public class GameDescription {
 
 	/**
 	 * Gets the version string of the game.
-	 * 
 	 * @return The version.
 	 */
 	public String getVersion() {
@@ -85,7 +81,6 @@ public class GameDescription {
 
 	/**
 	 * Gets the author of the game.
-	 * 
 	 * @return The author.
 	 */
 	public String getAuthor() {
@@ -94,7 +89,6 @@ public class GameDescription {
 
 	/**
 	 * Gets the main ScoreType of the game.
-	 * 
 	 * @return The main score type.
 	 */
 	public ScoreType getScoreType() {
@@ -103,7 +97,6 @@ public class GameDescription {
 
 	/**
 	 * Gets the secondary ScoreType of the game.
-	 * 
 	 * @return The secondary score type.
 	 */
 	public ScoreType getSecondaryScoreType() {
@@ -112,7 +105,6 @@ public class GameDescription {
 
 	/**
 	 * Gets the name of the main ScoreType of the game.
-	 * 
 	 * @return The name of the main score type.
 	 */
 	public String getScoreTypeName() {
@@ -121,7 +113,6 @@ public class GameDescription {
 
 	/**
 	 * Gets the name of the secondary ScoreType of the game.
-	 * 
 	 * @return The name of the secondary score type.
 	 */
 	public String getSecondaryScoreTypeName() {
@@ -130,16 +121,14 @@ public class GameDescription {
 
 	/**
 	 * Gets the PlayerType of the game.
-	 * 
 	 * @return The player type.
 	 */
 	public PlayerType getPlayerType() {
 		return playerType;
 	}
-	
+
 	/**
 	 * Gets the instruction pages of the game.
-	 * 
 	 * @return The instruction pages.
 	 */
 	public ArrayList<String> getInstructionPages() {

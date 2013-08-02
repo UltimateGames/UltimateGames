@@ -16,23 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Files;
+package me.ampayne2.ultimategames.files;
 
 import java.io.File;
 import java.util.HashMap;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Games.Game;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.games.Game;
 
 public class ConfigManager {
-
 	private UltimateGames ultimateGames;
 	private ConfigAccessor messageConfig;
 	private ConfigAccessor arenaConfig;
 	private ConfigAccessor lobbyConfig;
 	private ConfigAccessor ugSignConfig;
 	private HashMap<Game, ConfigAccessor> gameConfigs;
-	
+
 	public ConfigManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 		messageConfig = new ConfigAccessor(ultimateGames.getPlugin(), "MessageConfig.yml", ultimateGames.getPlugin().getDataFolder());
@@ -45,55 +44,49 @@ public class ConfigManager {
 		ugSignConfig.saveDefaultConfig();
 		gameConfigs = new HashMap<Game, ConfigAccessor>();
 	}
-	
+
 	/**
 	 * Gets the Message Config.
-	 * 
 	 * @return The Message Config.
 	 */
 	public ConfigAccessor getMessageConfig() {
 		return messageConfig;
 	}
-	
+
 	/**
 	 * Gets the Arena Config.
-	 * 
 	 * @return The Arena Config.
 	 */
 	public ConfigAccessor getArenaConfig() {
 		return arenaConfig;
 	}
-	
+
 	/**
 	 * Gets the Lobby Config.
-	 * 
 	 * @return The Lobby Config.
 	 */
 	public ConfigAccessor getLobbyConfig() {
 		return lobbyConfig;
 	}
-	
+
 	/**
 	 * Gets the Ultimate Game Sign Config.
-	 * 
 	 * @return The Ultimate Game Sign Config.
 	 */
 	public ConfigAccessor getUGSignConfig() {
 		return ugSignConfig;
 	}
-	
+
 	/**
 	 * Gets the Game Configs.
-	 * 
 	 * @return The Game Configs.
 	 */
 	public HashMap<Game, ConfigAccessor> getGameConfigs() {
 		return gameConfigs;
 	}
-	
+
 	/**
 	 * Gets a Game's Config.
-	 * 
 	 * @return The Game's Config.
 	 */
 	public ConfigAccessor getGameConfig(Game game) {
@@ -102,10 +95,9 @@ public class ConfigManager {
 		}
 		return gameConfigs.get(game);
 	}
-	
+
 	/**
 	 * Adds a Game's Config to the manager.
-	 * 
 	 * @param game The Game whose config you want to add.
 	 */
 	public void addGameConfig(Game game) {

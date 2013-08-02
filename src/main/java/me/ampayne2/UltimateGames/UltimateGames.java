@@ -16,30 +16,30 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames;
+package me.ampayne2.ultimategames;
 
 import java.io.IOException;
 
-import me.ampayne2.UltimateGames.API.ScoreboardManager;
-import me.ampayne2.UltimateGames.Arenas.ArenaManager;
-import me.ampayne2.UltimateGames.Command.CommandController;
-import me.ampayne2.UltimateGames.Countdowns.CountdownManager;
-import me.ampayne2.UltimateGames.Files.ConfigManager;
-import me.ampayne2.UltimateGames.Games.Game;
-import me.ampayne2.UltimateGames.Games.GameManager;
-import me.ampayne2.UltimateGames.Listeners.ArenaListener;
-import me.ampayne2.UltimateGames.Listeners.SignListener;
-import me.ampayne2.UltimateGames.Players.LobbyManager;
-import me.ampayne2.UltimateGames.Players.PlayerManager;
-import me.ampayne2.UltimateGames.Players.QueueManager;
-import me.ampayne2.UltimateGames.Players.SpawnpointManager;
-import me.ampayne2.UltimateGames.Signs.UGSignManager;
-import me.ampayne2.UltimateGames.Utils.Utils;
+import me.ampayne2.ultimategames.api.ScoreboardManager;
+import me.ampayne2.ultimategames.arenas.ArenaManager;
+import me.ampayne2.ultimategames.command.CommandController;
+import me.ampayne2.ultimategames.countdowns.CountdownManager;
+import me.ampayne2.ultimategames.files.ConfigManager;
+import me.ampayne2.ultimategames.games.Game;
+import me.ampayne2.ultimategames.games.GameManager;
+import me.ampayne2.ultimategames.listeners.ArenaListener;
+import me.ampayne2.ultimategames.listeners.SignListener;
+import me.ampayne2.ultimategames.players.LobbyManager;
+import me.ampayne2.ultimategames.players.PlayerManager;
+import me.ampayne2.ultimategames.players.QueueManager;
+import me.ampayne2.ultimategames.players.SpawnpointManager;
+import me.ampayne2.ultimategames.signs.UGSignManager;
+import me.ampayne2.ultimategames.utils.Utils;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.PluginClassLoader;
-import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
 
 public class UltimateGames extends JavaPlugin {
 	private JavaPlugin plugin;
@@ -80,17 +80,17 @@ public class UltimateGames extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(commandController, this);
 		getCommand("ultimategames").setExecutor(commandController);
 		try {
-		    Metrics metrics = new Metrics(this);
-		    Graph mostPopularGamesGraph = metrics.createGraph("Most Popular Games");
-		    for (Game game : gameManager.getGames()) {
-		    	mostPopularGamesGraph.addPlotter(new Metrics.Plotter(game.getGameDescription().getName()) {
+			Metrics metrics = new Metrics(this);
+			Graph mostPopularGamesGraph = metrics.createGraph("Most Popular Games");
+			for (Game game : gameManager.getGames()) {
+				mostPopularGamesGraph.addPlotter(new Metrics.Plotter(game.getGameDescription().getName()) {
 					@Override
 					public int getValue() {
 						return 1;
 					}
 				});
-		    }
-		    metrics.start();
+			}
+			metrics.start();
 		} catch (IOException e) {
 			messageManager.debug(e);
 		}
@@ -99,7 +99,7 @@ public class UltimateGames extends JavaPlugin {
 	public JavaPlugin getPlugin() {
 		return plugin;
 	}
-	
+
 	public ConfigManager getConfigManager() {
 		return configManager;
 	}
@@ -107,48 +107,46 @@ public class UltimateGames extends JavaPlugin {
 	public Message getMessageManager() {
 		return messageManager;
 	}
-	
+
 	public GameManager getGameManager() {
 		return gameManager;
 	}
-	
+
 	public ArenaManager getArenaManager() {
 		return arenaManager;
 	}
-	
+
 	public UGSignManager getUGSignManager() {
 		return ugSignManager;
 	}
-	
+
 	public QueueManager getQueueManager() {
 		return queueManager;
 	}
-	
+
 	public SpawnpointManager getSpawnpointManager() {
 		return spawnpointManager;
 	}
-	
+
 	public PlayerManager getPlayerManager() {
 		return playerManager;
 	}
-	
+
 	public CountdownManager getCountdownManager() {
 		return countdownManager;
 	}
-	
+
 	public LobbyManager getLobbyManager() {
 		return lobbyManager;
 	}
-	
+
 	public ScoreboardManager getScoreboardManager() {
 		return scoreboardManager;
 	}
-	
+
 	public Utils getUtils() {
 		return utils;
-
 	}
-
 
 	public PluginClassLoader getPluginClassLoader() {
 		return (PluginClassLoader) getClassLoader();

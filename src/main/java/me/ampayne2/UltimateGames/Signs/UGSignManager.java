@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Signs;
+package me.ampayne2.ultimategames.signs;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Games.Game;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.games.Game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,7 +35,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 @SuppressWarnings("unchecked")
 public class UGSignManager {
-
 	private UltimateGames ultimateGames;
 	private ArrayList<LobbySign> lobbySigns;
 	private ArrayList<InputSign> inputSigns;
@@ -44,10 +43,9 @@ public class UGSignManager {
 		this.ultimateGames = ultimateGames;
 		loadUGSigns();
 	}
-	
+
 	/**
 	 * Checks to see if a sign is an Ultimate Game sign.
-	 * 
 	 * @param sign The sign to check.
 	 * @return If the sign is an Ultimate Game sign.
 	 */
@@ -61,7 +59,6 @@ public class UGSignManager {
 
 	/**
 	 * Checks to see if a sign is a Lobby Sign.
-	 * 
 	 * @param sign The sign to check.
 	 * @return If the sign is a Lobby Sign.
 	 */
@@ -72,10 +69,9 @@ public class UGSignManager {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Checks to see if a sign is an Input Sign.
-	 * 
 	 * @param sign The sign to check.
 	 * @return If the sign is an Input Sign.
 	 */
@@ -86,10 +82,9 @@ public class UGSignManager {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Gets the Ultimate Game sign of a sign.
-	 * 
 	 * @param sign The sign.
 	 * @return The Ultimate Game sign.
 	 */
@@ -107,7 +102,6 @@ public class UGSignManager {
 
 	/**
 	 * Gets the Lobby Sign of a sign.
-	 * 
 	 * @param sign The sign.
 	 * @return The Lobby Sign.
 	 */
@@ -119,10 +113,9 @@ public class UGSignManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the Input Sign of a sign.
-	 * 
 	 * @param sign The sign.
 	 * @return The Input Sign.
 	 */
@@ -134,10 +127,9 @@ public class UGSignManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the Ultimate Game signs of an arena.
-	 * 
 	 * @param arena The arena.
 	 * @return The Ultimate Game Signs.
 	 */
@@ -149,10 +141,9 @@ public class UGSignManager {
 		ugSigns.addAll(inputSigns);
 		return ugSigns;
 	}
-	
+
 	/**
 	 * Gets the Ultimate Game signs of a game.
-	 * 
 	 * @param game The game.
 	 * @return The Ultimate Game Signs.
 	 */
@@ -167,7 +158,6 @@ public class UGSignManager {
 
 	/**
 	 * Gets the Lobby Signs of an arena.
-	 * 
 	 * @param arena The arena.
 	 * @return The Lobby Signs.
 	 */
@@ -183,7 +173,6 @@ public class UGSignManager {
 
 	/**
 	 * Gets the Lobby Signs of a game.
-	 * 
 	 * @param game The game.
 	 * @return The Lobby Signs.
 	 */
@@ -196,10 +185,9 @@ public class UGSignManager {
 		}
 		return gameSigns;
 	}
-	
+
 	/**
 	 * Gets the Input Signs of an arena.
-	 * 
 	 * @param arena The arena.
 	 * @return The Input Signs.
 	 */
@@ -215,7 +203,6 @@ public class UGSignManager {
 
 	/**
 	 * Gets the Input Signs of a game.
-	 * 
 	 * @param game The game.
 	 * @return The Input Signs.
 	 */
@@ -228,20 +215,18 @@ public class UGSignManager {
 		}
 		return gameSigns;
 	}
-	
+
 	/**
 	 * Updates the Ultimate Game signs of an arena.
-	 * 
 	 * @param arena The arena.
 	 */
 	public void updateUGSignsOfArena(Arena arena) {
 		updateLobbySignsOfArena(arena);
 		updateInputSignsOfArena(arena);
 	}
-	
+
 	/**
 	 * Updates the Ultimate Game signs of a game.
-	 * 
 	 * @param game The game.
 	 */
 	public void updateUGSignsOfGame(Game game) {
@@ -251,7 +236,6 @@ public class UGSignManager {
 
 	/**
 	 * Updates the Lobby Signs of an arena.
-	 * 
 	 * @param arena The arena.
 	 */
 	public void updateLobbySignsOfArena(Arena arena) {
@@ -263,7 +247,6 @@ public class UGSignManager {
 
 	/**
 	 * Updates the Lobby Signs of a game.
-	 * 
 	 * @param game The game.
 	 */
 	public void updateLobbySignsOfGame(Game game) {
@@ -272,10 +255,9 @@ public class UGSignManager {
 			lobbySign.update();
 		}
 	}
-	
+
 	/**
 	 * Updates the Input Signs of an arena.
-	 * 
 	 * @param arena The arena.
 	 */
 	public void updateInputSignsOfArena(Arena arena) {
@@ -284,10 +266,9 @@ public class UGSignManager {
 			inputSign.update();
 		}
 	}
-	
+
 	/**
 	 * Updates the Input Signs of a game.
-	 * 
 	 * @param game The game.
 	 */
 	public void updateInputSignsOfGame(Game game) {
@@ -299,7 +280,6 @@ public class UGSignManager {
 
 	/**
 	 * Adds a Lobby Sign to the manager.
-	 * 
 	 * @param lobbySign The Lobby Sign to add.
 	 */
 	public void addLobbySign(LobbySign lobbySign) {
@@ -307,10 +287,9 @@ public class UGSignManager {
 			lobbySigns.add(lobbySign);
 		}
 	}
-	
+
 	/**
 	 * Adds an Input Sign to the manager.
-	 * 
 	 * @param inputSign The Input Sign to add.
 	 */
 	public void addInputSign(InputSign inputSign) {
@@ -321,7 +300,6 @@ public class UGSignManager {
 
 	/**
 	 * Creates a Lobby Sign from the Sign for the arena and adds it to the manager and config.
-	 * 
 	 * @param sign The sign to turn into a Lobby Sign.
 	 * @param arena The arena the Lobby Sign will be created for.
 	 * @return The Lobby Sign created.
@@ -355,10 +333,9 @@ public class UGSignManager {
 
 		return lobbySign;
 	}
-	
+
 	/**
 	 * Creates a Input Sign from the Sign for the arena and adds it to the manager and config.
-	 * 
 	 * @param sign The sign to turn into a Input Sign.
 	 * @param arena The arena the Input Sign will be created for.
 	 * @return The Input Sign created.
@@ -396,7 +373,6 @@ public class UGSignManager {
 
 	/**
 	 * Removes a Lobby Sign from the manager and config.
-	 * 
 	 * @param sign The sign of the Lobby Sign to remove.
 	 * @return Whether or not the remove was successful.
 	 */
@@ -420,7 +396,7 @@ public class UGSignManager {
 				}
 				ugSignConfig.set(arenaPath, newLobbySigns);
 				if (ugSignConfig.getList(arenaPath).isEmpty()) {
-					ugSignConfig.set(arenaPath, null);	
+					ugSignConfig.set(arenaPath, null);
 				}
 				if (ugSignConfig.getConfigurationSection(gamePath).getKeys(true).isEmpty()) {
 					ugSignConfig.set(gamePath, null);
@@ -433,10 +409,9 @@ public class UGSignManager {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Removes an Input Sign from the manager and config.
-	 * 
 	 * @param sign The sign of the Input Sign to remove.
 	 * @return Whether or not the remove was successful.
 	 */
@@ -460,7 +435,7 @@ public class UGSignManager {
 				}
 				ugSignConfig.set(arenaPath, newInputSigns);
 				if (ugSignConfig.getList(arenaPath).isEmpty()) {
-					ugSignConfig.set(arenaPath, null);	
+					ugSignConfig.set(arenaPath, null);
 				}
 				if (ugSignConfig.getConfigurationSection(gamePath).getKeys(true).isEmpty()) {
 					ugSignConfig.set(gamePath, null);
@@ -473,7 +448,7 @@ public class UGSignManager {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Loads all of the Ultimate Game signs.
 	 */
@@ -481,7 +456,7 @@ public class UGSignManager {
 		loadLobbySigns();
 		loadInputSigns();
 	}
-	
+
 	/**
 	 * Loads or reloads all of the Lobby Signs.
 	 */
@@ -518,7 +493,7 @@ public class UGSignManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads or reloads all of the Input Signs.
 	 */
@@ -556,5 +531,4 @@ public class UGSignManager {
 			}
 		}
 	}
-	
 }

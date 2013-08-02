@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Database;
+package me.ampayne2.ultimategames.database;
 
 import com.alta189.simplesave.Database;
 import com.alta189.simplesave.DatabaseFactory;
@@ -25,14 +25,14 @@ import com.alta189.simplesave.exceptions.TableRegistrationException;
 import com.alta189.simplesave.mysql.MySQLConfiguration;
 import com.alta189.simplesave.sqlite.SQLiteConfiguration;
 
-import me.ampayne2.UltimateGames.Database.Tables.PlayerData;
-import me.ampayne2.UltimateGames.UltimateGames;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.database.tables.PlayerData;
 
 public class DatabaseManager {
-
 	@SuppressWarnings("unused")
 	private final UltimateGames plugin;
 	private final Database db;
+
 	public DatabaseManager(UltimateGames plugin) throws ConnectionException, TableRegistrationException {
 		this.plugin = plugin;
 

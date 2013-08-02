@@ -16,21 +16,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Countdowns;
+package me.ampayne2.ultimategames.countdowns;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.ArenaStatus;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Enums.ArenaStatus;
-
-public class StartingCountdown extends BukkitRunnable{
-	
+public class StartingCountdown extends BukkitRunnable {
 	private UltimateGames ultimateGames;
 	private Arena arena;
 	private Integer initialSeconds;
 	private Integer secondsLeft;
-	
+
 	public StartingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft) {
 		this.ultimateGames = ultimateGames;
 		this.arena = arena;
@@ -51,8 +50,7 @@ public class StartingCountdown extends BukkitRunnable{
 			ultimateGames.getCountdownManager().stopStartingCountdown(arena);
 		}
 		if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
-			new StartingCountdown(ultimateGames, arena, initialSeconds, secondsLeft-1).runTaskLater(ultimateGames, 20L);
+			new StartingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1).runTaskLater(ultimateGames, 20L);
 		}
 	}
-
 }

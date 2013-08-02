@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Database.Tables;
+package me.ampayne2.ultimategames.database.tables;
 
 import java.util.HashMap;
 
@@ -28,26 +28,18 @@ import org.bukkit.inventory.ItemStack;
 
 @Table("playerData")
 public class PlayerData {
-
 	@Id
 	public int id;
-
 	@Field
 	public String playerName;
-
 	@Field
 	public ItemStack[] inventory;
-
 	@Field
 	public ItemStack[] armorInventory;
-	
 	@Field
 	public Integer gamemode;
-	
 	@Field
 	public Integer experience;
-	
 	@Field
 	public HashMap<String, Integer> effects;
-
 }

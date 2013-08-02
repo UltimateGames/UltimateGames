@@ -16,21 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Signs;
+package me.ampayne2.ultimategames.signs;
 
-import me.ampayne2.UltimateGames.Arenas.Arena;
+import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class UGSign {
-	
 	private Sign sign;
 	private Arena arena;
 
 	/**
 	 * Creates a new sign
-	 * 
 	 * @param sign Sign to be turned into UGSign.
 	 * @param arena Arena of the sign.
 	 */
@@ -38,22 +36,20 @@ public abstract class UGSign {
 		this.sign = sign;
 		this.arena = arena;
 	}
-	
+
 	/**
 	 * Called when the UGSign is clicked.
 	 */
 	public abstract void onSignClick(PlayerInteractEvent event);
-	
+
 	/**
 	 * Gets the UGSign's updated lines.
-	 * 
 	 * @return sign The UGSign's updated lines.
 	 */
 	public abstract String[] getUpdatedLines();
 
 	/**
 	 * Gets the UGSign's Sign.
-	 * 
 	 * @return sign The UGSign's Sign.
 	 */
 	public Sign getSign() {
@@ -62,7 +58,6 @@ public abstract class UGSign {
 
 	/**
 	 * Gets the UGSign's Arena.
-	 * 
 	 * @return arena The UGSign's Arena.
 	 */
 	public Arena getArena() {
@@ -79,5 +74,4 @@ public abstract class UGSign {
 		}
 		sign.update();
 	}
-
 }

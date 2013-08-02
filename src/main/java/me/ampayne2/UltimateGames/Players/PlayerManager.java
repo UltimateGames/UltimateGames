@@ -16,10 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Players;
+package me.ampayne2.ultimategames.players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.api.ArenaScoreboard;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.events.GameJoinEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,18 +34,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.API.ArenaScoreboard;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Events.GameJoinEvent;
-
-public class PlayerManager implements Listener{
-	
+public class PlayerManager implements Listener {
 	private UltimateGames ultimateGames;
 	private HashMap<String, Arena> playerArenas = new HashMap<String, Arena>();
 	private HashMap<String, Boolean> playerInArena = new HashMap<String, Boolean>();
 	private ArrayList<String> playersInLimbo = new ArrayList<String>();
-	
+
 	@SuppressWarnings("unchecked")
 	public PlayerManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -51,10 +50,9 @@ public class PlayerManager implements Listener{
 			playerInArena.put(player.getName(), false);
 		}
 	}
-	
+
 	/**
 	 * Checks to see if a player is in an arena.
-	 * 
 	 * @param playerName The player's name.
 	 * @return If the player is in an arena or not.
 	 */
@@ -65,10 +63,9 @@ public class PlayerManager implements Listener{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Gets the arena a player is in.
-	 * 
 	 * @param playerName The player's name.
 	 * @return The arena a player is in. Null if the player isn't in an arena.
 	 */
@@ -79,10 +76,9 @@ public class PlayerManager implements Listener{
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Adds a player to an arena.
-	 * 
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 */
@@ -105,10 +101,9 @@ public class PlayerManager implements Listener{
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes a player from an arena.
-	 * 
 	 * @param playerName The player's name.
 	 * @param arena The arena.
 	 */
@@ -139,7 +134,7 @@ public class PlayerManager implements Listener{
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		String playerName = event.getPlayer().getName();
@@ -151,7 +146,7 @@ public class PlayerManager implements Listener{
 			ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
 		String playerName = event.getPlayer().getName();
@@ -164,5 +159,4 @@ public class PlayerManager implements Listener{
 		}
 		ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
 	}
-	
 }

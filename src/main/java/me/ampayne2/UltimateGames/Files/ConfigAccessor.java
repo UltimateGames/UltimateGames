@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Files;
+package me.ampayne2.ultimategames.files;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,21 +28,23 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigAccessor {
-
 	private final String fileName;
 	private final JavaPlugin plugin;
 	private File configFile;
 	private FileConfiguration fileConfiguration;
 
 	public ConfigAccessor(JavaPlugin plugin, String fileName, File parent) {
-		if (plugin == null)
+		if (plugin == null) {
 			throw new IllegalArgumentException("plugin cannot be null");
-		if (!plugin.isInitialized())
+		}
+		if (!plugin.isInitialized()) {
 			throw new IllegalArgumentException("plugin must be initialized");
+		}
 		this.plugin = plugin;
 		this.fileName = fileName;
-		if (parent == null)
+		if (parent == null) {
 			throw new IllegalStateException();
+		}
 		this.configFile = new File(parent, fileName);
 	}
 
@@ -85,5 +87,4 @@ public class ConfigAccessor {
 			this.plugin.saveResource(fileName, false);
 		}
 	}
-
 }

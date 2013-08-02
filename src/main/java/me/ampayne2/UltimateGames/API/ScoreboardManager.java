@@ -16,17 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.API;
+package me.ampayne2.ultimategames.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import me.ampayne2.UltimateGames.Arenas.Arena;
+import me.ampayne2.ultimategames.arenas.Arena;
 
 public class ScoreboardManager {
-	
 	private HashMap<Arena, ArrayList<ArenaScoreboard>> scoreboards = new HashMap<Arena, ArrayList<ArenaScoreboard>>();
-	
+
 	public ArrayList<ArenaScoreboard> getArenaScoreboards(Arena arena) {
 		if (scoreboards.containsKey(arena)) {
 			return scoreboards.get(arena);
@@ -34,7 +33,7 @@ public class ScoreboardManager {
 			return new ArrayList<ArenaScoreboard>();
 		}
 	}
-	
+
 	public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
 		ArenaScoreboard scoreboard = new ArenaScoreboard(name);
 		if (scoreboards.containsKey(arena)) {
@@ -46,7 +45,7 @@ public class ScoreboardManager {
 		}
 		return scoreboard;
 	}
-	
+
 	public void removeArenaScoreboard(Arena arena, String name) {
 		if (scoreboards.containsKey(arena)) {
 			for (ArenaScoreboard scoreboard : new ArrayList<ArenaScoreboard>(scoreboards.get(arena))) {
@@ -57,5 +56,4 @@ public class ScoreboardManager {
 			}
 		}
 	}
-
 }

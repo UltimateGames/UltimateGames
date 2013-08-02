@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.Commands.Arenas;
+package me.ampayne2.ultimategames.command.commands.arenas;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 
 import org.bukkit.command.CommandSender;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-
-public class Stop implements UGCommand{
-	
+public class Stop implements UGCommand {
 	private UltimateGames ultimateGames;
-	
+
 	public Stop(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length != 2) {

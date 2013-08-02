@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command.Commands;
+package me.ampayne2.ultimategames.command.commands;
+
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Command.interfaces.UGCommand;
-
-public class SetLobby implements UGCommand{
-
+public class SetLobby implements UGCommand {
 	private UltimateGames ultimateGames;
-	
+
 	public SetLobby(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
@@ -40,5 +39,4 @@ public class SetLobby implements UGCommand{
 		Player player = (Player) sender;
 		ultimateGames.getLobbyManager().setLobby(player.getLocation());
 	}
-
 }

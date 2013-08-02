@@ -16,21 +16,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Command;
+package me.ampayne2.ultimategames.command;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-import me.ampayne2.UltimateGames.Command.SubCommand;
-import me.ampayne2.UltimateGames.Command.Commands.SetLobby;
-import me.ampayne2.UltimateGames.Command.Commands.SpawnParticle;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.AddSpawn;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.Create;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.Join;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.Leave;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.Begin;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.End;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.Open;
-import me.ampayne2.UltimateGames.Command.Commands.Arenas.Stop;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.command.commands.SetLobby;
+import me.ampayne2.ultimategames.command.commands.SpawnParticle;
+import me.ampayne2.ultimategames.command.commands.arenas.AddSpawn;
+import me.ampayne2.ultimategames.command.commands.arenas.Begin;
+import me.ampayne2.ultimategames.command.commands.arenas.Create;
+import me.ampayne2.ultimategames.command.commands.arenas.End;
+import me.ampayne2.ultimategames.command.commands.arenas.Join;
+import me.ampayne2.ultimategames.command.commands.arenas.Leave;
+import me.ampayne2.ultimategames.command.commands.arenas.Open;
+import me.ampayne2.ultimategames.command.commands.arenas.Stop;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -41,14 +40,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CommandController extends JavaPlugin implements Listener{
-	
+public class CommandController extends JavaPlugin implements Listener {
 	private UltimateGames ultimateGames;
 	private final SubCommand mainCommand = new SubCommand();
 
 	public CommandController(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
-		
+
 		SubCommand arena = new SubCommand();
 		Create create = new Create(ultimateGames);
 		ultimateGames.getServer().getPluginManager().registerEvents(create, ultimateGames);
@@ -61,9 +59,9 @@ public class CommandController extends JavaPlugin implements Listener{
 		arena.addCommand("join", "ultimategames.arena.join", new Join(ultimateGames));
 		arena.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
 		mainCommand.addCommand("arena", null, arena);
-		
+
 		mainCommand.addCommand("setlobby", "ultimategames.setlobby", new SetLobby(ultimateGames));
-		
+
 		mainCommand.addCommand("SpawnParticle", "ultimategames.spawnparticle", new SpawnParticle());
 	}
 
@@ -104,9 +102,8 @@ public class CommandController extends JavaPlugin implements Listener{
 			// Invalid Arguments. Valid arguments are mainCommand.getSubCommandList());
 			return true;
 		}
-
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();

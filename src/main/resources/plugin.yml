@@ -2,7 +2,7 @@ name: UltimateGames
 version: 0
 description: The Ultimate Game Plugin
 author: ampayne2
-main: me.ampayne2.UltimateGames.UltimateGames
+main: me.ampayne2.ultimategames.UltimateGames
 commands:
   ultimategames:
     aliases: ug

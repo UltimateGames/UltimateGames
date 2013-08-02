@@ -16,27 +16,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Players;
+package me.ampayne2.ultimategames.players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
-
 public class SpawnpointManager {
-
 	private UltimateGames ultimateGames;
 	private HashMap<Arena, ArrayList<SpawnPoint>> spawnPoints = new HashMap<Arena, ArrayList<SpawnPoint>>();
-	
+
 	public SpawnpointManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 	}
-	
+
 	/**
 	 * Checks if an arena has a spawnpoint at the index.
 	 * @param arena The arena.
@@ -50,10 +49,9 @@ public class SpawnpointManager {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Adds a spawnpoint to the manager.
-	 * 
 	 * @param spawnPoint The spawnpoint.
 	 * @param addToConfig Should it be added to the config?
 	 */
@@ -67,11 +65,10 @@ public class SpawnpointManager {
 		}
 		ultimateGames.getServer().getPluginManager().registerEvents(spawnPoint, ultimateGames);
 	}
-	
+
 	/**
 	 * Creates a spawnpoint.
 	 * The spawnpoint is added to the manager and config.
-	 * 
 	 * @param arena The Arena.
 	 * @param location The location.
 	 * @param locked If the spawnpoint prevents the player from moving off of it.
@@ -86,10 +83,10 @@ public class SpawnpointManager {
 		newSpawnPoint.add(String.valueOf(location.getYaw()));
 		newSpawnPoint.add(String.valueOf(locked));
 		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-		String path = "Arenas."+arena.getGame().getGameDescription().getName()+"."+arena.getName()+".SpawnPoints";
+		String path = "Arenas." + arena.getGame().getGameDescription().getName() + "." + arena.getName() + ".SpawnPoints";
 		if (ultimateGames.getConfigManager().getArenaConfig().getConfig().contains(path)) {
 			@SuppressWarnings("unchecked")
-			 ArrayList<ArrayList<String>> arenaSpawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(path);
+			ArrayList<ArrayList<String>> arenaSpawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(path);
 			arenaSpawnPoints.add(newSpawnPoint);
 			arenaConfig.set(path, arenaSpawnPoints);
 		} else {
@@ -102,10 +99,9 @@ public class SpawnpointManager {
 		addSpawnPoint(spawnPoint);
 		return spawnPoint;
 	}
-	
+
 	/**
 	 * Get a specific spawnpoint of an arena.
-	 * 
 	 * @param arena The arena.
 	 * @param index The spawnpoint index.
 	 * @return The spawnpoint.
@@ -116,10 +112,9 @@ public class SpawnpointManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get a random spawnpoint of an arena.
-	 * 
 	 * @param arena The arena.
 	 * @return The spawnpoint.
 	 */
@@ -131,11 +126,10 @@ public class SpawnpointManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get a random spawnpoint of an arena at or above the minIndex.
 	 * Useful if there are certain spawnpoints only used for specific things.
-	 * 
 	 * @param arena The arena.
 	 * @param minIndex The minimum index.
 	 * @return The spawnpoint.
@@ -148,11 +142,10 @@ public class SpawnpointManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get a random spawnpoint of an arena within the minIndex and maxIndex.
 	 * Useful if there are certain spawnpoints only used for specific things.
-	 * 
 	 * @param arena The arena.
 	 * @param minIndex The minimum index.
 	 * @param maxIndex The maximum index.
@@ -166,13 +159,12 @@ public class SpawnpointManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get a certain amount of spawnpoints distributed evenly among the available spawnpoints.
 	 * Example: You have 8 spawn points. You ask for 4. It gives you the spawnpoints at indexes 0, 2, 4, and 6.
 	 * Example 2: You have 16 spawn points. You ask for 2. It gives you the spawnpoints at indexes 0 and 8.
 	 * Useful for spawnpoint setups similar to survival games where players need to be spaced out.
-	 * 
 	 * @param arena The arena.
 	 * @param amount The amount of spawnpoints to get.
 	 * @return The spawnpoints.
@@ -181,19 +173,18 @@ public class SpawnpointManager {
 		if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= amount) {
 			ArrayList<SpawnPoint> distributedSpawnPoints = new ArrayList<SpawnPoint>();
 			Integer size = spawnPoints.get(arena).size();
-			Double multiple = (double)size / (double)amount;
-			for(int i=0; i < amount; i++) {
-				Integer index = (int) Math.round(i*multiple);
+			Double multiple = (double) size / (double) amount;
+			for (int i = 0; i < amount; i++) {
+				Integer index = (int) Math.round(i * multiple);
 				distributedSpawnPoints.add(spawnPoints.get(arena).get(index));
 			}
 			return distributedSpawnPoints;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets all the spawnpoints of an arena.
-	 * 
 	 * @param arena The arena.
 	 * @return The spawnpoints.
 	 */
@@ -204,10 +195,9 @@ public class SpawnpointManager {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Removes the spawnpoint at a certain index.
-	 * 
 	 * @param arena The arena.
 	 * @param index The index.
 	 */
@@ -217,10 +207,9 @@ public class SpawnpointManager {
 			//TODO: Remove spawnpoint from arena config.
 		}
 	}
-	
+
 	/**
 	 * Removes the spawnpoints at the indexes.
-	 * 
 	 * @param arena The arena.
 	 * @param indexes The indexes.
 	 */
@@ -229,7 +218,7 @@ public class SpawnpointManager {
 			ArrayList<SpawnPoint> remove = new ArrayList<SpawnPoint>();
 			for (Integer index : indexes) {
 				if (spawnPoints.get(arena).size() >= index) {
-					remove.add(spawnPoints.get(arena).get(index));	
+					remove.add(spawnPoints.get(arena).get(index));
 				}
 			}
 			if (remove != null) {
@@ -238,10 +227,9 @@ public class SpawnpointManager {
 			//TODO: Remove spawnpoints from arena config.
 		}
 	}
-	
+
 	/**
 	 * Removes all the spawnpoints of an arena.
-	 * 
 	 * @param arena The arena.
 	 */
 	public void removeAllSpawnPoints(Arena arena) {
@@ -250,5 +238,4 @@ public class SpawnpointManager {
 			//TODO: Remove spawnpoints from arena config.
 		}
 	}
-	
 }

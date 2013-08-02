@@ -16,22 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.UltimateGames.Countdowns;
+package me.ampayne2.ultimategames.countdowns;
 
-import me.ampayne2.UltimateGames.UltimateGames;
-import me.ampayne2.UltimateGames.Arenas.Arena;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class EndingCountdown extends BukkitRunnable{
-	
+public class EndingCountdown extends BukkitRunnable {
 	private UltimateGames ultimateGames;
 	private Arena arena;
 	private Integer initialSeconds;
 	private Integer secondsLeft;
 	private Boolean expDisplay;
-	
+
 	public EndingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft, Boolean expDisplay) {
 		this.ultimateGames = ultimateGames;
 		this.arena = arena;
@@ -55,8 +55,7 @@ public class EndingCountdown extends BukkitRunnable{
 			ultimateGames.getCountdownManager().stopEndingCountdown(arena);
 		}
 		if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
-			new EndingCountdown(ultimateGames, arena, initialSeconds, secondsLeft-1, expDisplay).runTaskLater(ultimateGames, 20L);
+			new EndingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1, expDisplay).runTaskLater(ultimateGames, 20L);
 		}
 	}
-
 }
