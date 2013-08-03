@@ -1,6 +1,8 @@
 package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.SignType;
+
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 
@@ -12,6 +14,8 @@ public class TextOutputSign extends UGSign {
 	public TextOutputSign(String label, Sign sign, Arena arena) {
 		super(sign, arena);
 		this.label = label;
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		update();
 	}
 
 	@Override

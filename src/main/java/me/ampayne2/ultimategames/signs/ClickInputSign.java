@@ -31,13 +31,13 @@ public class ClickInputSign extends UGSign {
     public ClickInputSign(String label, Sign sign, Arena arena) {
         super(sign, arena);
         this.label = label;
-        arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.CLICK_INPUT);
+        arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
         update();
     }
 
     @Override
     public void onSignTrigger(Event event) {
-        getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.CLICK_INPUT, event);
+        getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
     }
 
     @Override

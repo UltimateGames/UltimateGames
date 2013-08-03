@@ -22,17 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.signs.ClickInputSign;
 import me.ampayne2.ultimategames.signs.LobbySign;
+import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.UGSign;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -49,7 +53,9 @@ public class SignListener implements Listener {
      */
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
-        //TODO: Permission check
+        if (!event.getPlayer().hasPermission("ultimategames.sign.create")) {
+        	return;
+        }
         String signPrefix = event.getLine(0);
         String gameName = event.getLine(1);
         String arenaName = event.getLine(2);
@@ -60,18 +66,23 @@ public class SignListener implements Listener {
         if (!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
             return;
         }
-        String[] lines;
-        if (signPrefix.equalsIgnoreCase(ultimateGames.getConfig().getString("LobbySignPrefix"))) {
-            LobbySign lobbySign = ultimateGames.getUGSignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
-            lines = lobbySign.getUpdatedLines();
-        } else if (signPrefix.equalsIgnoreCase(ultimateGames.getConfig().getString("InputSignPrefix"))) {
-            ClickInputSign inputSign = ultimateGames.getUGSignManager().createInputSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
-            String[] inputSignLines = {"", label, "", ""};
-            inputSign.setLines(inputSignLines);
-            lines = inputSign.getUpdatedLines();
+        FileConfiguration config = ultimateGames.getConfig();
+        SignType signType;
+        if (signPrefix.equalsIgnoreCase(config.getString("LobbySignPrefix"))) {
+        	signType = SignType.LOBBY;
+        } else if (signPrefix.equalsIgnoreCase(config.getString("ClickInputSignPrefix"))) {
+        	signType = SignType.CLICK_INPUT;
+        } else if (signPrefix.equalsIgnoreCase(config.getString("RedstoneInputSignPrefix"))) {
+        	signType = SignType.REDSTONE_INPUT;
+        } else if (signPrefix.equalsIgnoreCase(config.getString("TextOutputSignPrefix"))) {
+        	signType = SignType.TEXT_OUTPUT;
+        } else if (signPrefix.equalsIgnoreCase(config.getString("RedstoneOutputSignPrefix"))) {
+        	signType = SignType.REDSTONE_OUTPUT;
         } else {
-            return;
+        	return;
         }
+        UGSign ugSign = ultimateGames.getUGSignManager().createUGSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName), signType);
+        String[] lines = ugSign.getUpdatedLines();
         for (int i = 0; i < 4; i++) {
             event.setLine(i, lines[i]);
         }
@@ -94,12 +105,24 @@ public class SignListener implements Listener {
             return;
         }
         if (ugSign instanceof LobbySign) {
-            LobbySign lobbySign = (LobbySign) ugSign;
-            lobbySign.onSignClick(event);
+        	ugSign.onSignTrigger(event);
         } else if (ugSign instanceof ClickInputSign) {
-            ClickInputSign inputSign = (ClickInputSign) ugSign;
-            inputSign.onSignClick(event);
+        	ugSign.onSignTrigger(event);
         }
+    }
+    
+    /**
+     * Handles Redstone Input Signs.
+     * @param event The event thrown when a block is powered.
+     */
+    @EventHandler
+    public void onSignPower(BlockRedstoneEvent event) {
+    	if (event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN) {
+    		Sign sign = (Sign) event.getBlock().getState();
+    		if (ultimateGames.getUGSignManager().isRedstoneInputSign(sign)) {
+    			ultimateGames.getUGSignManager().getRedstoneInputSign(sign).onSignTrigger(event);
+    		}
+    	}
     }
 
     /**
@@ -133,11 +156,19 @@ public class SignListener implements Listener {
                 return;
             }
             //TODO: Permission check
-            if (ugSign instanceof LobbySign) {
-                ultimateGames.getUGSignManager().removeLobbySign(sign);
-            } else if (ugSign instanceof ClickInputSign) {
-                ultimateGames.getUGSignManager().removeInputSign(sign);
-            }
+            ultimateGames.getUGSignManager().removeUGSign(sign);
         }
+    }
+    
+    @EventHandler
+    public void onRedstoneBlockBreak(BlockBreakEvent event) {
+    	if (event.getBlock().getType() == Material.REDSTONE_BLOCK) {
+    		if (ultimateGames.getUGSignManager().isRedstoneOutputSign(event.getBlock().getLocation())) {
+    			//TODO: Permission check
+    			RedstoneOutputSign redstoneOutputSign = ultimateGames.getUGSignManager().getRedstoneOutputSign(event.getBlock().getLocation());
+    			redstoneOutputSign.setPowered(false);
+    			ultimateGames.getUGSignManager().removeUGSign(redstoneOutputSign.getSign());
+    		}
+    	}
     }
 }

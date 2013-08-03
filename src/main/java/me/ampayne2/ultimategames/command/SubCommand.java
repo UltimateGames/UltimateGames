@@ -48,7 +48,7 @@ public class SubCommand implements Command {
             Command entry = commandList.get(command);
             if (entry instanceof UGCommand) {
                 if (sender.hasPermission(permissionList.get(command))) {
-                    ((UGCommand) entry).execute(sender, args);
+                	((UGCommand) entry).execute(sender, args);
                 }
             } else if (entry instanceof SubCommand) {
                 SubCommand subCommand = (SubCommand) entry;

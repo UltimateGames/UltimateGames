@@ -22,10 +22,12 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.enums.PlayerType;
+import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.players.QueueManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class LobbySign extends UGSign {
@@ -36,21 +38,23 @@ public class LobbySign extends UGSign {
         super(sign, arena);
         this.ultimateGames = ultimateGames;
         this.arena = arena;
+        arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
         update();
     }
 
     @Override
-    public void onSignClick(PlayerInteractEvent event) {
+    public void onSignTrigger(Event event) {
         //TODO: Permission check
+    	PlayerInteractEvent interactEvent = (PlayerInteractEvent) event;
         ArenaStatus arenaStatus = arena.getStatus();
         if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
             // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-            ultimateGames.getPlayerManager().addPlayerToArena(event.getPlayer().getName(), arena, true);
+            ultimateGames.getPlayerManager().addPlayerToArena(interactEvent.getPlayer().getName(), arena, true);
             return;
         } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
                 || arena.getPlayers().size() >= arena.getMaxPlayers()) {
             QueueManager queue = ultimateGames.getQueueManager();
-            String playerName = event.getPlayer().getName();
+            String playerName = interactEvent.getPlayer().getName();
             if (queue.isPlayerInQueue(playerName, arena)) {
                 queue.removePlayerFromQueues(playerName);
             } else {

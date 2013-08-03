@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.arenas.Arena;
 
+import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 
@@ -68,10 +69,13 @@ public abstract class UGSign {
      * Updates the UGSign.
      */
     public void update() {
-        String[] lines = getUpdatedLines();
-        for (int i = 0; i < 4; i++) {
-            sign.setLine(i, lines[i]);
-        }
-        sign.update();
+    	Material material = sign.getLocation().getBlock().getType();
+    	if (material == Material.WALL_SIGN || material == Material.SIGN_POST) {
+            String[] lines = getUpdatedLines();
+            for (int i = 0; i < 4; i++) {
+                sign.setLine(i, lines[i]);
+            }
+            sign.update();
+    	}
     }
 }

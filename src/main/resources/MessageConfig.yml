@@ -1,7 +1,21 @@
 messages:
   prefix: "&8[&bUltimateGames&8]"
   
-  games: {}
+  commandusages:
+    arena:
+      addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked]"
+      begin: "&4Usage: /ug arena begin [arena] [game]"
+      create: "&4Usage: /ug arena create [arena] [game]"
+      end: "&4Usage: /ug arena end [arena] [game]"
+      join: "&4Usage: /ug arena join [arena] [game]"
+      leave: "&4Usage: /ug arena leave"
+      open: "&4Usage: /ug arena open [arena] [game]"
+      stop: "&4Usage: /ug arena stop [arena] [game]"
+    setlobby: "&4Usage: /ug setlobby"
+    spawnparticle: "&4Usage: /ug spawnparticle [name] [offset x] [offset y] [offset z] [speed] [amount]"
+  
+  games:
+    doesntexist: "Game doesn't exist."
   
   arenas:
     select: "Punch two corners of a cuboid to create the Arena '%s' of Game '%s'."
@@ -20,10 +34,9 @@ messages:
     leave: "%s left the game! %s"
 
     alreadyexists: "Arena already exists."
-    doesntexit: "Arena doesn't exist."
+    doesntexist: "Arena doesn't exist."
     failedtocreate: "Failed to create Arena '%s' of Game '%s'. %s"
     failedtojoin: "Failed to join Arena '%s' of Game '%s'. %s"
-    gamenotexist: "This gamemode doesn't exist!"
 
   queues:
     join: "Joined queue for Arena '%s' of Game '%s'. You are %s in line and will be able to join %s."

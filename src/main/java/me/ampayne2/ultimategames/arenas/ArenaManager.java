@@ -41,37 +41,41 @@ public class ArenaManager {
         this.ultimateGames = ultimateGames;
         arenas = new HashMap<Game, ArrayList<Arena>>();
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-        for (String gameKey : arenaConfig.getConfigurationSection("Arenas").getKeys(false)) {
-            if (ultimateGames.getGameManager().gameExists(gameKey)) {
-                String gamePath = "Arenas." + gameKey;
-                for (String arenaKey : arenaConfig.getConfigurationSection(gamePath).getKeys(false)) {
-                    if (!arenaExists(arenaKey, gameKey)) {
-                        String arenaPath = gamePath + "." + arenaKey;
-                        World world = Bukkit.getWorld(arenaConfig.getString(arenaPath + ".Arena-Location.world"));
-                        Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), arenaConfig.getInt(arenaPath + ".Arena-Location.miny"), arenaConfig
-                                .getInt(arenaPath + ".Arena-Location.minz"));
-                        Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), arenaConfig.getInt(arenaPath + ".Arena-Location.maxy"), arenaConfig
-                                .getInt(arenaPath + ".Arena-Location.maxz"));
-                        Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, minLocation, maxLocation);
-                        arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
-                        addArena(arena);
-                        Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
-                        if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
-                            @SuppressWarnings("unchecked")
-                            ArrayList<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
-                            if (!spawnPoints.isEmpty()) {
-                                for (ArrayList<String> spawnPoint : spawnPoints) {
-                                    if (!spawnPoints.isEmpty()) {
-                                        Double x = Double.valueOf(spawnPoint.get(0));
-                                        Double y = Double.valueOf(spawnPoint.get(1));
-                                        Double z = Double.valueOf(spawnPoint.get(2));
-                                        Float pitch = Float.valueOf(spawnPoint.get(3));
-                                        Float yaw = Float.valueOf(spawnPoint.get(4));
-                                        Location location = new Location(world, x, y, z);
-                                        location.setPitch(pitch);
-                                        location.setYaw(yaw);
-                                        SpawnPoint newSpawnPoint = new SpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(5)));
-                                        ultimateGames.getSpawnpointManager().addSpawnPoint(newSpawnPoint);
+        if (arenaConfig.getConfigurationSection("Arenas") == null) {
+        	return;
+        } else {
+            for (String gameKey : arenaConfig.getConfigurationSection("Arenas").getKeys(false)) {
+                if (ultimateGames.getGameManager().gameExists(gameKey)) {
+                    String gamePath = "Arenas." + gameKey;
+                    for (String arenaKey : arenaConfig.getConfigurationSection(gamePath).getKeys(false)) {
+                        if (!arenaExists(arenaKey, gameKey)) {
+                            String arenaPath = gamePath + "." + arenaKey;
+                            World world = Bukkit.getWorld(arenaConfig.getString(arenaPath + ".Arena-Location.world"));
+                            Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), arenaConfig.getInt(arenaPath + ".Arena-Location.miny"), arenaConfig
+                                    .getInt(arenaPath + ".Arena-Location.minz"));
+                            Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), arenaConfig.getInt(arenaPath + ".Arena-Location.maxy"), arenaConfig
+                                    .getInt(arenaPath + ".Arena-Location.maxz"));
+                            Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, minLocation, maxLocation);
+                            arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
+                            addArena(arena);
+                            Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
+                            if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
+                                @SuppressWarnings("unchecked")
+                                ArrayList<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
+                                if (!spawnPoints.isEmpty()) {
+                                    for (ArrayList<String> spawnPoint : spawnPoints) {
+                                        if (!spawnPoints.isEmpty()) {
+                                            Double x = Double.valueOf(spawnPoint.get(0));
+                                            Double y = Double.valueOf(spawnPoint.get(1));
+                                            Double z = Double.valueOf(spawnPoint.get(2));
+                                            Float pitch = Float.valueOf(spawnPoint.get(3));
+                                            Float yaw = Float.valueOf(spawnPoint.get(4));
+                                            Location location = new Location(world, x, y, z);
+                                            location.setPitch(pitch);
+                                            location.setYaw(yaw);
+                                            SpawnPoint newSpawnPoint = new SpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(5)));
+                                            ultimateGames.getSpawnpointManager().addSpawnPoint(newSpawnPoint);
+                                        }
                                     }
                                 }
                             }

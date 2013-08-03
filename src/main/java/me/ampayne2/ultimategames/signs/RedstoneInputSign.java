@@ -14,11 +14,13 @@ public class RedstoneInputSign extends UGSign {
 	public RedstoneInputSign(String label, Sign sign, Arena arena) {
 		super(sign, arena);
 		this.label = label;
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		update();
 	}
 
 	@Override
 	public void onSignTrigger(Event event) {
-		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.REDSTONE_INPUT, event);
+		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
 	}
 
 	@Override

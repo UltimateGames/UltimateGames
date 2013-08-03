@@ -1,5 +1,8 @@
-LobbySignPrefix: "[ug lobbysign]"
-InputSignPrefix: "[ug inputsign]"
+LobbySignPrefix: "[ug lsign]"
+ClickInputSignPrefix: "[ug cisign]"
+RedstoneInputSignPrefix: "[ug risign]"
+TextOutputSignPrefix: "[ug tosign]"
+RedstoneOutputSignPrefix: "[ug rosign]"
 
 Database:
   Type: "sqlite"

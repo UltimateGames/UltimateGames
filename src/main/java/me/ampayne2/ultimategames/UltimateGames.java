@@ -33,6 +33,7 @@ import me.ampayne2.ultimategames.players.LobbyManager;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.players.QueueManager;
 import me.ampayne2.ultimategames.players.SpawnpointManager;
+import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.UGSignManager;
 import me.ampayne2.ultimategames.utils.Utils;
 import org.mcstats.Metrics;
@@ -94,6 +95,14 @@ public class UltimateGames extends JavaPlugin {
         } catch (IOException e) {
             messageManager.debug(e);
         }
+    }
+    
+    public void onDisable() {
+    	for (Game game : gameManager.getGames()) {
+        	for (RedstoneOutputSign sign : ugSignManager.getRedstoneOutputSignsOfGame(game)) {
+        		sign.setPowered(false);
+        	}
+    	}
     }
 
     public JavaPlugin getPlugin() {
