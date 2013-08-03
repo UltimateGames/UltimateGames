@@ -94,7 +94,7 @@ public class PlayerManager implements Listener {
             Bukkit.getServer().getPluginManager().callEvent(gameJoinEvent);
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
             if (sendMessage) {
-                ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.join", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+                ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.join", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
             }
             for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
                 scoreBoard.addPlayer(playerName);
@@ -120,7 +120,7 @@ public class PlayerManager implements Listener {
                 }
             }
             if (sendMessage) {
-                ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.leave", playerName, String.valueOf(arena.getPlayers().size()) + " / " + arena.getMaxPlayers());
+                ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "arenas.leave", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
             }
             Location location = ultimateGames.getLobbyManager().getLobby();
             if (location != null) {

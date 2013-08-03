@@ -29,5 +29,5 @@ public interface UGCommand extends Command {
      * @param sender The sender of the command
      * @param args The arguments sent with the command
      */
-    public void execute(CommandSender sender, String[] args);
+    void execute(CommandSender sender, String[] args);
 }

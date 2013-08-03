@@ -38,13 +38,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class GameManager {
     private UltimateGames ultimateGames;
     private ArrayList<Game> games = new ArrayList<Game>();
-    private File gameFolder;
 
     @SuppressWarnings("unchecked")
     public GameManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
 
-        gameFolder = new File(ultimateGames.getPlugin().getDataFolder(), "Games");
+        File gameFolder = new File(ultimateGames.getPlugin().getDataFolder(), "Games");
         if (!gameFolder.exists()) {
             gameFolder.mkdirs();
         }

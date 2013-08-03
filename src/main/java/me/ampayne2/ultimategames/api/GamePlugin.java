@@ -28,37 +28,129 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class GamePlugin implements Listener {
-    public abstract Boolean loadGame(UltimateGames ultimateGames, Game game); // Setup anything needed for the game to function.
+    /**
+     * Setup anything needed for the game to function.
+     * @param ultimateGames The UltimateGames plugin instance
+     * @param game The game that is being loaded
+     * @return True if everything went well else false
+     */
+    public abstract Boolean loadGame(UltimateGames ultimateGames, Game game);
 
-    public abstract Boolean unloadGame(); // Called when removing the game from the game manager.
+    /**
+     * Called when removing the game from the game manager.
+     * @return True if everything went well else false
+     */
+    public abstract Boolean unloadGame();
 
-    public abstract Boolean stopGame(); // Sets all arenas to ArenaStatus.GAME_STOPPED. Disables the game.
+    /**
+     * Sets all arenas to ArenaStatus.GAME_STOPPED. Disables the game.
+     * @return True if everything went well else false
+     */
+    public abstract Boolean stopGame();
 
-    public abstract Boolean loadArena(Arena arena); // Setup anything needed for the game to function.
+    /**
+     * Load a arena.
+     * @param arena The arena to load
+     * @return True if everything went well else false
+     */
+    public abstract Boolean loadArena(Arena arena);
 
-    public abstract Boolean unloadArena(Arena arena); // Called when removing the arena from the arena manager.
+    /**
+     * Called when removing the arena from the arena manager.
+     * @param arena The arena to unload
+     * @return True if everything went well else false
+     */
+    public abstract Boolean unloadArena(Arena arena);
 
-    public abstract Boolean isStartPossible(Arena arena); // Checks to see if a start is possible. Used in force starting etc.
+    /**
+     * Checks to see if a start is possible. Used in force starting etc.
+     * @param arena The arena to attempt to start
+     * @return True if everything went well else false
+     */
+    public abstract Boolean isStartPossible(Arena arena);
 
-    public abstract Boolean startArena(Arena arena); // Sets to ArenaStatus.STARTING, called at countdown start. Should be used for preparing an arena.
+    /**
+     * Sets to ArenaStatus.STARTING, called at countdown start. Should be used for preparing an arena.
+     * @param arena The arena to start
+     * @return True if everything went well else false
+     */
+    public abstract Boolean startArena(Arena arena);
 
-    public abstract Boolean beginArena(Arena arena); // Sets to ArenaStatus.RUNNING, called at countdown end.
+    /**
+     * Sets to ArenaStatus.RUNNING, called at countdown end.
+     * @param arena The arena to begin
+     * @return True if everything went well else false
+     */
+    public abstract Boolean beginArena(Arena arena);
 
-    public abstract Boolean endArena(Arena arena); // Sets to ArenaStatus.ENDING.
+    /**
+     * Sets to ArenaStatus.ENDING. Called when the arena ends
+     * @param arena The arena to stop
+     * @return True if everything went well else false
+     */
+    public abstract Boolean endArena(Arena arena);
 
-    public abstract Boolean resetArena(Arena arena); // Sets to ArenaStatus.RESETTING. Should be used to reset anything in the arena. If returns false, sets to ArenaStatus.RESET_FAILED.
+    /**
+     * Sets to ArenaStatus.RESETTING. Should be used to reset anything in the arena. If returns false, sets to ArenaStatus.RESET_FAILED.
+     * @param arena The arena to reset
+     * @return True if everything went well else false
+     */
+    public abstract Boolean resetArena(Arena arena);
 
-    public abstract Boolean openArena(Arena arena); // Sets to ArenaStatus.OPEN.
+    /**
+     * Sets to ArenaStatus.OPEN. Called when a arena is open.
+     * @param arena The arena being opened
+     * @return True if everything went well else false
+     */
+    public abstract Boolean openArena(Arena arena);
 
-    public abstract Boolean stopArena(Arena arena); // Sets to ArenaStatus.ARENA_STOPPED. Disables the arena.
+    /**
+     * Sets to ArenaStatus.ARENA_STOPPED. Disables the arena.
+     * @param arena The arena to disable
+     * @return True if everything went well else false
+     */
+    public abstract Boolean stopArena(Arena arena); //
 
-    public abstract Boolean addPlayer(Arena arena, String playerName); // Handle player joining.
+    /**
+     * Handle player joining.
+     * @param arena The arena the player is joining
+     * @param playerName The player that join
+     * @return True if the player is added else false
+     */
+    public abstract Boolean addPlayer(Arena arena, String playerName);
 
-    public abstract Boolean removePlayer(Arena arena, String playerName); // Handle player leaving.
+    /**
+     * Handle player leaving.
+     * @param arena The arena the player is leaving
+     * @param playerName the player that leave
+     * @return True if everything went well else false
+     */
+    public abstract Boolean removePlayer(Arena arena, String playerName);
 
-    public abstract Boolean onArenaCommand(Arena arena, String command, CommandSender sender, String[] args); // Handle arena command.
+    /**
+     * Handle arena command.
+     * @param arena The arena that the command was done
+     * @param command The command
+     * @param sender The server of the command
+     * @param args the arguments.
+     * @return
+     */
+    public abstract Boolean onArenaCommand(Arena arena, String command, CommandSender sender, String[] args);
 
-    public abstract void handleInputSignCreate(Arena arena, Sign sign, String label); // Handle input sign creation.
+    /**
+     * Handle input sign creation.
+     * @param arena
+     * @param sign
+     * @param label
+     */
+    public abstract void handleInputSignCreate(Arena arena, Sign sign, String label); //
 
-    public abstract void handleInputSignClick(Arena arena, Sign sign, String label, PlayerInteractEvent event); // Handle input sign click.
+    /**
+     * Handle input sign click.
+     * @param arena
+     * @param sign
+     * @param label
+     * @param event
+     */
+    public abstract void handleInputSignClick(Arena arena, Sign sign, String label, PlayerInteractEvent event);
 }
