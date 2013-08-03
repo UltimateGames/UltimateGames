@@ -20,12 +20,13 @@ package me.ampayne2.ultimategames.api;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.games.Game;
+import me.ampayne2.ultimategames.signs.UGSign;
 
-import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class GamePlugin implements Listener {
     /**
@@ -138,19 +139,16 @@ public abstract class GamePlugin implements Listener {
     public abstract Boolean onArenaCommand(Arena arena, String command, CommandSender sender, String[] args);
 
     /**
-     * Handle input sign creation.
-     * @param arena
-     * @param sign
-     * @param label
+     * Handle UG Sign creation.
+     * @param ugSign
      */
-    public abstract void handleInputSignCreate(Arena arena, Sign sign, String label); //
-
+    public abstract void handleUGSignCreate(UGSign ugSign, SignType signType);
+    
     /**
-     * Handle input sign click.
-     * @param arena
-     * @param sign
-     * @param label
-     * @param event
+     * Handle UG Input Sign triggering.
+     * @param ugSign
+     * @param signType
      */
-    public abstract void handleInputSignClick(Arena arena, Sign sign, String label, PlayerInteractEvent event);
+    public abstract void handleInputSignTrigger(UGSign ugSign, SignType signType, Event event);
+    
 }

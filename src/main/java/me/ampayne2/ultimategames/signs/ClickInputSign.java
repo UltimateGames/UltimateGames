@@ -18,31 +18,26 @@
  */
 package me.ampayne2.ultimategames.signs;
 
-import java.util.Arrays;
-
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.SignType;
 
 import org.bukkit.block.Sign;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.Event;
 
-public class InputSign extends UGSign {
+public class ClickInputSign extends UGSign {
     private String label;
-    private Sign sign;
-    private Arena arena;
     private String[] lines = new String[4];
 
-    public InputSign(String label, Sign sign, Arena arena) {
+    public ClickInputSign(String label, Sign sign, Arena arena) {
         super(sign, arena);
         this.label = label;
-        this.sign = sign;
-        this.arena = arena;
-        arena.getGame().getGamePlugin().handleInputSignCreate(arena, sign, label);
+        arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.CLICK_INPUT);
         update();
     }
 
     @Override
-    public void onSignClick(PlayerInteractEvent event) {
-        arena.getGame().getGamePlugin().handleInputSignClick(arena, sign, label, event);
+    public void onSignTrigger(Event event) {
+        getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.CLICK_INPUT, event);
     }
 
     @Override
@@ -51,10 +46,10 @@ public class InputSign extends UGSign {
     }
 
     public void setLines(String[] lines) {
-        if (lines == null || lines.length != 4) {
-        	this.lines = new String[4];
-        } else {
-        	this.lines = Arrays.copyOf(lines, 4);
-        }
+    	this.lines = lines;
+    }
+    
+    public String getLabel() {
+    	return label;
     }
 }

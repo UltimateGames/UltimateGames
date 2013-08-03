@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.signs.InputSign;
+import me.ampayne2.ultimategames.signs.ClickInputSign;
 import me.ampayne2.ultimategames.signs.LobbySign;
 import me.ampayne2.ultimategames.signs.UGSign;
 
@@ -65,7 +65,7 @@ public class SignListener implements Listener {
             LobbySign lobbySign = ultimateGames.getUGSignManager().createLobbySign((Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
             lines = lobbySign.getUpdatedLines();
         } else if (signPrefix.equalsIgnoreCase(ultimateGames.getConfig().getString("InputSignPrefix"))) {
-            InputSign inputSign = ultimateGames.getUGSignManager().createInputSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
+            ClickInputSign inputSign = ultimateGames.getUGSignManager().createInputSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName));
             String[] inputSignLines = {"", label, "", ""};
             inputSign.setLines(inputSignLines);
             lines = inputSign.getUpdatedLines();
@@ -96,8 +96,8 @@ public class SignListener implements Listener {
         if (ugSign instanceof LobbySign) {
             LobbySign lobbySign = (LobbySign) ugSign;
             lobbySign.onSignClick(event);
-        } else if (ugSign instanceof InputSign) {
-            InputSign inputSign = (InputSign) ugSign;
+        } else if (ugSign instanceof ClickInputSign) {
+            ClickInputSign inputSign = (ClickInputSign) ugSign;
             inputSign.onSignClick(event);
         }
     }
@@ -135,7 +135,7 @@ public class SignListener implements Listener {
             //TODO: Permission check
             if (ugSign instanceof LobbySign) {
                 ultimateGames.getUGSignManager().removeLobbySign(sign);
-            } else if (ugSign instanceof InputSign) {
+            } else if (ugSign instanceof ClickInputSign) {
                 ultimateGames.getUGSignManager().removeInputSign(sign);
             }
         }

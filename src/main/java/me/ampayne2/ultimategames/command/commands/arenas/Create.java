@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
@@ -37,10 +38,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class Create implements UGCommand, Listener {
     private UltimateGames ultimateGames;
     private ArrayList<String> playersSelecting = new ArrayList<String>();
-    private HashMap<String, Location> corner1 = new HashMap<String, Location>();
-    private HashMap<String, Location> corner2 = new HashMap<String, Location>();
-    private HashMap<String, Game> game = new HashMap<String, Game>();
-    private HashMap<String, String> arenaName = new HashMap<String, String>();
+    private Map<String, Location> corner1 = new HashMap<String, Location>();
+    private Map<String, Location> corner2 = new HashMap<String, Location>();
+    private Map<String, Game> game = new HashMap<String, Game>();
+    private Map<String, String> arenaName = new HashMap<String, String>();
 
     public Create(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;

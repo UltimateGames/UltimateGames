@@ -18,47 +18,47 @@
  */
 package me.ampayne2.ultimategames.games;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class GameScoreContainer {
-    private HashMap<String, Integer> integerScores;
-    private HashMap<String, Boolean> booleanScores;
-    private HashMap<String, Integer> integerSecondaryScores;
-    private HashMap<String, Boolean> booleanSecondaryScores;
+    private Map<String, Integer> integerScores;
+    private Map<String, Boolean> booleanScores;
+    private Map<String, Integer> integerSecondaryScores;
+    private Map<String, Boolean> booleanSecondaryScores;
 
     public GameScoreContainer() {
 
     }
 
-    public HashMap<String, Integer> getIntegerScores() {
+    public Map<String, Integer> getIntegerScores() {
         return integerScores;
     }
 
-    public HashMap<String, Boolean> getBooleanScores() {
+    public Map<String, Boolean> getBooleanScores() {
         return booleanScores;
     }
 
-    public HashMap<String, Integer> getIntegerSecondaryScores() {
+    public Map<String, Integer> getIntegerSecondaryScores() {
         return integerSecondaryScores;
     }
 
-    public HashMap<String, Boolean> getBooleanSecondaryScores() {
+    public Map<String, Boolean> getBooleanSecondaryScores() {
         return booleanSecondaryScores;
     }
 
-    public void setIntegerScores(HashMap<String, Integer> scores) {
+    public void setIntegerScores(Map<String, Integer> scores) {
         integerScores = scores;
     }
 
-    public void setBooleanScores(HashMap<String, Boolean> scores) {
+    public void setBooleanScores(Map<String, Boolean> scores) {
         booleanScores = scores;
     }
 
-    public void setIntegerSecondaryScores(HashMap<String, Integer> scores) {
+    public void setIntegerSecondaryScores(Map<String, Integer> scores) {
         integerSecondaryScores = scores;
     }
 
-    public void setBooleanSecondaryScores(HashMap<String, Boolean> scores) {
+    public void setBooleanSecondaryScores(Map<String, Boolean> scores) {
         booleanSecondaryScores = scores;
     }
 }

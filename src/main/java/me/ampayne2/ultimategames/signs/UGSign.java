@@ -21,7 +21,7 @@ package me.ampayne2.ultimategames.signs;
 import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.block.Sign;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.Event;
 
 public abstract class UGSign {
     private Sign sign;
@@ -38,9 +38,9 @@ public abstract class UGSign {
     }
 
     /**
-     * Called when the UGSign is clicked.
+     * Called when the UGSign is triggered.
      */
-    public abstract void onSignClick(PlayerInteractEvent event);
+    public abstract void onSignTrigger(Event event);
 
     /**
      * Gets the UGSign's updated lines.
