@@ -467,8 +467,8 @@ public class UGSignManager {
                             String y = signInfo.get(2);
                             String z = signInfo.get(3);
                             if (world != null && x != null && y != null && z != null) {
-                                World signWorld;
-                                if ((signWorld = Bukkit.getWorld(world)) != null) {
+                                World signWorld = Bukkit.getWorld(world);
+                                if (signWorld != null) {
                                     Block locBlock = new Location(signWorld, Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z)).getBlock();
                                     if (locBlock.getType() == Material.WALL_SIGN || locBlock.getType() == Material.SIGN_POST) {
                                         addLobbySign(new LobbySign(ultimateGames, (Sign) locBlock.getState(), ultimateGames.getArenaManager().getArena(arenaKey, gameKey)));
@@ -505,8 +505,8 @@ public class UGSignManager {
                             String z = signInfo.get(3);
                             String label = signInfo.get(4);
                             if (world != null && x != null && y != null && z != null && label != null) {
-                                World signWorld;
-                                if ((signWorld = Bukkit.getWorld(world)) != null) {
+                                World signWorld = Bukkit.getWorld(world);
+                                if (signWorld != null) {
                                     Block locBlock = new Location(signWorld, Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z)).getBlock();
                                     if (locBlock.getType() == Material.WALL_SIGN || locBlock.getType() == Material.SIGN_POST) {
                                         addInputSign(new InputSign(label, (Sign) locBlock.getState(), ultimateGames.getArenaManager().getArena(arenaKey, gameKey)));

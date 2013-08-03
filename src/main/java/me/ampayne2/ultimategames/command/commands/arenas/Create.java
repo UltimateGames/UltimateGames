@@ -65,8 +65,8 @@ public class Create implements UGCommand, Listener {
 
     @EventHandler
     public void onSelect(PlayerInteractEvent event) {
-        String name;
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK && playersSelecting.contains(name = event.getPlayer().getName())) {
+        String name = event.getPlayer().getName();
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK && playersSelecting.contains(name)) {
             if (!corner1.containsKey(name)) {
                 corner1.put(name, event.getClickedBlock().getLocation());
                 event.setCancelled(true);

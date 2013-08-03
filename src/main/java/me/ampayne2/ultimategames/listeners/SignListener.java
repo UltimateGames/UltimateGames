@@ -84,16 +84,13 @@ public class SignListener implements Listener {
     @EventHandler
     public void onSignClick(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
-            // not right click or left click
             return;
         } else if (event.getClickedBlock().getType() != Material.WALL_SIGN && event.getClickedBlock().getType() != Material.SIGN_POST) {
-            // not a sign
             return;
         }
         Sign sign = (Sign) event.getClickedBlock().getState();
-        UGSign ugSign;
-        if ((ugSign = ultimateGames.getUGSignManager().getUGSign(sign)) == null) {
-            // not a UGSign
+        UGSign ugSign= ultimateGames.getUGSignManager().getUGSign(sign);
+        if (ugSign == null) {
             return;
         }
         if (ugSign instanceof LobbySign) {
@@ -131,9 +128,8 @@ public class SignListener implements Listener {
             signs.add((Sign) event.getBlock().getRelative(BlockFace.WEST).getState());
         }
         for (Sign sign : signs) {
-            UGSign ugSign;
-            if ((ugSign = ultimateGames.getUGSignManager().getUGSign(sign)) == null) {
-                // not a UGSign
+            UGSign ugSign= ultimateGames.getUGSignManager().getUGSign(sign);
+            if (ugSign == null) {
                 return;
             }
             //TODO: Permission check
