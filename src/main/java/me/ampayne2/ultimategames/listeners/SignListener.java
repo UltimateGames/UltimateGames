@@ -25,6 +25,7 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.signs.ClickInputSign;
 import me.ampayne2.ultimategames.signs.LobbySign;
+import me.ampayne2.ultimategames.signs.RedstoneInputSign;
 import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.UGSign;
 
@@ -120,7 +121,11 @@ public class SignListener implements Listener {
     	if (event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN) {
     		Sign sign = (Sign) event.getBlock().getState();
     		if (ultimateGames.getUGSignManager().isRedstoneInputSign(sign)) {
-    			ultimateGames.getUGSignManager().getRedstoneInputSign(sign).onSignTrigger(event);
+    			RedstoneInputSign redstoneInputSign = ultimateGames.getUGSignManager().getRedstoneInputSign(sign);
+    			if ((redstoneInputSign.isPowered() && event.getNewCurrent() == 0) || (!redstoneInputSign.isPowered() && event.getNewCurrent() > 0)) {
+    				redstoneInputSign.setPowered(event.getNewCurrent() > 0 ? true : false);
+    				redstoneInputSign.onSignTrigger(event);
+    			}
     		}
     	}
     }

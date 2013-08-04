@@ -48,7 +48,7 @@ public class RedstoneOutputSign extends UGSign {
 		if (powered) {
 			getSign().getLocation().getBlock().setType(Material.REDSTONE_BLOCK);
 		} else {
-			getSign().getLocation().getBlock().setType(getSign().getBlock().getType());
+			getSign().getLocation().getBlock().setType(getSign().getType());
 			getSign().getLocation().getBlock().getState().setData((org.bukkit.material.Sign) getSign().getData());
 			getSign().update();
 		}

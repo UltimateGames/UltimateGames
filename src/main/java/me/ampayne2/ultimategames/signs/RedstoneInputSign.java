@@ -10,10 +10,12 @@ public class RedstoneInputSign extends UGSign {
 
 	private String label;
 	private String[] lines = new String[4];
+	private Boolean powered;
 	
 	public RedstoneInputSign(String label, Sign sign, Arena arena) {
 		super(sign, arena);
 		this.label = label;
+		powered = sign.getBlock().isBlockPowered();
 		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
 		update();
 	}
@@ -34,6 +36,14 @@ public class RedstoneInputSign extends UGSign {
 	
 	public String getLabel() {
 		return label;
+	}
+	
+	public Boolean isPowered() {
+		return powered;
+	}
+	
+	public void setPowered(Boolean powered) {
+		this.powered = powered;
 	}
 
 }
