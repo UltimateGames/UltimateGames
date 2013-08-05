@@ -99,6 +99,7 @@ public class PlayerManager implements Listener {
             for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
                 scoreBoard.addPlayer(playerName);
             }
+            ultimateGames.getQueueManager().removePlayerFromQueues(playerName);
         }
     }
 
@@ -126,11 +127,11 @@ public class PlayerManager implements Listener {
             if (location != null) {
                 Bukkit.getPlayer(playerName).teleport(location);
             }
+    		if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena) && arena.getPlayers().size() <= arena.getMinPlayers()) {
+    			ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+    		}
             for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
                 scoreBoard.removePlayer(playerName);
-            }
-            if (arena.getPlayers().size() < arena.getMinPlayers()) {
-                ultimateGames.getArenaManager().endArena(arena);
             }
         }
     }

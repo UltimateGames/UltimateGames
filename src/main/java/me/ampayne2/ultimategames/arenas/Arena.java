@@ -20,6 +20,8 @@ package me.ampayne2.ultimategames.arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
@@ -38,11 +40,11 @@ public class Arena implements Listener {
     private UltimateGames ultimateGames;
     private String arenaName;
     private Game game;
-    private ArrayList<String> players = new ArrayList<String>();
+    private List<String> players = new ArrayList<String>();
     private Integer minPlayers;
     private Integer maxPlayers;
     private ArenaStatus arenaStatus;
-    private HashMap<String, Boolean> arenaSettings = new HashMap<String, Boolean>();
+    private Map<String, Boolean> arenaSettings = new HashMap<String, Boolean>();
     private Location minLocation;
     private Location maxLocation;
     private World arenaWorld;
@@ -223,8 +225,8 @@ public class Arena implements Listener {
      * Gets the players in the arena.
      * @return The players.
      */
-    public ArrayList<String> getPlayers() {
-        return players;
+    public List<String> getPlayers() {
+        return new ArrayList<String>(players);
     }
 
     /**

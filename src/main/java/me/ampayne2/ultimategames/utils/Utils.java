@@ -19,16 +19,21 @@
 package me.ampayne2.ultimategames.utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.util.BlockIterator;
 
 public class Utils {
     private UltimateGames ultimateGames;
@@ -74,7 +79,7 @@ public class Utils {
         meta.setTitle(game.getGameDescription().getName() + " Instructions");
         meta.setAuthor(game.getGameDescription().getAuthor());
         for (String page : game.getGameDescription().getInstructionPages()) {
-            meta.addPage(page);
+            meta.addPage(ChatColor.translateAlternateColorCodes('&', page));
         }
         book.setItemMeta(meta);
         return book;
@@ -128,5 +133,43 @@ public class Utils {
                 }
             }
         }, 1L);
+    }
+    
+    /**
+     * Gets all the entities in a player's line of sight within a certain range.
+     * @param player The player.
+     * @param range The range.
+     * @param highlightPath Whether or not it should 'highlight' the path with firework spark effects.
+     * @param highlightEntities Whether or not it should 'highlight' each entity with an explosion effect.
+     * @return The entities.
+     */
+    public List<Entity> getEntityTargets(final Player player, Integer range, Boolean highlightPath, Boolean highlightEntities) {
+        BlockIterator iterator = new BlockIterator(player.getWorld(), player.getEyeLocation().toVector(), player.getEyeLocation().getDirection(), 0, range);
+        List<Entity> target = new ArrayList<Entity>();
+        while (iterator.hasNext()) {
+            Block item = iterator.next();
+            if (item.getType() != Material.AIR) {
+            	break;
+            }
+            if (highlightPath) {
+            	ParticleEffect.FIREWORKS_SPARK.play(item.getLocation(), 0, 0, 0, 0, 1);
+            }
+            for (Entity entity : player.getNearbyEntities(range, range, range)) {
+                int acc = 1;
+                for (int x = -acc; x < acc; x++) {
+                    for (int z = -acc; z < acc; z++) {
+                        for (int y = -acc; y < acc; y++) {
+                            if (entity.getLocation().getBlock().getRelative(x, y, z).equals(item)) {
+                                target.add(entity);
+                                if (highlightEntities) {
+                                	ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return target;
     }
 }

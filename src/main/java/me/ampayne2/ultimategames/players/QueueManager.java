@@ -21,6 +21,8 @@ package me.ampayne2.ultimategames.players;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import me.ampayne2.ultimategames.UltimateGames;
@@ -28,7 +30,7 @@ import me.ampayne2.ultimategames.arenas.Arena;
 
 public class QueueManager {
     private UltimateGames ultimateGames;
-    private HashMap<Arena, ArrayList<String>> queue = new HashMap<Arena, ArrayList<String>>();
+    private Map<Arena, List<String>> queue = new HashMap<Arena, List<String>>();
 
     public QueueManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -42,7 +44,7 @@ public class QueueManager {
      */
     public Boolean isPlayerInQueue(String playerName, Arena arena) {
         if (queue.containsKey(arena)) {
-            ArrayList<String> players = queue.get(arena);
+            List<String> players = queue.get(arena);
             for (String player : players) {
                 if (playerName.equals(player)) {
                     return true;
@@ -58,16 +60,18 @@ public class QueueManager {
      * @param arena The arena.
      * @return The players.
      */
-    public ArrayList<String> getNextPlayers(Integer amount, Arena arena) {
+    public List<String> getNextPlayers(Integer amount, Arena arena) {
         if (queue.containsKey(arena)) {
-            ArrayList<String> arenaQueue = queue.get(arena);
-            ArrayList<String> nextPlayers = new ArrayList<String>();
+            List<String> arenaQueue = queue.get(arena);
+            List<String> nextPlayers = new ArrayList<String>();
             for (int i = 0; i < amount; i++) {
-                nextPlayers.add(arenaQueue.get(i));
+            	if (arenaQueue.size() > i) {
+                    nextPlayers.add(arenaQueue.get(i));
+            	}
             }
             return nextPlayers;
         }
-        return null;
+        return new ArrayList<String>();
     }
 
     /**
@@ -107,7 +111,7 @@ public class QueueManager {
         if (queue.containsKey(arena)) {
             queue.get(arena).add(playerName);
         } else {
-            ArrayList<String> players = new ArrayList<String>();
+            List<String> players = new ArrayList<String>();
             players.add(playerName);
             queue.put(arena, players);
         }
@@ -119,12 +123,12 @@ public class QueueManager {
      * @param playerName The player's name.
      */
     public void removePlayerFromQueues(String playerName) {
-        HashMap<Arena, ArrayList<String>> copy = new HashMap<Arena, ArrayList<String>>(queue);
-        Iterator<Entry<Arena, ArrayList<String>>> it = queue.entrySet().iterator();
+        Map<Arena, List<String>> copy = new HashMap<Arena, List<String>>(queue);
+        Iterator<Entry<Arena, List<String>>> it = queue.entrySet().iterator();
         while (it.hasNext()) {
-            Entry<Arena, ArrayList<String>> entry = it.next();
+            Entry<Arena, List<String>> entry = it.next();
             Arena arena = entry.getKey();
-            ArrayList<String> players = new ArrayList<String>(entry.getValue());
+            List<String> players = new ArrayList<String>(entry.getValue());
             for (String player : players) {
                 if (playerName.equals(player)) {
                     copy.get(arena).remove(player);
@@ -145,7 +149,7 @@ public class QueueManager {
      */
     public void clearArenaQueue(Arena arena) {
         if (queue.containsKey(arena)) {
-            ArrayList<String> players = queue.get(arena);
+            List<String> players = queue.get(arena);
             for (String player : players) {
                 sendLeaveMessage(player, arena);
             }
@@ -157,9 +161,9 @@ public class QueueManager {
      * Clears all queues.
      */
     public void clearAllQueues() {
-        Iterator<Entry<Arena, ArrayList<String>>> it = queue.entrySet().iterator();
+        Iterator<Entry<Arena, List<String>>> it = queue.entrySet().iterator();
         while (it.hasNext()) {
-            Entry<Arena, ArrayList<String>> entry = it.next();
+            Entry<Arena, List<String>> entry = it.next();
             for (String player : entry.getValue()) {
                 sendLeaveMessage(player, entry.getKey());
             }

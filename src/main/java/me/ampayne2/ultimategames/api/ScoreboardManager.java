@@ -20,20 +20,29 @@ package me.ampayne2.ultimategames.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import me.ampayne2.ultimategames.arenas.Arena;
 
 public class ScoreboardManager {
-    private HashMap<Arena, ArrayList<ArenaScoreboard>> scoreboards = new HashMap<Arena, ArrayList<ArenaScoreboard>>();
+    private Map<Arena, List<ArenaScoreboard>> scoreboards = new HashMap<Arena, List<ArenaScoreboard>>();
 
-    public ArrayList<ArenaScoreboard> getArenaScoreboards(Arena arena) {
-        if (scoreboards.containsKey(arena)) {
-            return scoreboards.get(arena);
-        } else {
-            return new ArrayList<ArenaScoreboard>();
-        }
+    /**
+     * Gets the ArenaScoreboards of an arena.
+     * @param arena The arena.
+     * @return The arena's ArenaScoreboards.
+     */
+    public List<ArenaScoreboard> getArenaScoreboards(Arena arena) {
+        return scoreboards.containsKey(arena) ? scoreboards.get(arena) : new ArrayList<ArenaScoreboard>();
     }
 
+    /**
+     * Creates an ArenaScoreboard for an arena.
+     * @param arena The arena.
+     * @param name Name of the ArenaScoreboard.
+     * @return The ArenaScoreboard created.
+     */
     public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
         ArenaScoreboard scoreboard = new ArenaScoreboard(name);
         if (scoreboards.containsKey(arena)) {
@@ -46,6 +55,11 @@ public class ScoreboardManager {
         return scoreboard;
     }
 
+    /**
+     * Removes an ArenaScoreboard from the manager.
+     * @param arena The arena.
+     * @param name The name of the scoreboard.
+     */
     public void removeArenaScoreboard(Arena arena, String name) {
         if (scoreboards.containsKey(arena)) {
             for (ArenaScoreboard scoreboard : new ArrayList<ArenaScoreboard>(scoreboards.get(arena))) {
