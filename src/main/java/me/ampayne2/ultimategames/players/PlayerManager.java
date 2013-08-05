@@ -24,6 +24,7 @@ import java.util.HashMap;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.api.ArenaScoreboard;
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.events.GameJoinEvent;
 
 import org.bukkit.Bukkit;
@@ -127,9 +128,14 @@ public class PlayerManager implements Listener {
             if (location != null) {
                 Bukkit.getPlayer(playerName).teleport(location);
             }
-    		if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena) && arena.getPlayers().size() <= arena.getMinPlayers()) {
-    			ultimateGames.getCountdownManager().stopStartingCountdown(arena);
-    		}
+            if (arena.getPlayers().size() < arena.getMinPlayers()) {
+            	if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
+            		ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+            	}
+            	if (arena.getStatus() != ArenaStatus.ENDING && arena.getPlayers().size() < 1) {
+            		ultimateGames.getArenaManager().endArena(arena);
+            	}
+            }
             for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
                 scoreBoard.removePlayer(playerName);
             }
