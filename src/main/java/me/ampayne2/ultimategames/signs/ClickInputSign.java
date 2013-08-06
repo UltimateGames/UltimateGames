@@ -18,6 +18,8 @@
  */
 package me.ampayne2.ultimategames.signs;
 
+import java.util.Arrays;
+
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.SignType;
 
@@ -46,10 +48,14 @@ public class ClickInputSign extends UGSign {
     }
 
     public void setLines(String[] lines) {
-    	this.lines = lines;
+        if (lines == null) {
+            this.lines = new String[0];
+        } else {
+            this.lines = Arrays.copyOf(lines, lines.length);
+        }
     }
-    
+
     public String getLabel() {
-    	return label;
+        return label;
     }
 }

@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.zip.ZipFile;
@@ -37,7 +38,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class GameManager {
     private UltimateGames ultimateGames;
-    private ArrayList<Game> games = new ArrayList<Game>();
+    private List<Game> games = new ArrayList<Game>();
 
     @SuppressWarnings("unchecked")
     public GameManager(UltimateGames ultimateGames) {
@@ -52,7 +53,7 @@ public class GameManager {
         PlayerType playerType = null;
         JarFile jarFile = null;
         String description, author, version, secondaryScoreTypeName, scoreTypeName;
-        ArrayList<String> instructionPages;
+        List<String> instructionPages;
         for (File file : gameFolder.listFiles(new GameFileFilter())) {
             scoreType = null;
             secondaryScoreType = null;
@@ -153,19 +154,19 @@ public class GameManager {
                 }
             } catch (Exception e) {
                 ultimateGames.getMessageManager().log(Level.WARNING, "An error occurred whilst loading the game " + file.getName() + ".");
-                e.printStackTrace();
+                ultimateGames.getMessageManager().debug(e);
                 if (jarFile != null) {
                     try {
                         jarFile.close();
                     } catch (IOException e1) {
-                        e1.printStackTrace();
+                        ultimateGames.getMessageManager().debug(e1);
                     }
                 }
             }
         }
     }
 
-    public ArrayList<Game> getGames() {
+    public List<Game> getGames() {
         return games;
     }
 

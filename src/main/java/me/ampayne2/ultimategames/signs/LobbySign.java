@@ -44,15 +44,14 @@ public class LobbySign extends UGSign {
 
     @Override
     public void onSignTrigger(Event event) {
-        //TODO: Permission check
-    	PlayerInteractEvent interactEvent = (PlayerInteractEvent) event;
+        // TODO: Permission check
+        PlayerInteractEvent interactEvent = (PlayerInteractEvent) event;
         ArenaStatus arenaStatus = arena.getStatus();
         if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
             // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
             ultimateGames.getPlayerManager().addPlayerToArena(interactEvent.getPlayer().getName(), arena, true);
             return;
-        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING
-                || arena.getPlayers().size() >= arena.getMaxPlayers()) {
+        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
             QueueManager queue = ultimateGames.getQueueManager();
             String playerName = interactEvent.getPlayer().getName();
             if (queue.isPlayerInQueue(playerName, arena)) {
@@ -69,16 +68,7 @@ public class LobbySign extends UGSign {
         String[] lines = new String[4];
 
         ArenaStatus arenaStatus = arena.getStatus();
-        ChatColor statusColor = ChatColor.BLACK;
-        if (arenaStatus == ArenaStatus.RESET_FAILED) {
-            statusColor = ChatColor.DARK_RED;
-        } else if (arenaStatus == ArenaStatus.OPEN) {
-            statusColor = ChatColor.GREEN;
-        } else if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
-            statusColor = ChatColor.BLACK;
-        } else {
-            statusColor = ChatColor.DARK_GRAY;
-        }
+        ChatColor statusColor = arenaStatus.getColor();
 
         if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
             lines[0] = statusColor + "[STOPPED]";

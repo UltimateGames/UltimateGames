@@ -20,6 +20,8 @@ package me.ampayne2.ultimategames.players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.api.ArenaScoreboard;
@@ -37,15 +39,16 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerManager implements Listener {
     private UltimateGames ultimateGames;
-    private HashMap<String, Arena> playerArenas = new HashMap<String, Arena>();
-    private HashMap<String, Boolean> playerInArena = new HashMap<String, Boolean>();
-    private ArrayList<String> playersInLimbo = new ArrayList<String>();
+    private Map<String, Arena> playerArenas = new HashMap<String, Arena>();
+    private Map<String, Boolean> playerInArena = new HashMap<String, Boolean>();
+    private List<String> playersInLimbo = new ArrayList<String>();
+    private static final String LIMBO = "limbo";
 
     @SuppressWarnings("unchecked")
     public PlayerManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains("limbo")) {
-            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList("limbo");
+        if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains(LIMBO)) {
+            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList(LIMBO);
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             playerInArena.put(player.getName(), false);
@@ -129,12 +132,12 @@ public class PlayerManager implements Listener {
                 Bukkit.getPlayer(playerName).teleport(location);
             }
             if (arena.getPlayers().size() < arena.getMinPlayers()) {
-            	if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
-            		ultimateGames.getCountdownManager().stopStartingCountdown(arena);
-            	}
-            	if (arena.getStatus() != ArenaStatus.ENDING && arena.getPlayers().size() < 1) {
-            		ultimateGames.getArenaManager().endArena(arena);
-            	}
+                if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
+                    ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+                }
+                if (arena.getStatus() == ArenaStatus.RUNNING && arena.getPlayers().size() < 1) {
+                    ultimateGames.getArenaManager().endArena(arena);
+                }
             }
             for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
                 scoreBoard.removePlayer(playerName);
@@ -149,7 +152,7 @@ public class PlayerManager implements Listener {
         if (playersInLimbo.contains(playerName)) {
             Bukkit.getPlayer(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
             playersInLimbo.remove(playerName);
-            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
+            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set(LIMBO, playersInLimbo);
             ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
         }
     }
@@ -161,7 +164,7 @@ public class PlayerManager implements Listener {
             Arena arena = getPlayerArena(playerName);
             removePlayerFromArena(playerName, arena, true);
             playersInLimbo.add(playerName);
-            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set("limbo", playersInLimbo);
+            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set(LIMBO, playersInLimbo);
             ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
         }
         ultimateGames.getQueueManager().removePlayerFromQueues(playerName);

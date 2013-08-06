@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.ampayne2.ultimategames.UltimateGames;
@@ -37,7 +38,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Create implements UGCommand, Listener {
     private UltimateGames ultimateGames;
-    private ArrayList<String> playersSelecting = new ArrayList<String>();
+    private List<String> playersSelecting = new ArrayList<String>();
     private Map<String, Location> corner1 = new HashMap<String, Location>();
     private Map<String, Location> corner2 = new HashMap<String, Location>();
     private Map<String, Game> game = new HashMap<String, Game>();
@@ -50,7 +51,7 @@ public class Create implements UGCommand, Listener {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 2) {
-        	ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.create");
+            ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.create");
             return;
         }
         String gameName = args[1];
@@ -88,7 +89,8 @@ public class Create implements UGCommand, Listener {
             return;
         } else {
             Arena newArena = new Arena(ultimateGames, game.get(playerName), arenaName.get(playerName), corner1.get(playerName), corner2.get(playerName));
-            newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getArenaConfig().getConfig().getString("Arenas." + newArena.getGame().getGameDescription().getName() + "." + newArena.getName() + ".Status")));
+            newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getArenaConfig().getConfig().getString(
+                    "Arenas." + newArena.getGame().getGameDescription().getName() + "." + newArena.getName() + ".Status")));
             ultimateGames.getArenaManager().addArena(newArena);
             playersSelecting.remove(playerName);
             corner1.remove(playerName);

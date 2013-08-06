@@ -19,14 +19,16 @@
 package me.ampayne2.ultimategames.countdowns;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.ArenaStatus;
 
 public class CountdownManager {
     private UltimateGames ultimateGames;
-    private ArrayList<Arena> starting = new ArrayList<Arena>();
-    private ArrayList<Arena> ending = new ArrayList<Arena>();
+    private List<Arena> starting = new ArrayList<Arena>();
+    private List<Arena> ending = new ArrayList<Arena>();
 
     public CountdownManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -71,6 +73,7 @@ public class CountdownManager {
     public void stopStartingCountdown(Arena arena) {
         if (starting.contains(arena)) {
             starting.remove(arena);
+            arena.setStatus(ArenaStatus.OPEN);
         }
     }
 

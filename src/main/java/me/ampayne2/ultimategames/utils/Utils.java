@@ -48,21 +48,21 @@ public class Utils {
      * @return The ordinal suffix.
      */
     public String getOrdinalSuffix(int value) {
-        value = Math.abs(value);
-        final int lastDigit = value % 10;
-        final int last2Digits = value % 100;
+        Integer roundedValue = Math.abs(value);
+        final int lastDigit = roundedValue % 10;
+        final int last2Digits = roundedValue % 100;
         switch (lastDigit) {
-            case 1:
-                return last2Digits == 11 ? "th" : "st";
+        case 1:
+            return last2Digits == 11 ? "th" : "st";
 
-            case 2:
-                return last2Digits == 12 ? "th" : "nd";
+        case 2:
+            return last2Digits == 12 ? "th" : "nd";
 
-            case 3:
-                return last2Digits == 13 ? "th" : "rd";
+        case 3:
+            return last2Digits == 13 ? "th" : "rd";
 
-            default:
-                return "th";
+        default:
+            return "th";
         }
     }
 
@@ -90,7 +90,7 @@ public class Utils {
      * @param playerName The player.
      * @param playersToScan Players to 'point' to.
      */
-    public void radarScan(String playerName, ArrayList<String> playersToScan) {
+    public void radarScan(String playerName, List<String> playersToScan) {
         if (playersToScan != null && playerName != null) {
             Player player = Bukkit.getPlayer(playerName);
             Double playerX = player.getLocation().getX();
@@ -128,13 +128,13 @@ public class Utils {
 
                     Object con = nmsPlayer.getClass().getField("playerConnection").get(nmsPlayer);
                     con.getClass().getMethod("a", packet.getClass()).invoke(con, packet);
-                } catch (Throwable e) {
-                    ultimateGames.getMessageManager().debug((Exception) e);
+                } catch (Exception e) {
+                    ultimateGames.getMessageManager().debug(e);
                 }
             }
         }, 1L);
     }
-    
+
     /**
      * Gets all the entities in a player's line of sight within a certain range.
      * @param player The player.
@@ -149,10 +149,10 @@ public class Utils {
         while (iterator.hasNext()) {
             Block item = iterator.next();
             if (item.getType() != Material.AIR) {
-            	break;
+                break;
             }
             if (highlightPath) {
-            	ParticleEffect.FIREWORKS_SPARK.play(item.getLocation(), 0, 0, 0, 0, 1);
+                ParticleEffect.FIREWORKS_SPARK.play(item.getLocation(), 0, 0, 0, 0, 1);
             }
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
                 int acc = 1;
@@ -162,7 +162,7 @@ public class Utils {
                             if (entity.getLocation().getBlock().getRelative(x, y, z).equals(item)) {
                                 target.add(entity);
                                 if (highlightEntities) {
-                                	ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
+                                    ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
                                 }
                             }
                         }

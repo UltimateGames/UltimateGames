@@ -34,7 +34,7 @@ public class Begin implements UGCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 2) {
-        	ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.begin");
+            ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.begin");
             return;
         }
         String gameName = args[1];

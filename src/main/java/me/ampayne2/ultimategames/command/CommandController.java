@@ -115,9 +115,9 @@ public class CommandController extends JavaPlugin implements Listener {
                 Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
                 String[] args;
                 if (command.length == 1) {
-                	args = new String[command.length - 1];
+                    args = new String[command.length - 1];
                 } else {
-                	args = new String[0];
+                    args = new String[0];
                 }
                 if (!arena.getGame().getGamePlugin().onArenaCommand(arena, command[0].replace("/", ""), (CommandSender) player, args)) {
                     event.setCancelled(false);

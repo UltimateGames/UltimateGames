@@ -35,12 +35,13 @@ public class Join implements UGCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 2) {
-        	ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.join");
+            ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.join");
             return;
         }
         String arenaName = args[0];
         String gameName = args[1];
-        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName) && ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.OPEN || ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.STARTING) {
+        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName) && ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.OPEN
+                || ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.STARTING) {
             ultimateGames.getPlayerManager().addPlayerToArena(((Player) sender).getName(), ultimateGames.getArenaManager().getArena(arenaName, gameName), true);
         }
     }

@@ -51,8 +51,8 @@ public class EndingCountdown extends BukkitRunnable {
         if (secondsLeft > 0 && secondsLeft <= 10) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
         } else if (secondsLeft == 0) {
+        	ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             ultimateGames.getArenaManager().endArena(arena);
-            ultimateGames.getCountdownManager().stopEndingCountdown(arena);
         }
         if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
             new EndingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1, expDisplay).runTaskLater(ultimateGames, 20L);

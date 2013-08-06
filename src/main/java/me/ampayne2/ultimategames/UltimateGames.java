@@ -97,13 +97,13 @@ public class UltimateGames extends JavaPlugin {
             messageManager.debug(e);
         }
     }
-    
+
     public void onDisable() {
-    	for (Game game : gameManager.getGames()) {
-        	for (RedstoneOutputSign sign : ugSignManager.getRedstoneOutputSignsOfGame(game)) {
-        		sign.setPowered(false);
-        	}
-    	}
+        for (Game game : gameManager.getGames()) {
+            for (RedstoneOutputSign sign : ugSignManager.getRedstoneOutputSignsOfGame(game)) {
+                sign.setPowered(false);
+            }
+        }
     }
 
     public JavaPlugin getPlugin() {

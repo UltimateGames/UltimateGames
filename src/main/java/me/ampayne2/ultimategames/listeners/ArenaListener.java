@@ -88,7 +88,7 @@ public class ArenaListener implements Listener {
         if (event.getEntity() instanceof TNTPrimed) {
             Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getLocation());
             if (arena != null) {
-                if (!arena.getArenaSetting("allowExplosionDamage") && !arena.getArenaSetting("allowExplosionBlockBreaking")) { //neither allowed, cancel both
+                if (!arena.getArenaSetting("allowExplosionDamage") && !arena.getArenaSetting("allowExplosionBlockBreaking")) {
                     event.setCancelled(true);
                 } else if (!arena.getArenaSetting("allowExplosionBlockBreaking")) {
                     event.blockList().clear();

@@ -34,18 +34,18 @@ public class AddSpawn implements UGCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 3 || !(args[2].equals("true") || args[2].equals("false"))) {
-        	ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.addspawn");
+            ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.addspawn");
             return;
         }
         String arenaName = args[0];
         String gameName = args[1];
         Boolean locked = Boolean.valueOf(args[2]);
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-        	ultimateGames.getMessageManager().sendMessage(sender.getName(), "games.doesntexist");
-        	return;
+            ultimateGames.getMessageManager().sendMessage(sender.getName(), "games.doesntexist");
+            return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-        	ultimateGames.getMessageManager().sendMessage(sender.getName(), "arenas.doesntexist");
-        	return;
+            ultimateGames.getMessageManager().sendMessage(sender.getName(), "arenas.doesntexist");
+            return;
         }
         Player player = (Player) sender;
         ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), player.getLocation(), locked);

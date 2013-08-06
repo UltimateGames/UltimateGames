@@ -20,6 +20,8 @@ package me.ampayne2.ultimategames.players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import me.ampayne2.ultimategames.UltimateGames;
@@ -30,7 +32,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class SpawnpointManager {
     private UltimateGames ultimateGames;
-    private HashMap<Arena, ArrayList<SpawnPoint>> spawnPoints = new HashMap<Arena, ArrayList<SpawnPoint>>();
+    private Map<Arena, List<SpawnPoint>> spawnPoints = new HashMap<Arena, List<SpawnPoint>>();
 
     public SpawnpointManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -54,7 +56,7 @@ public class SpawnpointManager {
         if (spawnPoints.containsKey(spawnPoint.getArena())) {
             spawnPoints.get(spawnPoint.getArena()).add(spawnPoint);
         } else {
-            ArrayList<SpawnPoint> spawn = new ArrayList<SpawnPoint>();
+            List<SpawnPoint> spawn = new ArrayList<SpawnPoint>();
             spawn.add(spawnPoint);
             spawnPoints.put(spawnPoint.getArena(), spawn);
         }
@@ -70,7 +72,7 @@ public class SpawnpointManager {
      * @return The spawnpoint created.
      */
     public SpawnPoint createSpawnPoint(Arena arena, Location location, Boolean locked) {
-        ArrayList<String> newSpawnPoint = new ArrayList<String>();
+        List<String> newSpawnPoint = new ArrayList<String>();
         newSpawnPoint.add(String.valueOf(location.getX()));
         newSpawnPoint.add(String.valueOf(location.getY()));
         newSpawnPoint.add(String.valueOf(location.getZ()));
@@ -81,11 +83,11 @@ public class SpawnpointManager {
         String path = "Arenas." + arena.getGame().getGameDescription().getName() + "." + arena.getName() + ".SpawnPoints";
         if (ultimateGames.getConfigManager().getArenaConfig().getConfig().contains(path)) {
             @SuppressWarnings("unchecked")
-            ArrayList<ArrayList<String>> arenaSpawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(path);
+            List<List<String>> arenaSpawnPoints = (ArrayList<List<String>>) arenaConfig.getList(path);
             arenaSpawnPoints.add(newSpawnPoint);
             arenaConfig.set(path, arenaSpawnPoints);
         } else {
-            ArrayList<ArrayList<String>> arenaSpawnPoints = new ArrayList<ArrayList<String>>();
+            List<List<String>> arenaSpawnPoints = new ArrayList<List<String>>();
             arenaSpawnPoints.add(newSpawnPoint);
             arenaConfig.set(path, arenaSpawnPoints);
         }
@@ -164,9 +166,9 @@ public class SpawnpointManager {
      * @param amount The amount of spawnpoints to get.
      * @return The spawnpoints.
      */
-    public ArrayList<SpawnPoint> getDistributedSpawnPoints(Arena arena, Integer amount) {
+    public List<SpawnPoint> getDistributedSpawnPoints(Arena arena, Integer amount) {
         if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= amount) {
-            ArrayList<SpawnPoint> distributedSpawnPoints = new ArrayList<SpawnPoint>();
+            List<SpawnPoint> distributedSpawnPoints = new ArrayList<SpawnPoint>();
             Integer size = spawnPoints.get(arena).size();
             Double multiple = (double) size / (double) amount;
             for (int i = 0; i < amount; i++) {
@@ -183,7 +185,7 @@ public class SpawnpointManager {
      * @param arena The arena.
      * @return The spawnpoints.
      */
-    public ArrayList<SpawnPoint> getSpawnPointsOfArena(Arena arena) {
+    public List<SpawnPoint> getSpawnPointsOfArena(Arena arena) {
         if (spawnPoints.containsKey(arena)) {
             return spawnPoints.get(arena);
         } else {

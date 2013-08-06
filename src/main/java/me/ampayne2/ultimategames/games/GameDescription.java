@@ -18,7 +18,7 @@
  */
 package me.ampayne2.ultimategames.games;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import me.ampayne2.ultimategames.enums.PlayerType;
 import me.ampayne2.ultimategames.enums.ScoreType;
@@ -27,7 +27,7 @@ public class GameDescription {
     private String name, description, version, author, scoreTypeName, secondaryScoreTypeName;
     private ScoreType scoreType, secondaryScoreType;
     private PlayerType playerType;
-    private ArrayList<String> instructionPages;
+    private List<String> instructionPages;
 
     /**
      * Creates a new Game Description.
@@ -42,7 +42,7 @@ public class GameDescription {
      * @param playerType
      * @param instructionPages
      */
-    public GameDescription(String name, String description, String version, String author, String scoreTypeName, String secondaryScoreTypeName, ScoreType scoreType, ScoreType secondaryScoreType, PlayerType playerType, ArrayList<String> instructionPages) {
+    public GameDescription(String name, String description, String version, String author, String scoreTypeName, String secondaryScoreTypeName, ScoreType scoreType, ScoreType secondaryScoreType, PlayerType playerType, List<String> instructionPages) {
         this.name = name;
         this.description = description;
         this.version = version;
@@ -131,7 +131,7 @@ public class GameDescription {
      * Gets the instruction pages of the game.
      * @return The instruction pages.
      */
-    public ArrayList<String> getInstructionPages() {
+    public List<String> getInstructionPages() {
         return instructionPages;
     }
 }

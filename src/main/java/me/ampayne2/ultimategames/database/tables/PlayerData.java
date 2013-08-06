@@ -18,7 +18,7 @@
  */
 package me.ampayne2.ultimategames.database.tables;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import com.alta189.simplesave.Field;
 import com.alta189.simplesave.Id;
@@ -41,5 +41,5 @@ public class PlayerData {
     @Field
     public Integer experience;
     @Field
-    public HashMap<String, Integer> effects;
+    public Map<String, Integer> effects;
 }

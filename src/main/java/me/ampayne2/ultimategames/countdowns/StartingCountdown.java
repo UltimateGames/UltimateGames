@@ -39,15 +39,15 @@ public class StartingCountdown extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (secondsLeft > 0 && initialSeconds == secondsLeft) {
+        if (secondsLeft > 0 && initialSeconds.equals(secondsLeft)) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
             arena.setStatus(ArenaStatus.STARTING);
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
         } else if (secondsLeft > 0 && secondsLeft <= 10) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
         } else if (secondsLeft == 0) {
+        	ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             ultimateGames.getArenaManager().beginArena(arena);
-            ultimateGames.getCountdownManager().stopStartingCountdown(arena);
         }
         if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
             new StartingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1).runTaskLater(ultimateGames, 20L);

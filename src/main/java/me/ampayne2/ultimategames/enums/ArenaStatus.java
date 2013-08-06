@@ -18,13 +18,25 @@
  */
 package me.ampayne2.ultimategames.enums;
 
+import org.bukkit.ChatColor;
+
 public enum ArenaStatus {
-    OPEN, //green
-    STARTING, //green
-    RUNNING, //green
-    ENDING, //green
-    RESETTING, //green
-    RESET_FAILED, //red
-    GAME_STOPPED, //grey
-    ARENA_STOPPED //grey
+    OPEN(ChatColor.GREEN),
+    STARTING(ChatColor.DARK_GRAY),
+    RUNNING(ChatColor.DARK_GRAY),
+    ENDING(ChatColor.DARK_GRAY),
+    RESETTING(ChatColor.DARK_GRAY),
+    RESET_FAILED(ChatColor.DARK_RED),
+    GAME_STOPPED(ChatColor.BLACK),
+    ARENA_STOPPED(ChatColor.BLACK);
+    
+    private ChatColor color;
+    
+    private ArenaStatus(ChatColor color) {
+    	this.color = color;
+    }
+    
+    public ChatColor getColor() {
+    	return color;
+    }
 }

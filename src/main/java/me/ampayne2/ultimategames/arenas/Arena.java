@@ -319,16 +319,11 @@ public class Arena implements Listener {
      * @return If the location is inside the arena or not.
      */
     public Boolean locationIsInArena(Location location) {
-        if (location.getWorld().equals(minLocation.getWorld())) {
-            if (location.getX() >= minLocation.getX() && location.getX() <= maxLocation.getX()) {
-                if (location.getY() >= minLocation.getY() && location.getY() <= maxLocation.getY()) {
-                    if (location.getZ() >= minLocation.getZ() && location.getZ() <= maxLocation.getZ()) {
-                        return true;
-                    }
-                }
-            }
+        if (location.getWorld().equals(minLocation.getWorld()) && location.getX() >= minLocation.getX() && location.getX() <= maxLocation.getX() && location.getY() >= minLocation.getY() && location.getY() <= maxLocation.getY() && location.getZ() >= minLocation.getZ() && location.getZ() <= maxLocation.getZ()) {
+        	return true;
+        } else {
+        	return false;
         }
-        return false;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

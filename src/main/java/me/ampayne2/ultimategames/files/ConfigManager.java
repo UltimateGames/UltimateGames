@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.files;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
@@ -30,7 +31,7 @@ public class ConfigManager {
     private ConfigAccessor arenaConfig;
     private ConfigAccessor lobbyConfig;
     private ConfigAccessor ugSignConfig;
-    private HashMap<Game, ConfigAccessor> gameConfigs;
+    private Map<Game, ConfigAccessor> gameConfigs;
 
     public ConfigManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -81,7 +82,7 @@ public class ConfigManager {
      * Gets the Game Configs.
      * @return The Game Configs.
      */
-    public HashMap<Game, ConfigAccessor> getGameConfigs() {
+    public Map<Game, ConfigAccessor> getGameConfigs() {
         return gameConfigs;
     }
 

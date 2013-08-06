@@ -21,6 +21,8 @@ package me.ampayne2.ultimategames.arenas;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import me.ampayne2.ultimategames.UltimateGames;
@@ -43,16 +45,21 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-public class ArenaManager implements Listener{
+public class ArenaManager implements Listener {
     private UltimateGames ultimateGames;
-    private HashMap<Game, ArrayList<Arena>> arenas;
+    private Map<Game, List<Arena>> arenas;
+    private static final Integer X_INDEX = 0;
+    private static final Integer Y_INDEX = 1;
+    private static final Integer Z_INDEX = 2;
+    private static final Integer PITCH_INDEX = 3;
+    private static final Integer YAW_INDEX = 4;
 
     public ArenaManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        arenas = new HashMap<Game, ArrayList<Arena>>();
+        arenas = new HashMap<Game, List<Arena>>();
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
         if (arenaConfig.getConfigurationSection("Arenas") == null) {
-        	return;
+            return;
         } else {
             for (String gameKey : arenaConfig.getConfigurationSection("Arenas").getKeys(false)) {
                 if (ultimateGames.getGameManager().gameExists(gameKey)) {
@@ -71,15 +78,15 @@ public class ArenaManager implements Listener{
                             Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
                             if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
                                 @SuppressWarnings("unchecked")
-                                ArrayList<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
+                                List<List<String>> spawnPoints = (ArrayList<List<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
                                 if (!spawnPoints.isEmpty()) {
-                                    for (ArrayList<String> spawnPoint : spawnPoints) {
+                                    for (List<String> spawnPoint : spawnPoints) {
                                         if (!spawnPoints.isEmpty()) {
-                                            Double x = Double.valueOf(spawnPoint.get(0));
-                                            Double y = Double.valueOf(spawnPoint.get(1));
-                                            Double z = Double.valueOf(spawnPoint.get(2));
-                                            Float pitch = Float.valueOf(spawnPoint.get(3));
-                                            Float yaw = Float.valueOf(spawnPoint.get(4));
+                                            Double x = Double.valueOf(spawnPoint.get(X_INDEX));
+                                            Double y = Double.valueOf(spawnPoint.get(Y_INDEX));
+                                            Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
+                                            Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
+                                            Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
                                             Location location = new Location(world, x, y, z);
                                             location.setPitch(pitch);
                                             location.setYaw(yaw);
@@ -104,7 +111,7 @@ public class ArenaManager implements Listener{
      */
     public boolean arenaExists(String arenaName, String gameName) {
         if (ultimateGames.getGameManager().gameExists(gameName) && arenas.containsKey(ultimateGames.getGameManager().getGame(gameName))) {
-            ArrayList<Arena> gameArenas = arenas.get(ultimateGames.getGameManager().getGame(gameName));
+            List<Arena> gameArenas = arenas.get(ultimateGames.getGameManager().getGame(gameName));
             for (Arena arena : gameArenas) {
                 if (arenaName.equals(arena.getName())) {
                     return true;
@@ -129,9 +136,9 @@ public class ArenaManager implements Listener{
      * @return The arena. Null if location isn't inside arena.
      */
     public Arena getLocationArena(Location location) {
-        Iterator<Entry<Game, ArrayList<Arena>>> it = arenas.entrySet().iterator();
+        Iterator<Entry<Game, List<Arena>>> it = arenas.entrySet().iterator();
         while (it.hasNext()) {
-            ArrayList<Arena> gameArenas = it.next().getValue();
+            List<Arena> gameArenas = it.next().getValue();
             for (Arena arena : gameArenas) {
                 if (arena.locationIsInArena(location)) {
                     return arena;
@@ -163,7 +170,7 @@ public class ArenaManager implements Listener{
      * @param gameName The game's name.
      * @return The arenas. Null if the game doesn't exist or if the game has no arenas.
      */
-    public ArrayList<Arena> getArenasOfGame(String gameName) {
+    public List<Arena> getArenasOfGame(String gameName) {
         if (ultimateGames.getGameManager().gameExists(gameName) && arenas.containsKey(ultimateGames.getGameManager().getGame(gameName))) {
             return arenas.get(ultimateGames.getGameManager().getGame(gameName));
         } else {
@@ -180,7 +187,7 @@ public class ArenaManager implements Listener{
             if (arenas.containsKey(arena.getGame())) {
                 arenas.get(arena.getGame()).add(arena);
             } else {
-                ArrayList<Arena> gameArenas = new ArrayList<Arena>();
+                List<Arena> gameArenas = new ArrayList<Arena>();
                 gameArenas.add(arena);
                 arenas.put(arena.getGame(), gameArenas);
             }
@@ -192,13 +199,11 @@ public class ArenaManager implements Listener{
      * @param arena The arena.
      */
     public void openArena(Arena arena) {
-        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
-            if (arena.getGame().getGamePlugin().openArena(arena)) {
-                arena.setStatus(ArenaStatus.OPEN);
-                ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-                for (String playerName : ultimateGames.getQueueManager().getNextPlayers(arena.getMaxPlayers(), arena)) {
-                	ultimateGames.getPlayerManager().addPlayerToArena(playerName, arena, true);
-                }
+        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName()) && arena.getGame().getGamePlugin().openArena(arena)) {
+            arena.setStatus(ArenaStatus.OPEN);
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+            for (String playerName : ultimateGames.getQueueManager().getNextPlayers(arena.getMaxPlayers() - arena.getPlayers().size(), arena)) {
+                ultimateGames.getPlayerManager().addPlayerToArena(playerName, arena, true);
             }
         }
     }
@@ -208,11 +213,9 @@ public class ArenaManager implements Listener{
      * @param arena
      */
     public void startArena(Arena arena) {
-        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
-            if (arena.getGame().getGamePlugin().isStartPossible(arena) && arena.getGame().getGamePlugin().startArena(arena)) {
-                arena.setStatus(ArenaStatus.STARTING);
-                ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-            }
+        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName()) && arena.getGame().getGamePlugin().isStartPossible(arena) && arena.getGame().getGamePlugin().startArena(arena)) {
+            arena.setStatus(ArenaStatus.STARTING);
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
         }
     }
 
@@ -238,12 +241,12 @@ public class ArenaManager implements Listener{
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
             arena.setStatus(ArenaStatus.ENDING);
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
-    		if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
-    			ultimateGames.getCountdownManager().stopStartingCountdown(arena);
-    		}
-    		if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
-    			ultimateGames.getCountdownManager().stopEndingCountdown(arena);
-    		}
+            if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
+                ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+            }
+            if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
+                ultimateGames.getCountdownManager().stopEndingCountdown(arena);
+            }
             if (arena.getGame().getGamePlugin().endArena(arena)) {
                 ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
             }
@@ -261,65 +264,65 @@ public class ArenaManager implements Listener{
             arena.getGame().getGamePlugin().stopArena(arena);
         }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-    	String playerName = event.getEntity().getName();
-    	if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-    		Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-    		arena.getGame().getGamePlugin().onPlayerDeath(arena, event);
-    	}
+        String playerName = event.getEntity().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onPlayerDeath(arena, event);
+        }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-    	String playerName = event.getPlayer().getName();
-    	if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-    		Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-    		arena.getGame().getGamePlugin().onPlayerRespawn(arena, event);
-    	}
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onPlayerRespawn(arena, event);
+        }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
-    	Entity entity = event.getEntity();
-    	if (entity instanceof Player) {
-        	String playerName = ((Player) event.getEntity()).getName();
-        	if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-        		Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-        		arena.getGame().getGamePlugin().onEntityDamage(arena, event);
-        	}
-    	} else {
-    		Arena arena = getLocationArena(event.getEntity().getLocation());
-    		if (arena != null) {
-    			arena.getGame().getGamePlugin().onEntityDamage(arena, event);
-    		}
-    	}
+        Entity entity = event.getEntity();
+        if (entity instanceof Player) {
+            String playerName = ((Player) event.getEntity()).getName();
+            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+                arena.getGame().getGamePlugin().onEntityDamage(arena, event);
+            }
+        } else {
+            Arena arena = getLocationArena(event.getEntity().getLocation());
+            if (arena != null) {
+                arena.getGame().getGamePlugin().onEntityDamage(arena, event);
+            }
+        }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-    	Entity entity = event.getEntity();
-    	if (entity instanceof Player) {
-        	String playerName = ((Player) event.getEntity()).getName();
-        	if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-        		Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-        		arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
-        	}
-    	} else {
-    		Arena arena = getLocationArena(event.getEntity().getLocation());
-    		if (arena != null) {
-    			arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
-    		}
-    	}
+        Entity entity = event.getEntity();
+        if (entity instanceof Player) {
+            String playerName = ((Player) event.getEntity()).getName();
+            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+                arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
+            }
+        } else {
+            Arena arena = getLocationArena(event.getEntity().getLocation());
+            if (arena != null) {
+                arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
+            }
+        }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-    	String playerName = event.getPlayer().getName();
-    	if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-    		Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-    		arena.getGame().getGamePlugin().onPlayerInteract(arena, event);
-    	}
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onPlayerInteract(arena, event);
+        }
     }
 }

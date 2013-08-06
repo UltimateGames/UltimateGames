@@ -18,7 +18,7 @@
  */
 package me.ampayne2.ultimategames.api;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -61,7 +61,7 @@ public class ArenaScoreboard {
      * Lets multiple players see an ArenaScoreboard.
      * @param playerNames The names of the players.
      */
-    public void addPlayers(ArrayList<String> playerNames) {
+    public void addPlayers(List<String> playerNames) {
         for (String playerName : playerNames) {
             Bukkit.getPlayer(playerName).setScoreboard(scoreboard);
         }
@@ -79,7 +79,7 @@ public class ArenaScoreboard {
      * Hides an ArenaScoreboard from multiple players.
      * @param playerNames The names of the players.
      */
-    public void removePlayers(ArrayList<String> playerNames) {
+    public void removePlayers(List<String> playerNames) {
         for (String playerName : playerNames) {
             Bukkit.getPlayer(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
@@ -99,11 +99,11 @@ public class ArenaScoreboard {
      * @param visible Whether or not the ArenaScoreboard should be visible.
      */
     public void setVisible(Boolean visible) {
-    	if (visible) {
-    		scoreboard.getObjective(name).setDisplaySlot(DisplaySlot.SIDEBAR);
-    	} else {
-    		scoreboard.clearSlot(DisplaySlot.SIDEBAR);
-    	}
+        if (visible) {
+            scoreboard.getObjective(name).setDisplaySlot(DisplaySlot.SIDEBAR);
+        } else {
+            scoreboard.clearSlot(DisplaySlot.SIDEBAR);
+        }
     }
 
     /**

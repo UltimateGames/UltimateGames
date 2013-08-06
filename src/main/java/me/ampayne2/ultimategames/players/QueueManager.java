@@ -65,9 +65,9 @@ public class QueueManager {
             List<String> arenaQueue = queue.get(arena);
             List<String> nextPlayers = new ArrayList<String>();
             for (int i = 0; i < amount; i++) {
-            	if (arenaQueue.size() > i) {
+                if (arenaQueue.size() > i) {
                     nextPlayers.add(arenaQueue.get(i));
-            	}
+                }
             }
             return nextPlayers;
         }

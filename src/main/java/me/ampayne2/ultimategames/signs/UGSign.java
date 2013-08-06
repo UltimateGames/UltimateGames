@@ -69,13 +69,13 @@ public abstract class UGSign {
      * Updates the UGSign.
      */
     public void update() {
-    	Material material = sign.getLocation().getBlock().getType();
-    	if (material == Material.WALL_SIGN || material == Material.SIGN_POST) {
+        Material material = sign.getLocation().getBlock().getType();
+        if (material == Material.WALL_SIGN || material == Material.SIGN_POST) {
             String[] lines = getUpdatedLines();
             for (int i = 0; i < 4; i++) {
                 sign.setLine(i, lines[i]);
             }
             sign.update();
-    	}
+        }
     }
 }

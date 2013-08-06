@@ -56,8 +56,8 @@ public class SpawnPoint implements Listener {
 
     public void lock(Boolean enabled) {
         this.locked = enabled;
-        if (enabled == false) {
-            this.playerName = null;
+        if (!enabled) {
+            playerName = null;
         }
     }
 
@@ -73,14 +73,12 @@ public class SpawnPoint implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (locked && playerName != null && event.getPlayer().getName().equals(playerName)) {
-            if (Math.abs(event.getTo().getX() - location.getX()) >= 1 || Math.abs(event.getTo().getZ() - location.getZ()) >= 1) {
-                Location location = new Location(this.location.getWorld(), this.location.getX(), this.location.getY(), this.location.getZ());
-                location.setPitch(event.getFrom().getPitch());
-                location.setYaw(event.getFrom().getYaw());
-                Bukkit.getPlayer(playerName).teleport(location);
-                ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "spawnpoints.leave");
-            }
+        if (locked && playerName != null && event.getPlayer().getName().equals(playerName) && Math.abs(event.getTo().getX() - location.getX()) >= 1 || Math.abs(event.getTo().getZ() - location.getZ()) >= 1) {
+            Location location = new Location(this.location.getWorld(), this.location.getX(), this.location.getY(), this.location.getZ());
+            location.setPitch(event.getFrom().getPitch());
+            location.setYaw(event.getFrom().getYaw());
+            Bukkit.getPlayer(playerName).teleport(location);
+            ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "spawnpoints.leave");
         }
     }
 }

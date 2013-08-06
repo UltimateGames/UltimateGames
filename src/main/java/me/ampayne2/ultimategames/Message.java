@@ -18,9 +18,13 @@
  */
 package me.ampayne2.ultimategames;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.games.Game;
@@ -274,7 +278,26 @@ public class Message {
      */
     public void debug(Exception e) {
         if (ultimateGames.getConfig().getBoolean("debug")) {
-            e.printStackTrace();
+            Logger log = Bukkit.getLogger();
+            log.severe("");
+            log.severe("Internal error!");
+            log.severe("If this bug hasn't been reported please open a ticket at https://github.com/ampayne2/UltimateGames/issues");
+            log.severe("Include the following into your bug report:");
+            log.severe(" ======= SNIP HERE =======");
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            for (String l: sw.toString().replace("\r", "").split("\n")) {
+               	log.severe(l);
+            }
+            pw.close();
+            try {
+            	sw.close();
+            } catch (IOException e1) {
+            	
+            }
+            log.severe(" ======= SNIP HERE =======");
+            log.severe("");
         }
     }
 }
