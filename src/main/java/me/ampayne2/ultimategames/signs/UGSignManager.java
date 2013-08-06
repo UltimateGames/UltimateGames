@@ -666,52 +666,39 @@ public class UGSignManager {
 	 * Loads all of the Ultimate Game signs.
 	 */
 	public void loadUGSigns() {
-		System.out.println("1");
 		FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
 		for (SignType signType : EnumSet.allOf(SignType.class)) {
 			String signTypeName = signType.toString();
-			System.out.println(signTypeName);
 			if (ugSignConfig.getConfigurationSection(signTypeName) != null) {
 				for (String gameKey : ugSignConfig.getConfigurationSection(signTypeName).getKeys(false)) {
-					System.out.println("4");
 					if (ultimateGames.getGameManager().gameExists(gameKey)) {
-						System.out.println("5");
 						String gamePath = signTypeName + "." + gameKey;
 						for (String arenaKey : ugSignConfig.getConfigurationSection(gamePath).getKeys(false)) {
-							System.out.println("6");
 							if (ultimateGames.getArenaManager().arenaExists(arenaKey, gameKey)) {
-								System.out.println("7");
 								String arenaPath = gamePath + "." + arenaKey;
 								List<List<String>> ugSigns = (List<List<String>>) ugSignConfig.getList(arenaPath);
 								for (List<String> signInfo : ugSigns) {
-									System.out.println("8");
 									World world = Bukkit.getWorld(signInfo.get(WORLD_INDEX));
 									Integer x = Integer.parseInt(signInfo.get(X_INDEX));
 									Integer y = Integer.parseInt(signInfo.get(Y_INDEX));
 									Integer z = Integer.parseInt(signInfo.get(Z_INDEX));
 									Block locBlock = new Location(world, x, y, z).getBlock();
 									if (locBlock.getType() == Material.WALL_SIGN || locBlock.getType() == Material.SIGN_POST) {
-										System.out.println("9");
 										Arena arena = ultimateGames.getArenaManager().getArena(arenaKey, gameKey);
 										switch (signType) {
 										case LOBBY:
-											System.out.println("10");
 											lobbySigns.add(new LobbySign(ultimateGames, (Sign) locBlock.getState(), arena));
 											break;
 										case CLICK_INPUT:
-											System.out.println("11");
 											clickInputSigns.add(new ClickInputSign(signInfo.get(LABEL_INDEX), (Sign) locBlock.getState(), arena));
 											break;
 										case REDSTONE_INPUT:
-											System.out.println("12");
 											redstoneInputSigns.add(new RedstoneInputSign(signInfo.get(LABEL_INDEX), (Sign) locBlock.getState(), arena));
 											break;
 										case TEXT_OUTPUT:
-											System.out.println("12");
 											textOutputSigns.add(new TextOutputSign(signInfo.get(LABEL_INDEX), (Sign) locBlock.getState(), arena));
 											break;
 										case REDSTONE_OUTPUT:
-											System.out.println("12");
 											redstoneOutputSigns.add(new RedstoneOutputSign(signInfo.get(LABEL_INDEX), (Sign) locBlock.getState(), arena));
 											break;
 										}
