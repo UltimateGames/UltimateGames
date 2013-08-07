@@ -36,6 +36,8 @@ import me.ampayne2.ultimategames.players.SpawnpointManager;
 import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.UGSignManager;
 import me.ampayne2.ultimategames.utils.Utils;
+import me.ampayne2.ultimategames.webapi.JettyServer;
+import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
 
@@ -55,6 +57,7 @@ public class UltimateGames extends JavaPlugin {
     private CountdownManager countdownManager;
     private LobbyManager lobbyManager;
     private ScoreboardManager scoreboardManager;
+    private JettyServer jettyServer; //For the API
     private Utils utils;
 
     public void onEnable() {
@@ -74,6 +77,14 @@ public class UltimateGames extends JavaPlugin {
         lobbyManager = new LobbyManager(this);
         scoreboardManager = new ScoreboardManager();
         utils = new Utils(this);
+        if (getConfig().getBoolean("enableAPI")) {
+            try {
+                jettyServer = new JettyServer(this);
+                jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
         getServer().getPluginManager().registerEvents(playerManager, this);
@@ -159,5 +170,9 @@ public class UltimateGames extends JavaPlugin {
 
     public PluginClassLoader getPluginClassLoader() {
         return (PluginClassLoader) getClassLoader();
+    }
+
+    public JettyServer getJettyServer() {
+        return jettyServer;
     }
 }

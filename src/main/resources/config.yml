@@ -3,6 +3,8 @@ ClickInputSignPrefix: "[ug cisign]"
 RedstoneInputSignPrefix: "[ug risign]"
 TextOutputSignPrefix: "[ug tosign]"
 RedstoneOutputSignPrefix: "[ug rosign]"
+enableAPI: true
+APIPort: 8080
 
 Database:
   Type: "sqlite"

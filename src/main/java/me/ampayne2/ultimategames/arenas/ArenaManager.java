@@ -255,4 +255,12 @@ public class ArenaManager {
         }
     }
 
+    public List<Arena> getArenas() {
+       List<Arena> arenaList = new ArrayList<Arena>();
+       for (Entry<Game, List<Arena>> entry : arenas.entrySet()) {
+           arenaList.addAll(entry.getValue());
+       }
+        return arenaList;
+    }
+
 }
