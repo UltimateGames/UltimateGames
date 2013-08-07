@@ -64,6 +64,14 @@ public class UltimateGames extends JavaPlugin {
         plugin = this;
         getConfig().options().copyDefaults(true);
         saveConfig();
+        if (getConfig().getBoolean("enableAPI")) {
+            try {
+                getLogger().info("Enabling API link");
+                jettyServer = new JettyServer(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         configManager = new ConfigManager(this);
         messageManager = new Message(this);
         playerManager = new PlayerManager(this);
@@ -77,14 +85,7 @@ public class UltimateGames extends JavaPlugin {
         lobbyManager = new LobbyManager(this);
         scoreboardManager = new ScoreboardManager();
         utils = new Utils(this);
-        if (getConfig().getBoolean("enableAPI")) {
-            try {
-                jettyServer = new JettyServer(this);
-                jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
         getServer().getPluginManager().registerEvents(playerManager, this);
