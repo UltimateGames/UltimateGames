@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.listeners;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -29,8 +30,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class ArenaListener implements Listener {
     private UltimateGames ultimateGames;
@@ -116,8 +123,92 @@ public class ArenaListener implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (ultimateGames.getPlayerManager().isPlayerInArena(event.getEntity().getName())) {
+        String playerName = event.getEntity().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
             event.setDeathMessage("");
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onPlayerDeath(arena, event);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onPlayerRespawn(arena, event);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamage(EntityDamageEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Player) {
+            String playerName = ((Player) event.getEntity()).getName();
+            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+                arena.getGame().getGamePlugin().onEntityDamage(arena, event);
+            }
+        } else {
+            Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getEntity().getLocation());
+            if (arena != null) {
+                arena.getGame().getGamePlugin().onEntityDamage(arena, event);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Player) {
+            String playerName = ((Player) event.getEntity()).getName();
+            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+                arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
+            }
+        } else {
+            Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getEntity().getLocation());
+            if (arena != null) {
+                arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onPlayerInteract(arena, event);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        if (event.getEntity() instanceof Player) {
+            String playerName = ((Player) event.getEntity()).getName();
+            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+                arena.getGame().getGamePlugin().onPlayerFoodLevelChange(arena, event);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onItemPickup(PlayerPickupItemEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onItemPickup(arena, event);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onItemDrop(PlayerDropItemEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            arena.getGame().getGamePlugin().onItemDrop(arena, event);
         }
     }
 }

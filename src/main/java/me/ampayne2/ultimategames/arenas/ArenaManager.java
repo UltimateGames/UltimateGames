@@ -1,20 +1,16 @@
 /*
  * This file is part of UltimateGames.
- *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
- *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.arenas;
 
@@ -34,18 +30,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
-public class ArenaManager implements Listener {
+public class ArenaManager {
     private UltimateGames ultimateGames;
     private Map<Game, List<Arena>> arenas;
     private static final Integer X_INDEX = 0;
@@ -78,9 +64,9 @@ public class ArenaManager implements Listener {
                             Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
                             if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
                                 @SuppressWarnings("unchecked")
-                                List<List<String>> spawnPoints = (ArrayList<List<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
+                                List<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
                                 if (!spawnPoints.isEmpty()) {
-                                    for (List<String> spawnPoint : spawnPoints) {
+                                    for (ArrayList<String> spawnPoint : spawnPoints) {
                                         if (!spawnPoints.isEmpty()) {
                                             Double x = Double.valueOf(spawnPoint.get(X_INDEX));
                                             Double y = Double.valueOf(spawnPoint.get(Y_INDEX));
@@ -265,64 +251,4 @@ public class ArenaManager implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        String playerName = event.getEntity().getName();
-        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-            arena.getGame().getGamePlugin().onPlayerDeath(arena, event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
-        String playerName = event.getPlayer().getName();
-        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-            arena.getGame().getGamePlugin().onPlayerRespawn(arena, event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamage(EntityDamageEvent event) {
-        Entity entity = event.getEntity();
-        if (entity instanceof Player) {
-            String playerName = ((Player) event.getEntity()).getName();
-            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-                arena.getGame().getGamePlugin().onEntityDamage(arena, event);
-            }
-        } else {
-            Arena arena = getLocationArena(event.getEntity().getLocation());
-            if (arena != null) {
-                arena.getGame().getGamePlugin().onEntityDamage(arena, event);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Entity entity = event.getEntity();
-        if (entity instanceof Player) {
-            String playerName = ((Player) event.getEntity()).getName();
-            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-                arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
-            }
-        } else {
-            Arena arena = getLocationArena(event.getEntity().getLocation());
-            if (arena != null) {
-                arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        String playerName = event.getPlayer().getName();
-        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-            arena.getGame().getGamePlugin().onPlayerInteract(arena, event);
-        }
-    }
 }

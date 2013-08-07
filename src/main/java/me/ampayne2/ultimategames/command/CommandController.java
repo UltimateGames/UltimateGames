@@ -119,9 +119,7 @@ public class CommandController extends JavaPlugin implements Listener {
                 } else {
                     args = new String[0];
                 }
-                if (!arena.getGame().getGamePlugin().onArenaCommand(arena, command[0].replace("/", ""), (CommandSender) player, args)) {
-                    event.setCancelled(false);
-                }
+                arena.getGame().getGamePlugin().onArenaCommand(arena, command[0].replace("/", ""), (CommandSender) player, args);
             }
         }
     }

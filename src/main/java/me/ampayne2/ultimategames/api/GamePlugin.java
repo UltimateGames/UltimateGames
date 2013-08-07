@@ -29,8 +29,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public abstract class GamePlugin implements Listener {
@@ -138,14 +141,14 @@ public abstract class GamePlugin implements Listener {
      * Handle UG Sign creation.
      * @param ugSign The UG Sign that was created.
      */
-    public abstract void handleUGSignCreate(UGSign ugSign, SignType signType);
+    public void handleUGSignCreate(UGSign ugSign, SignType signType) {}
 
     /**
      * Handle UG Input Sign triggering.
      * @param ugSign The UG Sign that was triggered.
      * @param signType The SignType of the UG Sign.
      */
-    public abstract void handleInputSignTrigger(UGSign ugSign, SignType signType, Event event);
+    public void handleInputSignTrigger(UGSign ugSign, SignType signType, Event event) {}
 
     /**
      * Handle arena commands.
@@ -153,43 +156,63 @@ public abstract class GamePlugin implements Listener {
      * @param command The command.
      * @param sender The sender of the command.
      * @param args The arguments.
-     * @return True if the command was successful else false.
      */
-    public abstract Boolean onArenaCommand(Arena arena, String command, CommandSender sender, String[] args);
+    public void onArenaCommand(Arena arena, String command, CommandSender sender, String[] args) {}
 
     /**
      * Handle player death.
      * @param arena The arena that the player died in.
      * @param event The PlayerDeathEvent.
      */
-    public abstract void onPlayerDeath(Arena arena, PlayerDeathEvent event);
+    public void onPlayerDeath(Arena arena, PlayerDeathEvent event) {}
 
     /**
      * Handle player respawning.
      * @param arena The arena the player is respawning in.
      * @param event The PlayerRespawnEvent.
      */
-    public abstract void onPlayerRespawn(Arena arena, PlayerRespawnEvent event);
+    public void onPlayerRespawn(Arena arena, PlayerRespawnEvent event) {}
 
     /**
      * Handle entity damage.
      * @param arena The arena the entity got damaged in.
      * @param event The EntityDamageEvent.
      */
-    public abstract void onEntityDamage(Arena arena, EntityDamageEvent event);
+    public void onEntityDamage(Arena arena, EntityDamageEvent event) {}
 
     /**
      * Handle entities damaging entities.
      * @param arena The arena the entity got damaged in.
      * @param event The EntityDamageByEntityEvent.
      */
-    public abstract void onEntityDamageByEntity(Arena arena, EntityDamageByEntityEvent event);
+    public void onEntityDamageByEntity(Arena arena, EntityDamageByEntityEvent event) {}
 
     /**
      * Handles player interactions.
      * @param arena The arena the player is in.
      * @param event The PlayerInteractEvent.
      */
-    public abstract void onPlayerInteract(Arena arena, PlayerInteractEvent event);
+    public void onPlayerInteract(Arena arena, PlayerInteractEvent event) {}
+    
+    /**
+     * Handles player food level changes.
+     * @param arena The arena the player is in.
+     * @param event The FoodLevelChangeEvent.
+     */
+    public void onPlayerFoodLevelChange(Arena arena, FoodLevelChangeEvent event) {}
+    
+    /**
+     * Handles players picking up items.
+     * @param arena The arena the player is in.
+     * @param event The PlayerPickupItemEvent.
+     */
+    public void onItemPickup(Arena arena, PlayerPickupItemEvent event) {}
+    
+    /**
+     * Handles players dropping items.
+     * @param arena The arena the player is in.
+     * @param event The PlayerDropItemEvent.
+     */
+    public void onItemDrop(Arena arena, PlayerDropItemEvent event) {}
 
 }
