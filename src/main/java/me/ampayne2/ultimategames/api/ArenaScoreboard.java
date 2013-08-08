@@ -21,9 +21,11 @@ package me.ampayne2.ultimategames.api;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 public class ArenaScoreboard {
     private Scoreboard scoreboard;
@@ -84,11 +86,36 @@ public class ArenaScoreboard {
             Bukkit.getPlayer(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
     }
+    
+    /**
+     * Sets a player's name to a certain color.
+     * @param playerName The player.
+     * @param chatColor The color.
+     */
+    public void setPlayerColor(String playerName, ChatColor chatColor) {
+        Team team = scoreboard.registerNewTeam(playerName);
+        team.setPrefix(chatColor + "");
+        team.addPlayer(Bukkit.getOfflinePlayer(playerName));
+    }
+    
+    /**
+     * Resets a player's name's color.
+     * @param playerName The player.
+     */
+    public void resetPlayerColor(String playerName) {
+        Team team = scoreboard.getTeam(playerName);
+        if (team != null) {
+            team.removePlayer(Bukkit.getOfflinePlayer(playerName));
+        }
+    }
 
     /**
      * Resets an ArenaScoreboard.
      */
     public void reset() {
+        for (Team team : scoreboard.getTeams()) {
+            team.unregister();
+        }
         scoreboard.getObjective(name).unregister();
         Objective objective = scoreboard.registerNewObjective(name, "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);

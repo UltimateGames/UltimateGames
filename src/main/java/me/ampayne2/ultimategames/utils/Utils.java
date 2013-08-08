@@ -26,6 +26,7 @@ import me.ampayne2.ultimategames.games.Game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,6 +34,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.util.BlockIterator;
 
 public class Utils {
@@ -64,6 +66,86 @@ public class Utils {
         default:
             return "th";
         }
+    }
+    
+    /**
+     * Gets the name of a ChatColor.
+     * @param chatColor The ChatColor.
+     * @return The ChatColor's name.
+     */
+    public String getChatColorName(ChatColor chatColor) {
+        String[] nameParts = chatColor.name().split("_");
+        String[] capitalizedNameParts = new String[nameParts.length];
+        for (int i = 0; i < nameParts.length; i++) {
+            String namePart = nameParts[i];
+            capitalizedNameParts[i] = Character.toUpperCase(namePart.charAt(0)) + namePart.substring(1).toLowerCase();
+        }
+        String name = capitalizedNameParts[0];
+        for (int i = 1; i < capitalizedNameParts.length; i++) {
+            name = name + " " + capitalizedNameParts[1];
+        }
+        return name;
+    }
+    
+    /**
+     * Converts a ChatColor to a Color.
+     * @param chatColor The ChatColor.
+     * @return The Color.
+     */
+    public Color chatColorToColor(ChatColor chatColor) {
+        Color color;
+        switch (chatColor) {
+        case BLACK:
+            color = Color.fromRGB(0, 0, 0);
+            break;
+        case DARK_BLUE:
+            color = Color.fromRGB(0, 0, 42);
+            break;
+        case DARK_GREEN:
+            color = Color.fromRGB(0, 42, 0);
+            break;
+        case DARK_AQUA:
+            color = Color.fromRGB(0, 42, 42);
+            break;
+        case DARK_RED:
+            color = Color.fromRGB(42, 0, 0);
+            break;
+        case DARK_PURPLE:
+            color = Color.fromRGB(42, 0, 42);
+            break;
+        case GOLD:
+            color = Color.fromRGB(42, 42, 0);
+            break;
+        case GRAY:
+            color = Color.fromRGB(42, 42, 42);
+            break;
+        case DARK_GRAY:
+            color = Color.fromRGB(21, 21, 21);
+            break;
+        case BLUE:
+            color = Color.fromRGB(21, 21, 63);
+            break;
+        case GREEN:
+            color = Color.fromRGB(21, 63, 21);
+            break;
+        case AQUA:
+            color = Color.fromRGB(21, 63, 63);
+        case RED:
+            color = Color.fromRGB(63, 21, 21);
+            break;
+        case LIGHT_PURPLE:
+            color = Color.fromRGB(63, 21, 63);
+            break;
+        case YELLOW:
+            color = Color.fromRGB(63, 63, 21);
+            break;
+        case WHITE:
+            color = Color.fromRGB(63, 63, 63);
+            break;
+        default:
+            color = Color.fromRGB(63, 63, 63);
+        }
+        return color;
     }
 
     /**
@@ -171,5 +253,20 @@ public class Utils {
             }
         }
         return target;
+    }
+    
+    /**
+     * Colors leather armor.
+     * @param itemStack The piece of armor.
+     * @param color The color.
+     * @return The colored piece of armor.
+     */
+    public ItemStack colorArmor(ItemStack itemStack, Color color) {
+        if (itemStack.getType() == Material.LEATHER_HELMET || itemStack.getType() == Material.LEATHER_CHESTPLATE || itemStack.getType() == Material.LEATHER_LEGGINGS || itemStack.getType() == Material.LEATHER_BOOTS) {
+            LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
+            meta.setColor(color);
+            itemStack.setItemMeta(meta);
+        }
+        return itemStack;
     }
 }
