@@ -98,7 +98,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena to stop.
      * @return True if everything went well else false.
      */
-    public abstract Boolean endArena(Arena arena);
+    public abstract void endArena(Arena arena);
 
     /**
      * Sets to ArenaStatus.RESETTING. Should be used to reset anything in the arena. If returns false, sets to ArenaStatus.RESET_FAILED.

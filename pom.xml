@@ -86,9 +86,9 @@
 			<version>8.1.7.v20120910</version>
 		</dependency>
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20090211</version>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
 		</dependency>
 
 	</dependencies>
@@ -141,8 +141,8 @@
 									<shadedPattern>me.ampayne2.ultimategames.jetty</shadedPattern>
 								</relocation>
 								<relocation>
-									<pattern>org.json</pattern>
-									<shadedPattern>me.ampayne2.ultimategames.json</shadedPattern>
+									<pattern>com.google.gson</pattern>
+									<shadedPattern>me.ampayne2.ultimategames.gson</shadedPattern>
 								</relocation>
 							</relocations>
 							<artifactSet>

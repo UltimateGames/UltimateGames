@@ -191,7 +191,6 @@ public class ArenaManager {
     public void openArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName()) && arena.getGame().getGamePlugin().openArena(arena)) {
             arena.setStatus(ArenaStatus.OPEN);
-            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
             for (String playerName : ultimateGames.getQueueManager().getNextPlayers(arena.getMaxPlayers() - arena.getPlayers().size(), arena)) {
                 ultimateGames.getPlayerManager().addPlayerToArena(playerName, arena, true);
             }
@@ -205,7 +204,6 @@ public class ArenaManager {
     public void startArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName()) && arena.getGame().getGamePlugin().isStartPossible(arena) && arena.getGame().getGamePlugin().startArena(arena)) {
             arena.setStatus(ArenaStatus.STARTING);
-            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
         }
     }
 
@@ -216,7 +214,6 @@ public class ArenaManager {
     public void beginArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
             arena.setStatus(ArenaStatus.RUNNING);
-            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
             if (arena.getGame().getGamePlugin().beginArena(arena)) {
                 ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.begin");
             }
@@ -230,16 +227,23 @@ public class ArenaManager {
     public void endArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
             arena.setStatus(ArenaStatus.ENDING);
-            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+
             if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
                 ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             }
             if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
                 ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             }
-            if (arena.getGame().getGamePlugin().endArena(arena)) {
-                ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
+            arena.getGame().getGamePlugin().endArena(arena);
+
+            ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
+
+            //Teleport everybody out of the arena
+            for (String playerName : arena.getPlayers()) {
+                ultimateGames.getPlayerManager().removePlayerFromArena(playerName, arena, false);
             }
+
+            openArena(arena);
         }
     }
 
@@ -250,7 +254,6 @@ public class ArenaManager {
     public void stopArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
             arena.setStatus(ArenaStatus.ARENA_STOPPED);
-            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
             arena.getGame().getGamePlugin().stopArena(arena);
         }
     }

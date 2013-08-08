@@ -37,6 +37,7 @@ import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.UGSignManager;
 import me.ampayne2.ultimategames.utils.Utils;
 import me.ampayne2.ultimategames.webapi.JettyServer;
+import me.ampayne2.ultimategames.webapi.WebHandler;
 import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
@@ -68,6 +69,7 @@ public class UltimateGames extends JavaPlugin {
             try {
                 getLogger().info("Enabling API link");
                 jettyServer = new JettyServer(this);
+                jettyServer.startServer();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -113,6 +115,13 @@ public class UltimateGames extends JavaPlugin {
         for (Game game : gameManager.getGames()) {
             for (RedstoneOutputSign sign : ugSignManager.getRedstoneOutputSignsOfGame(game)) {
                 sign.setPowered(false);
+            }
+        }
+        if (jettyServer != null) {
+            try {
+                jettyServer.stopServer();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -173,7 +182,9 @@ public class UltimateGames extends JavaPlugin {
         return (PluginClassLoader) getClassLoader();
     }
 
-    public JettyServer getJettyServer() {
-        return jettyServer;
+    public void addAPIHandler(String path, WebHandler handler) {
+        if (jettyServer != null) {
+            jettyServer.getHandler().addHandler(path, handler);
+        }
     }
 }
