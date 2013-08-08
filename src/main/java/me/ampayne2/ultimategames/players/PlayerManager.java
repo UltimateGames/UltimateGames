@@ -142,6 +142,7 @@ public class PlayerManager implements Listener {
             for (ArenaScoreboard scoreBoard : ultimateGames.getScoreboardManager().getArenaScoreboards(arena)) {
                 scoreBoard.removePlayer(playerName);
             }
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
         }
     }
 
