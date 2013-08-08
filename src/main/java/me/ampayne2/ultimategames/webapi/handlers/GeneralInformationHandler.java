@@ -18,12 +18,16 @@
  */
 package me.ampayne2.ultimategames.webapi.handlers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.webapi.WebHandler;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class GeneralInformationHandler implements WebHandler {
 
@@ -34,20 +38,18 @@ public class GeneralInformationHandler implements WebHandler {
 
     @Override
     public String sendResult() {
-        JSONArray jsonArray = new JSONArray();
+        Gson gson = new Gson();
+        List<Map> list = new ArrayList<Map>();
         for (Arena arena : plugin.getArenaManager().getArenas()) {
-            JSONObject jsonEntry = new JSONObject();
-            try {
-                jsonEntry.append("arenaName", arena.getName());
-                jsonEntry.append("gameName", arena.getGame().getGameDescription().getName());
-                jsonEntry.append("currentPlayers", arena.getPlayers().size());
-                jsonEntry.append("maxPlayers", arena.getMaxPlayers());
-                jsonEntry.append("status", arena.getStatus().name());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            jsonArray.put(jsonEntry);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("arenaName", arena.getName());
+            map.put("gameName", arena.getGame().getGameDescription().getName());
+            map.put("currentPlayers", arena.getPlayers().size() + "");
+            map.put("maxPlayers", arena.getMaxPlayers() + "");
+            map.put("status", arena.getStatus().name());
+            list.add(map);
+
         }
-        return jsonArray.toString();
+        return gson.toJson(list);
     }
 }

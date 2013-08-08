@@ -299,7 +299,10 @@ public class Arena implements Listener {
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
         arenaConfig.set("Arenas." + game.getGameDescription().getName() + "." + arenaName + ".Status", status.toString());
         ultimateGames.getConfigManager().getArenaConfig().saveConfig();
-        ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+        if (ultimateGames.getUGSignManager() != null) {
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+        }
+
     }
 
     /**
