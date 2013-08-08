@@ -40,11 +40,17 @@ public class JettyServer {
 
         ExecutorThreadPool pool = new ExecutorThreadPool(2, maxconnections, 60, TimeUnit.SECONDS, queue);
         server.setThreadPool(pool);
-        server.start();
-        //server.join();
     }
 
     public JettyHandler getHandler() {
         return (JettyHandler) server.getHandler();
+    }
+
+    public void startServer() throws Exception {
+        server.start();
+    }
+
+    public void stopServer() throws Exception {
+        server.stop();
     }
 }
