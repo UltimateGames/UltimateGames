@@ -243,7 +243,7 @@ public class ArenaManager {
                 ultimateGames.getPlayerManager().removePlayerFromArena(playerName, arena, false);
             }
 
-            arena.setStatus(ArenaStatus.OPEN);
+            openArena(arena);
         }
     }
 
