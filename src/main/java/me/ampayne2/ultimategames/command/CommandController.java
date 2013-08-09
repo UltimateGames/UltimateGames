@@ -110,7 +110,7 @@ public class CommandController extends JavaPlugin implements Listener {
         String playerName = player.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
             String[] command = event.getMessage().split(" ");
-            if (command.length > 0 && !command[0].equalsIgnoreCase("/ug") && !command[0].equalsIgnoreCase("/ultimategames") && !playerName.equals("ampayne2") && !playerName.equals("greatman321")) {
+            if (command.length > 0 && !command[0].equalsIgnoreCase("/ug") && !command[0].equalsIgnoreCase("/ultimategames") && !player.hasPermission("ultimategames.command.bypassblock")) {
                 event.setCancelled(true);
                 Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
                 String[] args;
