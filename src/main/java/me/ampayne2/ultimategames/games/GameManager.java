@@ -196,6 +196,7 @@ public class GameManager {
         }
         games.add(game);
         ultimateGames.getConfigManager().addGameConfig(game);
+        ultimateGames.getMetricsManager().addGame(game);
         ultimateGames.getMessageManager().log(Level.INFO, "Added game " + game.getGameDescription().getName());
     }
 

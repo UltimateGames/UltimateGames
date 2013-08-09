@@ -62,7 +62,7 @@ public class SpawnPoint implements Listener {
     }
 
     public void teleportPlayer(String playerName) {
-        Player player = Bukkit.getPlayer(playerName);
+        Player player = Bukkit.getPlayerExact(playerName);
         player.teleport(location);
         if (locked) {
             this.playerName = playerName;

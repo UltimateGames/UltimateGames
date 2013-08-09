@@ -174,12 +174,12 @@ public class Utils {
      */
     public void radarScan(String playerName, List<String> playersToScan) {
         if (playersToScan != null && playerName != null) {
-            Player player = Bukkit.getPlayer(playerName);
+            Player player = Bukkit.getPlayerExact(playerName);
             Double playerX = player.getLocation().getX();
             Double playerY = player.getEyeLocation().getY();
             Double playerZ = player.getLocation().getZ();
             for (String nextPlayerToScan : playersToScan) {
-                Player playerToScan = Bukkit.getPlayer(nextPlayerToScan);
+                Player playerToScan = Bukkit.getPlayerExact(nextPlayerToScan);
                 Double playerToScanX = playerToScan.getLocation().getX();
                 Double playerToScanZ = playerToScan.getLocation().getZ();
                 Double x = playerToScanX - playerX;

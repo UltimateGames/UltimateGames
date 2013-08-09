@@ -56,7 +56,7 @@ public class ArenaScoreboard {
      * @param playerName The name of the player.
      */
     public void addPlayer(String playerName) {
-        Bukkit.getPlayer(playerName).setScoreboard(scoreboard);
+        Bukkit.getPlayerExact(playerName).setScoreboard(scoreboard);
     }
 
     /**
@@ -65,7 +65,7 @@ public class ArenaScoreboard {
      */
     public void addPlayers(List<String> playerNames) {
         for (String playerName : playerNames) {
-            Bukkit.getPlayer(playerName).setScoreboard(scoreboard);
+            Bukkit.getPlayerExact(playerName).setScoreboard(scoreboard);
         }
     }
 
@@ -74,7 +74,7 @@ public class ArenaScoreboard {
      * @param playerName The name of the player.
      */
     public void removePlayer(String playerName) {
-        Bukkit.getPlayer(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        Bukkit.getPlayerExact(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     /**
@@ -83,7 +83,7 @@ public class ArenaScoreboard {
      */
     public void removePlayers(List<String> playerNames) {
         for (String playerName : playerNames) {
-            Bukkit.getPlayer(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+            Bukkit.getPlayerExact(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
     }
     

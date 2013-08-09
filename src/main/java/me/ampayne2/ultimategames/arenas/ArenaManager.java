@@ -181,6 +181,7 @@ public class ArenaManager {
                 gameArenas.add(arena);
                 arenas.put(arena.getGame(), gameArenas);
             }
+            ultimateGames.getMetricsManager().addArena(arena);
         }
     }
 

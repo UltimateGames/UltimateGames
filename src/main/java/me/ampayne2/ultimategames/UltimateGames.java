@@ -18,8 +18,6 @@
  */
 package me.ampayne2.ultimategames;
 
-import java.io.IOException;
-
 import me.ampayne2.ultimategames.api.ScoreboardManager;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.command.CommandController;
@@ -29,6 +27,7 @@ import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
 import me.ampayne2.ultimategames.listeners.ArenaListener;
 import me.ampayne2.ultimategames.listeners.SignListener;
+import me.ampayne2.ultimategames.metrics.MetricsManager;
 import me.ampayne2.ultimategames.players.LobbyManager;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.players.QueueManager;
@@ -39,9 +38,6 @@ import me.ampayne2.ultimategames.utils.Utils;
 import me.ampayne2.ultimategames.webapi.JettyServer;
 import me.ampayne2.ultimategames.webapi.WebHandler;
 import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
-import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
-
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.PluginClassLoader;
 
@@ -58,8 +54,9 @@ public class UltimateGames extends JavaPlugin {
     private CountdownManager countdownManager;
     private LobbyManager lobbyManager;
     private ScoreboardManager scoreboardManager;
-    private JettyServer jettyServer; //For the API
+    private JettyServer jettyServer;
     private Utils utils;
+    private MetricsManager metricsManager;
 
     public void onEnable() {
         plugin = this;
@@ -77,6 +74,7 @@ public class UltimateGames extends JavaPlugin {
         configManager = new ConfigManager(this);
         messageManager = new Message(this);
         playerManager = new PlayerManager(this);
+        metricsManager = new MetricsManager(this);
         gameManager = new GameManager(this);
         messageManager.loadGameMessages();
         queueManager = new QueueManager(this);
@@ -94,21 +92,7 @@ public class UltimateGames extends JavaPlugin {
         CommandController commandController = new CommandController(this);
         getServer().getPluginManager().registerEvents(commandController, this);
         getCommand("ultimategames").setExecutor(commandController);
-        try {
-            Metrics metrics = new Metrics(this);
-            Graph mostPopularGamesGraph = metrics.createGraph("Most Popular Games");
-            for (Game game : gameManager.getGames()) {
-                mostPopularGamesGraph.addPlotter(new Metrics.Plotter(game.getGameDescription().getName()) {
-                    @Override
-                    public int getValue() {
-                        return 1;
-                    }
-                });
-            }
-            metrics.start();
-        } catch (IOException e) {
-            messageManager.debug(e);
-        }
+        metricsManager.addTotalPlayersGraph();
     }
 
     public void onDisable() {
@@ -176,6 +160,10 @@ public class UltimateGames extends JavaPlugin {
 
     public Utils getUtils() {
         return utils;
+    }
+    
+    public MetricsManager getMetricsManager() {
+        return metricsManager;
     }
 
     public PluginClassLoader getPluginClassLoader() {

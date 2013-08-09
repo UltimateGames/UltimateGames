@@ -48,6 +48,7 @@ public class Arena implements Listener {
     private Location minLocation;
     private Location maxLocation;
     private World arenaWorld;
+    private Integer timesPlayed;
 
     public Arena(UltimateGames ultimateGames, Game game, String arenaName, Location corner1, Location corner2) {
         this.ultimateGames = ultimateGames;
@@ -146,6 +147,7 @@ public class Arena implements Listener {
         }
         ultimateGames.getConfigManager().getGameConfig(game).saveConfig();
         ultimateGames.getConfigManager().getArenaConfig().saveConfig();
+        timesPlayed = 0;
     }
 
     /**
@@ -289,6 +291,14 @@ public class Arena implements Listener {
     public World getWorld() {
         return arenaWorld;
     }
+    
+    /**
+     * Gets the amount of times played.
+     * @return The amount of times played.
+     */
+    public Integer getTimesPlayed() {
+        return timesPlayed;
+    }
 
     /**
      * Sets the status of the arena.
@@ -302,7 +312,9 @@ public class Arena implements Listener {
         if (ultimateGames.getUGSignManager() != null) {
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
         }
-
+        if (status == ArenaStatus.RUNNING) {
+            timesPlayed += 1;
+        }
     }
 
     /**

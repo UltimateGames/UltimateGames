@@ -111,7 +111,7 @@ public class Message {
      * @param messageType Path to the message, without "Messages."
      */
     public void sendMessage(String playerName, String messageType) {
-        Player player = Bukkit.getPlayer(playerName);
+        Player player = Bukkit.getPlayerExact(playerName);
         if (player == null) {
             return;
         }
@@ -125,7 +125,7 @@ public class Message {
      * @param replace Strings to replace %s with.
      */
     public void sendReplacedMessage(String playerName, String messageType, String... replace) {
-        Player player = Bukkit.getPlayer(playerName);
+        Player player = Bukkit.getPlayerExact(playerName);
         if (player == null) {
             return;
         }
@@ -139,7 +139,7 @@ public class Message {
      * @param messageType Path to the message in the game's config, without "Messages."
      */
     public void sendGameMessage(Game game, String playerName, String messageType) {
-        Player player = Bukkit.getPlayer(playerName);
+        Player player = Bukkit.getPlayerExact(playerName);
         if (player == null) {
             return;
         }
@@ -154,7 +154,7 @@ public class Message {
      * @param replace Strings to replace %s with.
      */
     public void sendReplacedGameMessage(Game game, String playerName, String messageType, String... replace) {
-        Player player = Bukkit.getPlayer(playerName);
+        Player player = Bukkit.getPlayerExact(playerName);
         if (player == null) {
             return;
         }
@@ -204,7 +204,7 @@ public class Message {
      */
     public void broadcastMessageToArena(Arena arena, String messageType) {
         for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayer(playerName);
+            Player player = Bukkit.getPlayerExact(playerName);
             if (player == null) {
                 return;
             }
@@ -220,7 +220,7 @@ public class Message {
      */
     public void broadcastReplacedMessageToArena(Arena arena, String messageType, String... replace) {
         for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayer(playerName);
+            Player player = Bukkit.getPlayerExact(playerName);
             if (player == null) {
                 return;
             }
@@ -236,7 +236,7 @@ public class Message {
      */
     public void broadcastGameMessageToArena(Game game, Arena arena, String messageType) {
         for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayer(playerName);
+            Player player = Bukkit.getPlayerExact(playerName);
             if (player == null) {
                 return;
             }
@@ -253,7 +253,7 @@ public class Message {
      */
     public void broadcastReplacedGameMessageToArena(Game game, Arena arena, String messageType, String... replace) {
         for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayer(playerName);
+            Player player = Bukkit.getPlayerExact(playerName);
             if (player == null) {
                 return;
             }

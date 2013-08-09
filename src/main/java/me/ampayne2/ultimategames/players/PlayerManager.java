@@ -91,7 +91,7 @@ public class PlayerManager implements Listener {
             playerInArena.put(playerName, true);
             playerArenas.put(playerName, arena);
             arena.addPlayer(playerName);
-            Player player = Bukkit.getPlayer(playerName);
+            Player player = Bukkit.getPlayerExact(playerName);
             player.getInventory().clear();
             arena.getGame().getGamePlugin().addPlayer(arena, playerName);
             GameJoinEvent gameJoinEvent = new GameJoinEvent(Bukkit.getPlayer(playerName), arena);
@@ -129,7 +129,7 @@ public class PlayerManager implements Listener {
             }
             Location location = ultimateGames.getLobbyManager().getLobby();
             if (location != null) {
-                Bukkit.getPlayer(playerName).teleport(location);
+                Bukkit.getPlayerExact(playerName).teleport(location);
             }
             if (arena.getPlayers().size() < arena.getMinPlayers()) {
                 if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
@@ -151,7 +151,7 @@ public class PlayerManager implements Listener {
         String playerName = event.getPlayer().getName();
         playerInArena.put(playerName, false);
         if (playersInLimbo.contains(playerName)) {
-            Bukkit.getPlayer(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
+            Bukkit.getPlayerExact(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
             playersInLimbo.remove(playerName);
             ultimateGames.getConfigManager().getLobbyConfig().getConfig().set(LIMBO, playersInLimbo);
             ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
