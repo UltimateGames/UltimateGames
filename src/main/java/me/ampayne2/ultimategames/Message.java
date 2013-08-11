@@ -60,8 +60,10 @@ public class Message {
         }
         for (Game game : ultimateGames.getGameManager().getGames()) {
             FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
-            for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
-                gameMessages.put(game.getGameDescription().getName() + "." + key, gameConfig.getString("Messages." + key));
+            if (gameConfig.isConfigurationSection("Messages")) {
+                for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
+                    gameMessages.put(game.getGameDescription().getName() + "." + key, gameConfig.getString("Messages." + key));
+                }
             }
         }
     }

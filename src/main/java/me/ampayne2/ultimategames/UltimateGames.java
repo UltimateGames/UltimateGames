@@ -79,11 +79,11 @@ public class UltimateGames extends JavaPlugin {
         messageManager.loadGameMessages();
         queueManager = new QueueManager(this);
         spawnpointManager = new SpawnpointManager(this);
+        scoreboardManager = new ScoreboardManager();
         arenaManager = new ArenaManager(this);
         ugSignManager = new UGSignManager(this);
         countdownManager = new CountdownManager(this);
         lobbyManager = new LobbyManager(this);
-        scoreboardManager = new ScoreboardManager();
         utils = new Utils(this);
         jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
