@@ -93,6 +93,7 @@
 
 	</dependencies>
 	<build>
+		<finalName>UltimateGames</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<defaultGoal>clean install</defaultGoal>
 		<resources>
