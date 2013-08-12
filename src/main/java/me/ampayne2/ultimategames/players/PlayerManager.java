@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.api.ArenaScoreboard;
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.arenas.SpawnPoint;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.events.GameJoinEvent;
+import me.ampayne2.ultimategames.scoreboards.ArenaScoreboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -36,6 +37,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
 
 public class PlayerManager implements Listener {
     private UltimateGames ultimateGames;
@@ -129,7 +131,11 @@ public class PlayerManager implements Listener {
             }
             Location location = ultimateGames.getLobbyManager().getLobby();
             if (location != null) {
-                Bukkit.getPlayerExact(playerName).teleport(location);
+                Player player = Bukkit.getPlayerExact(playerName);
+                for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(potionEffect.getType());
+                }
+                player.teleport(location);
             }
             if (arena.getPlayers().size() < arena.getMinPlayers()) {
                 if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {

@@ -39,7 +39,7 @@ public class GeneralInformationHandler implements WebHandler {
     @Override
     public String sendResult() {
         Gson gson = new Gson();
-        List<Map> list = new ArrayList<Map>();
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         for (Arena arena : plugin.getArenaManager().getArenas()) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("arenaName", arena.getName());
@@ -48,7 +48,6 @@ public class GeneralInformationHandler implements WebHandler {
             map.put("maxPlayers", arena.getMaxPlayers() + "");
             map.put("status", arena.getStatus().name());
             list.add(map);
-
         }
         return gson.toJson(list);
     }

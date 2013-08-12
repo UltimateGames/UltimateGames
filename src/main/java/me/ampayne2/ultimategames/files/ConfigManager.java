@@ -31,18 +31,25 @@ public class ConfigManager {
     private ConfigAccessor arenaConfig;
     private ConfigAccessor lobbyConfig;
     private ConfigAccessor ugSignConfig;
+    private ConfigAccessor blockPlaceWhitelistConfig;
+    private ConfigAccessor blockBreakWhitelistConfig;
     private Map<Game, ConfigAccessor> gameConfigs;
 
     public ConfigManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        messageConfig = new ConfigAccessor(ultimateGames.getPlugin(), "MessageConfig.yml", ultimateGames.getPlugin().getDataFolder());
+        File dataFolder = ultimateGames.getDataFolder();
+        messageConfig = new ConfigAccessor(ultimateGames, "Messages.yml", dataFolder);
         messageConfig.saveDefaultConfig();
-        arenaConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Arenas.yml", ultimateGames.getPlugin().getDataFolder());
+        arenaConfig = new ConfigAccessor(ultimateGames, "Arenas.yml", dataFolder);
         arenaConfig.saveDefaultConfig();
-        lobbyConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Lobbies.yml", ultimateGames.getPlugin().getDataFolder());
+        lobbyConfig = new ConfigAccessor(ultimateGames, "Lobbies.yml", dataFolder);
         lobbyConfig.saveDefaultConfig();
-        ugSignConfig = new ConfigAccessor(ultimateGames.getPlugin(), "Signs.yml", ultimateGames.getPlugin().getDataFolder());
+        ugSignConfig = new ConfigAccessor(ultimateGames, "Signs.yml", dataFolder);
         ugSignConfig.saveDefaultConfig();
+        blockPlaceWhitelistConfig = new ConfigAccessor(ultimateGames, "BlockPlaceWhitelist.yml", dataFolder);
+        blockPlaceWhitelistConfig.saveDefaultConfig();
+        blockBreakWhitelistConfig = new ConfigAccessor(ultimateGames, "BlockBreakWhitelist.yml", dataFolder);
+        blockBreakWhitelistConfig.saveDefaultConfig();
         gameConfigs = new HashMap<Game, ConfigAccessor>();
     }
 
@@ -76,6 +83,22 @@ public class ConfigManager {
      */
     public ConfigAccessor getUGSignConfig() {
         return ugSignConfig;
+    }
+    
+    /**
+     * Gets the Block Place Whitelist Config.
+     * @return The Block Place Whitelist Config.
+     */
+    public ConfigAccessor getBlockPlaceWhitelistConfig() {
+        return blockPlaceWhitelistConfig;
+    }
+    
+    /**
+     * Gets the Block Break Whitelist Config.
+     * @return The Block Break Whitelist Config.
+     */
+    public ConfigAccessor getBlockBreakWhitelistConfig() {
+        return blockBreakWhitelistConfig;
     }
 
     /**

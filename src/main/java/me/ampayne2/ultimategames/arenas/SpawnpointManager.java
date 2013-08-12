@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.players;
+package me.ampayne2.ultimategames.arenas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Random;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

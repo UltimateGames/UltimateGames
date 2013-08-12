@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.api;
+package me.ampayne2.ultimategames.scoreboards;
 
 import java.util.List;
 
@@ -93,9 +93,15 @@ public class ArenaScoreboard {
      * @param chatColor The color.
      */
     public void setPlayerColor(String playerName, ChatColor chatColor) {
-        Team team = scoreboard.registerNewTeam(playerName);
-        team.setPrefix(chatColor + "");
-        team.addPlayer(Bukkit.getOfflinePlayer(playerName));
+        Team team;
+        team = scoreboard.getTeam(playerName);
+        if (team != null) {
+            team.setPrefix(chatColor + "");
+        } else {
+            team = scoreboard.registerNewTeam(playerName);
+            team.setPrefix(chatColor + "");
+            team.addPlayer(Bukkit.getOfflinePlayer(playerName));
+        }
     }
     
     /**

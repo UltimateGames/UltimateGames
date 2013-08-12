@@ -16,18 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.listeners;
+package me.ampayne2.ultimategames.signs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.SignType;
-import me.ampayne2.ultimategames.signs.ClickInputSign;
-import me.ampayne2.ultimategames.signs.LobbySign;
-import me.ampayne2.ultimategames.signs.RedstoneInputSign;
-import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
-import me.ampayne2.ultimategames.signs.UGSign;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;

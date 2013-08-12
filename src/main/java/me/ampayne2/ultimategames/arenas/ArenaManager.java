@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
-import me.ampayne2.ultimategames.players.SpawnPoint;
+import me.ampayne2.ultimategames.scoreboards.ArenaScoreboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -215,6 +215,9 @@ public class ArenaManager {
     public void beginArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
             arena.setStatus(ArenaStatus.RUNNING);
+            for (ArenaScoreboard scoreBoard : new ArrayList<ArenaScoreboard>(ultimateGames.getScoreboardManager().getArenaScoreboards(arena))) {
+                ultimateGames.getScoreboardManager().removeArenaScoreboard(arena, scoreBoard.getName());
+            }
             if (arena.getGame().getGamePlugin().beginArena(arena)) {
                 ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.begin");
             }
@@ -236,6 +239,10 @@ public class ArenaManager {
                 ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             }
             arena.getGame().getGamePlugin().endArena(arena);
+            
+            for (ArenaScoreboard scoreBoard : new ArrayList<ArenaScoreboard>(ultimateGames.getScoreboardManager().getArenaScoreboards(arena))) {
+                ultimateGames.getScoreboardManager().removeArenaScoreboard(arena, scoreBoard.getName());
+            }
 
             ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
 

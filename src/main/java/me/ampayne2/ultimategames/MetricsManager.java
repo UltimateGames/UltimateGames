@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.metrics;
+package me.ampayne2.ultimategames;
 
 import java.io.IOException;
 
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
 
-import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
@@ -89,19 +88,19 @@ public class MetricsManager {
     }
 
     public void addArena(final Arena arena) {
-        arenasLoadedGraph.addPlotter(new Metrics.Plotter(arena.getName()) {
+        arenasLoadedGraph.addPlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 return 1;
             }
         });
-        totalArenasPlayedGraph.addPlotter(new Metrics.Plotter(arena.getName()) {
+        totalArenasPlayedGraph.addPlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 return arena.getTimesPlayed();
             }
         });
-        arenasBeingPlayedGraph.addPlotter(new Metrics.Plotter(arena.getName()) {
+        arenasBeingPlayedGraph.addPlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 if (arena.getStatus() == ArenaStatus.RUNNING) {
@@ -111,7 +110,7 @@ public class MetricsManager {
                 }
             }
         });
-        playersInArenasGraph.addPlotter(new Metrics.Plotter(arena.getName()) {
+        playersInArenasGraph.addPlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 return arena.getPlayers().size();
@@ -120,19 +119,19 @@ public class MetricsManager {
     }
 
     public void removeArena(final Arena arena) {
-        arenasLoadedGraph.removePlotter(new Metrics.Plotter(arena.getName()) {
+        arenasLoadedGraph.removePlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 return 1;
             }
         });
-        totalArenasPlayedGraph.removePlotter(new Metrics.Plotter(arena.getName()) {
+        totalArenasPlayedGraph.removePlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 return arena.getTimesPlayed();
             }
         });
-        arenasBeingPlayedGraph.removePlotter(new Metrics.Plotter(arena.getName()) {
+        arenasBeingPlayedGraph.removePlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 if (arena.getStatus() == ArenaStatus.RUNNING) {
@@ -142,7 +141,7 @@ public class MetricsManager {
                 }
             }
         });
-        playersInArenasGraph.removePlotter(new Metrics.Plotter(arena.getName()) {
+        playersInArenasGraph.removePlotter(new Metrics.Plotter(arena.getGame().getGameDescription().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
                 return arena.getPlayers().size();

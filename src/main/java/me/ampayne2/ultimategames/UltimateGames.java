@@ -18,26 +18,27 @@
  */
 package me.ampayne2.ultimategames;
 
-import me.ampayne2.ultimategames.api.ScoreboardManager;
+import me.ampayne2.ultimategames.arenas.ArenaListener;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
+import me.ampayne2.ultimategames.arenas.SpawnpointManager;
 import me.ampayne2.ultimategames.command.CommandController;
 import me.ampayne2.ultimategames.countdowns.CountdownManager;
 import me.ampayne2.ultimategames.files.ConfigManager;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
-import me.ampayne2.ultimategames.listeners.ArenaListener;
-import me.ampayne2.ultimategames.listeners.SignListener;
-import me.ampayne2.ultimategames.metrics.MetricsManager;
 import me.ampayne2.ultimategames.players.LobbyManager;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.players.QueueManager;
-import me.ampayne2.ultimategames.players.SpawnpointManager;
+import me.ampayne2.ultimategames.scoreboards.ScoreboardManager;
 import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
+import me.ampayne2.ultimategames.signs.SignListener;
 import me.ampayne2.ultimategames.signs.UGSignManager;
 import me.ampayne2.ultimategames.utils.Utils;
 import me.ampayne2.ultimategames.webapi.JettyServer;
 import me.ampayne2.ultimategames.webapi.WebHandler;
 import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
+import me.ampayne2.ultimategames.whitelist.WhitelistManager;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.PluginClassLoader;
 
@@ -54,6 +55,7 @@ public class UltimateGames extends JavaPlugin {
     private CountdownManager countdownManager;
     private LobbyManager lobbyManager;
     private ScoreboardManager scoreboardManager;
+    private WhitelistManager whitelistManager;
     private JettyServer jettyServer;
     private Utils utils;
     private MetricsManager metricsManager;
@@ -84,6 +86,7 @@ public class UltimateGames extends JavaPlugin {
         ugSignManager = new UGSignManager(this);
         countdownManager = new CountdownManager(this);
         lobbyManager = new LobbyManager(this);
+        whitelistManager = new WhitelistManager(this);
         utils = new Utils(this);
         jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
@@ -156,6 +159,10 @@ public class UltimateGames extends JavaPlugin {
 
     public ScoreboardManager getScoreboardManager() {
         return scoreboardManager;
+    }
+    
+    public WhitelistManager getWhitelistManager() {
+        return whitelistManager;
     }
 
     public Utils getUtils() {
