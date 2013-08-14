@@ -23,7 +23,5 @@ public class BlockChangeTable {
     public String material;
     @Field
     public byte data;
-    @Field
-    public Boolean needsBlockSupport;
 
 }

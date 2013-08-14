@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.ampayne2.ultimategames.UltimateGames;
@@ -59,6 +60,54 @@ public class BlockBreakWhitelist extends Whitelist {
      */
     public boolean canBreakMaterial(Game game, Material material) {
         return blocks.containsKey(game) && blocks.get(game).contains(material);
+    }
+    
+    /**
+     * Checks if a certain block can be broken in a certain game.
+     * @param game The game.
+     * @param block The block.
+     * @return True if the game has a whitelist and the block's material is whitelisted, else false.
+     */
+    public boolean canBreakMaterial(Game game, Block block) {
+        return blocks.containsKey(game) && blocks.get(game).contains(block.getType());
+    }
+    
+    /**
+     * Gets the materials that can be broken in a certain game out of a list of materials.
+     * @param game The game.
+     * @param materials The materials.
+     * @return The materials that can be broken.
+     */
+    public List<Material> materialsWhitelisted(Game game, List<Material> materials) {
+        List<Material> whitelistedMaterials = new ArrayList<Material>();
+        if (blocks.containsKey(game)) {
+            List<Material> whitelistedTypes = blocks.get(game);
+            for (Material material : materials) {
+                if (whitelistedTypes.contains(material)) {
+                    whitelistedMaterials.add(material);
+                }
+            }
+        }
+        return whitelistedMaterials;
+    }
+    
+    /**
+     * Gets the blocks that can be broken in a certain game out of a list of blocks.
+     * @param game The game.
+     * @param materials The materials.
+     * @return The blocks that can be broken.
+     */
+    public List<Block> blocksWhitelisted(Game game, List<Block> materials) {
+        List<Block> whitelistedBlocks = new ArrayList<Block>();
+        if (blocks.containsKey(game)) {
+            List<Material> whitelistedTypes = blocks.get(game);
+            for (Block block : materials) {
+                if (whitelistedTypes.contains(block.getType())) {
+                    whitelistedBlocks.add(block);
+                }
+            }
+        }
+        return whitelistedBlocks;
     }
 
 }

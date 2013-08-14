@@ -14,7 +14,7 @@
  */
 package me.ampayne2.ultimategames.arenas;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
@@ -117,12 +117,11 @@ public class ArenaListener implements Listener {
                     } else if (!arena.getArenaSetting("allowExplosionBlockBreaking")) {
                         event.blockList().clear();
                     } else {
-                        for (Block block : new ArrayList<Block>(event.blockList())) {
-                            if (ultimateGames.getWhitelistManager().getBlockBreakWhitelist().canBreakMaterial(arena.getGame(), block.getType())) {
-                                ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
-                            } else {
-                                event.blockList().remove(block);
-                            }
+                        List<Block> canBeBroken = ultimateGames.getWhitelistManager().getBlockBreakWhitelist().blocksWhitelisted(arena.getGame(), event.blockList());
+                        event.blockList().clear();
+                        event.blockList().addAll(canBeBroken);
+                        for (Block block : canBeBroken) {
+                            ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
                         }
                     }
                 } else {
@@ -173,9 +172,13 @@ public class ArenaListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPhysics(BlockPhysicsEvent event) {
         Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
-        if (arena != null && arena.getStatus() == ArenaStatus.RUNNING) {
-            Block block = event.getBlock();
-            ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
+        if (arena != null) {
+            if (arena.getStatus() == ArenaStatus.RUNNING) {
+                Block block = event.getBlock();
+                ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
+            } else if (arena.getStatus() == ArenaStatus.RESETTING) {
+                event.setCancelled(true);
+            }
         }
     }
 

@@ -251,6 +251,7 @@ public class ArenaManager {
                 ultimateGames.getPlayerManager().removePlayerFromArena(playerName, arena, false);
             }
 
+            arena.setStatus(ArenaStatus.RESETTING);
             if (ultimateGames.getLogManager().rollbackArena(arena)) {
                 openArena(arena);
             } else {

@@ -14,6 +14,7 @@
  */
 package me.ampayne2.ultimategames;
 
+import me.ampayne2.ultimategames.api.PointManager;
 import me.ampayne2.ultimategames.arenas.ArenaListener;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.arenas.LogManager;
@@ -62,6 +63,7 @@ public class UltimateGames extends JavaPlugin {
     private JettyServer jettyServer;
     private Utils utils;
     private MetricsManager metricsManager;
+    private PointManager pointManager;
 
     public void onEnable() {
         plugin = this;
@@ -104,6 +106,7 @@ public class UltimateGames extends JavaPlugin {
             return;
         }
         logManager = new LogManager(this);
+        pointManager = new PointManager();
         utils = new Utils(this);
         jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
@@ -206,5 +209,13 @@ public class UltimateGames extends JavaPlugin {
         if (jettyServer != null) {
             jettyServer.getHandler().addHandler(path, handler);
         }
+    }
+    
+    public PointManager getPointManager() {
+        return pointManager;
+    }
+
+    public void setPointManager(PointManager pointManager) {
+        this.pointManager = pointManager;
     }
 }
