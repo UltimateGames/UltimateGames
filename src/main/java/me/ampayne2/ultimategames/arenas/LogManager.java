@@ -18,6 +18,7 @@ public class LogManager {
     private Integer logTask;
     private List<BlockChange> pendingChanges = new ArrayList<BlockChange>();
     private List<BlockChange> savingChanges = new ArrayList<BlockChange>();
+    private Boolean logging = false;
 
     public LogManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -32,7 +33,8 @@ public class LogManager {
         logTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, new Runnable() {
             @Override
             public void run() {
-                if (!pendingChanges.isEmpty()) {
+                if (!pendingChanges.isEmpty() && !logging) {
+                    logging = true;
                     savingChanges.addAll(pendingChanges);
                     pendingChanges.clear();
                     for (BlockChange blockChange : savingChanges) {
@@ -71,6 +73,7 @@ public class LogManager {
                         }
                     }
                     savingChanges.clear();
+                    logging = false;
                 }
             }
         }, 0L, 5L);
