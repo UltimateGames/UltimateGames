@@ -26,7 +26,7 @@ import com.alta189.simplesave.mysql.MySQLConfiguration;
 import com.alta189.simplesave.sqlite.SQLiteConfiguration;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.database.tables.PlayerData;
+import me.ampayne2.ultimategames.database.tables.BlockChangeTable;
 
 public class DatabaseManager {
     @SuppressWarnings("unused")
@@ -56,7 +56,7 @@ public class DatabaseManager {
             throw new ConnectionException("Invalid database configuration!");
         }
 
-        db.registerTable(PlayerData.class);
+        db.registerTable(BlockChangeTable.class);
         db.connect();
     }
 

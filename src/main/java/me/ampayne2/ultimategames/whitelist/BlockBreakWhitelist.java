@@ -29,13 +29,24 @@ public class BlockBreakWhitelist extends Whitelist {
         blocks = new HashMap<Game, List<Material>>();
         FileConfiguration blockBreakWhitelistConfig = ultimateGames.getConfigManager().getBlockBreakWhitelistConfig().getConfig();
         for (Game game : ultimateGames.getGameManager().getGames()) {
-            if (blockBreakWhitelistConfig.contains("Games." + game.getGameDescription().getName())) {
-                List<String> materialNames = blockBreakWhitelistConfig.getStringList("Games." + game.getGameDescription().getName());
+            if (blockBreakWhitelistConfig.contains(game.getGameDescription().getName())) {
+                List<String> materialNames = blockBreakWhitelistConfig.getStringList(game.getGameDescription().getName());
                 List<Material> materials = new ArrayList<Material>();
                 for (String materialName : materialNames) {
                     materials.add(Material.valueOf(materialName));
                 }
                 blocks.put(game, materials);
+            } else {
+                FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+                if (gameConfig.contains("BlockBreakWhitelist")) {
+                    List<String> materialNames = gameConfig.getStringList("BlockBreakWhitelist");
+                    List<Material> materials = new ArrayList<Material>();
+                    for (String materialName : materialNames) {
+                        materials.add(Material.valueOf(materialName));
+                    }
+                    blocks.put(game, materials);
+                    blockBreakWhitelistConfig.set(game.getGameDescription().getName(), materialNames);
+                }
             }
         }
     }

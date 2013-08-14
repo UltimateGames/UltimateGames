@@ -27,6 +27,8 @@ import me.ampayne2.ultimategames.signs.UGSign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -158,6 +160,20 @@ public abstract class GamePlugin implements Listener {
      * @param args The arguments.
      */
     public void onArenaCommand(Arena arena, String command, CommandSender sender, String[] args) {}
+    
+    /**
+     * Handles block placing.
+     * @param arena The arena.
+     * @param event The BlockPlaceEvent.
+     */
+    public void onBlockPlace(Arena arena, BlockPlaceEvent event) {}
+    
+    /**
+     * Handles block breaking.
+     * @param arena The arena.
+     * @param event The BlockBreakEvent.
+     */
+    public void onBlockBreak(Arena arena, BlockBreakEvent event) {}
 
     /**
      * Handle player death.

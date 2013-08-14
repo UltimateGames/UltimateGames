@@ -36,6 +36,17 @@ public class BlockPlaceWhitelist extends Whitelist {
                     materials.add(Material.valueOf(materialName));
                 }
                 blocks.put(game, materials);
+            } else {
+                FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+                if (gameConfig.contains("BlockPlaceWhitelist")) {
+                    List<String> materialNames = gameConfig.getStringList("BlockPlaceWhitelist");
+                    List<Material> materials = new ArrayList<Material>();
+                    for (String materialName : materialNames) {
+                        materials.add(Material.valueOf(materialName));
+                    }
+                    blocks.put(game, materials);
+                    blockPlaceWhitelistConfig.set(game.getGameDescription().getName(), materialNames);
+                }
             }
         }
     }

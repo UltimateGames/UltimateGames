@@ -67,8 +67,6 @@ public class Arena implements Listener {
         Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath + ".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
         Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", true));
         Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", true));
-        Boolean allowBuilding = arenaConfig.getBoolean(arenaPath + ".Allow-Building", gamesConfig.getBoolean("DefaultSettings.Allow-Building", true));
-        Boolean allowBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Breaking", true));
         //Put all the arena information into the arenaSettings hashmap
         arenaSettings.put("storeInventory", storeInventory);
         arenaSettings.put("storeArmor", storeArmor);
@@ -78,8 +76,6 @@ public class Arena implements Listener {
         arenaSettings.put("resetAfterMatch", resetAfterMatch);
         arenaSettings.put("allowExplosionDamage", allowExplosionDamage);
         arenaSettings.put("allowExplosionBlockBreaking", allowExplosionBlockBreaking);
-        arenaSettings.put("allowBuilding", allowBuilding);
-        arenaSettings.put("allowBreaking", allowBreaking);
         minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", 8));
         if (game.getGameDescription().getPlayerType() == PlayerType.SINGLE_PLAYER) {
             maxPlayers = 1;
@@ -135,8 +131,6 @@ public class Arena implements Listener {
             arenaConfig.set(arenaPath + ".Reset-After-Match", resetAfterMatch);
             arenaConfig.set(arenaPath + ".Allow-Explosion-Damage", allowExplosionDamage);
             arenaConfig.set(arenaPath + ".Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
-            arenaConfig.set(arenaPath + ".Allow-Building", allowBuilding);
-            arenaConfig.set(arenaPath + ".Allow-Breaking", allowBreaking);
             arenaConfig.set(arenaPath + ".Arena-Location.world", arenaWorld.getName());
             arenaConfig.set(arenaPath + ".Arena-Location.minx", minLocation.getBlockX());
             arenaConfig.set(arenaPath + ".Arena-Location.miny", minLocation.getBlockY());
