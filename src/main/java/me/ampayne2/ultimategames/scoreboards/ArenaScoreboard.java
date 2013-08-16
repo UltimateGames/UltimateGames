@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -55,17 +56,17 @@ public class ArenaScoreboard {
      * Lets a player see an ArenaScoreboard.
      * @param playerName The name of the player.
      */
-    public void addPlayer(String playerName) {
-        Bukkit.getPlayerExact(playerName).setScoreboard(scoreboard);
+    public void addPlayer(Player player) {
+        player.setScoreboard(scoreboard);
     }
 
     /**
      * Lets multiple players see an ArenaScoreboard.
      * @param playerNames The names of the players.
      */
-    public void addPlayers(List<String> playerNames) {
-        for (String playerName : playerNames) {
-            Bukkit.getPlayerExact(playerName).setScoreboard(scoreboard);
+    public void addPlayers(List<Player> players) {
+        for (Player player : players) {
+            player.setScoreboard(scoreboard);
         }
     }
 
@@ -73,17 +74,18 @@ public class ArenaScoreboard {
      * Hides an ArenaScoreboard from a player.
      * @param playerName The name of the player.
      */
-    public void removePlayer(String playerName) {
-        Bukkit.getPlayerExact(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+    public void removePlayer(Player player) {
+        resetPlayerColor(player);
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     /**
      * Hides an ArenaScoreboard from multiple players.
      * @param playerNames The names of the players.
      */
-    public void removePlayers(List<String> playerNames) {
-        for (String playerName : playerNames) {
-            Bukkit.getPlayerExact(playerName).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+    public void removePlayers(List<Player> players) {
+        for (Player player : players) {
+            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
     }
     
@@ -92,15 +94,15 @@ public class ArenaScoreboard {
      * @param playerName The player.
      * @param chatColor The color.
      */
-    public void setPlayerColor(String playerName, ChatColor chatColor) {
+    public void setPlayerColor(Player player, ChatColor chatColor) {
         Team team;
-        team = scoreboard.getTeam(playerName);
+        team = scoreboard.getTeam(player.getName());
         if (team != null) {
             team.setPrefix(chatColor + "");
         } else {
-            team = scoreboard.registerNewTeam(playerName);
+            team = scoreboard.registerNewTeam(player.getName());
             team.setPrefix(chatColor + "");
-            team.addPlayer(Bukkit.getOfflinePlayer(playerName));
+            team.addPlayer(player);
         }
     }
     
@@ -108,10 +110,10 @@ public class ArenaScoreboard {
      * Resets a player's name's color.
      * @param playerName The player.
      */
-    public void resetPlayerColor(String playerName) {
-        Team team = scoreboard.getTeam(playerName);
+    public void resetPlayerColor(Player player) {
+        Team team = scoreboard.getTeam(player.getName());
         if (team != null) {
-            team.removePlayer(Bukkit.getOfflinePlayer(playerName));
+            team.removePlayer(player);
         }
     }
 

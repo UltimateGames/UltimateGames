@@ -20,7 +20,6 @@ package me.ampayne2.ultimategames.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,12 +59,16 @@ public class SpawnPoint implements Listener {
         }
     }
 
-    public void teleportPlayer(String playerName) {
-        Player player = Bukkit.getPlayerExact(playerName);
-        player.teleport(location);
-        if (locked) {
-            this.playerName = playerName;
+    public void teleportPlayer(Player player) {
+        if (player != null) {
+            player.teleport(location);
+            if (locked) {
+                this.playerName = player.getName();
+            }
+        } else {
+            this.playerName = null;
         }
+        
     }
 
     public String getPlayer() {

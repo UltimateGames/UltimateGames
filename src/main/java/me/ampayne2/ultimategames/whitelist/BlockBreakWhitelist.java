@@ -1,9 +1,10 @@
 package me.ampayne2.ultimategames.whitelist;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,7 +16,8 @@ import me.ampayne2.ultimategames.games.Game;
 public class BlockBreakWhitelist extends Whitelist {
     
     private UltimateGames ultimateGames;
-    private Map<Game, List<Material>> blocks;
+    private Map<Game, Set<Material>> blocks;
+    private Map<Game, Boolean> useAsBlacklist;
     
     /**
      * The Block Break Whitelist.
@@ -27,26 +29,31 @@ public class BlockBreakWhitelist extends Whitelist {
     }
     
     public void reload() {
-        blocks = new HashMap<Game, List<Material>>();
+        blocks = new HashMap<Game, Set<Material>>();
         FileConfiguration blockBreakWhitelistConfig = ultimateGames.getConfigManager().getBlockBreakWhitelistConfig().getConfig();
         for (Game game : ultimateGames.getGameManager().getGames()) {
             if (blockBreakWhitelistConfig.contains(game.getGameDescription().getName())) {
-                List<String> materialNames = blockBreakWhitelistConfig.getStringList(game.getGameDescription().getName());
-                List<Material> materials = new ArrayList<Material>();
+                List<String> materialNames = blockBreakWhitelistConfig.getStringList(game.getGameDescription().getName() + ".Materials");
+                Set<Material> materials = new HashSet<Material>();
                 for (String materialName : materialNames) {
                     materials.add(Material.valueOf(materialName));
                 }
                 blocks.put(game, materials);
+                useAsBlacklist.put(game, blockBreakWhitelistConfig.getBoolean(game.getGameDescription().getName() + ".Use-As-Blacklist", false));
             } else {
                 FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
                 if (gameConfig.contains("BlockBreakWhitelist")) {
                     List<String> materialNames = gameConfig.getStringList("BlockBreakWhitelist");
-                    List<Material> materials = new ArrayList<Material>();
+                    Set<Material> materials = new HashSet<Material>();
                     for (String materialName : materialNames) {
                         materials.add(Material.valueOf(materialName));
                     }
                     blocks.put(game, materials);
-                    blockBreakWhitelistConfig.set(game.getGameDescription().getName(), materialNames);
+                    Boolean blacklist = gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false);
+                    useAsBlacklist.put(game, blacklist);
+                    blockBreakWhitelistConfig.set(game.getGameDescription().getName() + ".Materials", materialNames);
+                    blockBreakWhitelistConfig.set(game.getGameDescription().getName() + ".Use-As-Blacklist", blacklist);
+                    ultimateGames.getConfigManager().getBlockBreakWhitelistConfig().saveConfig();
                 }
             }
         }
@@ -59,7 +66,7 @@ public class BlockBreakWhitelist extends Whitelist {
      * @return True if the game has a whitelist and the material is whitelisted, else false.
      */
     public boolean canBreakMaterial(Game game, Material material) {
-        return blocks.containsKey(game) && blocks.get(game).contains(material);
+        return blocks.containsKey(game) && ((!useAsBlacklist.get(game) && blocks.get(game).contains(material)) || (useAsBlacklist.get(game) && !blocks.get(game).contains(material)));
     }
     
     /**
@@ -69,7 +76,7 @@ public class BlockBreakWhitelist extends Whitelist {
      * @return True if the game has a whitelist and the block's material is whitelisted, else false.
      */
     public boolean canBreakMaterial(Game game, Block block) {
-        return blocks.containsKey(game) && blocks.get(game).contains(block.getType());
+        return blocks.containsKey(game) && ((!useAsBlacklist.get(game) && blocks.get(game).contains(block.getType())) || (useAsBlacklist.get(game) && !blocks.get(game).contains(block.getType())));
     }
     
     /**
@@ -78,12 +85,12 @@ public class BlockBreakWhitelist extends Whitelist {
      * @param materials The materials.
      * @return The materials that can be broken.
      */
-    public List<Material> materialsWhitelisted(Game game, List<Material> materials) {
-        List<Material> whitelistedMaterials = new ArrayList<Material>();
+    public Set<Material> materialsWhitelisted(Game game, Set<Material> materials) {
+        Set<Material> whitelistedMaterials = new HashSet<Material>();
         if (blocks.containsKey(game)) {
-            List<Material> whitelistedTypes = blocks.get(game);
+            Set<Material> whitelistedTypes = blocks.get(game);
             for (Material material : materials) {
-                if (whitelistedTypes.contains(material)) {
+                if ((!useAsBlacklist.get(game) && whitelistedTypes.contains(material)) || (useAsBlacklist.get(game) && !whitelistedTypes.contains(material))) {
                     whitelistedMaterials.add(material);
                 }
             }
@@ -97,12 +104,12 @@ public class BlockBreakWhitelist extends Whitelist {
      * @param materials The materials.
      * @return The blocks that can be broken.
      */
-    public List<Block> blocksWhitelisted(Game game, List<Block> materials) {
-        List<Block> whitelistedBlocks = new ArrayList<Block>();
+    public Set<Block> blocksWhitelisted(Game game, Set<Block> materials) {
+        Set<Block> whitelistedBlocks = new HashSet<Block>();
         if (blocks.containsKey(game)) {
-            List<Material> whitelistedTypes = blocks.get(game);
+            Set<Material> whitelistedTypes = blocks.get(game);
             for (Block block : materials) {
-                if (whitelistedTypes.contains(block.getType())) {
+                if ((!useAsBlacklist.get(game) && whitelistedTypes.contains(block.getType())) || (useAsBlacklist.get(game) && !whitelistedTypes.contains(block.getType()))) {
                     whitelistedBlocks.add(block);
                 }
             }

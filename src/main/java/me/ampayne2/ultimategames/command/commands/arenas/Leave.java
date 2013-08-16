@@ -36,7 +36,7 @@ public class Leave implements UGCommand {
         Player player = (Player) sender;
         String playerName = player.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-            ultimateGames.getPlayerManager().removePlayerFromArena(playerName, ultimateGames.getPlayerManager().getPlayerArena(playerName), true);
+            ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
         }
     }
 }

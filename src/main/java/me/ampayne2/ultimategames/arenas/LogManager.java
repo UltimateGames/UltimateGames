@@ -20,11 +20,11 @@ public class LogManager {
 
     public LogManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        //startLogSaving();
+        startLogSaving();
     }
 
     public void logBlockChange(Arena arena, Material material, byte data, Location location) {
-        //pendingChanges.add(new BlockChange(arena, material, data, location));
+        pendingChanges.add(new BlockChange(arena, material, data, location));
     }
 
     public void startLogSaving() {
@@ -69,12 +69,11 @@ public class LogManager {
     }
 
     public void stopLogSaving() {
-        //Bukkit.getScheduler().cancelTask(logTask);
+        Bukkit.getScheduler().cancelTask(logTask);
+        logTask = null;
     }
 
     public Boolean rollbackArena(Arena arena) {
-        return true;
-        /*
         List<BlockChangeTable> changes = ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName", arena.getGame().getGameDescription().getName())
                 .and().equal("arenaName", arena.getName()).execute().find();
         while (!changes.isEmpty()) {
@@ -101,6 +100,5 @@ public class LogManager {
         }
         System.out.println("Rolled back");
         return true;
-        */
     }
 }

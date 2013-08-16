@@ -19,15 +19,11 @@
 package me.ampayne2.ultimategames.arenas;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.enums.PlayerType;
 import me.ampayne2.ultimategames.games.Game;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,19 +31,30 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class Arena implements Listener {
+    
     private UltimateGames ultimateGames;
-    private String arenaName;
     private Game game;
+    private String arenaName;
+    private ArenaStatus arenaStatus;
     private List<String> players = new ArrayList<String>();
     private Integer minPlayers;
     private Integer maxPlayers;
-    private ArenaStatus arenaStatus;
-    private Map<String, Boolean> arenaSettings = new HashMap<String, Boolean>();
-    private Location minLocation;
-    private Location maxLocation;
+    private Boolean storeInventory;
+    private Boolean storeArmor;
+    private Boolean storeExp;
+    private Boolean storeEffects;
+    private Boolean storeGamemode;
+    private Boolean resetAfterMatch;
+    private Boolean allowExplosionDamage;
+    private Boolean allowExplosionBlockBreaking;
     private World arenaWorld;
+    private Double minX;
+    private Double maxX;
+    private Double minZ;
+    private Double maxZ;
     private Integer timesPlayed;
 
     public Arena(UltimateGames ultimateGames, Game game, String arenaName, Location corner1, Location corner2) {
@@ -59,23 +66,14 @@ public class Arena implements Listener {
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
         String arenaPath = "Arenas." + game.getGameDescription().getName() + "." + arenaName;
         //Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
-        Boolean storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
-        Boolean storeArmor = arenaConfig.getBoolean(arenaPath + ".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
-        Boolean storeExp = arenaConfig.getBoolean(arenaPath + ".Players.Store-Exp", gamesConfig.getBoolean("DefaultSettings.Store-Exp", true));
-        Boolean storeEffects = arenaConfig.getBoolean(arenaPath + ".Players.Store-Effects", gamesConfig.getBoolean("DefaultSettings.Store-Effects", true));
-        Boolean storeGamemode = arenaConfig.getBoolean(arenaPath + ".Players.Store-Gamemode", gamesConfig.getBoolean("DefaultSettings.Store-Gamemode", true));
-        Boolean resetAfterMatch = arenaConfig.getBoolean(arenaPath + ".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
-        Boolean allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", true));
-        Boolean allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", true));
-        //Put all the arena information into the arenaSettings hashmap
-        arenaSettings.put("storeInventory", storeInventory);
-        arenaSettings.put("storeArmor", storeArmor);
-        arenaSettings.put("storeExp", storeExp);
-        arenaSettings.put("storeEffects", storeEffects);
-        arenaSettings.put("storeGamemode", storeGamemode);
-        arenaSettings.put("resetAfterMatch", resetAfterMatch);
-        arenaSettings.put("allowExplosionDamage", allowExplosionDamage);
-        arenaSettings.put("allowExplosionBlockBreaking", allowExplosionBlockBreaking);
+        storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
+        storeArmor = arenaConfig.getBoolean(arenaPath + ".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
+        storeExp = arenaConfig.getBoolean(arenaPath + ".Players.Store-Exp", gamesConfig.getBoolean("DefaultSettings.Store-Exp", true));
+        storeEffects = arenaConfig.getBoolean(arenaPath + ".Players.Store-Effects", gamesConfig.getBoolean("DefaultSettings.Store-Effects", true));
+        storeGamemode = arenaConfig.getBoolean(arenaPath + ".Players.Store-Gamemode", gamesConfig.getBoolean("DefaultSettings.Store-Gamemode", true));
+        resetAfterMatch = arenaConfig.getBoolean(arenaPath + ".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
+        allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", false));
+        allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false));
         minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", 8));
         if (game.getGameDescription().getPlayerType() == PlayerType.SINGLE_PLAYER) {
             maxPlayers = 1;
@@ -85,38 +83,11 @@ public class Arena implements Listener {
             maxPlayers = arenaConfig.getInt(arenaPath + ".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", 8));
         }
         //takes the 2 corners and turns them into minLocation and maxLocation
-        Integer minx;
-        Integer miny;
-        Integer minz;
-        Integer maxx;
-        Integer maxy;
-        Integer maxz;
-        if (corner1.getBlockX() < corner2.getBlockX()) {
-            minx = corner1.getBlockX();
-            maxx = corner2.getBlockX();
-        } else {
-            minx = corner2.getBlockX();
-            maxx = corner1.getBlockX();
-        }
-        if (corner1.getBlockY() < corner2.getBlockY()) {
-            miny = corner1.getBlockY();
-            maxy = corner2.getBlockY();
-        } else {
-            miny = corner2.getBlockY();
-            maxy = corner1.getBlockY();
-        }
-        if (corner1.getBlockZ() < corner2.getBlockZ()) {
-            minz = corner1.getBlockZ();
-            maxz = corner2.getBlockZ();
-        } else {
-            minz = corner2.getBlockZ();
-            maxz = corner1.getBlockZ();
-        }
-        if (corner1.getWorld().equals(corner2.getWorld())) {
-            arenaWorld = corner1.getWorld();
-            minLocation = new Location(arenaWorld, minx, miny, minz);
-            maxLocation = new Location(arenaWorld, maxx, maxy, maxz);
-        }
+        arenaWorld = corner1.getWorld();
+        minX = corner1.getX() <= corner2.getX() ? corner1.getX() : corner2.getX();
+        maxX = corner2.getX() <= corner1.getX() ? corner1.getX() : corner2.getX();
+        minZ = corner1.getZ() <= corner2.getZ() ? corner1.getZ() : corner2.getZ();
+        maxZ = corner2.getZ() <= corner1.getZ() ? corner1.getZ() : corner2.getZ();
 
         //create the arena in the config if it doesn't exist
         if (arenaConfig.getConfigurationSection(arenaPath) == null) {
@@ -132,12 +103,10 @@ public class Arena implements Listener {
             arenaConfig.set(arenaPath + ".Allow-Explosion-Damage", allowExplosionDamage);
             arenaConfig.set(arenaPath + ".Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
             arenaConfig.set(arenaPath + ".Arena-Location.world", arenaWorld.getName());
-            arenaConfig.set(arenaPath + ".Arena-Location.minx", minLocation.getBlockX());
-            arenaConfig.set(arenaPath + ".Arena-Location.miny", minLocation.getBlockY());
-            arenaConfig.set(arenaPath + ".Arena-Location.minz", minLocation.getBlockZ());
-            arenaConfig.set(arenaPath + ".Arena-Location.maxx", maxLocation.getBlockX());
-            arenaConfig.set(arenaPath + ".Arena-Location.maxy", maxLocation.getBlockY());
-            arenaConfig.set(arenaPath + ".Arena-Location.maxz", maxLocation.getBlockZ());
+            arenaConfig.set(arenaPath + ".Arena-Location.minx", minX);
+            arenaConfig.set(arenaPath + ".Arena-Location.maxx", maxX);
+            arenaConfig.set(arenaPath + ".Arena-Location.minz", minZ);
+            arenaConfig.set(arenaPath + ".Arena-Location.maxz", maxZ);
         }
         ultimateGames.getConfigManager().getGameConfig(game).saveConfig();
         ultimateGames.getConfigManager().getArenaConfig().saveConfig();
@@ -167,18 +136,11 @@ public class Arena implements Listener {
      */
     public boolean addPlayer(String playerName) {
         if (game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() >= maxPlayers) {
-            // makes sure arena has room
-            setStatus(ArenaStatus.STARTING);
             return false;
         } else if (players.contains(playerName)) {
-            // player already in arena
             return false;
         } else {
-            // player joined successfully
             players.add(playerName);
-            if (game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() == maxPlayers) {
-                setStatus(ArenaStatus.STARTING);
-            }
             return true;
         }
     }
@@ -186,15 +148,11 @@ public class Arena implements Listener {
     /**
      * Removes a player from the arena's player list.
      * @param playerName The player's name.
-     * @return If it was successful.
      */
-    public boolean removePlayer(String playerName) {
+    public void removePlayer(String playerName) {
         if (players.contains(playerName)) {
             players.remove(playerName);
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -248,34 +206,133 @@ public class Arena implements Listener {
     public ArenaStatus getStatus() {
         return arenaStatus;
     }
-
+    
     /**
-     * Gets a certain boolean setting of the arena.
-     * @param setting The setting.
-     * @return Whether the setting is true or false.
+     * Gets the storeInventory setting.
+     * @return True if the game stores your inventory else false.
      */
-    public Boolean getArenaSetting(String setting) {
-        if (arenaSettings.containsKey(setting)) {
-            return arenaSettings.get(setting);
-        } else {
-            return null;
-        }
+    public Boolean storeInventory() {
+        return storeInventory;
     }
-
+    
     /**
-     * Gets the min location of the arena.
-     * @return The minimum location.
+     * Gets the storeArmor setting.
+     * @return True if the game stores your armor else false.
      */
-    public Location getMinLocation() {
-        return minLocation;
+    public Boolean storeArmor() {
+        return storeArmor;
     }
-
+    
     /**
-     * Gets the max location of the arena.
-     * @return The maximum location.
+     * Gets the storeExp setting.
+     * @return True if the game stores your exp else false.
      */
-    public Location getMaxLocation() {
-        return maxLocation;
+    public Boolean storeExp() {
+        return storeExp;
+    }
+    
+    /**
+     * Gets the storeEffects setting.
+     * @return True if the game stores your effects else false.
+     */
+    public Boolean storeEffects() {
+        return storeEffects;
+    }
+    
+    /**
+     * Gets the storeGamemode setting.
+     * @return True if the game stores your gamemode else false.
+     */
+    public Boolean storeGamemode() {
+        return storeGamemode;
+    }
+    
+    /**
+     * Gets the resetAfterMatch setting.
+     * @return True if the game resets after each match else false.
+     */
+    public Boolean resetAfterMatch() {
+        return resetAfterMatch;
+    }
+    
+    /**
+     * Gets the allowExplosionDamage setting.
+     * @return True if the game allows explosion damage else false.
+     */
+    public Boolean allowExplosionDamage() {
+        return allowExplosionDamage;
+    }
+    
+    /**
+     * Gets the allowExplosionBlockBreaking setting.
+     * @return True if the game allows explosion block breaking else false.
+     */
+    public Boolean allowExplosionBlockBreaking() {
+        return allowExplosionBlockBreaking;
+    }
+    
+    /**
+     * Sets the storeInventory setting.
+     * @param storeInventory Whether or not the game should store a player's inventory.
+     */
+    public void storeInventory(Boolean storeInventory) {
+        this.storeInventory = storeInventory;
+    }
+    
+    /**
+     * Sets the storeArmor setting.
+     * @param storeArmor Whether or not the game should store a player's armor.
+     */
+    public void storeArmor(Boolean storeArmor) {
+        this.storeArmor = storeArmor;
+    }
+    
+    /**
+     * Sets the storeExp setting.
+     * @param storeExp Whether or not the game should store a player's exp.
+     */
+    public void storeExp(Boolean storeExp) {
+        this.storeExp = storeExp;
+    }
+    
+    /**
+     * Sets the storeEffects setting.
+     * @param storeEffects Whether or not the game should store a player's effects.
+     */
+    public void storeEffects(Boolean storeEffects) {
+        this.storeEffects = storeEffects;
+    }
+    
+    /**
+     * Sets the storeGamemode setting.
+     * @param storeGamemode Whether or not the game should store a player's gamemode.
+     */
+    public void storeGamemode(Boolean storeGamemode) {
+        this.storeGamemode = storeGamemode;
+    }
+    
+    /**
+     * Sets the resetAfterMatch setting.
+     * @param resetAfterMatch Whether or not the game should reset after each match.
+     */
+    public void resetAfterMatch(Boolean resetAfterMatch) {
+        this.resetAfterMatch = resetAfterMatch;
+    }
+    
+    /**
+     * Sets the allowExplosionDamage setting.
+     * @param allowExplosionDamage Whether or not the game should allow explosion damage.
+     */
+    public void allowExplosionDamage(Boolean allowExplosionDamage) {
+        this.allowExplosionDamage = allowExplosionDamage;
+    }
+    
+    /**
+     * Sets the allowExplosionBlockBreaking setting.
+     * @param allowExplosionBlockBreaking Whether or not the game should allow explosion block breaking.
+     */
+    public void allowExplosionBlockBreaking(Boolean allowExplosionBlockBreaking) {
+        this.allowExplosionBlockBreaking = allowExplosionBlockBreaking;
     }
 
     /**
@@ -312,32 +369,23 @@ public class Arena implements Listener {
     }
 
     /**
-     * Sets a certain boolean setting of the arena.
-     * @param setting The setting.
-     * @param value The value.
-     */
-    public void setArenaSetting(String setting, Boolean value) {
-        if (arenaSettings.containsKey(setting)) {
-            arenaSettings.put(setting, value);
-        }
-        //TODO: save setting to config
-    }
-
-    /**
      * Checks to see if a location is inside the arena.
      * @param location The location.
      * @return If the location is inside the arena or not.
      */
     public Boolean locationIsInArena(Location location) {
-        if (location.getWorld().equals(minLocation.getWorld()) && location.getX() >= minLocation.getX() && location.getX() <= maxLocation.getX() && location.getY() >= minLocation.getY() && location.getY() <= maxLocation.getY() && location.getZ() >= minLocation.getZ() && location.getZ() <= maxLocation.getZ()) {
-        	return true;
-        } else {
-        	return false;
-        }
+        return location.getWorld().equals(arenaWorld) && location.getX() >= minX && location.getX() <= maxX && location.getZ() >= minZ && location.getZ() <= maxZ;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent event) {
+        if (players.contains(event.getPlayer().getName()) && !locationIsInArena(event.getTo())) {
+            event.getPlayer().getVelocity().multiply(-1);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (players.contains(event.getPlayer().getName()) && !locationIsInArena(event.getTo())) {
             event.setCancelled(true);
         }

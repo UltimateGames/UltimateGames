@@ -57,8 +57,9 @@ public class CommandController extends JavaPlugin implements Listener {
         arena.addCommand("end", "ultimategames.arena.end", new End(ultimateGames));
         arena.addCommand("stop", "ultimategames.arena.stop", new Stop(ultimateGames));
         arena.addCommand("join", "ultimategames.arena.join", new Join(ultimateGames));
-        arena.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
         mainCommand.addCommand("arena", null, arena);
+        
+        mainCommand.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
 
         mainCommand.addCommand("setlobby", "ultimategames.setlobby", new SetLobby(ultimateGames));
 

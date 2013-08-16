@@ -19,8 +19,10 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
+import me.ampayne2.ultimategames.players.QueueManager;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,9 +42,20 @@ public class Join implements UGCommand {
         }
         String arenaName = args[0];
         String gameName = args[1];
-        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName) && ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.OPEN
-                || ultimateGames.getArenaManager().getArena(arenaName, gameName).getStatus() == ArenaStatus.STARTING) {
-            ultimateGames.getPlayerManager().addPlayerToArena(((Player) sender).getName(), ultimateGames.getArenaManager().getArena(arenaName, gameName), true);
+        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+            ArenaStatus arenaStatus = arena.getStatus();
+            if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
+                // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
+                ultimateGames.getPlayerManager().addPlayerToArena((Player) sender, arena, true);
+                return;
+            } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
+                QueueManager queue = ultimateGames.getQueueManager();
+                String playerName = ((Player) sender).getName();
+                if (!queue.isPlayerInQueue(playerName, arena)) {
+                    queue.addPlayerToQueue(playerName, arena);
+                }
+            }
         }
     }
 }

@@ -25,12 +25,14 @@ import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.signs.UGSign;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -126,18 +128,17 @@ public abstract class GamePlugin implements Listener {
     /**
      * Handle player joining.
      * @param arena The arena the player is joining.
-     * @param playerName The name of the player joining.
+     * @param playerName The ArenaPlayer object of the player joining.
      * @return True if the player is added else false.
      */
-    public abstract Boolean addPlayer(Arena arena, String playerName);
+    public abstract Boolean addPlayer(Player player, Arena arena);
 
     /**
      * Handle player leaving.
      * @param arena The arena the player is leaving.
-     * @param playerName The name of the player leaving.
-     * @return True if everything went well else false.
+     * @param arenaPlayer The ArenaPlayer object of the player leaving.
      */
-    public abstract Boolean removePlayer(Arena arena, String playerName);
+    public abstract void removePlayer(Player player, Arena arena);
 
     /**
      * Handle UG Sign creation.
@@ -202,6 +203,13 @@ public abstract class GamePlugin implements Listener {
      * @param event The EntityDamageByEntityEvent.
      */
     public void onEntityDamageByEntity(Arena arena, EntityDamageByEntityEvent event) {}
+    
+    /**
+     * Handle entity explosions.
+     * @param arena The arena the entity exploded in.
+     * @param event The EntityExplodeEvent.
+     */
+    public void onEntityExplode(Arena arena, EntityExplodeEvent event) {}
 
     /**
      * Handles player interactions.

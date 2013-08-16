@@ -193,7 +193,7 @@ public class ArenaManager {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName()) && arena.getGame().getGamePlugin().openArena(arena)) {
             arena.setStatus(ArenaStatus.OPEN);
             for (String playerName : ultimateGames.getQueueManager().getNextPlayers(arena.getMaxPlayers() - arena.getPlayers().size(), arena)) {
-                ultimateGames.getPlayerManager().addPlayerToArena(playerName, arena, true);
+                ultimateGames.getPlayerManager().addPlayerToArena(Bukkit.getPlayerExact(playerName), arena, true);
             }
         }
     }
@@ -214,11 +214,11 @@ public class ArenaManager {
      */
     public void beginArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
-            arena.setStatus(ArenaStatus.RUNNING);
             for (ArenaScoreboard scoreBoard : new ArrayList<ArenaScoreboard>(ultimateGames.getScoreboardManager().getArenaScoreboards(arena))) {
                 ultimateGames.getScoreboardManager().removeArenaScoreboard(arena, scoreBoard.getName());
             }
             if (arena.getGame().getGamePlugin().beginArena(arena)) {
+                arena.setStatus(ArenaStatus.RUNNING);
                 ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.begin");
             }
         }
@@ -248,11 +248,11 @@ public class ArenaManager {
 
             //Teleport everybody out of the arena
             for (String playerName : arena.getPlayers()) {
-                ultimateGames.getPlayerManager().removePlayerFromArena(playerName, arena, false);
+                ultimateGames.getPlayerManager().removePlayerFromArena(Bukkit.getPlayerExact(playerName), false);
             }
 
             arena.setStatus(ArenaStatus.RESETTING);
-            if (ultimateGames.getLogManager().rollbackArena(arena)) {
+            if ((!arena.resetAfterMatch() || ultimateGames.getLogManager().rollbackArena(arena)) && arena.getGame().getGamePlugin().resetArena(arena)) {
                 openArena(arena);
             } else {
                 arena.setStatus(ArenaStatus.RESET_FAILED);
