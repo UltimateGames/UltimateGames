@@ -16,7 +16,7 @@ public class BlockPlaceWhitelist extends Whitelist {
     
     private UltimateGames ultimateGames;
     private Map<Game, Set<Material>> blocks;
-    private Map<Game, Boolean> useAsBlacklist;
+    private Map<Game, Boolean> useAsBlacklist = new HashMap<Game, Boolean>();
     
     /**
      * The Block Place Whitelist.

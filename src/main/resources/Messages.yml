@@ -6,6 +6,7 @@ messages:
       addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked]"
       begin: "&4Usage: /ug arena begin [arena] [game]"
       create: "&4Usage: /ug arena create [arena] [game]"
+      edit: "&4Usage: /ug arena edit"
       end: "&4Usage: /ug arena end [arena] [game]"
       join: "&4Usage: /ug arena join [arena] [game]"
       leave: "&4Usage: /ug arena leave"
@@ -21,6 +22,8 @@ messages:
     select: "Punch two corners of a cuboid to create the Arena '%s' of Game '%s'."
     create: "Created Arena '%s' of Game '%s'."
     delete: "Removed Arena '%s' of Game '%s'."
+    editon: "Entered Arena editing mode."
+    editoff: "No longer editing Arena."
     forceload: ""
     forceunload: ""
     start: "The game has started!"
@@ -33,10 +36,11 @@ messages:
     join: "%s joined the game! %s"
     leave: "%s left the game! %s"
 
-    alreadyexists: "Arena already exists."
-    doesntexist: "Arena doesn't exist."
-    failedtocreate: "Failed to create Arena '%s' of Game '%s'. %s"
-    failedtojoin: "Failed to join Arena '%s' of Game '%s'. %s"
+    alreadyexists: "&4Arena already exists."
+    doesntexist: "&4Arena doesn't exist."
+    failedtocreate: "&4Failed to create Arena '%s' of Game '%s'. %s"
+    failedtojoin: "&4Failed to join Arena '%s' of Game '%s'. %s"
+    notinarena: "&4Not in an Arena."
 
   queues:
     join: "Joined queue for Arena '%s' of Game '%s'. You are %s in line and will be able to join %s."
@@ -46,7 +50,7 @@ messages:
     
   spawnpoints:
     create: "Created SpawnPoint for Arena '%s' of Game '%s'"
-    leave: "You are not allowed to leave the spawnpoint."
+    leave: "&4You are not allowed to leave the spawnpoint."
   
   countdowns:
     timeleftstart: "The game starts in %s seconds!"
@@ -54,6 +58,7 @@ messages:
     aborted: "Countdown aborted."
     
   protections:
-    place: "You are not allowed to place blocks in the arena."
-    break: "You are not allowed to break blocks in the arena."
-    leave: "You are not allowed to go outside the arena."
+    place: "&4You are not allowed to place blocks in the arena."
+    break: "&4You are not allowed to break blocks in the arena."
+    leave: "&4You are not allowed to go outside the arena."
+    

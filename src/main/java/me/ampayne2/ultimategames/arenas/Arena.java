@@ -27,11 +27,13 @@ import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.util.Vector;
 
 public class Arena implements Listener {
     
@@ -84,10 +86,10 @@ public class Arena implements Listener {
         }
         //takes the 2 corners and turns them into minLocation and maxLocation
         arenaWorld = corner1.getWorld();
-        minX = corner1.getX() <= corner2.getX() ? corner1.getX() : corner2.getX();
-        maxX = corner2.getX() <= corner1.getX() ? corner1.getX() : corner2.getX();
-        minZ = corner1.getZ() <= corner2.getZ() ? corner1.getZ() : corner2.getZ();
-        maxZ = corner2.getZ() <= corner1.getZ() ? corner1.getZ() : corner2.getZ();
+        maxX = corner1.getX() > corner2.getX() ? corner1.getX() : corner2.getX();
+        minX = corner1.getX() < corner2.getX() ? corner1.getX() : corner2.getX();
+        maxZ = corner1.getZ() > corner2.getZ() ? corner1.getZ() : corner2.getZ();
+        minZ = corner1.getZ() < corner2.getZ() ? corner1.getZ() : corner2.getZ();
 
         //create the arena in the config if it doesn't exist
         if (arenaConfig.getConfigurationSection(arenaPath) == null) {
@@ -141,6 +143,7 @@ public class Arena implements Listener {
             return false;
         } else {
             players.add(playerName);
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
             return true;
         }
     }
@@ -379,8 +382,30 @@ public class Arena implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (players.contains(event.getPlayer().getName()) && !locationIsInArena(event.getTo())) {
-            event.getPlayer().getVelocity().multiply(-1);
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        Player player = event.getPlayer();
+        if (!(from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) && players.contains(player.getName())) {
+            Boolean left = false;
+            Vector vector = new Vector();
+            if (to.getX() < minX) {
+                vector.add(new Vector(2, 0, 0));
+                left = true;
+            } else if (to.getX() > maxX) {
+                vector.add(new Vector(-2, 0, 0));
+                left = true;
+            }
+            if (to.getZ() < minZ) {
+                vector.add(new Vector(0, 0, 2));
+                left = true;
+            } else if (to.getZ() > maxZ) {
+                vector.add(new Vector(0, 0, -2));
+                left = true;
+            }
+            if (left) {
+                player.setVelocity(vector);
+                ultimateGames.getMessageManager().sendMessage(player.getName(), "protections.leave");
+            }
         }
     }
     
@@ -388,6 +413,7 @@ public class Arena implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (players.contains(event.getPlayer().getName()) && !locationIsInArena(event.getTo())) {
             event.setCancelled(true);
+            ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.leave");
         }
     }
 }

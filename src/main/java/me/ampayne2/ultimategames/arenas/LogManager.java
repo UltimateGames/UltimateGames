@@ -1,11 +1,15 @@
 package me.ampayne2.ultimategames.arenas;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.database.tables.BlockChangeTable;
@@ -14,6 +18,7 @@ public class LogManager {
 
     private UltimateGames ultimateGames;
     private Integer logTask;
+    private Map<Arena, Integer> rollbackTask = new HashMap<Arena, Integer>();
     private List<BlockChange> pendingChanges = new ArrayList<BlockChange>();
     private List<BlockChange> savingChanges = new ArrayList<BlockChange>();
     private Boolean logging = false;
@@ -25,6 +30,12 @@ public class LogManager {
 
     public void logBlockChange(Arena arena, Material material, byte data, Location location) {
         pendingChanges.add(new BlockChange(arena, material, data, location));
+    }
+
+    public void logBlockChanges(Arena arena, Set<Block> blocks) {
+        for (Block block : blocks) {
+            pendingChanges.add(new BlockChange(arena, block.getType(), block.getData(), block.getLocation()));
+        }
     }
 
     public void startLogSaving() {
@@ -46,8 +57,8 @@ public class LogManager {
                             double x = location.getX();
                             double y = location.getY();
                             double z = location.getZ();
-                            if (ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName", gameName).and().equal("arenaName", arenaName).and().equal("x", x)
-                                    .and().equal("y", y).and().equal("z", z).execute().findOne() == null) {
+                            if (ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName", gameName).and().equal("arenaName", arenaName).and().equal(
+                                    "x", x).and().equal("y", y).and().equal("z", z).execute().findOne() == null) {
                                 BlockChangeTable table = new BlockChangeTable();
                                 table.gameName = gameName;
                                 table.arenaName = arenaName;
@@ -73,32 +84,48 @@ public class LogManager {
         logTask = null;
     }
 
-    public Boolean rollbackArena(Arena arena) {
-        List<BlockChangeTable> changes = ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName", arena.getGame().getGameDescription().getName())
-                .and().equal("arenaName", arena.getName()).execute().find();
-        while (!changes.isEmpty()) {
-            for (BlockChangeTable entry : new ArrayList<BlockChangeTable>(changes)) {
-                Location location = new Location(arena.getWorld(), entry.x, entry.y, entry.z);
-                Material material = Material.valueOf(entry.material);
-                if (!(location.getBlock().getType() == material && location.getBlock().getData() == entry.data)) {
-                    if (material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK) {
-                        location.getBlock().setTypeIdAndData(material.getId(), entry.data, false);
-                        location.getBlock().getRelative(BlockFace.UP).setTypeIdAndData(material.getId(), (byte) (entry.data | 0x8), false);
-                    } else {
-                        location.getBlock().setType(material);
-                        location.getBlock().setData(entry.data);
+    public void rollbackArena(Arena arena) {
+        if (!rollbackTask.containsKey(arena)) {
+            startRollingBack(arena);
+        }
+    }
+
+    public void startRollingBack(final Arena arena) {
+        rollbackTask.put(arena, Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, new Runnable() {
+            @Override
+            public void run() {
+                List<BlockChangeTable> changes = ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName",
+                        arena.getGame().getGameDescription().getName()).and().equal("arenaName", arena.getName()).execute().find();
+                if (changes.isEmpty()) {
+                    stopRollingBack(arena);
+                } else {
+                    for (int i = 0; i < 50; i++) {
+                        if ((changes.size() > i)) {
+                            return;
+                        }
+                        BlockChangeTable entry = changes.get(i);
+                        Location location = new Location(arena.getWorld(), entry.x, entry.y, entry.z);
+                        Material material = Material.valueOf(entry.material);
+                        if (!(location.getBlock().getType() == material && location.getBlock().getData() == entry.data)) {
+                            if (material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK) {
+                                location.getBlock().setTypeIdAndData(material.getId(), entry.data, false);
+                                location.getBlock().getRelative(BlockFace.UP).setTypeIdAndData(material.getId(), (byte) (entry.data | 0x8), false);
+                            } else {
+                                location.getBlock().setType(material);
+                                location.getBlock().setData(entry.data);
+                            }
+                        }
+                        ultimateGames.getDatabaseManager().getDatabase().remove(
+                                ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName", arena.getGame().getGameDescription().getName()).and().equal(
+                                        "arenaName", arena.getName()).and().equal("x", entry.x).and().equal("y", entry.y).and().equal("z", entry.z).execute().findOne());
                     }
                 }
-                changes.remove(entry);
             }
-        }
-        for (BlockChangeTable entry : ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName", arena.getGame().getGameDescription().getName()).and()
-                .equal("arenaName", arena.getName()).execute().find()) {
-            ultimateGames.getDatabaseManager().getDatabase().remove(
-                    ultimateGames.getDatabaseManager().getDatabase().select(BlockChangeTable.class).where().equal("gameName", arena.getGame().getGameDescription().getName()).and().equal("arenaName",
-                            arena.getName()).and().equal("x", entry.x).and().equal("y", entry.y).and().equal("z", entry.z).execute().findOne());
-        }
-        System.out.println("Rolled back");
-        return true;
+        }, 0L, 100L));
+    }
+
+    public void stopRollingBack(Arena arena) {
+        Bukkit.getScheduler().cancelTask(rollbackTask.get(arena));
+        rollbackTask.remove(arena);
     }
 }

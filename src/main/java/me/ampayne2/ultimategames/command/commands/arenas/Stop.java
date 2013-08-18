@@ -42,6 +42,7 @@ public class Stop implements UGCommand {
         if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
             Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
             ultimateGames.getArenaManager().stopArena(arena);
+            ultimateGames.getMessageManager().sendReplacedMessage(sender.getName(), "arenas.setstatus", arena.getName(), arena.getGame().getGameDescription().getName(), arena.getStatus().name());
         }
     }
 }

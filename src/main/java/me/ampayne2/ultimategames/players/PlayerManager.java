@@ -137,6 +137,14 @@ public class PlayerManager implements Listener {
             }
         }
     }
+    
+    public ArenaPlayer getArenaPlayer(String playerName) {
+        if (players.containsKey(playerName)) {
+            return players.get(playerName);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Teleports a player in limbo to the lobby.

@@ -1,20 +1,16 @@
 /*
  * This file is part of UltimateGames.
- *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
- *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.utils;
 
@@ -67,7 +63,7 @@ public class Utils {
             return "th";
         }
     }
-    
+
     /**
      * Gets the name of a ChatColor.
      * @param chatColor The ChatColor.
@@ -86,7 +82,7 @@ public class Utils {
         }
         return name;
     }
-    
+
     /**
      * Converts a ChatColor to a Color.
      * @param chatColor The ChatColor.
@@ -254,7 +250,7 @@ public class Utils {
         }
         return target;
     }
-    
+
     /**
      * Colors leather armor.
      * @param itemStack The piece of armor.
@@ -262,11 +258,54 @@ public class Utils {
      * @return The colored piece of armor.
      */
     public ItemStack colorArmor(ItemStack itemStack, Color color) {
-        if (itemStack.getType() == Material.LEATHER_HELMET || itemStack.getType() == Material.LEATHER_CHESTPLATE || itemStack.getType() == Material.LEATHER_LEGGINGS || itemStack.getType() == Material.LEATHER_BOOTS) {
+        if (itemStack.getType() == Material.LEATHER_HELMET || itemStack.getType() == Material.LEATHER_CHESTPLATE || itemStack.getType() == Material.LEATHER_LEGGINGS
+                || itemStack.getType() == Material.LEATHER_BOOTS) {
             LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
             meta.setColor(color);
             itemStack.setItemMeta(meta);
         }
         return itemStack;
+    }
+
+    public Boolean hasPhysics(Material material) {
+        switch (material) {
+        case ACTIVATOR_RAIL:
+        case ANVIL:
+        case CARPET:
+        case CACTUS:
+        case CROPS:
+        case DEAD_BUSH:
+        case DRAGON_EGG:
+        case FIRE:
+        case FLOWER_POT:
+        case GRAVEL:
+        case IRON_DOOR_BLOCK:
+        case LEVER:
+        case LONG_GRASS:
+        case MELON_STEM:
+        case NETHER_WARTS:
+        case POWERED_RAIL:
+        case RAILS:
+        case RED_MUSHROOM:
+        case RED_ROSE:
+        case REDSTONE_COMPARATOR_OFF:
+        case REDSTONE_COMPARATOR_ON:
+        case REDSTONE_TORCH_OFF:
+        case REDSTONE_TORCH_ON:
+        case REDSTONE_WIRE:
+        case SAND:
+        case SAPLING:
+        case STONE_BUTTON:
+        case SUGAR_CANE_BLOCK:
+        case TORCH:
+        case TRAP_DOOR:
+        case TRIPWIRE_HOOK:
+        case WATER_LILY:
+        case WOOD_BUTTON:
+        case WOODEN_DOOR:
+            return true;
+        default:
+            return false;
+        }
     }
 }

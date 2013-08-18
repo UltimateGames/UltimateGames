@@ -64,6 +64,7 @@ public class UltimateGames extends JavaPlugin {
     private Utils utils;
     private MetricsManager metricsManager;
     private PointManager pointManager;
+    private CommandController commandController;
 
     public void onEnable() {
         plugin = this;
@@ -112,7 +113,7 @@ public class UltimateGames extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
         getServer().getPluginManager().registerEvents(playerManager, this);
-        CommandController commandController = new CommandController(this);
+        commandController = new CommandController(this);
         getServer().getPluginManager().registerEvents(commandController, this);
         getCommand("ultimategames").setExecutor(commandController);
         metricsManager.addTotalPlayersGraph();
@@ -199,6 +200,10 @@ public class UltimateGames extends JavaPlugin {
 
     public MetricsManager getMetricsManager() {
         return metricsManager;
+    }
+    
+    public CommandController getCommandController() {
+        return commandController;
     }
 
     public PluginClassLoader getPluginClassLoader() {

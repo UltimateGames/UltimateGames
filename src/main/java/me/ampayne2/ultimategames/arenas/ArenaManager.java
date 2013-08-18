@@ -58,9 +58,9 @@ public class ArenaManager {
                         if (!arenaExists(arenaKey, gameKey)) {
                             String arenaPath = gamePath + "." + arenaKey;
                             World world = Bukkit.getWorld(arenaConfig.getString(arenaPath + ".Arena-Location.world"));
-                            Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), arenaConfig.getInt(arenaPath + ".Arena-Location.miny"), arenaConfig
+                            Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), 0, arenaConfig
                                     .getInt(arenaPath + ".Arena-Location.minz"));
-                            Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), arenaConfig.getInt(arenaPath + ".Arena-Location.maxy"), arenaConfig
+                            Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), 0, arenaConfig
                                     .getInt(arenaPath + ".Arena-Location.maxz"));
                             Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, minLocation, maxLocation);
                             arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
@@ -252,7 +252,10 @@ public class ArenaManager {
             }
 
             arena.setStatus(ArenaStatus.RESETTING);
-            if ((!arena.resetAfterMatch() || ultimateGames.getLogManager().rollbackArena(arena)) && arena.getGame().getGamePlugin().resetArena(arena)) {
+            if (arena.resetAfterMatch()) {
+                ultimateGames.getLogManager().rollbackArena(arena);
+            }
+            if (arena.getGame().getGamePlugin().resetArena(arena)) {
                 openArena(arena);
             } else {
                 arena.setStatus(ArenaStatus.RESET_FAILED);

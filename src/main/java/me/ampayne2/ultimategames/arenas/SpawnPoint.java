@@ -77,12 +77,18 @@ public class SpawnPoint implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (locked && playerName != null && event.getPlayer().getName().equals(playerName) && (Math.abs(event.getTo().getX() - location.getX()) >= 1 || Math.abs(event.getTo().getZ() - location.getZ()) >= 1)) {
-            Location location = new Location(this.location.getWorld(), this.location.getX(), this.location.getY(), this.location.getZ());
-            location.setPitch(event.getFrom().getPitch());
-            location.setYaw(event.getFrom().getYaw());
-            event.getPlayer().teleport(location);
-            ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "spawnpoints.leave");
+        if (locked && playerName != null) {
+            Location from = event.getFrom();
+            Location to = event.getTo();
+            if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ()) {
+                return;
+            }
+            if (event.getPlayer().getName().equals(playerName) && (Math.abs(to.getX() - location.getX()) >= 1 || Math.abs(to.getZ() - location.getZ()) >= 1)) {
+                location.setPitch(event.getFrom().getPitch());
+                location.setYaw(event.getFrom().getYaw());
+                event.getPlayer().teleport(location);
+                ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "spawnpoints.leave");
+            }
         }
     }
 }
