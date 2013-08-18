@@ -100,7 +100,7 @@ public class LogManager {
                     stopRollingBack(arena);
                 } else {
                     for (int i = 0; i < 50; i++) {
-                        if ((changes.size() > i)) {
+                        if ((changes.size() <= i)) {
                             return;
                         }
                         BlockChangeTable entry = changes.get(i);
