@@ -1,5 +1,5 @@
 name: UltimateGames
-version: 0
+version: ${build.number}
 description: The Ultimate Game Plugin
 author: ampayne2
 main: me.ampayne2.ultimategames.UltimateGames
