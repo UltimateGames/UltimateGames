@@ -25,17 +25,18 @@ import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.TextOutputSign;
 
 public enum SignType {
+    
     LOBBY(LobbySign.class, false), 
     CLICK_INPUT(ClickInputSign.class, true), 
     REDSTONE_INPUT(RedstoneInputSign.class, true), 
     TEXT_OUTPUT(TextOutputSign.class, true), 
     REDSTONE_OUTPUT(RedstoneOutputSign.class, true);
 
-    private static final Map<Class<?>, SignType> classTypes = new HashMap<Class<?>, SignType>();
+    private static final Map<Class<?>, SignType> CLASS_TYPES = new HashMap<Class<?>, SignType>();
 
     static {
         for (SignType signType : EnumSet.allOf(SignType.class)) {
-            classTypes.put(signType.getClassType(), signType);
+            CLASS_TYPES.put(signType.getClassType(), signType);
         }
     }
 
@@ -56,6 +57,7 @@ public enum SignType {
     }
 
     public static SignType getSignTypeFromClass(Class<?> signClass) {
-        return classTypes.get(signClass);
+        return CLASS_TYPES.get(signClass);
     }
+    
 }

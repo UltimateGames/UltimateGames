@@ -21,7 +21,9 @@ package me.ampayne2.ultimategames;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,14 +36,37 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class Message {
+public class Message implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private Map<String, String> messages = new HashMap<String, String>();
     private Map<String, String> gameMessages = new HashMap<String, String>();
 
     public Message(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+    }
+    
+    @Override
+    public boolean load() {
+        return reload();
+    }
+
+    @Override
+    public boolean reload() {
         loadMessages();
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 
     public void loadMessages() {
@@ -62,7 +87,7 @@ public class Message {
             FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
             if (gameConfig.isConfigurationSection("Messages")) {
                 for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
-                    gameMessages.put(game.getGameDescription().getName() + "." + key, gameConfig.getString("Messages." + key));
+                    gameMessages.put(game.getName() + "." + key, gameConfig.getString("Messages." + key));
                 }
             }
         }
@@ -100,7 +125,7 @@ public class Message {
      * @return The message.
      */
     public String getGameMessage(Game game, String messageType) {
-        String message = gameMessages.get(game.getGameDescription().getName() + "." + messageType);
+        String message = gameMessages.get(game.getName() + "." + messageType);
         if (message == null) {
             message = ChatColor.DARK_RED + "No configured message for " + messageType;
         }
@@ -112,12 +137,10 @@ public class Message {
      * @param playerName Name of the player to send the message to.
      * @param messageType Path to the message, without "Messages."
      */
-    public void sendMessage(String playerName, String messageType) {
-        Player player = Bukkit.getPlayerExact(playerName);
-        if (player == null) {
-            return;
+    public void sendMessage(Player player, String messageType) {
+        if (loaded) {
+            player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
         }
-        player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
     }
 
     /**
@@ -126,12 +149,10 @@ public class Message {
      * @param messageType Path to the message, without "Messages."
      * @param replace Strings to replace %s with.
      */
-    public void sendReplacedMessage(String playerName, String messageType, String... replace) {
-        Player player = Bukkit.getPlayerExact(playerName);
-        if (player == null) {
-            return;
+    public void sendReplacedMessage(Player player, String messageType, String... replace) {
+        if (loaded) {
+            player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
         }
-        player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
     }
 
     /**
@@ -140,12 +161,10 @@ public class Message {
      * @param playerName Name of the player to send the message to.
      * @param messageType Path to the message in the game's config, without "Messages."
      */
-    public void sendGameMessage(Game game, String playerName, String messageType) {
-        Player player = Bukkit.getPlayerExact(playerName);
-        if (player == null) {
-            return;
+    public void sendGameMessage(Game game, Player player, String messageType) {
+        if (loaded) {
+            player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
         }
-        player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
     }
 
     /**
@@ -155,12 +174,10 @@ public class Message {
      * @param messageType Path to the message, without "Messages."
      * @param replace Strings to replace %s with.
      */
-    public void sendReplacedGameMessage(Game game, String playerName, String messageType, String... replace) {
-        Player player = Bukkit.getPlayerExact(playerName);
-        if (player == null) {
-            return;
+    public void sendReplacedGameMessage(Game game, Player player, String messageType, String... replace) {
+        if (loaded) {
+            player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
         }
-        player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
     }
 
     /**
@@ -168,7 +185,9 @@ public class Message {
      * @param messageType Path to the message, without "Messages."
      */
     public void broadcastMessage(String messageType) {
-        Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getMessage(messageType));
+        if (loaded) {
+            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getMessage(messageType));
+        }
     }
 
     /**
@@ -177,7 +196,9 @@ public class Message {
      * @param replace Strings to replace %s with.
      */
     public void broadcastReplacedMessage(String messageType, String... replace) {
-        Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
+        if (loaded) {
+            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
+        }
     }
 
     /**
@@ -186,7 +207,9 @@ public class Message {
      * @param messageType Path to the message, without "Messages."
      */
     public void broadcastGameMessage(Game game, String messageType) {
-        Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
+        if (loaded) {
+            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
+        }
     }
 
     /**
@@ -196,7 +219,9 @@ public class Message {
      * @param replace Strings to replace %s with.
      */
     public void broadcastReplacedGameMessage(Game game, String messageType, String... replace) {
-        Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
+        if (loaded) {
+            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
+        }
     }
 
     /**
@@ -205,12 +230,17 @@ public class Message {
      * @param messageType Path to the message, without "Messages."
      */
     public void broadcastMessageToArena(Arena arena, String messageType) {
-        for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player == null) {
-                return;
+        if (loaded) {
+            List<String> players =  new ArrayList<String>();
+            players.addAll(arena.getPlayers());
+            players.addAll(arena.getSpectators());
+            for (String playerName : players) {
+                Player player = Bukkit.getPlayerExact(playerName);
+                if (player == null) {
+                    return;
+                }
+                player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
             }
-            player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
         }
     }
 
@@ -221,12 +251,17 @@ public class Message {
      * @param replace Strings to replace %s with.
      */
     public void broadcastReplacedMessageToArena(Arena arena, String messageType, String... replace) {
-        for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player == null) {
-                return;
+        if (loaded) {
+            List<String> players =  new ArrayList<String>();
+            players.addAll(arena.getPlayers());
+            players.addAll(arena.getSpectators());
+            for (String playerName : players) {
+                Player player = Bukkit.getPlayerExact(playerName);
+                if (player == null) {
+                    return;
+                }
+                player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
             }
-            player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
         }
     }
 
@@ -237,12 +272,17 @@ public class Message {
      * @param messageType Path to the message, without "Messages."
      */
     public void broadcastGameMessageToArena(Game game, Arena arena, String messageType) {
-        for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player == null) {
-                return;
+        if (loaded) {
+            List<String> players =  new ArrayList<String>();
+            players.addAll(arena.getPlayers());
+            players.addAll(arena.getSpectators());
+            for (String playerName : players) {
+                Player player = Bukkit.getPlayerExact(playerName);
+                if (player == null) {
+                    return;
+                }
+                player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
             }
-            player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
         }
     }
 
@@ -254,12 +294,17 @@ public class Message {
      * @param replace Strings to replace %s with.
      */
     public void broadcastReplacedGameMessageToArena(Game game, Arena arena, String messageType, String... replace) {
-        for (String playerName : arena.getPlayers()) {
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player == null) {
-                return;
+        if (loaded) {
+            List<String> players =  new ArrayList<String>();
+            players.addAll(arena.getPlayers());
+            players.addAll(arena.getSpectators());
+            for (String playerName : players) {
+                Player player = Bukkit.getPlayerExact(playerName);
+                if (player == null) {
+                    return;
+                }
+                player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
             }
-            player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
         }
     }
 
@@ -300,6 +345,17 @@ public class Message {
             }
             log.severe(" ======= SNIP HERE =======");
             log.severe("");
+        }
+    }
+    
+    /**
+     * Decides whether or not to print a debug message.
+     * @param message the message to debug.
+     */
+    public void debug(String message) {
+        if (ultimateGames.getConfig().getBoolean("debug")) {
+            Logger log = Bukkit.getLogger();
+            log.log(Level.INFO, message);
         }
     }
 }

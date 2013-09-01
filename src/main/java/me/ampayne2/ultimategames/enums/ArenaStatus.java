@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.enums;
 import org.bukkit.ChatColor;
 
 public enum ArenaStatus {
+    
     OPEN(ChatColor.GREEN),
     STARTING(ChatColor.DARK_GRAY),
     RUNNING(ChatColor.DARK_GRAY),
@@ -39,4 +40,5 @@ public enum ArenaStatus {
     public ChatColor getColor() {
     	return color;
     }
+    
 }

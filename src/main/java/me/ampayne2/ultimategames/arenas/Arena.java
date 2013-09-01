@@ -24,6 +24,8 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.enums.PlayerType;
 import me.ampayne2.ultimategames.games.Game;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,27 +39,30 @@ import org.bukkit.util.Vector;
 
 public class Arena implements Listener {
     
+    private boolean enabled = true;
     private UltimateGames ultimateGames;
     private Game game;
     private String arenaName;
     private ArenaStatus arenaStatus;
     private List<String> players = new ArrayList<String>();
-    private Integer minPlayers;
-    private Integer maxPlayers;
-    private Boolean storeInventory;
-    private Boolean storeArmor;
-    private Boolean storeExp;
-    private Boolean storeEffects;
-    private Boolean storeGamemode;
-    private Boolean resetAfterMatch;
-    private Boolean allowExplosionDamage;
-    private Boolean allowExplosionBlockBreaking;
+    private List<String> spectators = new ArrayList<String>();
+    private int minPlayers;
+    private int maxPlayers;
+    private boolean storeInventory;
+    private boolean storeArmor;
+    private boolean storeExp;
+    private boolean storeEffects;
+    private boolean storeGamemode;
+    private boolean resetAfterMatch;
+    private boolean allowExplosionDamage;
+    private boolean allowExplosionBlockBreaking;
+    private boolean allowMobSpawning;
     private World arenaWorld;
     private Double minX;
     private Double maxX;
     private Double minZ;
     private Double maxZ;
-    private Integer timesPlayed;
+    private int timesPlayed;
 
     public Arena(UltimateGames ultimateGames, Game game, String arenaName, Location corner1, Location corner2) {
         this.ultimateGames = ultimateGames;
@@ -66,7 +71,7 @@ public class Arena implements Listener {
         arenaStatus = ArenaStatus.OPEN;
         FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-        String arenaPath = "Arenas." + game.getGameDescription().getName() + "." + arenaName;
+        String arenaPath = "Arenas." + game.getName() + "." + arenaName;
         //Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
         storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
         storeArmor = arenaConfig.getBoolean(arenaPath + ".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
@@ -76,12 +81,13 @@ public class Arena implements Listener {
         resetAfterMatch = arenaConfig.getBoolean(arenaPath + ".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
         allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", false));
         allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false));
+        allowMobSpawning = arenaConfig.getBoolean(arenaPath + ".Allow-Mob-Spawning", gamesConfig.getBoolean("DefaultSettings.Allow-Mob-Spawning", false));
         minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", 8));
-        if (game.getGameDescription().getPlayerType() == PlayerType.SINGLE_PLAYER) {
+        if (game.getPlayerType() == PlayerType.SINGLE_PLAYER) {
             maxPlayers = 1;
-        } else if (game.getGameDescription().getPlayerType() == PlayerType.TWO_PLAYER) {
+        } else if (game.getPlayerType() == PlayerType.TWO_PLAYER) {
             maxPlayers = 2;
-        } else if (game.getGameDescription().getPlayerType() == PlayerType.CONFIGUREABLE) {
+        } else if (game.getPlayerType() == PlayerType.CONFIGUREABLE) {
             maxPlayers = arenaConfig.getInt(arenaPath + ".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", 8));
         }
         //takes the 2 corners and turns them into minLocation and maxLocation
@@ -104,6 +110,7 @@ public class Arena implements Listener {
             arenaConfig.set(arenaPath + ".Reset-After-Match", resetAfterMatch);
             arenaConfig.set(arenaPath + ".Allow-Explosion-Damage", allowExplosionDamage);
             arenaConfig.set(arenaPath + ".Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
+            arenaConfig.set(arenaPath + ".Allow-Mob-Spawning", allowMobSpawning);
             arenaConfig.set(arenaPath + ".Arena-Location.world", arenaWorld.getName());
             arenaConfig.set(arenaPath + ".Arena-Location.minx", minX);
             arenaConfig.set(arenaPath + ".Arena-Location.maxx", maxX);
@@ -113,6 +120,27 @@ public class Arena implements Listener {
         ultimateGames.getConfigManager().getGameConfig(game).saveConfig();
         ultimateGames.getConfigManager().getArenaConfig().saveConfig();
         timesPlayed = 0;
+    }
+    
+    /**
+     * Checks to see if an arena is enabled.
+     * @return True if the arena is enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+    
+    /**
+     * Disables an arena.
+     */
+    public void disable() {
+        for (String playerName : players) {
+            ultimateGames.getPlayerManager().removePlayerFromArena(Bukkit.getPlayerExact(playerName), false);
+        }
+        for (String playerName : spectators) {
+            ultimateGames.getPlayerManager().removeSpectatorFromArena(Bukkit.getPlayerExact(playerName));
+        }
+        enabled = false;
     }
 
     /**
@@ -137,15 +165,23 @@ public class Arena implements Listener {
      * @return If it was successful.
      */
     public boolean addPlayer(String playerName) {
-        if (game.getGameDescription().getPlayerType() != PlayerType.INFINITE && players.size() >= maxPlayers) {
-            return false;
-        } else if (players.contains(playerName)) {
-            return false;
+        if (enabled) {
+            if (game.getPlayerType() != PlayerType.INFINITE && players.size() >= maxPlayers) {
+                return false;
+            } else if (players.contains(playerName)) {
+                return false;
+            } else {
+                players.add(playerName);
+                ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+                return true;
+            }
         } else {
-            players.add(playerName);
-            ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
-            return true;
+            return false;
         }
+    }
+    
+    public boolean addSpectator(String playerName) {
+        return enabled && !spectators.contains(playerName) && spectators.add(playerName);
     }
 
     /**
@@ -153,8 +189,19 @@ public class Arena implements Listener {
      * @param playerName The player's name.
      */
     public void removePlayer(String playerName) {
-        if (players.contains(playerName)) {
+        if (enabled && players.contains(playerName)) {
             players.remove(playerName);
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+        }
+    }
+    
+    /**
+     * Removes a spectator from the arena's spectator list.
+     * @param playerName The spectator's name.
+     */
+    public void removeSpectator(String playerName) {
+        if (enabled && spectators.contains(playerName)) {
+            spectators.remove(playerName);
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
         }
     }
@@ -163,8 +210,18 @@ public class Arena implements Listener {
      * Removes all of the arena's players.
      */
     public void removePlayers() {
-        if (!players.isEmpty()) {
+        if (enabled && !players.isEmpty()) {
             players.clear();
+            ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+        }
+    }
+    
+    /**
+     * Removes all of the arena's spectators.
+     */
+    public void removeSpectators() {
+        if (enabled && !spectators.isEmpty()) {
+            spectators.clear();
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
         }
     }
@@ -172,10 +229,19 @@ public class Arena implements Listener {
     /**
      * Checks to see if the arena has a certain player.
      * @param playerName The player's name.
-     * @return If the arena has the player.
+     * @return True if the arena has the player, else false.
      */
     public boolean hasPlayer(String playerName) {
-        return !players.isEmpty() && players.contains(playerName);
+        return enabled && !players.isEmpty() && players.contains(playerName);
+    }
+    
+    /**
+     * Checks to see if the arena has a certain spectator.
+     * @param playerName The spectator's name.
+     * @return True if the arena has the spectator, else false.
+     */
+    public boolean hasSpectator(String playerName) {
+        return enabled && !spectators.isEmpty() && spectators.contains(playerName);
     }
 
     /**
@@ -183,14 +249,22 @@ public class Arena implements Listener {
      * @return The players.
      */
     public List<String> getPlayers() {
-        return new ArrayList<String>(players);
+        return enabled ? new ArrayList<String>(players) : new ArrayList<String>();
+    }
+    
+    /**
+     * Gets the spectators in the arena.
+     * @return The spectators.
+     */
+    public List<String> getSpectators() {
+        return enabled ? new ArrayList<String>(spectators) : new ArrayList<String>();
     }
 
     /**
      * Gets the min players of the arena.
      * @return The minimum amount of players.
      */
-    public Integer getMinPlayers() {
+    public int getMinPlayers() {
         return minPlayers;
     }
 
@@ -198,7 +272,7 @@ public class Arena implements Listener {
      * Gets the max players of the arena.
      * @return The maximum amount of players.
      */
-    public Integer getMaxPlayers() {
+    public int getMaxPlayers() {
         return maxPlayers;
     }
 
@@ -214,7 +288,7 @@ public class Arena implements Listener {
      * Gets the storeInventory setting.
      * @return True if the game stores your inventory else false.
      */
-    public Boolean storeInventory() {
+    public boolean storeInventory() {
         return storeInventory;
     }
     
@@ -222,7 +296,7 @@ public class Arena implements Listener {
      * Gets the storeArmor setting.
      * @return True if the game stores your armor else false.
      */
-    public Boolean storeArmor() {
+    public boolean storeArmor() {
         return storeArmor;
     }
     
@@ -230,7 +304,7 @@ public class Arena implements Listener {
      * Gets the storeExp setting.
      * @return True if the game stores your exp else false.
      */
-    public Boolean storeExp() {
+    public boolean storeExp() {
         return storeExp;
     }
     
@@ -238,7 +312,7 @@ public class Arena implements Listener {
      * Gets the storeEffects setting.
      * @return True if the game stores your effects else false.
      */
-    public Boolean storeEffects() {
+    public boolean storeEffects() {
         return storeEffects;
     }
     
@@ -246,7 +320,7 @@ public class Arena implements Listener {
      * Gets the storeGamemode setting.
      * @return True if the game stores your gamemode else false.
      */
-    public Boolean storeGamemode() {
+    public boolean storeGamemode() {
         return storeGamemode;
     }
     
@@ -254,7 +328,7 @@ public class Arena implements Listener {
      * Gets the resetAfterMatch setting.
      * @return True if the game resets after each match else false.
      */
-    public Boolean resetAfterMatch() {
+    public boolean resetAfterMatch() {
         return resetAfterMatch;
     }
     
@@ -262,7 +336,7 @@ public class Arena implements Listener {
      * Gets the allowExplosionDamage setting.
      * @return True if the game allows explosion damage else false.
      */
-    public Boolean allowExplosionDamage() {
+    public boolean allowExplosionDamage() {
         return allowExplosionDamage;
     }
     
@@ -270,72 +344,16 @@ public class Arena implements Listener {
      * Gets the allowExplosionBlockBreaking setting.
      * @return True if the game allows explosion block breaking else false.
      */
-    public Boolean allowExplosionBlockBreaking() {
+    public boolean allowExplosionBlockBreaking() {
         return allowExplosionBlockBreaking;
     }
     
     /**
-     * Sets the storeInventory setting.
-     * @param storeInventory Whether or not the game should store a player's inventory.
+     * Gets the allowMobSpawning setting.
+     * @return True if the game allows mob spawning else false.
      */
-    public void storeInventory(Boolean storeInventory) {
-        this.storeInventory = storeInventory;
-    }
-    
-    /**
-     * Sets the storeArmor setting.
-     * @param storeArmor Whether or not the game should store a player's armor.
-     */
-    public void storeArmor(Boolean storeArmor) {
-        this.storeArmor = storeArmor;
-    }
-    
-    /**
-     * Sets the storeExp setting.
-     * @param storeExp Whether or not the game should store a player's exp.
-     */
-    public void storeExp(Boolean storeExp) {
-        this.storeExp = storeExp;
-    }
-    
-    /**
-     * Sets the storeEffects setting.
-     * @param storeEffects Whether or not the game should store a player's effects.
-     */
-    public void storeEffects(Boolean storeEffects) {
-        this.storeEffects = storeEffects;
-    }
-    
-    /**
-     * Sets the storeGamemode setting.
-     * @param storeGamemode Whether or not the game should store a player's gamemode.
-     */
-    public void storeGamemode(Boolean storeGamemode) {
-        this.storeGamemode = storeGamemode;
-    }
-    
-    /**
-     * Sets the resetAfterMatch setting.
-     * @param resetAfterMatch Whether or not the game should reset after each match.
-     */
-    public void resetAfterMatch(Boolean resetAfterMatch) {
-        this.resetAfterMatch = resetAfterMatch;
-    }
-    
-    /**
-     * Sets the allowExplosionDamage setting.
-     * @param allowExplosionDamage Whether or not the game should allow explosion damage.
-     */
-    public void allowExplosionDamage(Boolean allowExplosionDamage) {
-        this.allowExplosionDamage = allowExplosionDamage;
-    }
-    
-    /**
-     * Sets the allowExplosionBlockBreaking setting.
-     * @param allowExplosionBlockBreaking Whether or not the game should allow explosion block breaking.
-     */
-    public void allowExplosionBlockBreaking(Boolean allowExplosionBlockBreaking) {
-        this.allowExplosionBlockBreaking = allowExplosionBlockBreaking;
+    public boolean allowMobSpawning() {
+        return allowMobSpawning;
     }
 
     /**
@@ -350,7 +368,7 @@ public class Arena implements Listener {
      * Gets the amount of times played.
      * @return The amount of times played.
      */
-    public Integer getTimesPlayed() {
+    public int getTimesPlayed() {
         return timesPlayed;
     }
 
@@ -359,15 +377,17 @@ public class Arena implements Listener {
      * @param status The status.
      */
     public void setStatus(ArenaStatus status) {
-        arenaStatus = status;
-        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-        arenaConfig.set("Arenas." + game.getGameDescription().getName() + "." + arenaName + ".Status", status.toString());
-        ultimateGames.getConfigManager().getArenaConfig().saveConfig();
-        if (ultimateGames.getUGSignManager() != null) {
-            ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
-        }
-        if (status == ArenaStatus.RUNNING) {
-            timesPlayed += 1;
+        if (enabled) {
+            arenaStatus = status;
+            FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+            arenaConfig.set("Arenas." + game.getName() + "." + arenaName + ".Status", status.toString());
+            ultimateGames.getConfigManager().getArenaConfig().saveConfig();
+            if (ultimateGames.getUGSignManager() != null) {
+                ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+            }
+            if (status == ArenaStatus.RUNNING) {
+                timesPlayed += 1;
+            }
         }
     }
 
@@ -376,12 +396,37 @@ public class Arena implements Listener {
      * @param location The location.
      * @return If the location is inside the arena or not.
      */
-    public Boolean locationIsInArena(Location location) {
-        return location.getWorld().equals(arenaWorld) && location.getX() >= minX && location.getX() <= maxX && location.getZ() >= minZ && location.getZ() <= maxZ;
+    public boolean locationIsInArena(Location location) {
+        return enabled && location.getWorld().equals(arenaWorld) && location.getX() >= minX && location.getX() <= maxX && location.getZ() >= minZ && location.getZ() <= maxZ;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    /**
+     * Handles player movement to keep players or spectators from leaving the arena.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
+        /*
+        if (enabled) {
+            Location from = event.getFrom();
+            Location to = event.getTo();
+            Player player = event.getPlayer();
+            if ((from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()) && (players.contains(player.getName()) || spectators.contains(player.getName()))) {
+                Vector vector = new Vector();
+                if (to.getX() < minX) {
+                    vector.add(new Vector(minX - to.getX(), 0, 0));
+                } else if (to.getX() > maxX) {
+                    vector.add(new Vector(maxX - to.getX(), 0, 0));
+                }
+                if (to.getZ() < minZ) {
+                    vector.add(new Vector(0, 0, minZ - to.getZ()));
+                } else if (to.getZ() > maxZ) {
+                    vector.add(new Vector(0, 0, maxZ - to.getZ()));
+                }
+                player.setVelocity(vector);
+                ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
+            }
+        }
+        */
         Location from = event.getFrom();
         Location to = event.getTo();
         Player player = event.getPlayer();
@@ -404,16 +449,23 @@ public class Arena implements Listener {
             }
             if (left) {
                 player.setVelocity(vector);
-                ultimateGames.getMessageManager().sendMessage(player.getName(), "protections.leave");
+                ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
             }
         }
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    /**
+     * Stops players and spectators from teleporting out of an arena.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (players.contains(event.getPlayer().getName()) && !locationIsInArena(event.getTo())) {
-            event.setCancelled(true);
-            ultimateGames.getMessageManager().sendMessage(event.getPlayer().getName(), "protections.leave");
+        if (enabled) {
+            Player player = event.getPlayer();
+            String playerName = player.getName();
+            if ((players.contains(playerName) || spectators.contains(playerName)) && !locationIsInArena(event.getTo())) {
+                event.setCancelled(true);
+                ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
+            }
         }
     }
 }

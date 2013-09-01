@@ -13,11 +13,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class BlockPlaceWhitelist extends Whitelist {
-    
+
     private UltimateGames ultimateGames;
     private Map<Game, Set<Material>> blocks;
     private Map<Game, Boolean> useAsBlacklist = new HashMap<Game, Boolean>();
-    
+
     /**
      * The Block Place Whitelist.
      * @param ultimateGames The UltimateGames instance.
@@ -26,38 +26,24 @@ public class BlockPlaceWhitelist extends Whitelist {
         this.ultimateGames = ultimateGames;
         reload();
     }
-    
+
     public void reload() {
         blocks = new HashMap<Game, Set<Material>>();
-        FileConfiguration blockPlaceWhitelistConfig = ultimateGames.getConfigManager().getBlockPlaceWhitelistConfig().getConfig();
         for (Game game : ultimateGames.getGameManager().getGames()) {
-            if (blockPlaceWhitelistConfig.contains(game.getGameDescription().getName())) {
-                List<String> materialNames = blockPlaceWhitelistConfig.getStringList(game.getGameDescription().getName() + ".Materials");
+            FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+            if (gameConfig.contains("BlockPlaceWhitelist")) {
+                List<String> materialNames = gameConfig.getStringList("BlockPlaceWhitelist");
                 Set<Material> materials = new HashSet<Material>();
                 for (String materialName : materialNames) {
                     materials.add(Material.valueOf(materialName));
                 }
                 blocks.put(game, materials);
-                useAsBlacklist.put(game, blockPlaceWhitelistConfig.getBoolean(game.getGameDescription().getName() + ".Use-As-Blacklist", false));
-            } else {
-                FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
-                if (gameConfig.contains("BlockPlaceWhitelist")) {
-                    List<String> materialNames = gameConfig.getStringList("BlockPlaceWhitelist");
-                    Set<Material> materials = new HashSet<Material>();
-                    for (String materialName : materialNames) {
-                        materials.add(Material.valueOf(materialName));
-                    }
-                    blocks.put(game, materials);
-                    Boolean blacklist = gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false);
-                    useAsBlacklist.put(game, blacklist);
-                    blockPlaceWhitelistConfig.set(game.getGameDescription().getName() + ".Materials", materialNames);
-                    blockPlaceWhitelistConfig.set(game.getGameDescription().getName() + ".Use-As-Blacklist", blacklist);
-                    ultimateGames.getConfigManager().getBlockPlaceWhitelistConfig().saveConfig();
-                }
+                Boolean blacklist = gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false);
+                useAsBlacklist.put(game, blacklist);
             }
         }
     }
-    
+
     /**
      * Checks if a certain material can be placed in a certain game.
      * @param game The game.

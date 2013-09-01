@@ -43,7 +43,7 @@ public class GeneralInformationHandler implements WebHandler {
         for (Arena arena : plugin.getArenaManager().getArenas()) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("arenaName", arena.getName());
-            map.put("gameName", arena.getGame().getGameDescription().getName());
+            map.put("gameName", arena.getGame().getName());
             map.put("currentPlayers", arena.getPlayers().size() + "");
             map.put("maxPlayers", arena.getMaxPlayers() + "");
             map.put("status", arena.getStatus().name());

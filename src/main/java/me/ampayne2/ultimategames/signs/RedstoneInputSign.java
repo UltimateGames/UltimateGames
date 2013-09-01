@@ -18,7 +18,8 @@
  */
 package me.ampayne2.ultimategames.signs;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.SignType;
@@ -29,7 +30,7 @@ import org.bukkit.event.Event;
 public class RedstoneInputSign extends UGSign {
 
     private String label;
-    private String[] lines = new String[4];
+    private List<String> lines = new ArrayList<String>();
     private Boolean powered;
 
     public RedstoneInputSign(String label, Sign sign, Arena arena) {
@@ -46,15 +47,15 @@ public class RedstoneInputSign extends UGSign {
     }
 
     @Override
-    public String[] getUpdatedLines() {
+    public List<String> getUpdatedLines() {
         return lines;
     }
 
-    public void setLines(String[] lines) {
+    public void setLines(List<String> lines) {
         if (lines == null) {
-            this.lines = new String[0];
+            this.lines = new ArrayList<String>();
         } else {
-            this.lines = Arrays.copyOf(lines, lines.length);
+            this.lines = lines;
         }
     }
 

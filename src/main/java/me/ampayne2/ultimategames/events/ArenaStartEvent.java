@@ -18,5 +18,5 @@
  */
 package me.ampayne2.ultimategames.events;
 
-public class GameStartEvent {
+public class ArenaStartEvent {
 }

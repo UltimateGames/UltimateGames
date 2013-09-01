@@ -23,10 +23,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.arenas.Arena;
 
-public class ScoreboardManager {
+public class ScoreboardManager implements Manager {
+    
+    private boolean loaded = false;
     private Map<Arena, List<ArenaScoreboard>> scoreboards = new HashMap<Arena, List<ArenaScoreboard>>();
+
+    @Override
+    public boolean load() {
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public boolean reload() {
+        scoreboards.clear();
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        scoreboards.clear();
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
+    }
 
     /**
      * Gets the ArenaScoreboards of an arena.

@@ -29,6 +29,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.zip.ZipFile;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.api.GamePlugin;
 import me.ampayne2.ultimategames.enums.PlayerType;
@@ -36,19 +37,32 @@ import me.ampayne2.ultimategames.enums.ScoreType;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class GameManager {
+public class GameManager implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private List<Game> games = new ArrayList<Game>();
 
-    @SuppressWarnings("unchecked")
     public GameManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+    }
+    
+    @Override
+    public boolean load() {
+        return reload();
+    }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean reload() {
+        for (Game game : games) {
+            game.disable();
+        }
+        games.clear();
         File gameFolder = new File(ultimateGames.getPlugin().getDataFolder(), "Games");
         if (!gameFolder.exists()) {
             gameFolder.mkdirs();
         }
-
         ScoreType scoreType = null, secondaryScoreType = null;
         PlayerType playerType = null;
         JarFile jarFile = null;
@@ -142,8 +156,17 @@ public class GameManager {
                         GamePlugin plugin = (GamePlugin) object;
 
                         //Well, everything loaded.
-                        GameDescription gameDescription = new GameDescription(gameName, description, version, author, scoreTypeName, secondaryScoreTypeName, scoreType, secondaryScoreType, playerType, instructionPages);
-                        Game game = new Game(plugin, gameDescription);
+                        Game game = new Game(plugin);
+                        game.setName(gameName);
+                        game.setDescription(description);
+                        game.setVersion(version);
+                        game.setAuthor(author);
+                        game.setScoreTypeName(scoreTypeName);
+                        game.setSecondaryScoreTypeName(secondaryScoreTypeName);
+                        game.setScoreType(scoreType);
+                        game.setSecondaryScoreType(secondaryScoreType);
+                        game.setPlayerType(playerType);
+                        game.setInstructionPages(instructionPages);
                         //We load the game
                         plugin.loadGame(ultimateGames, game);
                         addGame(game);
@@ -164,6 +187,22 @@ public class GameManager {
                 }
             }
         }
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        for (Game game : games) {
+            game.disable();
+        }
+        games.clear();
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 
     public List<Game> getGames() {
@@ -172,7 +211,7 @@ public class GameManager {
 
     public boolean gameExists(String gameName) {
         for (Game game : games) {
-            if (gameName.equals(game.getGameDescription().getName())) {
+            if (gameName.equals(game.getName())) {
                 return true;
             }
         }
@@ -181,7 +220,7 @@ public class GameManager {
 
     public Game getGame(String gameName) {
         for (Game game : games) {
-            if (gameName.equals(game.getGameDescription().getName())) {
+            if (gameName.equals(game.getName())) {
                 return game;
             }
         }
@@ -190,19 +229,18 @@ public class GameManager {
 
     public void addGame(Game game) {
         for (Game aGame : games) {
-            if (game.getGameDescription().getName().equals(aGame.getGameDescription().getName())) {
+            if (game.getName().equals(aGame.getName())) {
                 return;
             }
         }
         games.add(game);
         ultimateGames.getConfigManager().addGameConfig(game);
         ultimateGames.getMetricsManager().addGame(game);
-        ultimateGames.getMessageManager().log(Level.INFO, "Added game " + game.getGameDescription().getName());
+        ultimateGames.getMessageManager().log(Level.INFO, "Added game " + game.getName());
     }
 
     public void disableAll() {
         //TODO: The logic
-        //for ()
     }
 
     private class GameFileFilter implements FileFilter {

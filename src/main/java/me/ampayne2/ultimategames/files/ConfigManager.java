@@ -1,20 +1,16 @@
 /*
  * This file is part of UltimateGames.
- *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
- *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.files;
 
@@ -22,21 +18,32 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
 
-public class ConfigManager {
+public class ConfigManager implements Manager {
+
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private ConfigAccessor messageConfig;
     private ConfigAccessor arenaConfig;
     private ConfigAccessor lobbyConfig;
     private ConfigAccessor ugSignConfig;
-    private ConfigAccessor blockPlaceWhitelistConfig;
-    private ConfigAccessor blockBreakWhitelistConfig;
+    private ConfigAccessor ugChestConfig;
     private Map<Game, ConfigAccessor> gameConfigs;
 
     public ConfigManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+    }
+
+    @Override
+    public boolean load() {
+        return reload();
+    }
+
+    @Override
+    public boolean reload() {
         File dataFolder = ultimateGames.getDataFolder();
         messageConfig = new ConfigAccessor(ultimateGames, "Messages.yml", dataFolder);
         messageConfig.saveDefaultConfig();
@@ -46,11 +53,21 @@ public class ConfigManager {
         lobbyConfig.saveDefaultConfig();
         ugSignConfig = new ConfigAccessor(ultimateGames, "Signs.yml", dataFolder);
         ugSignConfig.saveDefaultConfig();
-        blockPlaceWhitelistConfig = new ConfigAccessor(ultimateGames, "BlockPlaceWhitelist.yml", dataFolder);
-        blockPlaceWhitelistConfig.saveDefaultConfig();
-        blockBreakWhitelistConfig = new ConfigAccessor(ultimateGames, "BlockBreakWhitelist.yml", dataFolder);
-        blockBreakWhitelistConfig.saveDefaultConfig();
+        ugChestConfig = new ConfigAccessor(ultimateGames, "Chests.yml", dataFolder);
+        ugChestConfig.saveDefaultConfig();
         gameConfigs = new HashMap<Game, ConfigAccessor>();
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 
     /**
@@ -86,19 +103,11 @@ public class ConfigManager {
     }
     
     /**
-     * Gets the Block Place Whitelist Config.
-     * @return The Block Place Whitelist Config.
+     * Gets the Ultimate Game Chest Config.
+     * @return The Ultimate Game Sign Config.
      */
-    public ConfigAccessor getBlockPlaceWhitelistConfig() {
-        return blockPlaceWhitelistConfig;
-    }
-    
-    /**
-     * Gets the Block Break Whitelist Config.
-     * @return The Block Break Whitelist Config.
-     */
-    public ConfigAccessor getBlockBreakWhitelistConfig() {
-        return blockBreakWhitelistConfig;
+    public ConfigAccessor getUGChestConfig() {
+        return ugChestConfig;
     }
 
     /**
@@ -126,7 +135,7 @@ public class ConfigManager {
      */
     public void addGameConfig(Game game) {
         if (!gameConfigs.containsKey(game)) {
-            ConfigAccessor config = new ConfigAccessor(ultimateGames.getPlugin(), game.getGameDescription().getName() + ".yml", new File(ultimateGames.getPlugin().getDataFolder() + "/Games"));
+            ConfigAccessor config = new ConfigAccessor(ultimateGames.getPlugin(), game.getName() + ".yml", new File(ultimateGames.getPlugin().getDataFolder() + "/Games"));
             config.saveConfig();
             gameConfigs.put(game, config);
         }

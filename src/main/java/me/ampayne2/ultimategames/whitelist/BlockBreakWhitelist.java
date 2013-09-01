@@ -14,11 +14,11 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
 
 public class BlockBreakWhitelist extends Whitelist {
-    
+
     private UltimateGames ultimateGames;
     private Map<Game, Set<Material>> blocks;
     private Map<Game, Boolean> useAsBlacklist = new HashMap<Game, Boolean>();
-    
+
     /**
      * The Block Break Whitelist.
      * @param ultimateGames The UltimateGames instance.
@@ -27,38 +27,24 @@ public class BlockBreakWhitelist extends Whitelist {
         this.ultimateGames = ultimateGames;
         reload();
     }
-    
+
     public void reload() {
         blocks = new HashMap<Game, Set<Material>>();
-        FileConfiguration blockBreakWhitelistConfig = ultimateGames.getConfigManager().getBlockBreakWhitelistConfig().getConfig();
         for (Game game : ultimateGames.getGameManager().getGames()) {
-            if (blockBreakWhitelistConfig.contains(game.getGameDescription().getName())) {
-                List<String> materialNames = blockBreakWhitelistConfig.getStringList(game.getGameDescription().getName() + ".Materials");
+            FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+            if (gameConfig.contains("BlockBreakWhitelist")) {
+                List<String> materialNames = gameConfig.getStringList("BlockBreakWhitelist");
                 Set<Material> materials = new HashSet<Material>();
                 for (String materialName : materialNames) {
                     materials.add(Material.valueOf(materialName));
                 }
                 blocks.put(game, materials);
-                useAsBlacklist.put(game, blockBreakWhitelistConfig.getBoolean(game.getGameDescription().getName() + ".Use-As-Blacklist", false));
-            } else {
-                FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
-                if (gameConfig.contains("BlockBreakWhitelist")) {
-                    List<String> materialNames = gameConfig.getStringList("BlockBreakWhitelist");
-                    Set<Material> materials = new HashSet<Material>();
-                    for (String materialName : materialNames) {
-                        materials.add(Material.valueOf(materialName));
-                    }
-                    blocks.put(game, materials);
-                    Boolean blacklist = gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false);
-                    useAsBlacklist.put(game, blacklist);
-                    blockBreakWhitelistConfig.set(game.getGameDescription().getName() + ".Materials", materialNames);
-                    blockBreakWhitelistConfig.set(game.getGameDescription().getName() + ".Use-As-Blacklist", blacklist);
-                    ultimateGames.getConfigManager().getBlockBreakWhitelistConfig().saveConfig();
-                }
+                Boolean blacklist = gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false);
+                useAsBlacklist.put(game, blacklist);
             }
         }
     }
-    
+
     /**
      * Checks if a certain material can be broken in a certain game.
      * @param game The game.
@@ -68,7 +54,7 @@ public class BlockBreakWhitelist extends Whitelist {
     public boolean canBreakMaterial(Game game, Material material) {
         return blocks.containsKey(game) && ((!useAsBlacklist.get(game) && blocks.get(game).contains(material)) || (useAsBlacklist.get(game) && !blocks.get(game).contains(material)));
     }
-    
+
     /**
      * Checks if a certain block can be broken in a certain game.
      * @param game The game.
@@ -78,7 +64,7 @@ public class BlockBreakWhitelist extends Whitelist {
     public boolean canBreakMaterial(Game game, Block block) {
         return blocks.containsKey(game) && ((!useAsBlacklist.get(game) && blocks.get(game).contains(block.getType())) || (useAsBlacklist.get(game) && !blocks.get(game).contains(block.getType())));
     }
-    
+
     /**
      * Gets the materials that can be broken in a certain game out of a list of materials.
      * @param game The game.
@@ -97,7 +83,7 @@ public class BlockBreakWhitelist extends Whitelist {
         }
         return whitelistedMaterials;
     }
-    
+
     /**
      * Gets the blocks that can be broken in a certain game out of a list of blocks.
      * @param game The game.

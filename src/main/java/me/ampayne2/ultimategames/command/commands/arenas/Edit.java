@@ -1,6 +1,7 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
@@ -17,7 +18,7 @@ public class Edit implements UGCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 0) {
-            ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.edit");
+            ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.edit");
             return;
         }
         String senderName = sender.getName();
@@ -25,13 +26,13 @@ public class Edit implements UGCommand {
             ArenaPlayer player = ultimateGames.getPlayerManager().getArenaPlayer(senderName);
             if (player.isEditing()) {
                 player.setEditing(false);
-                ultimateGames.getMessageManager().sendMessage(sender.getName(), "arenas.editoff");
+                ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.editoff");
             } else {
                 player.setEditing(true);
-                ultimateGames.getMessageManager().sendMessage(sender.getName(), "arenas.editon");
+                ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.editon");
             }
         } else {
-            ultimateGames.getMessageManager().sendMessage(sender.getName(), "arenas.notinarena");
+            ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.notinarena");
         }
     }
 

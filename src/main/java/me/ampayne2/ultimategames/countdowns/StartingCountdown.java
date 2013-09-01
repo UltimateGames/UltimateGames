@@ -25,12 +25,16 @@ import me.ampayne2.ultimategames.enums.ArenaStatus;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class StartingCountdown extends BukkitRunnable {
+    
     private UltimateGames ultimateGames;
     private Arena arena;
-    private Integer initialSeconds;
-    private Integer secondsLeft;
+    private int initialSeconds;
+    private int secondsLeft;
+    private final int FINAL_COUNTDOWN_THRESHOLD = 10;
+    private final int END_COUNTDOWN_TIME = 0;
+    private final long SECOND_LENGTH = 20L;
 
-    public StartingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft) {
+    public StartingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds, int secondsLeft) {
         this.ultimateGames = ultimateGames;
         this.arena = arena;
         this.initialSeconds = initialSeconds;
@@ -39,17 +43,17 @@ public class StartingCountdown extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (secondsLeft > 0 && initialSeconds.equals(secondsLeft)) {
+        if (secondsLeft > END_COUNTDOWN_TIME && initialSeconds == secondsLeft) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
             arena.setStatus(ArenaStatus.STARTING);
-        } else if (secondsLeft > 0 && secondsLeft <= 10) {
+        } else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-        } else if (secondsLeft == 0) {
+        } else if (secondsLeft == END_COUNTDOWN_TIME) {
         	ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             ultimateGames.getArenaManager().beginArena(arena);
         }
         if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
-            new StartingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1).runTaskLater(ultimateGames, 20L);
+            new StartingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1).runTaskLater(ultimateGames, SECOND_LENGTH);
         }
     }
 }

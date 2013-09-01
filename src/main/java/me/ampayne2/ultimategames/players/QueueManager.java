@@ -25,15 +25,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 
-public class QueueManager {
+public class QueueManager implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private Map<Arena, List<String>> queue = new HashMap<Arena, List<String>>();
 
     public QueueManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+    }
+    
+    @Override
+    public boolean load() {
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public boolean reload() {
+        clearAllQueues();
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        clearAllQueues();
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 
     /**
@@ -42,7 +72,7 @@ public class QueueManager {
      * @param arena The arena.
      * @return If the player is in the arena's queue or not.
      */
-    public Boolean isPlayerInQueue(String playerName, Arena arena) {
+    public boolean isPlayerInQueue(String playerName, Arena arena) {
         if (queue.containsKey(arena)) {
             List<String> players = queue.get(arena);
             for (String player : players) {
@@ -79,7 +109,7 @@ public class QueueManager {
      * @param playerName The player's name.
      * @param arena The arena.
      */
-    public void sendJoinMessage(String playerName, Arena arena) {
+    public void sendJoinMessage(Player player, Arena arena) {
         Integer queuePosition = queue.get(arena).size();
         String position = queuePosition.toString() + ultimateGames.getUtils().getOrdinalSuffix(queuePosition);
         Integer gamePosition = (int) Math.ceil((double) queue.get(arena).size() / arena.getMaxPlayers());
@@ -89,7 +119,7 @@ public class QueueManager {
         } else {
             wait = gamePosition.toString() + " games from now";
         }
-        ultimateGames.getMessageManager().sendReplacedMessage(playerName, "queues.join", arena.getName(), arena.getGame().getGameDescription().getName(), position, wait);
+        ultimateGames.getMessageManager().sendReplacedMessage(player, "queues.join", arena.getName(), arena.getGame().getName(), position, wait);
     }
 
     /**
@@ -97,8 +127,8 @@ public class QueueManager {
      * @param playerName The player's name.
      * @param arena The arena.
      */
-    public void sendLeaveMessage(String playerName, Arena arena) {
-        ultimateGames.getMessageManager().sendReplacedMessage(playerName, "queues.leave", arena.getName(), arena.getGame().getGameDescription().getName());
+    public void sendLeaveMessage(Player player, Arena arena) {
+        ultimateGames.getMessageManager().sendReplacedMessage(player, "queues.leave", arena.getName(), arena.getGame().getName());
     }
 
     /**
@@ -106,8 +136,9 @@ public class QueueManager {
      * @param playerName The player's name.
      * @param arena The arena.
      */
-    public void addPlayerToQueue(String playerName, Arena arena) {
-        removePlayerFromQueues(playerName);
+    public void addPlayerToQueue(Player player, Arena arena) {
+        String playerName = player.getName();
+        removePlayerFromQueues(player);
         if (queue.containsKey(arena)) {
             queue.get(arena).add(playerName);
         } else {
@@ -115,24 +146,25 @@ public class QueueManager {
             players.add(playerName);
             queue.put(arena, players);
         }
-        sendJoinMessage(playerName, arena);
+        sendJoinMessage(player, arena);
     }
 
     /**
      * Removes a player from all queues.
      * @param playerName The player's name.
      */
-    public void removePlayerFromQueues(String playerName) {
+    public void removePlayerFromQueues(Player player) {
+        String playerName = player.getName();
         Map<Arena, List<String>> copy = new HashMap<Arena, List<String>>(queue);
         Iterator<Entry<Arena, List<String>>> it = queue.entrySet().iterator();
         while (it.hasNext()) {
             Entry<Arena, List<String>> entry = it.next();
             Arena arena = entry.getKey();
             List<String> players = new ArrayList<String>(entry.getValue());
-            for (String player : players) {
-                if (playerName.equals(player)) {
-                    copy.get(arena).remove(player);
-                    sendLeaveMessage(playerName, arena);
+            for (String queuePlayer : players) {
+                if (playerName.equals(queuePlayer)) {
+                    copy.get(arena).remove(queuePlayer);
+                    sendLeaveMessage(player, arena);
                     if (copy.get(arena).isEmpty()) {
                         copy.remove(arena);
                     }
@@ -150,8 +182,8 @@ public class QueueManager {
     public void clearArenaQueue(Arena arena) {
         if (queue.containsKey(arena)) {
             List<String> players = queue.get(arena);
-            for (String player : players) {
-                sendLeaveMessage(player, arena);
+            for (String playerName : players) {
+                sendLeaveMessage(Bukkit.getPlayerExact(playerName), arena);
             }
             queue.remove(arena);
         }
@@ -164,9 +196,10 @@ public class QueueManager {
         Iterator<Entry<Arena, List<String>>> it = queue.entrySet().iterator();
         while (it.hasNext()) {
             Entry<Arena, List<String>> entry = it.next();
-            for (String player : entry.getValue()) {
-                sendLeaveMessage(player, entry.getKey());
+            for (String playerName : entry.getValue()) {
+                sendLeaveMessage(Bukkit.getPlayerExact(playerName), entry.getKey());
             }
         }
+        queue.clear();
     }
 }

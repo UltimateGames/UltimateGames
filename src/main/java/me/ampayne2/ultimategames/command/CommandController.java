@@ -24,6 +24,7 @@ import java.util.List;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.commands.ExtCmd;
+import me.ampayne2.ultimategames.command.commands.Reload;
 import me.ampayne2.ultimategames.command.commands.SetLobby;
 import me.ampayne2.ultimategames.command.commands.SpawnParticle;
 import me.ampayne2.ultimategames.command.commands.arenas.AddSpawn;
@@ -34,6 +35,7 @@ import me.ampayne2.ultimategames.command.commands.arenas.End;
 import me.ampayne2.ultimategames.command.commands.arenas.Join;
 import me.ampayne2.ultimategames.command.commands.arenas.Leave;
 import me.ampayne2.ultimategames.command.commands.arenas.Open;
+import me.ampayne2.ultimategames.command.commands.arenas.Spectate;
 import me.ampayne2.ultimategames.command.commands.arenas.Stop;
 
 import org.bukkit.command.Command;
@@ -65,6 +67,7 @@ public class CommandController extends JavaPlugin implements Listener {
         arena.addCommand("stop", "ultimategames.arena.stop", new Stop(ultimateGames));
         arena.addCommand("join", "ultimategames.arena.join", new Join(ultimateGames));
         arena.addCommand("edit", "ultimategames.arena.edit", new Edit(ultimateGames));
+        arena.addCommand("spectate", "ultimategames.arena.spectate", new Spectate(ultimateGames));
         mainCommand.addCommand("arena", null, arena);
         
         mainCommand.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
@@ -74,6 +77,8 @@ public class CommandController extends JavaPlugin implements Listener {
         mainCommand.addCommand("SpawnParticle", "ultimategames.spawnparticle", new SpawnParticle());
         
         mainCommand.addCommand("cmd", "ultimategames.extcmd", new ExtCmd(ultimateGames));
+        
+        mainCommand.addCommand("reload", "ultimategames.reload", new Reload(ultimateGames));
     }
 
     @Override

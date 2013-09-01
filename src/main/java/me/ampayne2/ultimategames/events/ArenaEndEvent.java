@@ -21,29 +21,30 @@ package me.ampayne2.ultimategames.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.EndType;
-import me.ampayne2.ultimategames.games.GameDescription;
 import me.ampayne2.ultimategames.games.GameScoreContainer;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class GameEndEvent extends Event {
+public class ArenaEndEvent extends Event {
+    
     private static final HandlerList handlers = new HandlerList();
+    private Arena arena;
     private List<String> players = new ArrayList<String>();
-    private GameDescription gameDescription;
     private GameScoreContainer scoreContainer;
     private EndType endType;
 
-    public GameEndEvent(GameDescription gameDescription, List<String> players, GameScoreContainer scoreContainer, EndType endType) {
-        this.gameDescription = gameDescription;
+    public ArenaEndEvent(Arena arena, List<String> players, GameScoreContainer scoreContainer, EndType endType) {
+        this.arena = arena;
         this.players = players;
         this.scoreContainer = scoreContainer;
         this.endType = endType;
     }
-
-    public GameDescription getGameDescription() {
-        return gameDescription;
+    
+    public Arena getArena() {
+        return arena;
     }
 
     public List<String> getPlayers() {

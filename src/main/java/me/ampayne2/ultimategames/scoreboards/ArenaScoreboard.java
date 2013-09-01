@@ -29,6 +29,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 public class ArenaScoreboard {
+    
     private Scoreboard scoreboard;
     private String name;
 
@@ -146,7 +147,7 @@ public class ArenaScoreboard {
      * @param name Name of the element.
      * @return The score.
      */
-    public Integer getScore(String name) {
+    public int getScore(String name) {
         return scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).getScore();
     }
 

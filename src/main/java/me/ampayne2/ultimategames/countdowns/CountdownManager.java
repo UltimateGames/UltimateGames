@@ -21,11 +21,14 @@ package me.ampayne2.ultimategames.countdowns;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 
-public class CountdownManager {
+public class CountdownManager implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private List<Arena> starting = new ArrayList<Arena>();
     private List<Arena> ending = new ArrayList<Arena>();
@@ -34,12 +37,39 @@ public class CountdownManager {
         this.ultimateGames = ultimateGames;
     }
 
+    @Override
+    public boolean load() {
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public boolean reload() {
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        for (Arena arena : starting) {
+            arena.setStatus(ArenaStatus.OPEN);
+        }
+        starting.clear();
+        ending.clear();
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
+    }
+
     /**
      * Checks to see if an arena has a starting countdown running.
      * @param arena The arena.
      * @return If the arena has a starting countdown running.
      */
-    public Boolean isStartingCountdownEnabled(Arena arena) {
+    public boolean isStartingCountdownEnabled(Arena arena) {
         return starting.contains(arena);
     }
 
@@ -48,7 +78,7 @@ public class CountdownManager {
      * @param arena The arena.
      * @return If the arena has an ending countdown running.
      */
-    public Boolean isEndingCountdownEnabled(Arena arena) {
+    public boolean isEndingCountdownEnabled(Arena arena) {
         return ending.contains(arena);
     }
 
@@ -99,4 +129,5 @@ public class CountdownManager {
             ending.remove(arena);
         }
     }
+    
 }

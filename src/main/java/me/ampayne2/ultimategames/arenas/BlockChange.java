@@ -3,6 +3,9 @@ package me.ampayne2.ultimategames.arenas;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+/**
+ * Contains basic information about a block used for logging.
+ */
 public class BlockChange {
     
     public Arena arena;

@@ -18,5 +18,5 @@
  */
 package me.ampayne2.ultimategames.events;
 
-public class GameResetEvent {
+public class ArenaLeaveEvent {
 }

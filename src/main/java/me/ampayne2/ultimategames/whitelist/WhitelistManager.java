@@ -1,9 +1,12 @@
 package me.ampayne2.ultimategames.whitelist;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 
-public class WhitelistManager {
+public class WhitelistManager implements Manager {
     
+    private boolean loaded = false;
+    private UltimateGames ultimateGames;
     private BlockPlaceWhitelist blockPlaceWhitelist;
     private BlockBreakWhitelist blockBreakWhitelist;
     
@@ -12,8 +15,30 @@ public class WhitelistManager {
      * @param ultimateGames The UltimateGames instance.
      */
     public WhitelistManager(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
+    
+    @Override
+    public boolean load() {
+        return reload();
+    }
+
+    @Override
+    public boolean reload() {
         blockPlaceWhitelist = new BlockPlaceWhitelist(ultimateGames);
         blockBreakWhitelist = new BlockBreakWhitelist(ultimateGames);
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
     
     /**

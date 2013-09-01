@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.SignType;
@@ -36,22 +37,51 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 
 @SuppressWarnings("unchecked")
-public class UGSignManager {
+public class UGSignManager implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private List<LobbySign> lobbySigns = new ArrayList<LobbySign>();
     private List<ClickInputSign> clickInputSigns = new ArrayList<ClickInputSign>();
     private List<RedstoneInputSign> redstoneInputSigns = new ArrayList<RedstoneInputSign>();
     private List<TextOutputSign> textOutputSigns = new ArrayList<TextOutputSign>();
     private List<RedstoneOutputSign> redstoneOutputSigns = new ArrayList<RedstoneOutputSign>();
-    private static final Integer WORLD_INDEX = 0;
-    private static final Integer X_INDEX = 1;
-    private static final Integer Y_INDEX = 2;
-    private static final Integer Z_INDEX = 3;
-    private static final Integer LABEL_INDEX = 4;
+    private static final int WORLD_INDEX = 0;
+    private static final int X_INDEX = 1;
+    private static final int Y_INDEX = 2;
+    private static final int Z_INDEX = 3;
+    private static final int LABEL_INDEX = 4;
+    private static final String PATH_SEPARATOR = ".";
 
     public UGSignManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+    }
+
+    @Override
+    public boolean load() {
+        return reload();
+    }
+
+    @Override
+    public boolean reload() {
         loadUGSigns();
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        lobbySigns.clear();
+        clickInputSigns.clear();
+        redstoneInputSigns.clear();
+        textOutputSigns.clear();
+        redstoneOutputSigns.clear();
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 
     /**
@@ -433,11 +463,13 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateUGSignsOfArena(Arena arena) {
-        updateLobbySignsOfArena(arena);
-        updateClickInputSignsOfArena(arena);
-        updateRedstoneInputSignsOfArena(arena);
-        updateTextOutputSignsOfArena(arena);
-        updateRedstoneOutputSignsOfArena(arena);
+        if (loaded) {
+            updateLobbySignsOfArena(arena);
+            updateClickInputSignsOfArena(arena);
+            updateRedstoneInputSignsOfArena(arena);
+            updateTextOutputSignsOfArena(arena);
+            updateRedstoneOutputSignsOfArena(arena);
+        }
     }
 
     /**
@@ -445,11 +477,13 @@ public class UGSignManager {
      * @param game The game.
      */
     public void updateUGSignsOfGame(Game game) {
-        updateLobbySignsOfGame(game);
-        updateClickInputSignsOfGame(game);
-        updateRedstoneInputSignsOfGame(game);
-        updateTextOutputSignsOfGame(game);
-        updateRedstoneOutputSignsOfGame(game);
+        if (loaded) {
+            updateLobbySignsOfGame(game);
+            updateClickInputSignsOfGame(game);
+            updateRedstoneInputSignsOfGame(game);
+            updateTextOutputSignsOfGame(game);
+            updateRedstoneOutputSignsOfGame(game);
+        }
     }
 
     /**
@@ -457,9 +491,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateLobbySignsOfArena(Arena arena) {
-        List<LobbySign> arenaSigns = getLobbySignsOfArena(arena);
-        for (LobbySign lobbySign : arenaSigns) {
-            lobbySign.update();
+        if (loaded) {
+            List<LobbySign> arenaSigns = getLobbySignsOfArena(arena);
+            for (LobbySign lobbySign : arenaSigns) {
+                lobbySign.update();
+            }
         }
     }
 
@@ -468,9 +504,11 @@ public class UGSignManager {
      * @param game The game.
      */
     public void updateLobbySignsOfGame(Game game) {
-        List<LobbySign> gameSigns = getLobbySignsOfGame(game);
-        for (LobbySign lobbySign : gameSigns) {
-            lobbySign.update();
+        if (loaded) {
+            List<LobbySign> gameSigns = getLobbySignsOfGame(game);
+            for (LobbySign lobbySign : gameSigns) {
+                lobbySign.update();
+            }
         }
     }
 
@@ -479,9 +517,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateClickInputSignsOfArena(Arena arena) {
-        List<ClickInputSign> ciSigns = getClickInputSignsOfArena(arena);
-        for (ClickInputSign ciSign : ciSigns) {
-            ciSign.update();
+        if (loaded) {
+            List<ClickInputSign> ciSigns = getClickInputSignsOfArena(arena);
+            for (ClickInputSign ciSign : ciSigns) {
+                ciSign.update();
+            }
         }
     }
 
@@ -490,9 +530,11 @@ public class UGSignManager {
      * @param game The game.
      */
     public void updateClickInputSignsOfGame(Game game) {
-        List<ClickInputSign> ciSigns = getClickInputSignsOfGame(game);
-        for (ClickInputSign ciSign : ciSigns) {
-            ciSign.update();
+        if (loaded) {
+            List<ClickInputSign> ciSigns = getClickInputSignsOfGame(game);
+            for (ClickInputSign ciSign : ciSigns) {
+                ciSign.update();
+            }
         }
     }
 
@@ -501,9 +543,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateRedstoneInputSignsOfArena(Arena arena) {
-        List<RedstoneInputSign> riSigns = getRedstoneInputSignsOfArena(arena);
-        for (RedstoneInputSign riSign : riSigns) {
-            riSign.update();
+        if (loaded) {
+            List<RedstoneInputSign> riSigns = getRedstoneInputSignsOfArena(arena);
+            for (RedstoneInputSign riSign : riSigns) {
+                riSign.update();
+            }
         }
     }
 
@@ -512,9 +556,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateRedstoneInputSignsOfGame(Game game) {
-        List<RedstoneInputSign> riSigns = getRedstoneInputSignsOfGame(game);
-        for (RedstoneInputSign riSign : riSigns) {
-            riSign.update();
+        if (loaded) {
+            List<RedstoneInputSign> riSigns = getRedstoneInputSignsOfGame(game);
+            for (RedstoneInputSign riSign : riSigns) {
+                riSign.update();
+            }
         }
     }
 
@@ -523,9 +569,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateTextOutputSignsOfArena(Arena arena) {
-        List<TextOutputSign> toSigns = getTextOutputSignsOfArena(arena);
-        for (TextOutputSign toSign : toSigns) {
-            toSign.update();
+        if (loaded) {
+            List<TextOutputSign> toSigns = getTextOutputSignsOfArena(arena);
+            for (TextOutputSign toSign : toSigns) {
+                toSign.update();
+            }
         }
     }
 
@@ -534,9 +582,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateTextOutputSignsOfGame(Game game) {
-        List<TextOutputSign> toSigns = getTextOutputSignsOfGame(game);
-        for (TextOutputSign toSign : toSigns) {
-            toSign.update();
+        if (loaded) {
+            List<TextOutputSign> toSigns = getTextOutputSignsOfGame(game);
+            for (TextOutputSign toSign : toSigns) {
+                toSign.update();
+            }
         }
     }
 
@@ -545,9 +595,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateRedstoneOutputSignsOfArena(Arena arena) {
-        List<RedstoneOutputSign> roSigns = getRedstoneOutputSignsOfArena(arena);
-        for (RedstoneOutputSign roSign : roSigns) {
-            roSign.update();
+        if (loaded) {
+            List<RedstoneOutputSign> roSigns = getRedstoneOutputSignsOfArena(arena);
+            for (RedstoneOutputSign roSign : roSigns) {
+                roSign.update();
+            }
         }
     }
 
@@ -556,9 +608,11 @@ public class UGSignManager {
      * @param arena The arena.
      */
     public void updateRedstoneOutputSignsOfGame(Game game) {
-        List<RedstoneOutputSign> roSigns = getRedstoneOutputSignsOfGame(game);
-        for (RedstoneOutputSign roSign : roSigns) {
-            roSign.update();
+        if (loaded) {
+            List<RedstoneOutputSign> roSigns = getRedstoneOutputSignsOfGame(game);
+            for (RedstoneOutputSign roSign : roSigns) {
+                roSign.update();
+            }
         }
     }
 
@@ -567,48 +621,50 @@ public class UGSignManager {
      * @param ugSign The UG Sign to add.
      */
     public UGSign createUGSign(String label, Sign sign, Arena arena, SignType signType) {
-        FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
-        String signPath = signType.toString() + "." + arena.getGame().getGameDescription().getName() + "." + arena.getName();
-        List<String> signInfo = new ArrayList<String>();
-        signInfo.add(WORLD_INDEX, sign.getWorld().getName());
-        signInfo.add(X_INDEX, Integer.toString(sign.getX()));
-        signInfo.add(Y_INDEX, Integer.toString(sign.getY()));
-        signInfo.add(Z_INDEX, Integer.toString(sign.getZ()));
-        if (signType.hasLabel()) {
-            signInfo.add(LABEL_INDEX, label);
-        }
-        List<List<String>> ugSigns;
-        if (ugSignConfig.contains(signPath)) {
-            ugSigns = (List<List<String>>) ugSignConfig.getList(signPath);
-            ugSigns.add(signInfo);
-        } else {
-            ugSigns = new ArrayList<List<String>>();
-            ugSigns.add(signInfo);
-            ugSignConfig.createSection(signPath);
-        }
-        ugSignConfig.set(signPath, ugSigns);
-        ultimateGames.getConfigManager().getUGSignConfig().saveConfig();
-        switch (signType) {
-        case LOBBY:
-            LobbySign lobbySign = new LobbySign(ultimateGames, sign, arena);
-            lobbySigns.add(lobbySign);
-            return lobbySign;
-        case CLICK_INPUT:
-            ClickInputSign clickInputSign = new ClickInputSign(label, sign, arena);
-            clickInputSigns.add(clickInputSign);
-            return clickInputSign;
-        case REDSTONE_INPUT:
-            RedstoneInputSign redstoneInputSign = new RedstoneInputSign(label, sign, arena);
-            redstoneInputSigns.add(redstoneInputSign);
-            return redstoneInputSign;
-        case TEXT_OUTPUT:
-            TextOutputSign textOutputSign = new TextOutputSign(label, sign, arena);
-            textOutputSigns.add(textOutputSign);
-            return textOutputSign;
-        case REDSTONE_OUTPUT:
-            RedstoneOutputSign redstoneOutputSign = new RedstoneOutputSign(label, sign, arena);
-            redstoneOutputSigns.add(redstoneOutputSign);
-            return redstoneOutputSign;
+        if (loaded) {
+            FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
+            String signPath = signType.toString() + PATH_SEPARATOR + arena.getGame().getName() + PATH_SEPARATOR + arena.getName();
+            List<String> signInfo = new ArrayList<String>();
+            signInfo.add(WORLD_INDEX, sign.getWorld().getName());
+            signInfo.add(X_INDEX, Integer.toString(sign.getX()));
+            signInfo.add(Y_INDEX, Integer.toString(sign.getY()));
+            signInfo.add(Z_INDEX, Integer.toString(sign.getZ()));
+            if (signType.hasLabel()) {
+                signInfo.add(LABEL_INDEX, label);
+            }
+            List<List<String>> ugSigns;
+            if (ugSignConfig.contains(signPath)) {
+                ugSigns = (List<List<String>>) ugSignConfig.getList(signPath);
+                ugSigns.add(signInfo);
+            } else {
+                ugSigns = new ArrayList<List<String>>();
+                ugSigns.add(signInfo);
+                ugSignConfig.createSection(signPath);
+            }
+            ugSignConfig.set(signPath, ugSigns);
+            ultimateGames.getConfigManager().getUGSignConfig().saveConfig();
+            switch (signType) {
+            case LOBBY:
+                LobbySign lobbySign = new LobbySign(ultimateGames, sign, arena);
+                lobbySigns.add(lobbySign);
+                return lobbySign;
+            case CLICK_INPUT:
+                ClickInputSign clickInputSign = new ClickInputSign(label, sign, arena);
+                clickInputSigns.add(clickInputSign);
+                return clickInputSign;
+            case REDSTONE_INPUT:
+                RedstoneInputSign redstoneInputSign = new RedstoneInputSign(label, sign, arena);
+                redstoneInputSigns.add(redstoneInputSign);
+                return redstoneInputSign;
+            case TEXT_OUTPUT:
+                TextOutputSign textOutputSign = new TextOutputSign(label, sign, arena);
+                textOutputSigns.add(textOutputSign);
+                return textOutputSign;
+            case REDSTONE_OUTPUT:
+                RedstoneOutputSign redstoneOutputSign = new RedstoneOutputSign(label, sign, arena);
+                redstoneOutputSigns.add(redstoneOutputSign);
+                return redstoneOutputSign;
+            }
         }
         return null;
     }
@@ -619,15 +675,15 @@ public class UGSignManager {
      */
     public void removeUGSign(Sign sign) {
         UGSign ugSign = getUGSign(sign);
-        if (ugSign != null) {
+        if (loaded && ugSign != null) {
             FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
             String world = sign.getWorld().getName();
             Integer x = sign.getX();
             Integer y = sign.getY();
             Integer z = sign.getZ();
             SignType signType = getSignType(ugSign);
-            String gamePath = signType.toString() + "." + ugSign.getArena().getGame().getGameDescription().getName();
-            String arenaPath = gamePath + "." + ugSign.getArena().getName();
+            String gamePath = signType.toString() + PATH_SEPARATOR + ugSign.getArena().getGame().getName();
+            String arenaPath = gamePath + PATH_SEPARATOR + ugSign.getArena().getName();
             if (ugSignConfig.contains(arenaPath)) {
                 List<List<String>> ugSigns = (List<List<String>>) ugSignConfig.getList(arenaPath);
                 List<List<String>> newUGSigns = new ArrayList<List<String>>(ugSigns);
@@ -670,16 +726,21 @@ public class UGSignManager {
      * Loads all of the Ultimate Game signs.
      */
     public void loadUGSigns() {
+        lobbySigns.clear();
+        clickInputSigns.clear();
+        redstoneInputSigns.clear();
+        textOutputSigns.clear();
+        redstoneOutputSigns.clear();
         FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
         for (SignType signType : EnumSet.allOf(SignType.class)) {
             String signTypeName = signType.toString();
             if (ugSignConfig.getConfigurationSection(signTypeName) != null) {
                 for (String gameKey : ugSignConfig.getConfigurationSection(signTypeName).getKeys(false)) {
                     if (ultimateGames.getGameManager().gameExists(gameKey)) {
-                        String gamePath = signTypeName + "." + gameKey;
+                        String gamePath = signTypeName + PATH_SEPARATOR + gameKey;
                         for (String arenaKey : ugSignConfig.getConfigurationSection(gamePath).getKeys(false)) {
                             if (ultimateGames.getArenaManager().arenaExists(arenaKey, gameKey)) {
-                                String arenaPath = gamePath + "." + arenaKey;
+                                String arenaPath = gamePath + PATH_SEPARATOR + arenaKey;
                                 List<List<String>> ugSigns = (List<List<String>>) ugSignConfig.getList(arenaPath);
                                 for (List<String> signInfo : ugSigns) {
                                     World world = Bukkit.getWorld(signInfo.get(WORLD_INDEX));

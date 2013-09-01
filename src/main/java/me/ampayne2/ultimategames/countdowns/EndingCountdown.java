@@ -26,13 +26,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class EndingCountdown extends BukkitRunnable {
+    
     private UltimateGames ultimateGames;
     private Arena arena;
-    private Integer initialSeconds;
-    private Integer secondsLeft;
+    private int initialSeconds;
+    private int secondsLeft;
     private Boolean expDisplay;
+    private final int FINAL_COUNTDOWN_THRESHOLD = 10;
+    private final int END_COUNTDOWN_TIME = 0;
+    private final long SECOND_LENGTH = 20L;
 
-    public EndingCountdown(UltimateGames ultimateGames, Arena arena, Integer initialSeconds, Integer secondsLeft, Boolean expDisplay) {
+    public EndingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds, int secondsLeft, Boolean expDisplay) {
         this.ultimateGames = ultimateGames;
         this.arena = arena;
         this.initialSeconds = initialSeconds;
@@ -48,14 +52,14 @@ public class EndingCountdown extends BukkitRunnable {
                 player.setLevel(secondsLeft);
             }
         }
-        if (secondsLeft > 0 && secondsLeft <= 10) {
+        if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
-        } else if (secondsLeft == 0) {
+        } else if (secondsLeft == END_COUNTDOWN_TIME) {
         	ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             ultimateGames.getArenaManager().endArena(arena);
         }
         if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
-            new EndingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1, expDisplay).runTaskLater(ultimateGames, 20L);
+            new EndingCountdown(ultimateGames, arena, initialSeconds, secondsLeft - 1, expDisplay).runTaskLater(ultimateGames, SECOND_LENGTH);
         }
     }
 }

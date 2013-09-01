@@ -18,6 +18,8 @@
  */
 package me.ampayne2.ultimategames.signs;
 
+import java.util.List;
+
 import me.ampayne2.ultimategames.arenas.Arena;
 
 import org.bukkit.Material;
@@ -47,7 +49,7 @@ public abstract class UGSign {
      * Gets the UGSign's updated lines.
      * @return sign The UGSign's updated lines.
      */
-    public abstract String[] getUpdatedLines();
+    public abstract List<String> getUpdatedLines();
 
     /**
      * Gets the UGSign's Sign.
@@ -71,9 +73,11 @@ public abstract class UGSign {
     public void update() {
         Material material = sign.getLocation().getBlock().getType();
         if (material == Material.WALL_SIGN || material == Material.SIGN_POST) {
-            String[] lines = getUpdatedLines();
+            List<String> lines = getUpdatedLines();
             for (int i = 0; i < 4; i++) {
-                sign.setLine(i, lines[i]);
+                if (lines.size() > i) {
+                    sign.setLine(i, lines.get(i));
+                }
             }
             sign.update();
         }

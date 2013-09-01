@@ -40,6 +40,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+/**
+ * The API used for creating an Ultimate Game.
+ * Extend this class, implement all the abstract methods, and override any non-abstract methods you may need.
+ */
 public abstract class GamePlugin implements Listener {
 
     /**
@@ -127,18 +131,40 @@ public abstract class GamePlugin implements Listener {
 
     /**
      * Handle player joining.
+     * @param player The player joining.
      * @param arena The arena the player is joining.
-     * @param playerName The ArenaPlayer object of the player joining.
      * @return True if the player is added else false.
      */
     public abstract Boolean addPlayer(Player player, Arena arena);
 
     /**
      * Handle player leaving.
+     * @param player The player leaving.
      * @param arena The arena the player is leaving.
-     * @param arenaPlayer The ArenaPlayer object of the player leaving.
      */
     public abstract void removePlayer(Player player, Arena arena);
+    
+    /**
+     * Handle spectator joining.
+     * @param player The spectator joining.
+     * @param arena The arena the spectator is joining.
+     * @return True if the spectator is added else false.
+     */
+    public abstract Boolean addSpectator(Player player, Arena arena);
+    
+    /**
+     * Handle spectator leaving.
+     * @param player The spectator leaving.
+     * @param arena The arena the spectator is leaving.
+     */
+    public abstract void removeSpectator(Player player, Arena arena);
+    
+    /**
+     * Handle turning players into spectators.
+     * @param player The player to turn into a spectator.
+     * @param arena The arena the player is in.
+     */
+    public void makePlayerSpectator(Player player, Arena arena) {}
 
     /**
      * Handle UG Sign creation.

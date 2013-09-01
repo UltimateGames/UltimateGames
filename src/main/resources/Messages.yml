@@ -9,11 +9,14 @@ messages:
       edit: "&4Usage: /ug arena edit"
       end: "&4Usage: /ug arena end [arena] [game]"
       join: "&4Usage: /ug arena join [arena] [game]"
-      leave: "&4Usage: /ug arena leave"
       open: "&4Usage: /ug arena open [arena] [game]"
       stop: "&4Usage: /ug arena stop [arena] [game]"
+      spectate: "&4Usage: /ug arena spectate [arena] [game]"
+    leave: "&4Usage: /ug leave"
+    extcmd: "&4Usage: /ug cmd [command to execute]"
     setlobby: "&4Usage: /ug setlobby"
     spawnparticle: "&4Usage: /ug spawnparticle [name] [offset x] [offset y] [offset z] [speed] [amount]"
+    reload: "&4Usage: /ug reload"
   
   games:
     doesntexist: "Game doesn't exist."

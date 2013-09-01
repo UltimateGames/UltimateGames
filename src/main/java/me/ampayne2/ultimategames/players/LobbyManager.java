@@ -18,18 +18,30 @@
  */
 package me.ampayne2.ultimategames.players;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class LobbyManager {
+public class LobbyManager implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private Location lobby;
 
     public LobbyManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+    }
+    
+    @Override
+    public boolean load() {
+        return reload();
+    }
+    
+    @Override
+    public boolean reload() {
         FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getLobbyConfig().getConfig();
         if (lobbyConfig.contains("world") && lobbyConfig.contains("x") && lobbyConfig.contains("y") && lobbyConfig.contains("z") && lobbyConfig.contains("pitch") && lobbyConfig.contains("yaw")) {
             String world = lobbyConfig.getString("world");
@@ -43,6 +55,19 @@ public class LobbyManager {
             location.setYaw(yaw);
             this.lobby = location;
         }
+        loaded = true;
+        return true;
+    }
+    
+    @Override
+    public void unload() {
+        lobby = null;
+        loaded = false;
+    }
+    
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 
     public Location getLobby() {

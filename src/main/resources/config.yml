@@ -5,7 +5,6 @@ TextOutputSignPrefix: "[ug tosign]"
 RedstoneOutputSignPrefix: "[ug rosign]"
 enableAPI: true
 APIPort: 8080
-
 Database:
   Type: "sqlite"
   Address: "127.0.0.1"
@@ -14,3 +13,4 @@ Database:
   Password: ""
   Database: ""
   Prefix: "ug_"
+debug: false

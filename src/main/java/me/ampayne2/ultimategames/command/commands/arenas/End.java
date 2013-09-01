@@ -23,6 +23,7 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class End implements UGCommand {
     private UltimateGames ultimateGames;
@@ -34,7 +35,7 @@ public class End implements UGCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 2) {
-            ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.end");
+            ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.end");
             return;
         }
         String arenaName = args[0];

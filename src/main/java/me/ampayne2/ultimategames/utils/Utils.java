@@ -31,10 +31,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.material.Attachable;
 import org.bukkit.util.BlockIterator;
 
 public class Utils {
+
     private UltimateGames ultimateGames;
+    private final int LAST_DIGIT_DIVIDER = 10;
+    private final int LAST_TWO_DIGIT_DIVIDER = 100;
+    private final int LAST_TWO_DIGITS_ELEVEN = 11;
+    private final int LAST_TWO_DIGITS_TWELVE = 12;
+    private final int LAST_TWO_DIGITS_THIRTEEN = 13;
+    private final long AUTO_RESPAWN_DELAY = 1L;
 
     public Utils(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -47,17 +55,17 @@ public class Utils {
      */
     public String getOrdinalSuffix(int value) {
         Integer roundedValue = Math.abs(value);
-        final int lastDigit = roundedValue % 10;
-        final int last2Digits = roundedValue % 100;
+        final int lastDigit = roundedValue % LAST_DIGIT_DIVIDER;
+        final int last2Digits = roundedValue % LAST_TWO_DIGIT_DIVIDER;
         switch (lastDigit) {
         case 1:
-            return last2Digits == 11 ? "th" : "st";
+            return last2Digits == LAST_TWO_DIGITS_ELEVEN ? "th" : "st";
 
         case 2:
-            return last2Digits == 12 ? "th" : "nd";
+            return last2Digits == LAST_TWO_DIGITS_TWELVE ? "th" : "nd";
 
         case 3:
-            return last2Digits == 13 ? "th" : "rd";
+            return last2Digits == LAST_TWO_DIGITS_THIRTEEN ? "th" : "rd";
 
         default:
             return "th";
@@ -92,51 +100,51 @@ public class Utils {
         Color color;
         switch (chatColor) {
         case BLACK:
-            color = Color.fromRGB(0, 0, 0);
+            color = Color.BLACK;
             break;
         case DARK_BLUE:
-            color = Color.fromRGB(0, 0, 42);
+            color = Color.NAVY;
             break;
         case DARK_GREEN:
-            color = Color.fromRGB(0, 42, 0);
+            color = Color.GREEN;
             break;
         case DARK_AQUA:
-            color = Color.fromRGB(0, 42, 42);
+            color = Color.AQUA;
             break;
         case DARK_RED:
-            color = Color.fromRGB(42, 0, 0);
+            color = Color.MAROON;
             break;
         case DARK_PURPLE:
-            color = Color.fromRGB(42, 0, 42);
+            color = Color.PURPLE;
             break;
         case GOLD:
-            color = Color.fromRGB(42, 42, 0);
+            color = Color.ORANGE;
             break;
         case GRAY:
-            color = Color.fromRGB(42, 42, 42);
+            color = Color.SILVER;
             break;
         case DARK_GRAY:
-            color = Color.fromRGB(21, 21, 21);
+            color = Color.GRAY;
             break;
         case BLUE:
-            color = Color.fromRGB(21, 21, 63);
+            color = Color.BLUE;
             break;
         case GREEN:
-            color = Color.fromRGB(21, 63, 21);
+            color = Color.LIME;
             break;
         case AQUA:
-            color = Color.fromRGB(21, 63, 63);
+            color = Color.TEAL;
         case RED:
-            color = Color.fromRGB(63, 21, 21);
+            color = Color.RED;
             break;
         case LIGHT_PURPLE:
-            color = Color.fromRGB(63, 21, 63);
+            color = Color.FUCHSIA;
             break;
         case YELLOW:
-            color = Color.fromRGB(63, 63, 21);
+            color = Color.YELLOW;
             break;
         case WHITE:
-            color = Color.fromRGB(63, 63, 63);
+            color = Color.WHITE;
             break;
         default:
             color = Color.fromRGB(63, 63, 63);
@@ -154,9 +162,9 @@ public class Utils {
     public ItemStack createInstructionBook(Game game) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setTitle(game.getGameDescription().getName() + " Instructions");
-        meta.setAuthor(game.getGameDescription().getAuthor());
-        for (String page : game.getGameDescription().getInstructionPages()) {
+        meta.setTitle(game.getName() + " Instructions");
+        meta.setAuthor(game.getAuthor());
+        for (String page : game.getInstructionPages()) {
             meta.addPage(ChatColor.translateAlternateColorCodes('&', page));
         }
         book.setItemMeta(meta);
@@ -210,7 +218,7 @@ public class Utils {
                     ultimateGames.getMessageManager().debug(e);
                 }
             }
-        }, 1L);
+        }, AUTO_RESPAWN_DELAY);
     }
 
     /**
@@ -267,6 +275,11 @@ public class Utils {
         return itemStack;
     }
 
+    /**
+     * Checks if a material has physics.
+     * @param material The material.
+     * @return True if the material has physics, else false.
+     */
     public Boolean hasPhysics(Material material) {
         switch (material) {
         case ACTIVATOR_RAIL:
@@ -308,4 +321,15 @@ public class Utils {
             return false;
         }
     }
+
+    /**
+     * Checks if a block is attached to a block.
+     * @param attached The block that might be attached.
+     * @param block The support block.
+     * @return True if the block is attached to the block, else false.
+     */
+    public Boolean isAttachedToBlock(Block attached, Block block) {
+        return attached.getState().getData() instanceof Attachable && attached.getRelative(((Attachable) attached.getState().getData()).getAttachedFace()).equals(block);
+    }
+
 }

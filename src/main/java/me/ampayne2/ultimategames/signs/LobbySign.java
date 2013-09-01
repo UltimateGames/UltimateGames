@@ -18,6 +18,9 @@
  */
 package me.ampayne2.ultimategames.signs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
@@ -27,10 +30,12 @@ import me.ampayne2.ultimategames.players.QueueManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class LobbySign extends UGSign {
+    
     private UltimateGames ultimateGames;
     private Arena arena;
 
@@ -46,45 +51,44 @@ public class LobbySign extends UGSign {
     public void onSignTrigger(Event event) {
         // TODO: Permission check
         PlayerInteractEvent interactEvent = (PlayerInteractEvent) event;
+        Player player = interactEvent.getPlayer();
         ArenaStatus arenaStatus = arena.getStatus();
         if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
             // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-            ultimateGames.getPlayerManager().addPlayerToArena(interactEvent.getPlayer(), arena, true);
+            ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
             return;
         } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
             QueueManager queue = ultimateGames.getQueueManager();
-            String playerName = interactEvent.getPlayer().getName();
-            if (queue.isPlayerInQueue(playerName, arena)) {
-                queue.removePlayerFromQueues(playerName);
+            if (queue.isPlayerInQueue(player.getName(), arena)) {
+                queue.removePlayerFromQueues(player);
             } else {
-                queue.addPlayerToQueue(playerName, arena);
+                queue.addPlayerToQueue(player, arena);
             }
         }
     }
 
     @Override
-    public String[] getUpdatedLines() {
+    public List<String> getUpdatedLines() {
 
-        String[] lines = new String[4];
+        List<String> lines = new ArrayList<String>();
 
         ArenaStatus arenaStatus = arena.getStatus();
         ChatColor statusColor = arenaStatus.getColor();
 
         if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
-            lines[0] = statusColor + "[STOPPED]";
+            lines.add(statusColor + "[STOPPED]");
         } else {
-            lines[0] = statusColor + "[" + arenaStatus.toString() + "]";
+            lines.add(statusColor + "[" + arenaStatus.toString() + "]");
         }
 
-        lines[1] = arena.getGame().getGameDescription().getName();
+        lines.add(arena.getGame().getName());
+        lines.add(arena.getName());
 
-        lines[2] = arena.getName();
-
-        PlayerType playerType = arena.getGame().getGameDescription().getPlayerType();
+        PlayerType playerType = arena.getGame().getPlayerType();
         if (playerType == PlayerType.INFINITE) {
-            lines[3] = "";
+            lines.add("");
         } else {
-            lines[3] = statusColor + Integer.toString(arena.getPlayers().size()) + " / " + Integer.toString(arena.getMaxPlayers());
+            lines.add(statusColor + Integer.toString(arena.getPlayers().size()) + " / " + Integer.toString(arena.getMaxPlayers()));
         }
 
         return lines;

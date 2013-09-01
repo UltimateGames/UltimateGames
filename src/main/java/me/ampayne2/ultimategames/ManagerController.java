@@ -1,0 +1,193 @@
+package me.ampayne2.ultimategames;
+
+import com.alta189.simplesave.exceptions.ConnectionException;
+import com.alta189.simplesave.exceptions.TableRegistrationException;
+
+import me.ampayne2.ultimategames.api.PointManager;
+import me.ampayne2.ultimategames.arenas.ArenaListener;
+import me.ampayne2.ultimategames.arenas.ArenaManager;
+import me.ampayne2.ultimategames.arenas.LogManager;
+import me.ampayne2.ultimategames.arenas.SpawnpointManager;
+import me.ampayne2.ultimategames.chests.UGChestManager;
+import me.ampayne2.ultimategames.command.CommandController;
+import me.ampayne2.ultimategames.countdowns.CountdownManager;
+import me.ampayne2.ultimategames.database.DatabaseManager;
+import me.ampayne2.ultimategames.files.ConfigManager;
+import me.ampayne2.ultimategames.games.GameManager;
+import me.ampayne2.ultimategames.players.LobbyManager;
+import me.ampayne2.ultimategames.players.PlayerManager;
+import me.ampayne2.ultimategames.players.QueueManager;
+import me.ampayne2.ultimategames.scoreboards.ScoreboardManager;
+import me.ampayne2.ultimategames.signs.SignListener;
+import me.ampayne2.ultimategames.signs.UGSignManager;
+import me.ampayne2.ultimategames.utils.Utils;
+import me.ampayne2.ultimategames.webapi.JettyServer;
+import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
+import me.ampayne2.ultimategames.whitelist.WhitelistManager;
+
+public class ManagerController {
+
+    private UltimateGames ultimateGames;
+    public ConfigManager configManager;
+    public GameManager gameManager;
+    public ArenaManager arenaManager;
+    public UGSignManager ugSignManager;
+    public UGChestManager ugChestManager;
+    public QueueManager queueManager;
+    public Message messageManager;
+    public SpawnpointManager spawnpointManager;
+    public PlayerManager playerManager;
+    public CountdownManager countdownManager;
+    public LobbyManager lobbyManager;
+    public ScoreboardManager scoreboardManager;
+    public WhitelistManager whitelistManager;
+    public DatabaseManager databaseManager;
+    public LogManager logManager;
+    public Utils utils;
+    public MetricsManager metricsManager;
+    public PointManager pointManager;
+    public CommandController commandController;
+    public JettyServer jettyServer;
+
+    public ManagerController(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
+
+    public boolean loadManagers() {
+        // Initializes all the managers, registers a few events, and sets the UG command executor.
+        configManager = new ConfigManager(ultimateGames);
+        messageManager = new Message(ultimateGames);
+        playerManager = new PlayerManager(ultimateGames);
+        metricsManager = new MetricsManager(ultimateGames);
+        gameManager = new GameManager(ultimateGames);
+        queueManager = new QueueManager(ultimateGames);
+        spawnpointManager = new SpawnpointManager(ultimateGames);
+        scoreboardManager = new ScoreboardManager();
+        arenaManager = new ArenaManager(ultimateGames);
+        ugSignManager = new UGSignManager(ultimateGames);
+        ugChestManager = new UGChestManager(ultimateGames);
+        countdownManager = new CountdownManager(ultimateGames);
+        lobbyManager = new LobbyManager(ultimateGames);
+        whitelistManager = new WhitelistManager(ultimateGames);
+        logManager = new LogManager(ultimateGames);
+        pointManager = new PointManager();
+        utils = new Utils(ultimateGames);
+        ultimateGames.getServer().getPluginManager().registerEvents(new SignListener(ultimateGames), ultimateGames);
+        ultimateGames.getServer().getPluginManager().registerEvents(new ArenaListener(ultimateGames), ultimateGames);
+        ultimateGames.getServer().getPluginManager().registerEvents(playerManager, ultimateGames);
+        commandController = new CommandController(ultimateGames);
+        ultimateGames.getServer().getPluginManager().registerEvents(commandController, ultimateGames);
+        ultimateGames.getCommand("ultimategames").setExecutor(commandController);
+        
+        
+        // Tells each manager to load what it needs to function. Has a specific order based on the manager's dependencies on each other.
+        if (!(configManager.load() && messageManager.load() && playerManager.load() && metricsManager.load() && gameManager.load())) {
+            return false;
+        }
+        messageManager.loadGameMessages();
+        if (!(queueManager.load() && spawnpointManager.load() && scoreboardManager.load() && arenaManager.load())) {
+            return false;
+        }
+        if (ultimateGames.getConfig().getBoolean("enableAPI")) {
+            try {
+                ultimateGames.getLogger().info("Enabling live stats API link");
+                jettyServer = new JettyServer(ultimateGames);
+                jettyServer.startServer();
+            } catch (Exception e) {
+                ultimateGames.getLogger().info("Failed to enable live stats API link");
+                messageManager.debug(e);
+            }
+        }
+        jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(ultimateGames));
+        if (!(ugSignManager.load() && ugChestManager.load() && countdownManager.load() && lobbyManager.load() && whitelistManager.load())) {
+            return false;
+        }
+        try {
+            databaseManager = new DatabaseManager(ultimateGames);
+        } catch (TableRegistrationException e) {
+            ultimateGames.getLogger().severe("A error occured while connecting to the database!");
+            messageManager.debug(e);
+            ultimateGames.getServer().getPluginManager().disablePlugin(ultimateGames);
+            return false;
+        } catch (ConnectionException e) {
+            ultimateGames.getLogger().severe("A error occured while connecting to the database!");
+            messageManager.debug(e);
+            ultimateGames.getServer().getPluginManager().disablePlugin(ultimateGames);
+            return false;
+        }
+        if (!logManager.load()) {
+            return false;
+        }
+        metricsManager.addTotalPlayersGraph();
+        return true;
+    }
+    
+    public boolean reloadManagers() {
+        /*
+        if (!(configManager.reload() && messageManager.reload() && playerManager.reload() && metricsManager.reload() && gameManager.reload())) {
+            return false;
+        }
+        messageManager.loadGameMessages();
+        if (!(queueManager.reload() && spawnpointManager.reload() && scoreboardManager.reload() && arenaManager.reload())) {
+            return false;
+        }
+        if (ultimateGames.getConfig().getBoolean("enableAPI")) {
+            try {
+                ultimateGames.getLogger().info("Reloading live stats API link");
+                jettyServer.stopServer();
+                jettyServer = new JettyServer(ultimateGames);
+                jettyServer.startServer();
+            } catch (Exception e) {
+                ultimateGames.getLogger().info("Failed to reload live stats API link");
+                messageManager.debug(e);
+            }
+        }
+        jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(ultimateGames));
+        if (!(ugSignManager.reload() && countdownManager.reload() && lobbyManager.reload() && whitelistManager.reload() && logManager.reload())) {
+            return false;
+        }
+        
+        pointManager = new PointManager();
+        utils = new Utils(ultimateGames);
+        
+        try {
+            databaseManager = new DatabaseManager(ultimateGames);
+        } catch (TableRegistrationException e) {
+            ultimateGames.getLogger().severe("A error occured while connecting to the database!");
+            messageManager.debug(e);
+            ultimateGames.getServer().getPluginManager().disablePlugin(ultimateGames);
+            return false;
+        } catch (ConnectionException e) {
+            ultimateGames.getLogger().severe("A error occured while connecting to the database!");
+            messageManager.debug(e);
+            ultimateGames.getServer().getPluginManager().disablePlugin(ultimateGames);
+            return false;
+        }
+        */
+        return true;
+    }
+    
+    public void unloadManagers() {
+        configManager.unload();
+        messageManager.unload();
+        playerManager.unload();
+        metricsManager.unload();
+        gameManager.unload();
+        queueManager.unload();
+        spawnpointManager.unload();
+        scoreboardManager.unload();
+        arenaManager.unload();
+        try {
+            jettyServer.stopServer();
+        } catch (Exception e) {
+            
+        }
+        ugSignManager.unload();
+        ugChestManager.unload();
+        countdownManager.unload();
+        lobbyManager.unload();
+        whitelistManager.unload();
+        logManager.unload();
+    }
+
+}

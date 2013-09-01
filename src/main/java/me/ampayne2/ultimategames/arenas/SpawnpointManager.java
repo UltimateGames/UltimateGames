@@ -24,17 +24,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class SpawnpointManager {
+public class SpawnpointManager implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
     private Map<Arena, List<SpawnPoint>> spawnPoints = new HashMap<Arena, List<SpawnPoint>>();
 
     public SpawnpointManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+    }
+    
+    @Override
+    public boolean load() {
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public boolean reload() {
+        loaded = true;
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        spawnPoints.clear();
+        loaded = false;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 
     /**
@@ -79,7 +105,7 @@ public class SpawnpointManager {
         newSpawnPoint.add(String.valueOf(location.getYaw()));
         newSpawnPoint.add(String.valueOf(locked));
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-        String path = "Arenas." + arena.getGame().getGameDescription().getName() + "." + arena.getName() + ".SpawnPoints";
+        String path = "Arenas." + arena.getGame().getName() + "." + arena.getName() + ".SpawnPoints";
         if (ultimateGames.getConfigManager().getArenaConfig().getConfig().contains(path)) {
             @SuppressWarnings("unchecked")
             List<List<String>> arenaSpawnPoints = (ArrayList<List<String>>) arenaConfig.getList(path);
@@ -234,4 +260,5 @@ public class SpawnpointManager {
             //TODO: Remove spawnpoints from arena config.
         }
     }
+    
 }

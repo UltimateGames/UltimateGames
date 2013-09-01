@@ -23,6 +23,7 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class Open implements UGCommand {
     private UltimateGames ultimateGames;
@@ -34,7 +35,7 @@ public class Open implements UGCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 2) {
-            ultimateGames.getMessageManager().sendMessage(sender.getName(), "commandusages.arena.open");
+            ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.open");
             return;
         }
         String arenaName = args[0];
@@ -42,7 +43,7 @@ public class Open implements UGCommand {
         if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
             Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
             ultimateGames.getArenaManager().openArena(arena);
-            ultimateGames.getMessageManager().sendReplacedMessage(sender.getName(), "arenas.setstatus", arena.getName(), arena.getGame().getGameDescription().getName(), arena.getStatus().name());
+            ultimateGames.getMessageManager().sendReplacedMessage((Player) sender, "arenas.setstatus", arena.getName(), arena.getGame().getName(), arena.getStatus().name());
         }
     }
 }

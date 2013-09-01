@@ -1,20 +1,16 @@
 /*
  * This file is part of UltimateGames.
- *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
- *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.arenas;
 
@@ -25,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
@@ -35,55 +32,67 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class ArenaManager {
+public class ArenaManager implements Manager {
+    
+    private boolean loaded = false;
     private UltimateGames ultimateGames;
-    private Map<Game, List<Arena>> arenas;
-    private static final Integer X_INDEX = 0;
-    private static final Integer Y_INDEX = 1;
-    private static final Integer Z_INDEX = 2;
-    private static final Integer PITCH_INDEX = 3;
-    private static final Integer YAW_INDEX = 4;
+    private Map<Game, List<Arena>> arenas = new HashMap<Game, List<Arena>>();
+    private static final int LOCATION_Y = 0;
+    private static final int X_INDEX = 0;
+    private static final int Y_INDEX = 1;
+    private static final int Z_INDEX = 2;
+    private static final int PITCH_INDEX = 3;
+    private static final int YAW_INDEX = 4;
+    private static final int LOCKED_INDEX = 5;
 
     public ArenaManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        arenas = new HashMap<Game, List<Arena>>();
+    }
+
+    public boolean load() {
+        if (reload()) {
+            loaded = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean reload() {
+        arenas.clear();
+        ultimateGames.getConfigManager().getArenaConfig().reloadConfig();
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
         if (arenaConfig.getConfigurationSection("Arenas") == null) {
-            return;
-        } else {
-            for (String gameKey : arenaConfig.getConfigurationSection("Arenas").getKeys(false)) {
-                if (ultimateGames.getGameManager().gameExists(gameKey)) {
-                    String gamePath = "Arenas." + gameKey;
-                    for (String arenaKey : arenaConfig.getConfigurationSection(gamePath).getKeys(false)) {
-                        if (!arenaExists(arenaKey, gameKey)) {
-                            String arenaPath = gamePath + "." + arenaKey;
-                            World world = Bukkit.getWorld(arenaConfig.getString(arenaPath + ".Arena-Location.world"));
-                            Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), 0, arenaConfig
-                                    .getInt(arenaPath + ".Arena-Location.minz"));
-                            Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), 0, arenaConfig
-                                    .getInt(arenaPath + ".Arena-Location.maxz"));
-                            Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, minLocation, maxLocation);
-                            arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
-                            addArena(arena);
-                            Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
-                            if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
-                                @SuppressWarnings("unchecked")
-                                List<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
-                                if (!spawnPoints.isEmpty()) {
-                                    for (ArrayList<String> spawnPoint : spawnPoints) {
-                                        if (!spawnPoints.isEmpty()) {
-                                            Double x = Double.valueOf(spawnPoint.get(X_INDEX));
-                                            Double y = Double.valueOf(spawnPoint.get(Y_INDEX));
-                                            Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
-                                            Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
-                                            Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
-                                            Location location = new Location(world, x, y, z);
-                                            location.setPitch(pitch);
-                                            location.setYaw(yaw);
-                                            SpawnPoint newSpawnPoint = new SpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(5)));
-                                            ultimateGames.getSpawnpointManager().addSpawnPoint(newSpawnPoint);
-                                        }
-                                    }
+            return true;
+        }
+        for (String gameKey : arenaConfig.getConfigurationSection("Arenas").getKeys(false)) {
+            if (ultimateGames.getGameManager().gameExists(gameKey)) {
+                String gamePath = "Arenas." + gameKey;
+                for (String arenaKey : arenaConfig.getConfigurationSection(gamePath).getKeys(false)) {
+                    if (!arenaExists(arenaKey, gameKey)) {
+                        String arenaPath = gamePath + "." + arenaKey;
+                        World world = Bukkit.getWorld(arenaConfig.getString(arenaPath + ".Arena-Location.world"));
+                        Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), LOCATION_Y, arenaConfig.getInt(arenaPath + ".Arena-Location.minz"));
+                        Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), LOCATION_Y, arenaConfig.getInt(arenaPath + ".Arena-Location.maxz"));
+                        Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, minLocation, maxLocation);
+                        arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
+                        addArena(arena);
+                        Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
+                        if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
+                            @SuppressWarnings("unchecked")
+                            List<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
+                            if (!spawnPoints.isEmpty()) {
+                                for (ArrayList<String> spawnPoint : spawnPoints) {
+                                    Double x = Double.valueOf(spawnPoint.get(X_INDEX));
+                                    Double y = Double.valueOf(spawnPoint.get(Y_INDEX));
+                                    Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
+                                    Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
+                                    Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
+                                    Location location = new Location(world, x, y, z);
+                                    location.setPitch(pitch);
+                                    location.setYaw(yaw);
+                                    SpawnPoint newSpawnPoint = new SpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(LOCKED_INDEX)));
+                                    ultimateGames.getSpawnpointManager().addSpawnPoint(newSpawnPoint);
                                 }
                             }
                         }
@@ -91,6 +100,19 @@ public class ArenaManager {
                 }
             }
         }
+        return true;
+    }
+
+    public void unload() {
+        for (Arena arena : getArenas()) {
+            arena.disable();
+        }
+        arenas.clear();
+        loaded = false;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
     }
 
     /**
@@ -116,7 +138,7 @@ public class ArenaManager {
      * @param location The location.
      * @return If the location is inside an arena or not.
      */
-    public Boolean isLocationInArena(Location location) {
+    public boolean isLocationInArena(Location location) {
         return getLocationArena(location) == null;
     }
 
@@ -190,7 +212,7 @@ public class ArenaManager {
      * @param arena The arena.
      */
     public void openArena(Arena arena) {
-        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName()) && arena.getGame().getGamePlugin().openArena(arena)) {
+        if (arenaExists(arena.getName(), arena.getGame().getName()) && arena.getGame().getGamePlugin().openArena(arena)) {
             arena.setStatus(ArenaStatus.OPEN);
             for (String playerName : ultimateGames.getQueueManager().getNextPlayers(arena.getMaxPlayers() - arena.getPlayers().size(), arena)) {
                 ultimateGames.getPlayerManager().addPlayerToArena(Bukkit.getPlayerExact(playerName), arena, true);
@@ -203,7 +225,7 @@ public class ArenaManager {
      * @param arena
      */
     public void startArena(Arena arena) {
-        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName()) && arena.getGame().getGamePlugin().isStartPossible(arena) && arena.getGame().getGamePlugin().startArena(arena)) {
+        if (arenaExists(arena.getName(), arena.getGame().getName()) && arena.getGame().getGamePlugin().isStartPossible(arena) && arena.getGame().getGamePlugin().startArena(arena)) {
             arena.setStatus(ArenaStatus.STARTING);
         }
     }
@@ -213,7 +235,7 @@ public class ArenaManager {
      * @param arena The arena.
      */
     public void beginArena(Arena arena) {
-        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+        if (arenaExists(arena.getName(), arena.getGame().getName())) {
             for (ArenaScoreboard scoreBoard : new ArrayList<ArenaScoreboard>(ultimateGames.getScoreboardManager().getArenaScoreboards(arena))) {
                 ultimateGames.getScoreboardManager().removeArenaScoreboard(arena, scoreBoard.getName());
             }
@@ -229,7 +251,7 @@ public class ArenaManager {
      * @param arena The arena.
      */
     public void endArena(Arena arena) {
-        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+        if (arenaExists(arena.getName(), arena.getGame().getName())) {
             arena.setStatus(ArenaStatus.ENDING);
 
             if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
@@ -239,26 +261,28 @@ public class ArenaManager {
                 ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             }
             arena.getGame().getGamePlugin().endArena(arena);
-            
+
             for (ArenaScoreboard scoreBoard : new ArrayList<ArenaScoreboard>(ultimateGames.getScoreboardManager().getArenaScoreboards(arena))) {
                 ultimateGames.getScoreboardManager().removeArenaScoreboard(arena, scoreBoard.getName());
             }
 
             ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
 
-            //Teleport everybody out of the arena
+            // Teleport everybody out of the arena
             for (String playerName : arena.getPlayers()) {
                 ultimateGames.getPlayerManager().removePlayerFromArena(Bukkit.getPlayerExact(playerName), false);
             }
-
-            arena.setStatus(ArenaStatus.RESETTING);
-            if (arena.resetAfterMatch()) {
-                ultimateGames.getLogManager().rollbackArena(arena);
+            for (String playerName : arena.getSpectators()) {
+                ultimateGames.getPlayerManager().removeSpectatorFromArena(Bukkit.getPlayerExact(playerName));
             }
-            if (arena.getGame().getGamePlugin().resetArena(arena)) {
-                openArena(arena);
+            if (arena.resetAfterMatch()) {
+                arena.setStatus(ArenaStatus.RESETTING);
+                ultimateGames.getLogManager().rollbackArena(arena);
+                if (!arena.getGame().getGamePlugin().resetArena(arena)) {
+                    arena.setStatus(ArenaStatus.RESET_FAILED);
+                }
             } else {
-                arena.setStatus(ArenaStatus.RESET_FAILED);
+                arena.setStatus(ArenaStatus.OPEN);
             }
         }
     }
@@ -268,17 +292,21 @@ public class ArenaManager {
      * @param arena The arena.
      */
     public void stopArena(Arena arena) {
-        if (arenaExists(arena.getName(), arena.getGame().getGameDescription().getName())) {
+        if (arenaExists(arena.getName(), arena.getGame().getName())) {
             arena.setStatus(ArenaStatus.ARENA_STOPPED);
             arena.getGame().getGamePlugin().stopArena(arena);
         }
     }
 
+    /**
+     * Gets all of the arenas.
+     * @return All of the existing arenas.
+     */
     public List<Arena> getArenas() {
-       List<Arena> arenaList = new ArrayList<Arena>();
-       for (Entry<Game, List<Arena>> entry : arenas.entrySet()) {
-           arenaList.addAll(entry.getValue());
-       }
+        List<Arena> arenaList = new ArrayList<Arena>();
+        for (Entry<Game, List<Arena>> entry : arenas.entrySet()) {
+            arenaList.addAll(entry.getValue());
+        }
         return arenaList;
     }
 
