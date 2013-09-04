@@ -33,7 +33,7 @@ public class AddSpawn implements UGCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (args.length != 3 || !(args[2].equals("true") || args[2].equals("false"))) {
+        if (!(args[2].equals("true") || args[2].equals("false"))) {
             ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.addspawn");
             return;
         }

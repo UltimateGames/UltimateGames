@@ -15,9 +15,7 @@ public class Reload implements UGCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            ultimateGames.getManager().reloadManagers();
-        }
+        ultimateGames.getManager().reloadManagers();
     }
 
 }

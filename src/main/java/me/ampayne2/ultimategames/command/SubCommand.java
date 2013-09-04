@@ -22,20 +22,30 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.command.interfaces.Command;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class SubCommand implements Command {
+    
+    private UltimateGames ultimateGames;
     private Map<String, Command> commandList = new HashMap<String, Command>();
     private Map<String, String> permissionList = new HashMap<String, String>();
+    private Map<String, Integer> argsLength = new HashMap<String, Integer>();
+    private static final int DYNAMIC_ARGS_LENGTH = -1;
+    private static final String COMMAND_USAGE_PREFIX = "commandusages.";
+    private static final String NO_PERMISSION_PATH = "permissions.nopermission";
 
-    public void addCommand(String name, String permission, Command command) {
+    public void addCommand(UltimateGames ultimateGames, String name, String permission, Command command, Integer argslength) {
+        this.ultimateGames = ultimateGames;
         commandList.put(name, command);
         if (command instanceof UGCommand) {
             permissionList.put(name, permission);
+            argsLength.put(name, argslength);
         }
     }
 
@@ -47,8 +57,14 @@ public class SubCommand implements Command {
         if (commandExist(command)) {
             Command entry = commandList.get(command);
             if (entry instanceof UGCommand) {
-                if (sender.hasPermission(permissionList.get(command))) {
-                    ((UGCommand) entry).execute(sender, args);
+                if (argsLength.get(command) == DYNAMIC_ARGS_LENGTH || argsLength.get(command) == args.length) {
+                    if (sender.hasPermission(permissionList.get(command))) {
+                        ((UGCommand) entry).execute(sender, args);
+                    } else {
+                        ultimateGames.getMessageManager().sendReplacedMessage((Player) sender, NO_PERMISSION_PATH, command);
+                    }
+                } else {
+                    ultimateGames.getMessageManager().sendMessage((Player) sender, COMMAND_USAGE_PREFIX + command);
                 }
             } else if (entry instanceof SubCommand) {
                 SubCommand subCommand = (SubCommand) entry;

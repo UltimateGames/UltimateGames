@@ -24,7 +24,6 @@ public class BlockPlaceWhitelist extends Whitelist {
      */
     public BlockPlaceWhitelist(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        reload();
     }
 
     public void reload() {
@@ -51,7 +50,7 @@ public class BlockPlaceWhitelist extends Whitelist {
      * @return True if the game has a whitelist and the material is whitelisted, else false.
      */
     public boolean canPlaceMaterial(Game game, Material material) {
-        return blocks.containsKey(game) && ((!useAsBlacklist.get(game) && blocks.get(game).contains(material)) || (useAsBlacklist.get(game) && !blocks.get(game).contains(material)));
+        return blocks.containsKey(game) && (useAsBlacklist.get(game) ^ blocks.get(game).contains(material));
     }
 
 }

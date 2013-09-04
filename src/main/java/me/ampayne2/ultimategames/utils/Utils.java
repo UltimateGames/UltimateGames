@@ -37,12 +37,13 @@ import org.bukkit.util.BlockIterator;
 public class Utils {
 
     private UltimateGames ultimateGames;
-    private final int LAST_DIGIT_DIVIDER = 10;
-    private final int LAST_TWO_DIGIT_DIVIDER = 100;
-    private final int LAST_TWO_DIGITS_ELEVEN = 11;
-    private final int LAST_TWO_DIGITS_TWELVE = 12;
-    private final int LAST_TWO_DIGITS_THIRTEEN = 13;
-    private final long AUTO_RESPAWN_DELAY = 1L;
+    private static final int LAST_DIGIT_DIVIDER = 10;
+    private static final int LAST_TWO_DIGIT_DIVIDER = 100;
+    private static final int LAST_TWO_DIGITS_ELEVEN = 11;
+    private static final int LAST_TWO_DIGITS_TWELVE = 12;
+    private static final int LAST_TWO_DIGITS_THIRTEEN = 13;
+    private static final long AUTO_RESPAWN_DELAY = 1L;
+    private static final String COLOR_NAME_SEPARATOR = " ";
 
     public Utils(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -84,11 +85,12 @@ public class Utils {
             String namePart = nameParts[i];
             capitalizedNameParts[i] = Character.toUpperCase(namePart.charAt(0)) + namePart.substring(1).toLowerCase();
         }
-        String name = capitalizedNameParts[0];
+        StringBuilder nameBuilder = new StringBuilder(capitalizedNameParts[0]);
         for (int i = 1; i < capitalizedNameParts.length; i++) {
-            name = name + " " + capitalizedNameParts[1];
+            nameBuilder.append(COLOR_NAME_SEPARATOR);
+            nameBuilder.append(capitalizedNameParts[i]);
         }
-        return name;
+        return nameBuilder.toString();
     }
 
     /**
@@ -147,7 +149,7 @@ public class Utils {
             color = Color.WHITE;
             break;
         default:
-            color = Color.fromRGB(63, 63, 63);
+            color = Color.WHITE;
         }
         return color;
     }

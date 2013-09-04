@@ -19,10 +19,6 @@ public class Spectate implements UGCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (args.length != 2) {
-            ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.spectate");
-            return;
-        }
         String arenaName = args[0];
         String gameName = args[1];
         if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {

@@ -14,23 +14,28 @@
  */
 package me.ampayne2.ultimategames;
 
+import java.util.logging.Level;
+
 import me.ampayne2.ultimategames.api.PointManager;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.arenas.LogManager;
 import me.ampayne2.ultimategames.arenas.SpawnpointManager;
 import me.ampayne2.ultimategames.chests.UGChestManager;
+import me.ampayne2.ultimategames.classes.ClassManager;
 import me.ampayne2.ultimategames.command.CommandController;
 import me.ampayne2.ultimategames.countdowns.CountdownManager;
 import me.ampayne2.ultimategames.database.DatabaseManager;
 import me.ampayne2.ultimategames.files.ConfigManager;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
+import me.ampayne2.ultimategames.misc.MetricsManager;
 import me.ampayne2.ultimategames.players.LobbyManager;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.players.QueueManager;
 import me.ampayne2.ultimategames.scoreboards.ScoreboardManager;
 import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.UGSignManager;
+import me.ampayne2.ultimategames.teams.TeamManager;
 import me.ampayne2.ultimategames.utils.Utils;
 import me.ampayne2.ultimategames.webapi.WebHandler;
 import me.ampayne2.ultimategames.whitelist.WhitelistManager;
@@ -64,7 +69,7 @@ public class UltimateGames extends JavaPlugin {
             try {
                 managerController.jettyServer.stopServer();
             } catch (Exception e) {
-                e.printStackTrace();
+                getLogger().log(Level.SEVERE, "An error occured in unloading the Web API", e);
             }
         }
     }
@@ -84,9 +89,17 @@ public class UltimateGames extends JavaPlugin {
     public Message getMessageManager() {
         return managerController.messageManager;
     }
+    
+    public ClassManager getClassManager() {
+        return managerController.classManager;
+    }
 
     public GameManager getGameManager() {
         return managerController.gameManager;
+    }
+    
+    public TeamManager getTeamManager() {
+        return managerController.teamManager;
     }
 
     public ArenaManager getArenaManager() {

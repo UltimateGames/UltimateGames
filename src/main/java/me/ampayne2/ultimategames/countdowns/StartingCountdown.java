@@ -30,9 +30,9 @@ public class StartingCountdown extends BukkitRunnable {
     private Arena arena;
     private int initialSeconds;
     private int secondsLeft;
-    private final int FINAL_COUNTDOWN_THRESHOLD = 10;
-    private final int END_COUNTDOWN_TIME = 0;
-    private final long SECOND_LENGTH = 20L;
+    private static final int FINAL_COUNTDOWN_THRESHOLD = 10;
+    private static final int END_COUNTDOWN_TIME = 0;
+    private static final long SECOND_LENGTH = 20L;
 
     public StartingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds, int secondsLeft) {
         this.ultimateGames = ultimateGames;

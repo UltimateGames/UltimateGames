@@ -341,7 +341,7 @@ public class Message implements Manager {
             try {
             	sw.close();
             } catch (IOException e1) {
-            	
+                ultimateGames.getLogger().log(Level.SEVERE, "An error occured in debugging an exception", e);
             }
             log.severe(" ======= SNIP HERE =======");
             log.severe("");

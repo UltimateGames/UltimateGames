@@ -17,10 +17,6 @@ public class Edit implements UGCommand {
     
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (args.length != 0) {
-            ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.edit");
-            return;
-        }
         String senderName = sender.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(senderName)) {
             ArenaPlayer player = ultimateGames.getPlayerManager().getArenaPlayer(senderName);

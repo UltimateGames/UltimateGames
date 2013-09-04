@@ -26,7 +26,6 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.commands.ExtCmd;
 import me.ampayne2.ultimategames.command.commands.Reload;
 import me.ampayne2.ultimategames.command.commands.SetLobby;
-import me.ampayne2.ultimategames.command.commands.SpawnParticle;
 import me.ampayne2.ultimategames.command.commands.arenas.AddSpawn;
 import me.ampayne2.ultimategames.command.commands.arenas.Begin;
 import me.ampayne2.ultimategames.command.commands.arenas.Create;
@@ -59,26 +58,25 @@ public class CommandController extends JavaPlugin implements Listener {
         SubCommand arena = new SubCommand();
         Create create = new Create(ultimateGames);
         ultimateGames.getServer().getPluginManager().registerEvents(create, ultimateGames);
-        arena.addCommand("create", "ultimategames.arena.create", create);
-        arena.addCommand("addspawn", "ultimategames.arena.addspawn", new AddSpawn(ultimateGames));
-        arena.addCommand("open", "ultimategames.arena.open", new Open(ultimateGames));
-        arena.addCommand("begin", "ultimategames.arena.begin", new Begin(ultimateGames));
-        arena.addCommand("end", "ultimategames.arena.end", new End(ultimateGames));
-        arena.addCommand("stop", "ultimategames.arena.stop", new Stop(ultimateGames));
-        arena.addCommand("join", "ultimategames.arena.join", new Join(ultimateGames));
-        arena.addCommand("edit", "ultimategames.arena.edit", new Edit(ultimateGames));
-        arena.addCommand("spectate", "ultimategames.arena.spectate", new Spectate(ultimateGames));
-        mainCommand.addCommand("arena", null, arena);
+        arena.addCommand(ultimateGames, "create", "ultimategames.arena.create", create, 2);
+        arena.addCommand(ultimateGames, "addspawn", "ultimategames.arena.addspawn", new AddSpawn(ultimateGames), 3);
+        arena.addCommand(ultimateGames, "open", "ultimategames.arena.open", new Open(ultimateGames), 2);
+        arena.addCommand(ultimateGames, "begin", "ultimategames.arena.begin", new Begin(ultimateGames), 2);
+        arena.addCommand(ultimateGames, "end", "ultimategames.arena.end", new End(ultimateGames), 2);
+        arena.addCommand(ultimateGames, "stop", "ultimategames.arena.stop", new Stop(ultimateGames), 2);
+        arena.addCommand(ultimateGames, "join", "ultimategames.arena.join", new Join(ultimateGames), 2);
+        arena.addCommand(ultimateGames, "edit", "ultimategames.arena.edit", new Edit(ultimateGames), 0);
+        arena.addCommand(ultimateGames, "spectate", "ultimategames.arena.spectate", new Spectate(ultimateGames), 2);
         
-        mainCommand.addCommand("leave", "ultimategames.arena.leave", new Leave(ultimateGames));
+        mainCommand.addCommand(ultimateGames, "arena", null, arena, null);
+        
+        mainCommand.addCommand(ultimateGames, "leave", "ultimategames.arena.leave", new Leave(ultimateGames), 0);
 
-        mainCommand.addCommand("setlobby", "ultimategames.setlobby", new SetLobby(ultimateGames));
-
-        mainCommand.addCommand("SpawnParticle", "ultimategames.spawnparticle", new SpawnParticle());
+        mainCommand.addCommand(ultimateGames, "setlobby", "ultimategames.setlobby", new SetLobby(ultimateGames), 0);
         
-        mainCommand.addCommand("cmd", "ultimategames.extcmd", new ExtCmd(ultimateGames));
+        mainCommand.addCommand(ultimateGames, "cmd", "ultimategames.extcmd", new ExtCmd(ultimateGames), -1);
         
-        mainCommand.addCommand("reload", "ultimategames.reload", new Reload(ultimateGames));
+        mainCommand.addCommand(ultimateGames, "reload", "ultimategames.reload", new Reload(ultimateGames), 0);
     }
 
     @Override
@@ -98,7 +96,6 @@ public class CommandController extends JavaPlugin implements Listener {
                 mainCommand.execute("", sender, args);
                 return true;
             } else {
-                // Invalid Argument. Valid arguments are mainCommand.getSubCommandList());
                 return true;
             }
         }
@@ -115,7 +112,6 @@ public class CommandController extends JavaPlugin implements Listener {
             mainCommand.execute(args[0], sender, newArgs);
             return true;
         } else {
-            // Invalid Arguments. Valid arguments are mainCommand.getSubCommandList());
             return true;
         }
     }

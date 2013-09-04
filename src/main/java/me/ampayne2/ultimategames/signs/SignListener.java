@@ -39,7 +39,15 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
+    
     private UltimateGames ultimateGames;
+    private static final int SIGN_PREFIX_LINE = 0;
+    private static final int GAME_NAME_LINE = 1;
+    private static final int ARENA_NAME_LINE = 2;
+    private static final int LABEL_LINE = 3;
+    private static final int LINE_AMOUNT = 4;
+    private static final String BLANK_LINE = "";
+    private static final int MINIMUM_REDSTONE_CURRENT = 0;
 
     public SignListener(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -54,11 +62,11 @@ public class SignListener implements Listener {
         if (!event.getPlayer().hasPermission("ultimategames.sign.create")) {
             return;
         }
-        String signPrefix = event.getLine(0);
-        String gameName = event.getLine(1);
-        String arenaName = event.getLine(2);
-        String label = event.getLine(3);
-        if (signPrefix.equals("") || gameName.equals("") || arenaName.equals("")) {
+        String signPrefix = event.getLine(SIGN_PREFIX_LINE);
+        String gameName = event.getLine(GAME_NAME_LINE);
+        String arenaName = event.getLine(ARENA_NAME_LINE);
+        String label = event.getLine(LABEL_LINE);
+        if (signPrefix.equals(BLANK_LINE) || gameName.equals(BLANK_LINE) || arenaName.equals(BLANK_LINE)) {
             return;
         }
         if (!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
@@ -81,7 +89,7 @@ public class SignListener implements Listener {
         }
         UGSign ugSign = ultimateGames.getUGSignManager().createUGSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName), signType);
         List<String> lines = ugSign.getUpdatedLines();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < LINE_AMOUNT; i++) {
             if (lines.size() > i) {
                 event.setLine(i, lines.get(i));
             }
@@ -121,8 +129,8 @@ public class SignListener implements Listener {
             Sign sign = (Sign) event.getBlock().getState();
             if (ultimateGames.getUGSignManager().isRedstoneInputSign(sign)) {
                 RedstoneInputSign redstoneInputSign = ultimateGames.getUGSignManager().getRedstoneInputSign(sign);
-                if ((redstoneInputSign.isPowered() && event.getNewCurrent() == 0) || (!redstoneInputSign.isPowered() && event.getNewCurrent() > 0)) {
-                    redstoneInputSign.setPowered(event.getNewCurrent() > 0 ? true : false);
+                if ((redstoneInputSign.isPowered() && event.getNewCurrent() == MINIMUM_REDSTONE_CURRENT) || (!redstoneInputSign.isPowered() && event.getNewCurrent() > MINIMUM_REDSTONE_CURRENT)) {
+                    redstoneInputSign.setPowered(event.getNewCurrent() > MINIMUM_REDSTONE_CURRENT ? true : false);
                     redstoneInputSign.onSignTrigger(event);
                 }
             }

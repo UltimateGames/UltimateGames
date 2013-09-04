@@ -9,6 +9,7 @@ import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 public class ExtCmd implements UGCommand {
     
     private UltimateGames ultimateGames;
+    private static final String STRING_SEPARATOR = " ";
 
     public ExtCmd(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -16,19 +17,20 @@ public class ExtCmd implements UGCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player) || args.length == 0) {
+        if (!(sender instanceof Player)) {
             return;
         }
         Player player = (Player) sender;
         if (ultimateGames.getPlayerManager().isPlayerInArena(player.getName())) {
-            String command = args[0];
+            StringBuilder command = new StringBuilder(args[0]);
             if (args.length != 1) {
                 for (int i=1; i < args.length; i++) {
-                    command = command + " " + args[i];
+                    command.append(STRING_SEPARATOR);
+                    command.append(args[i]);
                 }
             }
             ultimateGames.getCommandController().addBlockBypasser(player.getName());
-            player.performCommand(command);
+            player.performCommand(command.toString());
             ultimateGames.getCommandController().removeBlockBypasser(player.getName());
         }
     }

@@ -25,8 +25,6 @@ import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
-import me.ampayne2.ultimategames.scoreboards.ArenaScoreboard;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -236,9 +234,7 @@ public class ArenaManager implements Manager {
      */
     public void beginArena(Arena arena) {
         if (arenaExists(arena.getName(), arena.getGame().getName())) {
-            for (ArenaScoreboard scoreBoard : new ArrayList<ArenaScoreboard>(ultimateGames.getScoreboardManager().getArenaScoreboards(arena))) {
-                ultimateGames.getScoreboardManager().removeArenaScoreboard(arena, scoreBoard.getName());
-            }
+            ultimateGames.getScoreboardManager().removeArenaScoreboard(arena);
             if (arena.getGame().getGamePlugin().beginArena(arena)) {
                 arena.setStatus(ArenaStatus.RUNNING);
                 ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.begin");
@@ -261,19 +257,17 @@ public class ArenaManager implements Manager {
                 ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             }
             arena.getGame().getGamePlugin().endArena(arena);
-
-            for (ArenaScoreboard scoreBoard : new ArrayList<ArenaScoreboard>(ultimateGames.getScoreboardManager().getArenaScoreboards(arena))) {
-                ultimateGames.getScoreboardManager().removeArenaScoreboard(arena, scoreBoard.getName());
-            }
+            
+            ultimateGames.getScoreboardManager().removeArenaScoreboard(arena);
 
             ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
 
             // Teleport everybody out of the arena
-            for (String playerName : arena.getPlayers()) {
-                ultimateGames.getPlayerManager().removePlayerFromArena(Bukkit.getPlayerExact(playerName), false);
-            }
             for (String playerName : arena.getSpectators()) {
                 ultimateGames.getPlayerManager().removeSpectatorFromArena(Bukkit.getPlayerExact(playerName));
+            }
+            for (String playerName : arena.getPlayers()) {
+                ultimateGames.getPlayerManager().removePlayerFromArena(Bukkit.getPlayerExact(playerName), false);
             }
             if (arena.resetAfterMatch()) {
                 arena.setStatus(ArenaStatus.RESETTING);

@@ -43,6 +43,8 @@ public enum ParticleEffect {
             "witchMagic", 13), NOTE("note", 14), PORTAL("portal", 15), ENCHANTMENT_TABLE("enchantmenttable", 16), EXPLODE("explode", 17), FLAME("flame", 18), LAVA("lava", 19), FOOTSTEP("footstep", 20), SPLASH(
             "splash", 21), LARGE_SMOKE("largesmoke", 22), CLOUD("cloud", 23), RED_DUST("reddust", 24), SNOWBALL_POOF("snowballpoof", 25), DRIP_WATER("dripWater", 26), DRIP_LAVA("dripLava", 27), SNOW_SHOVEL(
             "snowshovel", 28), SLIME("slime", 29), HEART("heart", 30), ANGRY_VILLAGER("angryVillager", 31), HAPPY_VILLAGER("happyVillager", 32);
+    
+    private static final float CRACK_SPEED = 0.1F;
     private String name;
     private int id;
 
@@ -177,11 +179,11 @@ public enum ParticleEffect {
     }
 
     private static Object createTileCrackPacket(int id, byte data, Location loc, float offsetX, float offsetY, float offsetZ, int amount) {
-        return createPacket("tilecrack_" + id + "_" + data, loc, offsetX, offsetY, offsetZ, 0.1F, amount);
+        return createPacket("tilecrack_" + id + "_" + data, loc, offsetX, offsetY, offsetZ, CRACK_SPEED, amount);
     }
 
     private static Object createIconCrackPacket(int id, Location loc, float offsetX, float offsetY, float offsetZ, int amount) {
-        return createPacket("iconcrack_" + id, loc, offsetX, offsetY, offsetZ, 0.1F, amount);
+        return createPacket("iconcrack_" + id, loc, offsetX, offsetY, offsetZ, CRACK_SPEED, amount);
     }
 
     private static Object createPacket(String effectName, Location loc, float offsetX, float offsetY, float offsetZ, float speed, int amount) {

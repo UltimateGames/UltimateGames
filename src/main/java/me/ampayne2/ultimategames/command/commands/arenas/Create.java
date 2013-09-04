@@ -51,10 +51,6 @@ public class Create implements UGCommand, Listener {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (args.length != 2) {
-            ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.create");
-            return;
-        }
         String gameName = args[1];
         String arena = args[0];
         if (!ultimateGames.getGameManager().gameExists(gameName)) {

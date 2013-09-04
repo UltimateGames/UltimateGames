@@ -19,13 +19,18 @@ import java.util.Set;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
+import me.ampayne2.ultimategames.players.PlayerManager;
+import me.ampayne2.ultimategames.teams.Team;
+import me.ampayne2.ultimategames.teams.TeamManager;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -48,10 +53,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import org.shininet.bukkit.playerheads.events.LivingEntityDropHeadEvent;
-
 public class ArenaListener implements Listener {
+    
     private UltimateGames ultimateGames;
+    private static final int DOOR_BIT = 0x8;
 
     public ArenaListener(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -126,9 +131,7 @@ public class ArenaListener implements Listener {
                     } else {
                         arena.getGame().getGamePlugin().onBlockBreak(arena, event);
                         if (arena.resetAfterMatch()) {
-                            if ((block.getType() == Material.WOODEN_DOOR || block.getType() == Material.IRON_DOOR_BLOCK) && (block.getData() & 0x8) == 0x8) {
-                                ultimateGames.getLogManager().logBlockChange(arena, block.getType(), (byte) (block.getData() & ~0x8), block.getRelative(BlockFace.DOWN).getLocation());
-                            } else {
+                            if (!((block.getType() == Material.WOODEN_DOOR || block.getType() == Material.IRON_DOOR_BLOCK) && (block.getData() & DOOR_BIT) == DOOR_BIT)) {
                                 ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
                             }
                         }
@@ -283,23 +286,46 @@ public class ArenaListener implements Listener {
 
     /**
      * Stops players not in an arena from damaging players in that arena,<br>
-     * and players in an arena from damaging players not in that arena.<br>
-     * Calls the game's onEntityDamageByEntity event.
+     * players in an arena from damaging players not in that arena,<br>
+     * and players on the same team from damaging each other if the team has friendly fire off.<br>
+     * Calls the game's onEntityDamageByEntity event if the damage is allowed.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
-            String playerName = ((Player) event.getEntity()).getName();
-            if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-                Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-                Entity damager = event.getDamager();
-                if (damager instanceof Player) {
-                    String damagerName = ((Player) damager).getName();
-                    if (!ultimateGames.getPlayerManager().isPlayerInArena(damagerName) || !ultimateGames.getPlayerManager().getPlayerArena(damagerName).equals(arena)) {
-                        event.setCancelled(true);
+            Player player = (Player) event.getEntity();
+            String playerName = player.getName();
+            PlayerManager playerManager = ultimateGames.getPlayerManager();
+            if (playerManager.isPlayerInArena(playerName)) {
+                Arena arena = playerManager.getPlayerArena(playerName);
+                
+                Entity damagerEntity = event.getDamager();
+                Player damager = null;
+                if (damagerEntity instanceof Player) {
+                    damager = (Player) damagerEntity;
+                } else if (damagerEntity instanceof Arrow) {
+                    Arrow arrow = (Arrow) damagerEntity;
+                    LivingEntity shooter = arrow.getShooter();
+                    if (shooter instanceof Player) {
+                        damager = (Player) shooter;
+                    }
+                }
+                
+                if (damager != null) {
+                    String damagerName = damager.getName();
+                    if (playerManager.isPlayerInArena(damagerName) && playerManager.getPlayerArena(damagerName).equals(arena)) {
+                        TeamManager teamManager = ultimateGames.getTeamManager();
+                        Team playerTeam = teamManager.getPlayerTeam(playerName);
+                        Team damagerTeam = teamManager.getPlayerTeam(damagerName);
+                        if (playerTeam != null && damagerTeam != null && playerTeam.equals(damagerTeam) && !playerTeam.hasFriendlyFire()) {
+                            ultimateGames.getMessageManager().sendMessage(damager, "teams.friendlyfire");
+                            event.setCancelled(true);
+                        } else {
+                            arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
+                        }
                     } else {
-                        arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
+                        event.setCancelled(true);
                     }
                 }
             }
@@ -388,21 +414,6 @@ public class ArenaListener implements Listener {
             if (arena != null && !arena.allowMobSpawning()) {
                 event.setCancelled(true);
             }
-        }
-    }
-
-    /**
-     * Handles head dropping with the PlayerHeads plugin.<br>
-     * Cancels the event if the entity is a player in an arena,<br>
-     * or if the entity is not a player and its location is inside an arena.<br>
-     * http://dev.bukkit.org/bukkit-plugins/player-heads/
-     */
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onHeadDrop(LivingEntityDropHeadEvent event) {
-        Entity entity = event.getEntity();
-        if ((entity instanceof Player && ultimateGames.getPlayerManager().isPlayerInArena(((Player) entity).getName()))
-                || ultimateGames.getArenaManager().getLocationArena(entity.getLocation()) != null) {
-            event.setCancelled(true);
         }
     }
     

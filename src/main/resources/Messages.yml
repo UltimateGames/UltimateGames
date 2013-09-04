@@ -2,21 +2,22 @@ messages:
   prefix: "&8[&bUltimateGames&8]"
   
   commandusages:
-    arena:
-      addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked]"
-      begin: "&4Usage: /ug arena begin [arena] [game]"
-      create: "&4Usage: /ug arena create [arena] [game]"
-      edit: "&4Usage: /ug arena edit"
-      end: "&4Usage: /ug arena end [arena] [game]"
-      join: "&4Usage: /ug arena join [arena] [game]"
-      open: "&4Usage: /ug arena open [arena] [game]"
-      stop: "&4Usage: /ug arena stop [arena] [game]"
-      spectate: "&4Usage: /ug arena spectate [arena] [game]"
+    addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked]"
+    begin: "&4Usage: /ug arena begin [arena] [game]"
+    create: "&4Usage: /ug arena create [arena] [game]"
+    edit: "&4Usage: /ug arena edit"
+    end: "&4Usage: /ug arena end [arena] [game]"
+    join: "&4Usage: /ug arena join [arena] [game]"
+    open: "&4Usage: /ug arena open [arena] [game]"
+    stop: "&4Usage: /ug arena stop [arena] [game]"
+    spectate: "&4Usage: /ug arena spectate [arena] [game]"
     leave: "&4Usage: /ug leave"
     extcmd: "&4Usage: /ug cmd [command to execute]"
     setlobby: "&4Usage: /ug setlobby"
-    spawnparticle: "&4Usage: /ug spawnparticle [name] [offset x] [offset y] [offset z] [speed] [amount]"
     reload: "&4Usage: /ug reload"
+    
+  permissions:
+    nopermission: "&4You do not have permission to use the %s command."
   
   games:
     doesntexist: "Game doesn't exist."
@@ -38,12 +39,23 @@ messages:
 
     join: "%s joined the game! %s"
     leave: "%s left the game! %s"
+    kick: "You were kicked from the arena!"
 
     alreadyexists: "&4Arena already exists."
     doesntexist: "&4Arena doesn't exist."
     failedtocreate: "&4Failed to create Arena '%s' of Game '%s'. %s"
     failedtojoin: "&4Failed to join Arena '%s' of Game '%s'. %s"
     notinarena: "&4Not in an Arena."
+    
+  teams:
+    join: "&4Joined Team %s!"
+    kick: "&4Kicked from Team %s!"
+    leave: "&4Left Team %s!"
+    friendlyfire: "&4Friendly Fire is off for your Team!"
+    
+  classes:
+    join: "&4Joined Class %s!"
+    nextdeath: "&4Joined Class %s! Your inventory will be reset next death."
 
   queues:
     join: "Joined queue for Arena '%s' of Game '%s'. You are %s in line and will be able to join %s."

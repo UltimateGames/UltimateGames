@@ -28,6 +28,7 @@ public class LogManager {
     private static final long ROLLBACK_DELAY = 0L;
     private static final long ROLLBACK_PERIOD = 50L;
     private static final int CHANGES_PER_ITERATION = 200;
+    private static final int DOOR_BIT = 0x8;
 
     public LogManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -44,7 +45,7 @@ public class LogManager {
 
     public boolean reload() {
         stopLogSaving();
-        logging = Boolean.valueOf(false);
+        logging = false;
         startLogSaving();
         for (Arena arena : ultimateGames.getArenaManager().getArenas()) {
             stopRollingBack(arena);
@@ -91,7 +92,7 @@ public class LogManager {
                         Material material = blockChange.material;
                         byte data = blockChange.data;
                         Location location = blockChange.location;
-                        if (!((material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK) && (data & 0x8) == 0x8)) {
+                        if (!((material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK) && (data & DOOR_BIT) == DOOR_BIT)) {
                             String gameName = arena.getGame().getName();
                             String arenaName = arena.getName();
                             double x = location.getX();
@@ -151,7 +152,7 @@ public class LogManager {
                         if (!(location.getBlock().getType() == material && location.getBlock().getData() == entry.data)) {
                             if (material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK) {
                                 location.getBlock().setTypeIdAndData(material.getId(), entry.data, false);
-                                location.getBlock().getRelative(BlockFace.UP).setTypeIdAndData(material.getId(), (byte) (entry.data | 0x8), false);
+                                location.getBlock().getRelative(BlockFace.UP).setTypeIdAndData(material.getId(), (byte) (entry.data | DOOR_BIT), false);
                             } else {
                                 location.getBlock().setType(material);
                                 location.getBlock().setData(entry.data);

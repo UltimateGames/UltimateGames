@@ -37,6 +37,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
+/**
+ * Represents a UltimateGames Arena.
+ */
 public class Arena implements Listener {
     
     private boolean enabled = true;
@@ -63,6 +66,8 @@ public class Arena implements Listener {
     private Double minZ;
     private Double maxZ;
     private int timesPlayed;
+    private static final int DEFAULT_MIN_PLAYERS = 4;
+    private static final int DEFAULT_MAX_PLAYERS = 8;
 
     public Arena(UltimateGames ultimateGames, Game game, String arenaName, Location corner1, Location corner2) {
         this.ultimateGames = ultimateGames;
@@ -82,13 +87,13 @@ public class Arena implements Listener {
         allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", false));
         allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false));
         allowMobSpawning = arenaConfig.getBoolean(arenaPath + ".Allow-Mob-Spawning", gamesConfig.getBoolean("DefaultSettings.Allow-Mob-Spawning", false));
-        minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", 8));
+        minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", DEFAULT_MIN_PLAYERS));
         if (game.getPlayerType() == PlayerType.SINGLE_PLAYER) {
             maxPlayers = 1;
         } else if (game.getPlayerType() == PlayerType.TWO_PLAYER) {
             maxPlayers = 2;
         } else if (game.getPlayerType() == PlayerType.CONFIGUREABLE) {
-            maxPlayers = arenaConfig.getInt(arenaPath + ".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", 8));
+            maxPlayers = arenaConfig.getInt(arenaPath + ".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", DEFAULT_MAX_PLAYERS));
         }
         //takes the 2 corners and turns them into minLocation and maxLocation
         arenaWorld = corner1.getWorld();
@@ -180,6 +185,11 @@ public class Arena implements Listener {
         }
     }
     
+    /**
+     * Adds a spectator to the arena.
+     * @param playerName The name of the spectator to add.
+     * @return True if the spectator was added, else false.
+     */
     public boolean addSpectator(String playerName) {
         return enabled && !spectators.contains(playerName) && spectators.add(playerName);
     }
@@ -405,49 +415,29 @@ public class Arena implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        /*
-        if (enabled) {
-            Location from = event.getFrom();
-            Location to = event.getTo();
-            Player player = event.getPlayer();
-            if ((from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()) && (players.contains(player.getName()) || spectators.contains(player.getName()))) {
-                Vector vector = new Vector();
-                if (to.getX() < minX) {
-                    vector.add(new Vector(minX - to.getX(), 0, 0));
-                } else if (to.getX() > maxX) {
-                    vector.add(new Vector(maxX - to.getX(), 0, 0));
-                }
-                if (to.getZ() < minZ) {
-                    vector.add(new Vector(0, 0, minZ - to.getZ()));
-                } else if (to.getZ() > maxZ) {
-                    vector.add(new Vector(0, 0, maxZ - to.getZ()));
-                }
-                player.setVelocity(vector);
-                ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
-            }
-        }
-        */
         Location from = event.getFrom();
         Location to = event.getTo();
         Player player = event.getPlayer();
         if (!(from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) && players.contains(player.getName())) {
-            Boolean left = false;
-            Vector vector = new Vector();
+            boolean left = false;
+            int x = 0;
+            int z = 0;
             if (to.getX() < minX) {
-                vector.add(new Vector(2, 0, 0));
+                x = (int) (minX - to.getX());
                 left = true;
             } else if (to.getX() > maxX) {
-                vector.add(new Vector(-2, 0, 0));
+                x = (int) (maxX - to.getX());
                 left = true;
             }
             if (to.getZ() < minZ) {
-                vector.add(new Vector(0, 0, 2));
+                z = (int) (minZ - to.getZ());
                 left = true;
             } else if (to.getZ() > maxZ) {
-                vector.add(new Vector(0, 0, -2));
+                z = (int) (maxZ - to.getZ());
                 left = true;
             }
             if (left) {
+                Vector vector = new Vector(x, 0, z);
                 player.setVelocity(vector);
                 ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
             }

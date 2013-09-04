@@ -42,6 +42,7 @@ public class GameManager implements Manager {
     private boolean loaded = false;
     private UltimateGames ultimateGames;
     private List<Game> games = new ArrayList<Game>();
+    private static final int BUFFER_SIZE = 1024;
 
     public GameManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -86,7 +87,7 @@ public class GameManager implements Manager {
                 File configFile = new File(ultimateGames.getPlugin().getDataFolder() + "/Games", file.getName().replace(".jar", ".yml"));
                 if (!configFile.exists()) {
                     ZipFile zip = new ZipFile(file);
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[BUFFER_SIZE];
 
                     FileOutputStream output = new FileOutputStream(configFile);
                     InputStream input = zip.getInputStream(zip.getEntry("gameplugin.yml"));

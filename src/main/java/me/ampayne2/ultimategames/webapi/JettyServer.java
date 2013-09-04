@@ -29,16 +29,19 @@ import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 public class JettyServer {
 
     private Server server;
+    private static final int CORE_POOL_SIZE = 2;
+    private static final int MAX_CONNECTIONS = 30;
+    private static final int KEEP_ALIVE_TIME = 60;
+    
     public JettyServer(UltimateGames plugin) throws Exception {
         org.eclipse.jetty.util.log.Log.setLog(new JettyNullLogger());
         server = new Server(plugin.getConfig().getInt("APIPort"));
         server.setHandler(new JettyHandler());
         server.setSessionIdManager(new HashSessionIdManager());
+        
+        LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(MAX_CONNECTIONS);
 
-        int maxconnections = 30;
-        LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(maxconnections);
-
-        ExecutorThreadPool pool = new ExecutorThreadPool(2, maxconnections, 60, TimeUnit.SECONDS, queue);
+        ExecutorThreadPool pool = new ExecutorThreadPool(CORE_POOL_SIZE, MAX_CONNECTIONS, KEEP_ALIVE_TIME, TimeUnit.SECONDS, queue);
         server.setThreadPool(pool);
     }
 

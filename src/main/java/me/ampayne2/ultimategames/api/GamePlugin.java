@@ -58,7 +58,13 @@ public abstract class GamePlugin implements Listener {
      * Called when a game is being unloaded.
      * @return True if everything went well else false.
      */
-    public abstract Boolean unloadGame();
+    public abstract void unloadGame();
+    
+    /**
+     * Called when a game is being reloaded.
+     * @return True if everything went well else false.
+     */
+    public abstract Boolean reloadGame();
 
     /**
      * Sets all arenas to ArenaStatus.GAME_STOPPED. Disables the game.
@@ -178,6 +184,13 @@ public abstract class GamePlugin implements Listener {
      * @param signType The SignType of the UG Sign.
      */
     public void handleInputSignTrigger(UGSign ugSign, SignType signType, Event event) {}
+    
+    /**
+     * Handle players joining the queue. Can be used to fill up an uneven team.
+     * @param player The player that joined the queue.
+     * @param arena The arena of the queue they joined.
+     */
+    public void onPlayerJoinQueue(Player player, Arena arena) {}
 
     /**
      * Handle arena commands.

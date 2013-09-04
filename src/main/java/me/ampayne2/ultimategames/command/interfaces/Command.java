@@ -19,4 +19,5 @@
 package me.ampayne2.ultimategames.command.interfaces;
 
 public interface Command {
+    
 }

@@ -3,6 +3,8 @@ version: ${build.number}
 description: The Ultimate Game Plugin
 author: ampayne2
 main: me.ampayne2.ultimategames.UltimateGames
+load: POSTWORLD
+softdepend: [PlayerHeads]
 commands:
   ultimategames:
     aliases: ug

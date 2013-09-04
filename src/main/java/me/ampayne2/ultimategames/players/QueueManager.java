@@ -147,6 +147,7 @@ public class QueueManager implements Manager {
             queue.put(arena, players);
         }
         sendJoinMessage(player, arena);
+        arena.getGame().getGamePlugin().onPlayerJoinQueue(player, arena);
     }
 
     /**

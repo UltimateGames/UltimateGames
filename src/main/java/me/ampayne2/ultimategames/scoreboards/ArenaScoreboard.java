@@ -115,6 +115,7 @@ public class ArenaScoreboard {
         Team team = scoreboard.getTeam(player.getName());
         if (team != null) {
             team.removePlayer(player);
+            team.unregister();
         }
     }
 

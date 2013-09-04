@@ -1,35 +1,29 @@
 /*
  * This file is part of UltimateGames.
- *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
- *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.scoreboards;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.arenas.Arena;
 
 public class ScoreboardManager implements Manager {
-    
+
     private boolean loaded = false;
-    private Map<Arena, List<ArenaScoreboard>> scoreboards = new HashMap<Arena, List<ArenaScoreboard>>();
+    private Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
 
     @Override
     public boolean load() {
@@ -56,12 +50,12 @@ public class ScoreboardManager implements Manager {
     }
 
     /**
-     * Gets the ArenaScoreboards of an arena.
+     * Gets the ArenaScoreboard of an arena.
      * @param arena The arena.
      * @return The arena's ArenaScoreboards.
      */
-    public List<ArenaScoreboard> getArenaScoreboards(Arena arena) {
-        return scoreboards.containsKey(arena) ? scoreboards.get(arena) : new ArrayList<ArenaScoreboard>();
+    public ArenaScoreboard getArenaScoreboard(Arena arena) {
+        return scoreboards.containsKey(arena) ? scoreboards.get(arena) : null;
     }
 
     /**
@@ -72,29 +66,19 @@ public class ScoreboardManager implements Manager {
      */
     public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
         ArenaScoreboard scoreboard = new ArenaScoreboard(name);
-        if (scoreboards.containsKey(arena)) {
-            scoreboards.get(arena).add(scoreboard);
-        } else {
-            ArrayList<ArenaScoreboard> newScoreboards = new ArrayList<ArenaScoreboard>();
-            newScoreboards.add(scoreboard);
-            scoreboards.put(arena, newScoreboards);
-        }
-        return scoreboard;
+        return scoreboards.put(arena, scoreboard);
     }
 
     /**
-     * Removes an ArenaScoreboard from the manager.
+     * Removes an Arena's ArenaScoreboard from the manager.
      * @param arena The arena.
-     * @param name The name of the scoreboard.
      */
-    public void removeArenaScoreboard(Arena arena, String name) {
+    public void removeArenaScoreboard(Arena arena) {
         if (scoreboards.containsKey(arena)) {
-            for (ArenaScoreboard scoreboard : new ArrayList<ArenaScoreboard>(scoreboards.get(arena))) {
-                if (name.equals(scoreboard.getName())) {
-                    scoreboard.reset();
-                    scoreboards.get(arena).remove(scoreboard);
-                }
-            }
+            ArenaScoreboard scoreboard = scoreboards.get(arena);
+            scoreboard.reset();
+            scoreboards.remove(arena);
         }
     }
+
 }

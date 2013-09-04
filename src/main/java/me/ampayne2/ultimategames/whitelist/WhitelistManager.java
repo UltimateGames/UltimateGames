@@ -26,7 +26,9 @@ public class WhitelistManager implements Manager {
     @Override
     public boolean reload() {
         blockPlaceWhitelist = new BlockPlaceWhitelist(ultimateGames);
+        blockPlaceWhitelist.reload();
         blockBreakWhitelist = new BlockBreakWhitelist(ultimateGames);
+        blockBreakWhitelist.reload();
         loaded = true;
         return true;
     }
