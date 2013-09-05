@@ -60,11 +60,11 @@ public abstract class GameClass {
     
     /**
      * Checks if a GameClass has a player.
-     * @param player The player.
+     * @param playerName The player's name.
      * @return True if the player is in the GameClass, else false.
      */
-    public boolean hasPlayer(Player player) {
-        return players.contains(player.getName());
+    public boolean hasPlayer(String playerName) {
+        return players.contains(playerName);
     }
     
     /**
@@ -91,10 +91,9 @@ public abstract class GameClass {
     
     /**
      * Removes a player from the GameClass.
-     * @param player The player to remove from the GameClass.
+     * @param playerName The name of the player to remove from the GameClass.
      */
-    public void removePlayerFromClass(Player player) {
-        String playerName = player.getName();
+    public void removePlayerFromClass(String playerName) {
         if (players.contains(playerName)) {
             players.remove(playerName);
         }

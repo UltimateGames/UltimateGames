@@ -66,7 +66,7 @@ public class ClassManager implements Manager {
      * @return The classes of a game.
      */
     public Set<GameClass> getGameClasses(Game game) {
-        return enabled && gameClasses.containsKey(game) ? gameClasses.get(game) : new HashSet<GameClass>();
+        return enabled && gameClasses.containsKey(game) ? new HashSet<GameClass>(gameClasses.get(game)) : new HashSet<GameClass>();
     }
     
     /**
@@ -101,6 +101,21 @@ public class ClassManager implements Manager {
                 gameClasses.get(game).remove(gameClass);
             }
         }
+    }
+    
+    /**
+     * Gets a player's GameClass.
+     * @param game The game of the player.
+     * @param playerName The player's name.
+     * @return The GameClass, null if the player isn't in one.
+     */
+    public GameClass getPlayerClass(Game game, String playerName) {
+        for (GameClass gameClass : getGameClasses(game)) {
+            if (gameClass.hasPlayer(playerName)) {
+                return gameClass;
+            }
+        }
+        return null;
     }
 
 }

@@ -61,12 +61,60 @@ public class TeamManager implements Manager {
     }
     
     /**
+     * Checks if a team of an arena with a certain name exists.
+     * @param arena The arena.
+     * @param name The name of the team.
+     * @return True if the team exists, else null.
+     */
+    public boolean teamExists(Arena arena, String name) {
+        if (teams.containsKey(arena)) {
+            for (Team team : teams.get(arena)) {
+                if (name.equalsIgnoreCase(team.getName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Gets a team of an arena with a certain name.
+     * @param arena The arena.
+     * @param name The name of the team.
+     * @return The team if it exists, else null.
+     */
+    public Team getTeam(Arena arena, String name) {
+        if (teams.containsKey(arena)) {
+            for (Team team : teams.get(arena)) {
+                if (name.equalsIgnoreCase(team.getName())) {
+                    return team;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * Gets the teams of an arena.
      * @param arena The arena.
      * @return The teams of the arena.
      */
     public List<Team> getTeamsOfArena(Arena arena) {
         return loaded && teams.containsKey(arena) ? teams.get(arena) : new ArrayList<Team>();
+    }
+    
+    /**
+     * Removes all the teams of an arena.
+     * @param arena The arena.
+     */
+    public void removeTeamsOfArena(Arena arena) {
+        if (loaded && teams.containsKey(arena)) {
+            List<Team> arenaTeams = teams.get(arena);
+            for (Team team : arenaTeams) {
+                team.removePlayers();
+            }
+            teams.remove(arena);
+        }
     }
     
     /**

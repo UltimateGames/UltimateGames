@@ -89,6 +89,14 @@ public class Team {
     }
     
     /**
+     * Checks if a team has space for another player while staying even with other teams.
+     * @return True if the team has space, else false.
+     */
+    public boolean hasSpace() {
+        return Math.floor(arena.getPlayers().size() / ultimateGames.getTeamManager().getTeamsOfArena(arena).size()) > players.size();
+    }
+    
+    /**
      * Gets the players in a team.
      * @return The players in a team.
      */

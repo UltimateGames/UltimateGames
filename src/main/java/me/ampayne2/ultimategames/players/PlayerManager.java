@@ -25,6 +25,7 @@ import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.SpawnPoint;
+import me.ampayne2.ultimategames.classes.GameClass;
 import me.ampayne2.ultimategames.events.ArenaJoinEvent;
 import me.ampayne2.ultimategames.scoreboards.ArenaScoreboard;
 
@@ -157,6 +158,11 @@ public class PlayerManager implements Listener, Manager {
                 Bukkit.getPlayer(normalPlayer).hidePlayer(player);
             }
 
+            // Remove all of the player's potion effects
+            for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                player.removePotionEffect(potionEffect.getType());
+            }
+
             // Give the player flight
             player.setAllowFlight(true);
             player.setFlying(true);
@@ -242,6 +248,11 @@ public class PlayerManager implements Listener, Manager {
                     Bukkit.getPlayer(normalPlayer).hidePlayer(player);
                 }
 
+                // Remove all of the player's potion effects
+                for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(potionEffect.getType());
+                }
+
                 // Extinguish the spectator if on fire
                 player.setFireTicks(0);
 
@@ -272,6 +283,12 @@ public class PlayerManager implements Listener, Manager {
             // Removes the player from any teams the player is in
             ultimateGames.getTeamManager().removePlayerFromTeam(player);
 
+            // Removes the player from any classes the player is in
+            GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(arena.getGame(), playerName);
+            if (gameClass != null) {
+                gameClass.removePlayerFromClass(playerName);
+            }
+
             // Removes the player from any spawnpoints the player is locked in
             for (SpawnPoint spawnPoint : ultimateGames.getSpawnpointManager().getSpawnPointsOfArena(arena)) {
                 if (spawnPoint.getPlayer() != null && spawnPoint.getPlayer().equals(playerName)) {
@@ -279,11 +296,14 @@ public class PlayerManager implements Listener, Manager {
                 }
             }
 
-            // Removes the player from all arena scoreboards
+            // Removes the player from the arena scoreboard
             ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
             if (scoreBoard != null) {
                 scoreBoard.removePlayer(player);
             }
+
+            // Extinguish the spectator if on fire
+            player.setFireTicks(0);
 
             // Removes all of the player's potion effects
             for (PotionEffect potionEffect : player.getActivePotionEffects()) {
@@ -333,25 +353,28 @@ public class PlayerManager implements Listener, Manager {
             arena.removeSpectator(playerName);
             arena.getGame().getGamePlugin().removeSpectator(player, arena);
             spectators.remove(playerName);
-            
+
             // Removes the spectator from any spawnpoints the spectator is locked in
             for (SpawnPoint spawnPoint : ultimateGames.getSpawnpointManager().getSpawnPointsOfArena(arena)) {
                 if (spawnPoint.getPlayer() != null && spawnPoint.getPlayer().equals(playerName)) {
                     spawnPoint.teleportPlayer(null);
                 }
             }
-            
+
             // Removes the spectator from all arena scoreboards
             ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
             if (scoreBoard != null) {
                 scoreBoard.removePlayer(player);
             }
-            
+
+            // Extinguish the spectator if on fire
+            player.setFireTicks(0);
+
             // Removes all of the spectator's potion effects
             for (PotionEffect potionEffect : player.getActivePotionEffects()) {
                 player.removePotionEffect(potionEffect.getType());
             }
-            
+
             // Teleports the spectator to the lobby
             Location location = ultimateGames.getLobbyManager().getLobby();
             if (location != null) {
@@ -362,11 +385,11 @@ public class PlayerManager implements Listener, Manager {
             for (String normalPlayer : arena.getPlayers()) {
                 Bukkit.getPlayerExact(normalPlayer).showPlayer(player);
             }
-            
+
             // Takes away flight from the spectator
             player.setAllowFlight(false);
             player.setFlying(false);
-            
+
             // Removes the spectator from limbo
             removePlayerFromLimbo(player);
         }
