@@ -66,7 +66,8 @@ public class ScoreboardManager implements Manager {
      */
     public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
         ArenaScoreboard scoreboard = new ArenaScoreboard(name);
-        return scoreboards.put(arena, scoreboard);
+        scoreboards.put(arena, scoreboard);
+        return scoreboard;
     }
 
     /**

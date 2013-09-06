@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.database.tables.BlockChangeTable;
+import me.ampayne2.ultimategames.enums.ArenaStatus;
 
 public class LogManager {
 
@@ -172,5 +173,6 @@ public class LogManager {
             Bukkit.getScheduler().cancelTask(rollbackTask.get(arena));
             rollbackTask.remove(arena);
         }
+        arena.setStatus(ArenaStatus.OPEN);
     }
 }

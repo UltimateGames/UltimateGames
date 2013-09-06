@@ -13,13 +13,13 @@ import me.ampayne2.ultimategames.games.Game;
  * The base class for a GameClass in a game. Games extend this to make their own classes.
  */
 public abstract class GameClass {
-    
+
     private UltimateGames ultimateGames;
     private Game game;
     private String name;
     private boolean canSwitchToWithoutDeath;
     private List<String> players = new ArrayList<String>();
-    
+
     /**
      * Creates a new GameClass.
      * @param ultimateGames A reference to the UltimateGames instance.
@@ -33,7 +33,7 @@ public abstract class GameClass {
         this.name = name;
         this.canSwitchToWithoutDeath = canSwitchToWithoutDeath;
     }
-    
+
     /**
      * Gets the Game of a GameClass.
      * @return The GameClass's Game.
@@ -41,7 +41,7 @@ public abstract class GameClass {
     public Game getGame() {
         return game;
     }
-    
+
     /**
      * Gets the name of a GameClass.
      * @return The GameClass's name.
@@ -49,7 +49,7 @@ public abstract class GameClass {
     public String getName() {
         return name;
     }
-    
+
     /**
      * Checks if a player can switch to the GameClass without having to die first.
      * @return True if the player can switch without having to die first, else false.
@@ -57,7 +57,7 @@ public abstract class GameClass {
     public boolean canSwitchToWithoutDeath() {
         return canSwitchToWithoutDeath;
     }
-    
+
     /**
      * Checks if a GameClass has a player.
      * @param playerName The player's name.
@@ -66,7 +66,7 @@ public abstract class GameClass {
     public boolean hasPlayer(String playerName) {
         return players.contains(playerName);
     }
-    
+
     /**
      * Adds a player to the GameClass.
      * @param player The player to add to the GameClass.
@@ -76,6 +76,10 @@ public abstract class GameClass {
         String playerName = player.getName();
         if (!players.contains(playerName)) {
             players.add(playerName);
+            GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(game, playerName);
+            if (gameClass != null) {
+                gameClass.removePlayerFromClass(playerName);
+            }
             ArenaStatus arenaStatus = ultimateGames.getPlayerManager().getPlayerArena(playerName).getStatus();
             if (canSwitchToWithoutDeath || arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
                 ultimateGames.getMessageManager().sendReplacedMessage(player, "classes.join", name);
@@ -88,7 +92,33 @@ public abstract class GameClass {
             return false;
         }
     }
-    
+
+    /**
+     * Adds a player to the GameClass.
+     * @param player The player to add to the GameClass.
+     * @param resetInventory If the player's inventory should be reset immediately.
+     * @return True if the player is added to the GameClass, else false.
+     */
+    public boolean addPlayerToClass(Player player, Boolean resetInventory) {
+        String playerName = player.getName();
+        if (!players.contains(playerName)) {
+            players.add(playerName);
+            GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(game, playerName);
+            if (gameClass != null) {
+                gameClass.removePlayerFromClass(playerName);
+            }
+            if (resetInventory) {
+                ultimateGames.getMessageManager().sendReplacedMessage(player, "classes.join", name);
+                resetInventory(player);
+            } else {
+                ultimateGames.getMessageManager().sendReplacedMessage(player, "classes.nextdeath", name);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Removes a player from the GameClass.
      * @param playerName The name of the player to remove from the GameClass.
@@ -98,14 +128,14 @@ public abstract class GameClass {
             players.remove(playerName);
         }
     }
-    
+
     /**
      * Removes all players from the GameClass.
      */
     public void removePlayersFromClass() {
         players.clear();
     }
-    
+
     /**
      * Resets a player's inventory.
      * @param player The player whose inventory you want to reset.

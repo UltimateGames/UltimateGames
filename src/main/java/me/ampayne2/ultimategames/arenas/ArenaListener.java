@@ -37,6 +37,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
@@ -54,7 +55,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class ArenaListener implements Listener {
-    
+
     private UltimateGames ultimateGames;
     private static final int DOOR_BIT = 0x8;
 
@@ -77,7 +78,8 @@ public class ArenaListener implements Listener {
             if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
                 if (ultimateGames.getPlayerManager().getArenaPlayer(playerName).isEditing()) {
                     return;
-                } else if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockPlaceWhitelist().canPlaceMaterial(arena.getGame(), event.getBlock().getType()) && arena.resetAfterMatch()) {
+                } else if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockPlaceWhitelist().canPlaceMaterial(arena.getGame(), event.getBlock().getType())
+                        && arena.resetAfterMatch()) {
                     arena.getGame().getGamePlugin().onBlockPlace(arena, event);
                     if (!event.isCancelled()) {
                         ultimateGames.getLogManager().logBlockChange(arena, event.getBlockReplacedState().getType(), event.getBlockReplacedState().getRawData(),
@@ -237,6 +239,23 @@ public class ArenaListener implements Listener {
     }
 
     /**
+     * Handles block fading events in arenas.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockFade(BlockFadeEvent event) {
+        Block block = event.getBlock();
+        Arena arena = ultimateGames.getArenaManager().getLocationArena(block.getLocation());
+        if (arena != null) {
+            arena.getGame().getGamePlugin().onBlockFade(arena, event);
+            if (!event.isCancelled() && arena.resetAfterMatch() && arena.getStatus() == ArenaStatus.RUNNING) {
+                ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
+            } else if (arena.getStatus() == ArenaStatus.RESETTING) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    /**
      * Calls a game's onPlayerDeath method, and stops death message when a player in an arena is killed.
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -299,7 +318,7 @@ public class ArenaListener implements Listener {
             PlayerManager playerManager = ultimateGames.getPlayerManager();
             if (playerManager.isPlayerInArena(playerName)) {
                 Arena arena = playerManager.getPlayerArena(playerName);
-                
+
                 Entity damagerEntity = event.getDamager();
                 Player damager = null;
                 if (damagerEntity instanceof Player) {
@@ -311,7 +330,7 @@ public class ArenaListener implements Listener {
                         damager = (Player) shooter;
                     }
                 }
-                
+
                 if (damager != null) {
                     String damagerName = damager.getName();
                     if (playerManager.isPlayerInArena(damagerName) && playerManager.getPlayerArena(damagerName).equals(arena)) {
@@ -402,7 +421,7 @@ public class ArenaListener implements Listener {
             event.setCancelled(true);
         }
     }
-    
+
     /**
      * Handles mob spawning.<br>
      * Checks if an arena allows mob spawning before letting a mob spawn inside it.
@@ -416,5 +435,5 @@ public class ArenaListener implements Listener {
             }
         }
     }
-    
+
 }

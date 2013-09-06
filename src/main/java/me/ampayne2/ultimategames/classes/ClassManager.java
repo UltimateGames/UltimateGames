@@ -27,9 +27,10 @@ public class ClassManager implements Manager {
         while (it.hasNext()) {
             Entry<Game, Set<GameClass>> entry = it.next();
             for (GameClass gameClass : entry.getValue()) {
-                removeGameClass(gameClass);
+                gameClass.removePlayersFromClass();
             }
         }
+        gameClasses = new HashMap<Game, Set<GameClass>>();
         return true;
     }
 
@@ -39,9 +40,10 @@ public class ClassManager implements Manager {
         while (it.hasNext()) {
             Entry<Game, Set<GameClass>> entry = it.next();
             for (GameClass gameClass : entry.getValue()) {
-                removeGameClass(gameClass);
+                gameClass.removePlayersFromClass();
             }
         }
+        gameClasses = new HashMap<Game, Set<GameClass>>();
         enabled = false;
     }
 

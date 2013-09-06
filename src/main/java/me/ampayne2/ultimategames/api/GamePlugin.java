@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -277,5 +278,12 @@ public abstract class GamePlugin implements Listener {
      * @param event The PlayerDropItemEvent.
      */
     public void onItemDrop(Arena arena, PlayerDropItemEvent event) {}
+    
+    /**
+     * Handles blocks fading.
+     * @param arena The arena the block is in.
+     * @param event The BlockFadeEvent.
+     */
+    public void onBlockFade(Arena arena, BlockFadeEvent event) {}
 
 }
