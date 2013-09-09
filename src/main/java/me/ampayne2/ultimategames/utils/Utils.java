@@ -27,12 +27,34 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Blaze;
+import org.bukkit.entity.CaveSpider;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Silverfish;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Squid;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.Attachable;
+import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 public class Utils {
@@ -45,7 +67,7 @@ public class Utils {
     private static final int LAST_TWO_DIGITS_THIRTEEN = 13;
     private static final long AUTO_RESPAWN_DELAY = 1L;
     private static final String WORD_SEPARATOR = " ";
-    private static final double TARGETER_ACCURACY = 0.5;
+    private static final double TARGETER_ACCURACY = 0.8;
 
     public Utils(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -63,13 +85,10 @@ public class Utils {
         switch (lastDigit) {
             case 1:
                 return last2Digits == LAST_TWO_DIGITS_ELEVEN ? "th" : "st";
-
             case 2:
                 return last2Digits == LAST_TWO_DIGITS_TWELVE ? "th" : "nd";
-
             case 3:
                 return last2Digits == LAST_TWO_DIGITS_THIRTEEN ? "th" : "rd";
-
             default:
                 return "th";
         }
@@ -238,18 +257,25 @@ public class Utils {
         Vector direction = location.getDirection();
         List<Entity> entities = player.getNearbyEntities(range, range, range);
         Set<Entity> targetedEntities = new HashSet<Entity>();
-        for (int i=0; i < range; i++) {
+        for (int i = 0; i < range; i++) {
             if (highlightPath) {
                 ParticleEffect.FIREWORKS_SPARK.play(location, 0, 0, 0, 0, 1);
             }
+            double locationX = location.getX();
+            double locationY = location.getY();
+            double locationZ = location.getZ();
             for (Entity entity : entities) {
                 boolean add = false;
                 Location entityLocation = entity.getLocation();
-                if (Math.abs(location.getX() - entityLocation.getX()) <= TARGETER_ACCURACY) {
+                double entityX = entityLocation.getX();
+                double entityYLower = entityLocation.getY();
+                double entityYHigher = entityYLower + getEntityHeight(entity);
+                double entityZ = entityLocation.getZ();
+                if (Math.abs(locationX - entityX) <= TARGETER_ACCURACY) {
                     add = true;
-                } else if (Math.abs(location.getY() - entityLocation.getY()) <= TARGETER_ACCURACY || Math.abs(location.getY() - (entityLocation.getY() + 1)) <= TARGETER_ACCURACY) {
+                } else if (locationY >= entityYLower && locationY <= entityYHigher) {
                     add = true;
-                } else if (Math.abs(location.getZ() - entityLocation.getZ()) <= TARGETER_ACCURACY) {
+                } else if (Math.abs(locationZ - entityZ) <= TARGETER_ACCURACY) {
                     add = true;
                 }
                 if (add) {
@@ -262,6 +288,32 @@ public class Utils {
             location.add(direction);
         }
         return targetedEntities;
+    }
+
+    /**
+     * Gets an entities height.
+     * @param entity The entity.
+     * @return The entities height.
+     */
+    public double getEntityHeight(Entity entity) {
+        double y;
+        if (entity instanceof Player || entity instanceof Skeleton || entity instanceof Creeper || entity instanceof Zombie || entity instanceof PigZombie || entity instanceof Snowman
+                || entity instanceof Villager || entity instanceof Blaze) {
+            y = 2.0;
+        } else if (entity instanceof Cow || entity instanceof Pig || entity instanceof Sheep || entity instanceof MushroomCow || entity instanceof MagmaCube || entity instanceof Slime) {
+            y = 1.5;
+        } else if (entity instanceof Chicken || entity instanceof Spider || entity instanceof Wolf) {
+            y = 1.0;
+        } else if (entity instanceof Ocelot || entity instanceof CaveSpider || entity instanceof Silverfish) {
+            y = 0.5;
+        } else if (entity instanceof Enderman) {
+            y = 2.5;
+        } else if (entity instanceof Squid) {
+            y = 0.1;
+        } else {
+            y = 1.0;
+        }
+        return y;
     }
 
     /**
@@ -334,7 +386,8 @@ public class Utils {
      * @return True if the block is attached to the block, else false.
      */
     public Boolean isAttachedToBlock(Block attached, Block block) {
-        return attached.getState().getData() instanceof Attachable && attached.getRelative(((Attachable) attached.getState().getData()).getAttachedFace()).equals(block);
+        MaterialData data = attached.getState().getData();
+        return data instanceof Attachable && attached.getRelative(((Attachable) data).getAttachedFace()).equals(block);
     }
 
 }
