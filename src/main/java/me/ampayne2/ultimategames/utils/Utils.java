@@ -265,20 +265,12 @@ public class Utils {
             double locationY = location.getY();
             double locationZ = location.getZ();
             for (Entity entity : entities) {
-                boolean add = false;
                 Location entityLocation = entity.getLocation();
                 double entityX = entityLocation.getX();
                 double entityYLower = entityLocation.getY();
                 double entityYHigher = entityYLower + getEntityHeight(entity);
                 double entityZ = entityLocation.getZ();
-                if (Math.abs(locationX - entityX) <= TARGETER_ACCURACY) {
-                    add = true;
-                } else if (locationY >= entityYLower && locationY <= entityYHigher) {
-                    add = true;
-                } else if (Math.abs(locationZ - entityZ) <= TARGETER_ACCURACY) {
-                    add = true;
-                }
-                if (add) {
+                if (Math.abs(locationX - entityX) <= TARGETER_ACCURACY && (locationY >= entityYLower && locationY <= entityYHigher) && Math.abs(locationZ - entityZ) <= TARGETER_ACCURACY) {
                     targetedEntities.add(entity);
                     if (highlightEntities) {
                         ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
