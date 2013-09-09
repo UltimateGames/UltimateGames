@@ -14,8 +14,9 @@
  */
 package me.ampayne2.ultimategames.utils;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
@@ -32,7 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.Attachable;
-import org.bukkit.util.BlockIterator;
+import org.bukkit.util.Vector;
 
 public class Utils {
 
@@ -43,7 +44,8 @@ public class Utils {
     private static final int LAST_TWO_DIGITS_TWELVE = 12;
     private static final int LAST_TWO_DIGITS_THIRTEEN = 13;
     private static final long AUTO_RESPAWN_DELAY = 1L;
-    private static final String COLOR_NAME_SEPARATOR = " ";
+    private static final String WORD_SEPARATOR = " ";
+    private static final double TARGETER_ACCURACY = 0.5;
 
     public Utils(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -59,17 +61,17 @@ public class Utils {
         final int lastDigit = roundedValue % LAST_DIGIT_DIVIDER;
         final int last2Digits = roundedValue % LAST_TWO_DIGIT_DIVIDER;
         switch (lastDigit) {
-        case 1:
-            return last2Digits == LAST_TWO_DIGITS_ELEVEN ? "th" : "st";
+            case 1:
+                return last2Digits == LAST_TWO_DIGITS_ELEVEN ? "th" : "st";
 
-        case 2:
-            return last2Digits == LAST_TWO_DIGITS_TWELVE ? "th" : "nd";
+            case 2:
+                return last2Digits == LAST_TWO_DIGITS_TWELVE ? "th" : "nd";
 
-        case 3:
-            return last2Digits == LAST_TWO_DIGITS_THIRTEEN ? "th" : "rd";
+            case 3:
+                return last2Digits == LAST_TWO_DIGITS_THIRTEEN ? "th" : "rd";
 
-        default:
-            return "th";
+            default:
+                return "th";
         }
     }
 
@@ -87,7 +89,7 @@ public class Utils {
         }
         StringBuilder nameBuilder = new StringBuilder(capitalizedNameParts[0]);
         for (int i = 1; i < capitalizedNameParts.length; i++) {
-            nameBuilder.append(COLOR_NAME_SEPARATOR);
+            nameBuilder.append(WORD_SEPARATOR);
             nameBuilder.append(capitalizedNameParts[i]);
         }
         return nameBuilder.toString();
@@ -101,55 +103,55 @@ public class Utils {
     public Color chatColorToColor(ChatColor chatColor) {
         Color color;
         switch (chatColor) {
-        case BLACK:
-            color = Color.BLACK;
-            break;
-        case DARK_BLUE:
-            color = Color.NAVY;
-            break;
-        case DARK_GREEN:
-            color = Color.GREEN;
-            break;
-        case DARK_AQUA:
-            color = Color.AQUA;
-            break;
-        case DARK_RED:
-            color = Color.MAROON;
-            break;
-        case DARK_PURPLE:
-            color = Color.PURPLE;
-            break;
-        case GOLD:
-            color = Color.ORANGE;
-            break;
-        case GRAY:
-            color = Color.SILVER;
-            break;
-        case DARK_GRAY:
-            color = Color.GRAY;
-            break;
-        case BLUE:
-            color = Color.BLUE;
-            break;
-        case GREEN:
-            color = Color.LIME;
-            break;
-        case AQUA:
-            color = Color.TEAL;
-        case RED:
-            color = Color.RED;
-            break;
-        case LIGHT_PURPLE:
-            color = Color.FUCHSIA;
-            break;
-        case YELLOW:
-            color = Color.YELLOW;
-            break;
-        case WHITE:
-            color = Color.WHITE;
-            break;
-        default:
-            color = Color.WHITE;
+            case BLACK:
+                color = Color.BLACK;
+                break;
+            case DARK_BLUE:
+                color = Color.NAVY;
+                break;
+            case DARK_GREEN:
+                color = Color.GREEN;
+                break;
+            case DARK_AQUA:
+                color = Color.AQUA;
+                break;
+            case DARK_RED:
+                color = Color.MAROON;
+                break;
+            case DARK_PURPLE:
+                color = Color.PURPLE;
+                break;
+            case GOLD:
+                color = Color.ORANGE;
+                break;
+            case GRAY:
+                color = Color.SILVER;
+                break;
+            case DARK_GRAY:
+                color = Color.GRAY;
+                break;
+            case BLUE:
+                color = Color.BLUE;
+                break;
+            case GREEN:
+                color = Color.LIME;
+                break;
+            case AQUA:
+                color = Color.TEAL;
+            case RED:
+                color = Color.RED;
+                break;
+            case LIGHT_PURPLE:
+                color = Color.FUCHSIA;
+                break;
+            case YELLOW:
+                color = Color.YELLOW;
+                break;
+            case WHITE:
+                color = Color.WHITE;
+                break;
+            default:
+                color = Color.WHITE;
         }
         return color;
     }
@@ -231,34 +233,35 @@ public class Utils {
      * @param highlightEntities Whether or not it should 'highlight' each entity with an explosion effect.
      * @return The entities.
      */
-    public List<Entity> getEntityTargets(final Player player, Integer range, Boolean highlightPath, Boolean highlightEntities) {
-        BlockIterator iterator = new BlockIterator(player.getWorld(), player.getEyeLocation().toVector(), player.getEyeLocation().getDirection(), 0, range);
-        List<Entity> target = new ArrayList<Entity>();
-        while (iterator.hasNext()) {
-            Block item = iterator.next();
-            if (item.getType() != Material.AIR) {
-                break;
-            }
+    public Set<Entity> getEntityTargets(Player player, double range, Boolean highlightPath, Boolean highlightEntities) {
+        Location location = player.getEyeLocation();
+        Vector direction = location.getDirection();
+        List<Entity> entities = player.getNearbyEntities(range, range, range);
+        Set<Entity> targetedEntities = new HashSet<Entity>();
+        for (int i=0; i < range; i++) {
             if (highlightPath) {
-                ParticleEffect.FIREWORKS_SPARK.play(item.getLocation(), 0, 0, 0, 0, 1);
+                ParticleEffect.FIREWORKS_SPARK.play(location, 0, 0, 0, 0, 1);
             }
-            for (Entity entity : player.getNearbyEntities(range, range, range)) {
-                int acc = 1;
-                for (int x = -acc; x < acc; x++) {
-                    for (int z = -acc; z < acc; z++) {
-                        for (int y = -acc; y < acc; y++) {
-                            if (entity.getLocation().getBlock().getRelative(x, y, z).equals(item)) {
-                                target.add(entity);
-                                if (highlightEntities) {
-                                    ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
-                                }
-                            }
-                        }
+            for (Entity entity : entities) {
+                boolean add = false;
+                Location entityLocation = entity.getLocation();
+                if (Math.abs(location.getX() - entityLocation.getX()) <= TARGETER_ACCURACY) {
+                    add = true;
+                } else if (Math.abs(location.getY() - entityLocation.getY()) <= TARGETER_ACCURACY || Math.abs(location.getY() - (entityLocation.getY() + 1)) <= TARGETER_ACCURACY) {
+                    add = true;
+                } else if (Math.abs(location.getZ() - entityLocation.getZ()) <= TARGETER_ACCURACY) {
+                    add = true;
+                }
+                if (add) {
+                    targetedEntities.add(entity);
+                    if (highlightEntities) {
+                        ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
                     }
                 }
             }
+            location.add(direction);
         }
-        return target;
+        return targetedEntities;
     }
 
     /**
@@ -284,43 +287,43 @@ public class Utils {
      */
     public Boolean hasPhysics(Material material) {
         switch (material) {
-        case ACTIVATOR_RAIL:
-        case ANVIL:
-        case CARPET:
-        case CACTUS:
-        case CROPS:
-        case DEAD_BUSH:
-        case DRAGON_EGG:
-        case FIRE:
-        case FLOWER_POT:
-        case GRAVEL:
-        case IRON_DOOR_BLOCK:
-        case LEVER:
-        case LONG_GRASS:
-        case MELON_STEM:
-        case NETHER_WARTS:
-        case POWERED_RAIL:
-        case RAILS:
-        case RED_MUSHROOM:
-        case RED_ROSE:
-        case REDSTONE_COMPARATOR_OFF:
-        case REDSTONE_COMPARATOR_ON:
-        case REDSTONE_TORCH_OFF:
-        case REDSTONE_TORCH_ON:
-        case REDSTONE_WIRE:
-        case SAND:
-        case SAPLING:
-        case STONE_BUTTON:
-        case SUGAR_CANE_BLOCK:
-        case TORCH:
-        case TRAP_DOOR:
-        case TRIPWIRE_HOOK:
-        case WATER_LILY:
-        case WOOD_BUTTON:
-        case WOODEN_DOOR:
-            return true;
-        default:
-            return false;
+            case ACTIVATOR_RAIL:
+            case ANVIL:
+            case CARPET:
+            case CACTUS:
+            case CROPS:
+            case DEAD_BUSH:
+            case DRAGON_EGG:
+            case FIRE:
+            case FLOWER_POT:
+            case GRAVEL:
+            case IRON_DOOR_BLOCK:
+            case LEVER:
+            case LONG_GRASS:
+            case MELON_STEM:
+            case NETHER_WARTS:
+            case POWERED_RAIL:
+            case RAILS:
+            case RED_MUSHROOM:
+            case RED_ROSE:
+            case REDSTONE_COMPARATOR_OFF:
+            case REDSTONE_COMPARATOR_ON:
+            case REDSTONE_TORCH_OFF:
+            case REDSTONE_TORCH_ON:
+            case REDSTONE_WIRE:
+            case SAND:
+            case SAPLING:
+            case STONE_BUTTON:
+            case SUGAR_CANE_BLOCK:
+            case TORCH:
+            case TRAP_DOOR:
+            case TRIPWIRE_HOOK:
+            case WATER_LILY:
+            case WOOD_BUTTON:
+            case WOODEN_DOOR:
+                return true;
+            default:
+                return false;
         }
     }
 

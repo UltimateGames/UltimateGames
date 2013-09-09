@@ -75,11 +75,11 @@ public abstract class GameClass {
     public boolean addPlayerToClass(Player player) {
         String playerName = player.getName();
         if (!players.contains(playerName)) {
-            players.add(playerName);
             GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(game, playerName);
             if (gameClass != null) {
                 gameClass.removePlayerFromClass(playerName);
             }
+            players.add(playerName);
             ArenaStatus arenaStatus = ultimateGames.getPlayerManager().getPlayerArena(playerName).getStatus();
             if (canSwitchToWithoutDeath || arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
                 ultimateGames.getMessageManager().sendReplacedMessage(player, "classes.join", name);
@@ -102,11 +102,11 @@ public abstract class GameClass {
     public boolean addPlayerToClass(Player player, Boolean resetInventory) {
         String playerName = player.getName();
         if (!players.contains(playerName)) {
-            players.add(playerName);
             GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(game, playerName);
             if (gameClass != null) {
                 gameClass.removePlayerFromClass(playerName);
             }
+            players.add(playerName);
             if (resetInventory) {
                 ultimateGames.getMessageManager().sendReplacedMessage(player, "classes.join", name);
                 resetInventory(player);

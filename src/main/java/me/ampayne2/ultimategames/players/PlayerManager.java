@@ -281,7 +281,7 @@ public class PlayerManager implements Listener, Manager {
             players.remove(playerName);
 
             // Removes the player from any teams the player is in
-            ultimateGames.getTeamManager().removePlayerFromTeam(player);
+            ultimateGames.getTeamManager().removePlayerFromTeam(playerName);
 
             // Removes the player from any classes the player is in
             GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(arena.getGame(), playerName);
@@ -301,6 +301,8 @@ public class PlayerManager implements Listener, Manager {
             if (scoreBoard != null) {
                 scoreBoard.removePlayer(player);
             }
+            
+            ultimateGames.getTeamManager().removePlayerFromTeam(playerName);
 
             // Extinguish the spectator if on fire
             player.setFireTicks(0);
@@ -466,6 +468,9 @@ public class PlayerManager implements Listener, Manager {
         }
         if (playersInLimbo.contains(playerName)) {
             Bukkit.getPlayerExact(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
+            playersInLimbo.remove(playerName);
+            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set(LIMBO, playersInLimbo);
+            ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
         }
     }
 

@@ -109,6 +109,7 @@ public class ManagerController {
         if (!(queueManager.load() && spawnpointManager.load() && scoreboardManager.load() && teamManager.load() && arenaManager.load())) {
             return false;
         }
+        metricsManager.addTotalPlayersGraph();
         if (ultimateGames.getConfig().getBoolean("enableAPI")) {
             try {
                 ultimateGames.getLogger().info("Enabling live stats API link");

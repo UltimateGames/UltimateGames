@@ -71,11 +71,11 @@ public class LobbyManager implements Manager {
     }
 
     public Location getLobby() {
-        return this.lobby;
+        return lobby;
     }
 
     public void setLobby(Location location) {
-        this.lobby = location;
+        lobby = location;
         FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getLobbyConfig().getConfig();
         lobbyConfig.set("world", location.getWorld().getName());
         lobbyConfig.set("x", location.getX());

@@ -7,7 +7,6 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.scoreboards.ArenaScoreboard;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -22,6 +21,7 @@ public class Team {
     private Arena arena;
     private boolean friendlyFire;
     private List<String> players = new ArrayList<String>();
+    private static final int MAX_NAME_LENGTH = 14;
     
     /**
      * Creates a new team.
@@ -35,7 +35,7 @@ public class Team {
         this.arena = arena;
         this.color = color;
         // Keeps the name from being longer than 16 (14 + color) and potentially crashing players in the arena
-        this.name = name.substring(0, Math.min(name.length(), 14));
+        this.name = name.substring(0, Math.min(name.length(), MAX_NAME_LENGTH));
         this.friendlyFire = friendlyFire;
     }
     
@@ -93,7 +93,7 @@ public class Team {
      * @return True if the team has space, else false.
      */
     public boolean hasSpace() {
-        return Math.floor(arena.getPlayers().size() / ultimateGames.getTeamManager().getTeamsOfArena(arena).size()) > players.size();
+        return Math.floor(arena.getPlayers().size() / ultimateGames.getTeamManager().getTeamsOfArena(arena).size()) >= players.size();
     }
     
     /**
@@ -122,15 +122,14 @@ public class Team {
     
     /**
      * Removes a player from the team.
-     * @param player The player to remove from the team.
+     * @param playerName Name of the player to remove from the team.
      */
-    public void removePlayer(Player player) {
-        String playerName = player.getName();
+    public void removePlayer(String playerName) {
         if (players.contains(playerName)) {
             players.remove(playerName);
             ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
             if (scoreBoard != null) {
-                scoreBoard.resetPlayerColor(player);
+                scoreBoard.resetPlayerColor(playerName);
             }
         }
     }
@@ -142,7 +141,7 @@ public class Team {
         for (String playerName : players) {
             ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
             if (scoreBoard != null) {
-                scoreBoard.resetPlayerColor(Bukkit.getPlayerExact(playerName));
+                scoreBoard.resetPlayerColor(playerName);
             }
         }
         players.clear();

@@ -4,7 +4,7 @@ description: The Ultimate Game Plugin
 author: ampayne2
 main: me.ampayne2.ultimategames.UltimateGames
 load: POSTWORLD
-softdepend: [PlayerHeads]
+softdepend: [PlayerHeads, Multiverse-Core]
 commands:
   ultimategames:
     aliases: ug

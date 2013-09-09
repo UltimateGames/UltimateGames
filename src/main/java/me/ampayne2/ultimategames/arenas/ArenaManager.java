@@ -25,6 +25,8 @@ import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
+import me.ampayne2.ultimategames.teams.Team;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -73,7 +75,6 @@ public class ArenaManager implements Manager {
                         Location minLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.minx"), LOCATION_Y, arenaConfig.getInt(arenaPath + ".Arena-Location.minz"));
                         Location maxLocation = new Location(world, arenaConfig.getInt(arenaPath + ".Arena-Location.maxx"), LOCATION_Y, arenaConfig.getInt(arenaPath + ".Arena-Location.maxz"));
                         Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, minLocation, maxLocation);
-                        arena.setStatus(ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status")));
                         addArena(arena);
                         Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
                         if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
@@ -259,6 +260,10 @@ public class ArenaManager implements Manager {
             arena.getGame().getGamePlugin().endArena(arena);
             
             ultimateGames.getScoreboardManager().removeArenaScoreboard(arena);
+            
+            for (Team team : ultimateGames.getTeamManager().getTeamsOfArena(arena)) {
+                team.removePlayers();
+            }
 
             ultimateGames.getMessageManager().broadcastMessageToArena(arena, "arenas.end");
 

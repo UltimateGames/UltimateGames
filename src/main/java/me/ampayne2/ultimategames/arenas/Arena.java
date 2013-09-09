@@ -46,7 +46,7 @@ public class Arena implements Listener {
     private UltimateGames ultimateGames;
     private Game game;
     private String arenaName;
-    private ArenaStatus arenaStatus;
+    private ArenaStatus arenaStatus = ArenaStatus.OPEN;
     private List<String> players = new ArrayList<String>();
     private List<String> spectators = new ArrayList<String>();
     private int minPlayers;
@@ -68,12 +68,12 @@ public class Arena implements Listener {
     private int timesPlayed;
     private static final int DEFAULT_MIN_PLAYERS = 4;
     private static final int DEFAULT_MAX_PLAYERS = 8;
+    private static final String PATH_SEPARATOR = ".";
 
     public Arena(UltimateGames ultimateGames, Game game, String arenaName, Location corner1, Location corner2) {
         this.ultimateGames = ultimateGames;
         this.arenaName = arenaName;
         this.game = game;
-        arenaStatus = ArenaStatus.OPEN;
         FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
         String arenaPath = "Arenas." + game.getName() + "." + arenaName;
@@ -88,6 +88,7 @@ public class Arena implements Listener {
         allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false));
         allowMobSpawning = arenaConfig.getBoolean(arenaPath + ".Allow-Mob-Spawning", gamesConfig.getBoolean("DefaultSettings.Allow-Mob-Spawning", false));
         minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", DEFAULT_MIN_PLAYERS));
+        arenaStatus = ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status", "ARENA_STOPPED"));
         if (game.getPlayerType() == PlayerType.SINGLE_PLAYER) {
             maxPlayers = 1;
         } else if (game.getPlayerType() == PlayerType.TWO_PLAYER) {
@@ -390,7 +391,7 @@ public class Arena implements Listener {
         if (enabled) {
             arenaStatus = status;
             FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-            arenaConfig.set("Arenas." + game.getName() + "." + arenaName + ".Status", status.toString());
+            arenaConfig.set("Arenas." + game.getName() + PATH_SEPARATOR + arenaName + ".Status", status.toString());
             ultimateGames.getConfigManager().getArenaConfig().saveConfig();
             if (ultimateGames.getUGSignManager() != null) {
                 ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);

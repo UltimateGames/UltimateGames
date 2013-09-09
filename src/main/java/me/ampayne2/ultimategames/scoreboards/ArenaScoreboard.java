@@ -1,20 +1,16 @@
 /*
  * This file is part of UltimateGames.
- *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
- *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.scoreboards;
 
@@ -29,7 +25,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 public class ArenaScoreboard {
-    
+
     private Scoreboard scoreboard;
     private String name;
 
@@ -76,7 +72,7 @@ public class ArenaScoreboard {
      * @param playerName The name of the player.
      */
     public void removePlayer(Player player) {
-        resetPlayerColor(player);
+        resetPlayerColor(player.getName());
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
@@ -89,32 +85,29 @@ public class ArenaScoreboard {
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
     }
-    
+
     /**
      * Sets a player's name to a certain color.
      * @param playerName The player.
      * @param chatColor The color.
      */
     public void setPlayerColor(Player player, ChatColor chatColor) {
-        Team team;
-        team = scoreboard.getTeam(player.getName());
+        Team team = scoreboard.getPlayerTeam(player);
         if (team != null) {
-            team.setPrefix(chatColor + "");
-        } else {
-            team = scoreboard.registerNewTeam(player.getName());
-            team.setPrefix(chatColor + "");
-            team.addPlayer(player);
+            team.unregister();
         }
+        team = scoreboard.registerNewTeam(player.getName());
+        team.setPrefix(chatColor + "");
+        team.addPlayer(player);
     }
-    
+
     /**
      * Resets a player's name's color.
      * @param playerName The player.
      */
-    public void resetPlayerColor(Player player) {
-        Team team = scoreboard.getTeam(player.getName());
+    public void resetPlayerColor(String playerName) {
+        Team team = scoreboard.getTeam(playerName);
         if (team != null) {
-            team.removePlayer(player);
             team.unregister();
         }
     }

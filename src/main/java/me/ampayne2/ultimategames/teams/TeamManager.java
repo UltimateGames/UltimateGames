@@ -198,10 +198,10 @@ public class TeamManager implements Manager {
      */
     public boolean setPlayerTeam(Player player, Team team) {
         String playerName = player.getName();
-        if (loaded && ultimateGames.getPlayerManager().isPlayerInArena(playerName) && ultimateGames.getPlayerManager().getArenaPlayer(playerName).equals(team.getArena())) {
+        if (loaded && ultimateGames.getPlayerManager().isPlayerInArena(playerName) && ultimateGames.getPlayerManager().getArenaPlayer(playerName).getArena().equals(team.getArena())) {
             Team oldTeam = getPlayerTeam(playerName);
             if (oldTeam != null) {
-                oldTeam.removePlayer(player);
+                oldTeam.removePlayer(playerName);
                 ultimateGames.getMessageManager().sendReplacedMessage(player, "teams.leave", oldTeam.getColor() + oldTeam.getName());
             }
             team.addPlayer(player);
@@ -214,14 +214,13 @@ public class TeamManager implements Manager {
     
     /**
      * Removes a player from their team if they are in one.
-     * @param player The player to remove from their team.
+     * @param playerName Name of the player to remove from their team.
      */
-    public void removePlayerFromTeam(Player player) {
-        String playerName = player.getName();
+    public void removePlayerFromTeam(String playerName) {
         if (loaded) {
             Team team = getPlayerTeam(playerName);
             if (team != null) {
-                team.removePlayer(player);
+                team.removePlayer(playerName);
             }
         }
     }
@@ -266,8 +265,8 @@ public class TeamManager implements Manager {
                 playersNotInTeamsAmount = playersNotInTeams.size();
             } else {
                 String playerName = playersInTeams.get(playersInTeamsAmount - 1);
+                getPlayerTeam(playerName).removePlayer(playerName);
                 Player player = Bukkit.getPlayerExact(playerName);
-                getPlayerTeam(playerName).removePlayer(player);
                 ultimateGames.getPlayerManager().removePlayerFromArena(player, false);
                 ultimateGames.getMessageManager().sendMessage(player, "arenas.kick");
                 playersInTeams.remove(playerName);
@@ -282,9 +281,8 @@ public class TeamManager implements Manager {
             List<String> teamPlayers = team.getPlayers();
             while ((playerAmount / teamAmount) < teamPlayers.size()) {
                 String playerName = teamPlayers.get(teamPlayers.size() - 1);
-                Player player = Bukkit.getPlayerExact(playerName);
-                team.removePlayer(player);
-                ultimateGames.getMessageManager().sendReplacedMessage(player, "teams.kick", team.getColor() + team.getName());
+                team.removePlayer(playerName);
+                ultimateGames.getMessageManager().sendReplacedMessage(Bukkit.getPlayerExact(playerName), "teams.kick", team.getColor() + team.getName());
                 playersNotInTeams.add(playerName);
             }
         }
