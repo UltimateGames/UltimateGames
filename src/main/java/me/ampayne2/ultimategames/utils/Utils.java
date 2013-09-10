@@ -258,6 +258,9 @@ public class Utils {
         List<Entity> entities = player.getNearbyEntities(range, range, range);
         Set<Entity> targetedEntities = new HashSet<Entity>();
         for (int i = 0; i < range; i++) {
+            if (location.getBlock().getType() != Material.AIR) {
+                break;
+            }
             if (highlightPath) {
                 ParticleEffect.FIREWORKS_SPARK.play(location, 0, 0, 0, 0, 1);
             }
