@@ -252,13 +252,13 @@ public class Utils {
      * @param highlightEntities Whether or not it should 'highlight' each entity with an explosion effect.
      * @return The entities.
      */
-    public Set<Entity> getEntityTargets(Player player, double range, Boolean highlightPath, Boolean highlightEntities) {
+    public Set<Entity> getEntityTargets(Player player, double range, Boolean goThroughWalls, Boolean highlightPath, Boolean highlightEntities) {
         Location location = player.getEyeLocation();
         Vector direction = location.getDirection();
         List<Entity> entities = player.getNearbyEntities(range, range, range);
         Set<Entity> targetedEntities = new HashSet<Entity>();
         for (int i = 0; i < range; i++) {
-            if (location.getBlock().getType() != Material.AIR) {
+            if (goThroughWalls && location.getBlock().getType() != Material.AIR) {
                 break;
             }
             if (highlightPath) {
