@@ -1,3 +1,21 @@
+/*
+ * This file is part of UltimateGames.
+ *
+ * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
+ *
+ * UltimateGames is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * UltimateGames is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package me.ampayne2.ultimategames.classes;
 
 import java.util.HashMap;
@@ -10,8 +28,11 @@ import java.util.Set;
 import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.games.Game;
 
+/**
+ * Manages player classes for games.
+ */
 public class ClassManager implements Manager {
-    
+
     private boolean enabled = false;
     private Map<Game, Set<GameClass>> gameClasses = new HashMap<Game, Set<GameClass>>();
 
@@ -51,7 +72,7 @@ public class ClassManager implements Manager {
     public boolean isLoaded() {
         return enabled;
     }
-    
+
     /**
      * Checks if a game has a certain GameClass.
      * @param game The game.
@@ -61,7 +82,7 @@ public class ClassManager implements Manager {
     public boolean hasGameClass(Game game, GameClass gameClass) {
         return enabled && gameClasses.containsKey(game) && gameClasses.get(game).contains(gameClass);
     }
-    
+
     /**
      * Gets the classes of a game.
      * @param game The game.
@@ -70,7 +91,7 @@ public class ClassManager implements Manager {
     public Set<GameClass> getGameClasses(Game game) {
         return enabled && gameClasses.containsKey(game) ? new HashSet<GameClass>(gameClasses.get(game)) : new HashSet<GameClass>();
     }
-    
+
     /**
      * Adds a GameClass to the list of game classes.
      * @param game The game.
@@ -85,11 +106,11 @@ public class ClassManager implements Manager {
                 gameClasses.put(game, classes);
                 return true;
             }
-            
+
         }
         return false;
     }
-    
+
     /**
      * Removes a GameClass from the list of game classes.
      * @param game The game.
@@ -104,7 +125,7 @@ public class ClassManager implements Manager {
             }
         }
     }
-    
+
     /**
      * Gets a player's GameClass.
      * @param game The game of the player.

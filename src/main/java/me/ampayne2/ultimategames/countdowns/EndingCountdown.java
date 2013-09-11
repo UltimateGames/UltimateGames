@@ -25,8 +25,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * A type of countdown used to end the game.
+ */
 public class EndingCountdown extends BukkitRunnable {
-    
+
     private UltimateGames ultimateGames;
     private Arena arena;
     private int initialSeconds;
@@ -36,6 +39,14 @@ public class EndingCountdown extends BukkitRunnable {
     private static final int END_COUNTDOWN_TIME = 0;
     private static final long SECOND_LENGTH = 20L;
 
+    /**
+     * Creates a new Ending Countdown.
+     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param arena The arena of the countdown.
+     * @param initialSeconds Initial seconds of the countdown.
+     * @param secondsLeft How many seconds are left on the countdown.
+     * @param expDisplay If the countdown should display exp.
+     */
     public EndingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds, int secondsLeft, Boolean expDisplay) {
         this.ultimateGames = ultimateGames;
         this.arena = arena;
@@ -55,7 +66,7 @@ public class EndingCountdown extends BukkitRunnable {
         if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
         } else if (secondsLeft == END_COUNTDOWN_TIME) {
-        	ultimateGames.getCountdownManager().stopEndingCountdown(arena);
+            ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             ultimateGames.getArenaManager().endArena(arena);
         }
         if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {

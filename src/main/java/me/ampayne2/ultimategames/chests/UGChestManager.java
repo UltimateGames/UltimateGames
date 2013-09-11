@@ -1,3 +1,21 @@
+/*
+ * This file is part of UltimateGames.
+ *
+ * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
+ *
+ * UltimateGames is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * UltimateGames is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package me.ampayne2.ultimategames.chests;
 
 import java.util.ArrayList;
@@ -21,10 +39,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
 
-
+/**
+ * Manages the UG chests for arenas.
+ */
 @SuppressWarnings("unchecked")
 public class UGChestManager implements Manager {
-    
+
     private boolean loaded = false;
     private UltimateGames ultimateGames;
     private List<RandomChest> randomChests = new ArrayList<RandomChest>();
@@ -36,6 +56,10 @@ public class UGChestManager implements Manager {
     private static final int LABEL_INDEX = 4;
     private static final String PATH_SEPARATOR = ".";
 
+    /**
+     * Creates a new Chest Manager.
+     * @param ultimateGames A reference to the UltimateGames instance.
+     */
     public UGChestManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
@@ -271,14 +295,14 @@ public class UGChestManager implements Manager {
             ugChestConfig.set(chestPath, ugChests);
             ultimateGames.getConfigManager().getUGChestConfig().saveConfig();
             switch (chestType) {
-            case RANDOM:
-                RandomChest randomChest = new RandomChest(ultimateGames, chest, arena);
-                randomChests.add(randomChest);
-                return randomChest;
-            case STATIC:
-                StaticChest staticChest = new StaticChest(ultimateGames, label, chest, arena);
-                staticChests.add(staticChest);
-                return staticChest;
+                case RANDOM:
+                    RandomChest randomChest = new RandomChest(ultimateGames, chest, arena);
+                    randomChests.add(randomChest);
+                    return randomChest;
+                case STATIC:
+                    StaticChest staticChest = new StaticChest(ultimateGames, label, chest, arena);
+                    staticChests.add(staticChest);
+                    return staticChest;
             }
         }
         return null;
@@ -318,12 +342,12 @@ public class UGChestManager implements Manager {
                 ultimateGames.getConfigManager().getUGChestConfig().saveConfig();
             }
             switch (chestType) {
-            case RANDOM:
-                randomChests.remove(ugChest);
-                break;
-            case STATIC:
-                staticChests.remove(ugChest);
-                break;
+                case RANDOM:
+                    randomChests.remove(ugChest);
+                    break;
+                case STATIC:
+                    staticChests.remove(ugChest);
+                    break;
             }
         }
     }
@@ -354,12 +378,12 @@ public class UGChestManager implements Manager {
                                     if (locBlock.getType() == Material.WALL_SIGN || locBlock.getType() == Material.SIGN_POST) {
                                         Arena arena = ultimateGames.getArenaManager().getArena(arenaKey, gameKey);
                                         switch (chestType) {
-                                        case RANDOM:
-                                            randomChests.add(new RandomChest(ultimateGames, (Chest) locBlock.getState(), arena));
-                                            break;
-                                        case STATIC:
-                                            staticChests.add(new StaticChest(ultimateGames, chestInfo.get(LABEL_INDEX), (Chest) locBlock.getState(), arena));
-                                            break;
+                                            case RANDOM:
+                                                randomChests.add(new RandomChest(ultimateGames, (Chest) locBlock.getState(), arena));
+                                                break;
+                                            case STATIC:
+                                                staticChests.add(new StaticChest(ultimateGames, chestInfo.get(LABEL_INDEX), (Chest) locBlock.getState(), arena));
+                                                break;
                                         }
                                     }
                                 }

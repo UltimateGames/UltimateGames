@@ -1,3 +1,21 @@
+/*
+ * This file is part of UltimateGames.
+ *
+ * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
+ *
+ * UltimateGames is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * UltimateGames is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package me.ampayne2.ultimategames.arenas;
 
 import java.util.ArrayList;
@@ -15,6 +33,9 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.database.tables.BlockChangeTable;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 
+/**
+ * Handles arena logging and rolling back.
+ */
 public class LogManager {
 
     private boolean loaded = false;
@@ -31,6 +52,10 @@ public class LogManager {
     private static final int CHANGES_PER_ITERATION = 200;
     private static final int DOOR_BIT = 0x8;
 
+    /**
+     * Creates a new log manager.
+     * @param ultimateGames A reference to the UltimateGames instance.
+     */
     public LogManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
@@ -70,16 +95,31 @@ public class LogManager {
         return loaded;
     }
 
+    /**
+     * Logs a BlockChange.
+     * @param arena The arena of the change.
+     * @param material The material of the original block.
+     * @param data The data of the original block.
+     * @param location The location of the change.
+     */
     public void logBlockChange(Arena arena, Material material, byte data, Location location) {
         pendingChanges.add(new BlockChange(arena, material, data, location));
     }
 
+    /**
+     * Logs a collection of block changes.
+     * @param arena The arena of the changes.
+     * @param blocks The blocks to be logged.
+     */
     public void logBlockChanges(Arena arena, Collection<Block> blocks) {
         for (Block block : blocks) {
             pendingChanges.add(new BlockChange(arena, block.getType(), block.getData(), block.getLocation()));
         }
     }
 
+    /**
+     * Starts log saving.
+     */
     public void startLogSaving() {
         logTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, new Runnable() {
             @Override
@@ -121,6 +161,9 @@ public class LogManager {
         }, SAVE_DELAY, SAVE_PERIOD);
     }
 
+    /**
+     * Stops log saving.
+     */
     public void stopLogSaving() {
         if (logTask != null) {
             Bukkit.getScheduler().cancelTask(logTask);
@@ -128,12 +171,20 @@ public class LogManager {
         }
     }
 
+    /**
+     * Rolls back an arena.
+     * @param arena The arena to roll back.
+     */
     public void rollbackArena(Arena arena) {
         if (!rollbackTask.containsKey(arena)) {
             startRollingBack(arena);
         }
     }
 
+    /**
+     * Starts rolling back an arena.
+     * @param arena The arena to start rolling back.
+     */
     public void startRollingBack(final Arena arena) {
         rollbackTask.put(arena, Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, new Runnable() {
             @Override
@@ -168,6 +219,10 @@ public class LogManager {
         }, ROLLBACK_DELAY, ROLLBACK_PERIOD));
     }
 
+    /**
+     * Stops rolling back an arena.
+     * @param arena The arena to stop rolling back.
+     */
     public void stopRollingBack(Arena arena) {
         if (rollbackTask.containsKey(arena)) {
             Bukkit.getScheduler().cancelTask(rollbackTask.get(arena));

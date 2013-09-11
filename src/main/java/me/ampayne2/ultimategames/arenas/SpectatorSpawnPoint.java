@@ -16,50 +16,52 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.players;
+package me.ampayne2.ultimategames.arenas;
 
-import me.ampayne2.ultimategames.arenas.Arena;
-
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class ArenaSpectator {
-    
-    private String playerName;
+/**
+ * An arena spawn point for spectators.
+ */
+public class SpectatorSpawnPoint {
+
     private Arena arena;
-    
+    private Location location;
+
     /**
-     * Represents a player spectating an arena.
-     * @param playerName The player's name.
-     * @param arena The arena.
+     * Creates a new SpectatorSpawnPoint
+     * @param ultimateGames A reference to the ultimateGames instance.
+     * @param arena The arena of the spawnpoint.
+     * @param location The location of the spawnpoint.
      */
-    public ArenaSpectator(String playerName, Arena arena) {
-        this.playerName = playerName;
+    public SpectatorSpawnPoint(Arena arena, Location location) {
         this.arena = arena;
+        this.location = location;
     }
-    
+
     /**
-     * Gets the player.
-     * @return The player.
-     */
-    public Player getPlayer() {
-        return Bukkit.getPlayerExact(playerName);
-    }
-    
-    /**
-     * Gets a player's name.
-     * @return The player's name.
-     */
-    public String getPlayerName() {
-        return playerName;
-    }
-    
-    /**
-     * Gets the player's arena.
-     * @return The player's arena.
+     * Gets the spawnpoint's arena.
+     * @return The spawnpoint's arena.
      */
     public Arena getArena() {
         return arena;
+    }
+
+    /**
+     * Gets the spawnpoint's location.
+     * @return The spawnpoint's location.
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * Teleports a player to the spawnpoint.
+     * @param player The player to teleport.
+     */
+    public void teleportPlayer(Player player) {
+        player.teleport(location);
     }
 
 }

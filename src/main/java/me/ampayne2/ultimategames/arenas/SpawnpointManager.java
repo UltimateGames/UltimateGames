@@ -23,23 +23,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import me.ampayne2.ultimategames.Manager;
 import me.ampayne2.ultimategames.UltimateGames;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
+/**
+ * Manages arena spawnpoints for players and spectators.
+ */
 public class SpawnpointManager implements Manager {
-    
+
     private boolean loaded = false;
     private UltimateGames ultimateGames;
-    private Map<Arena, List<SpawnPoint>> spawnPoints = new HashMap<Arena, List<SpawnPoint>>();
+    private Map<Arena, List<PlayerSpawnPoint>> playerSpawnPoints = new HashMap<Arena, List<PlayerSpawnPoint>>();
+    private Map<Arena, SpectatorSpawnPoint> spectatorSpawnPoints = new HashMap<Arena, SpectatorSpawnPoint>();
+    private static final String PATH_SEPARATOR = ".";
 
+    /**
+     * Creates a new Spawnpoint Manager.
+     * @param ultimateGames A reference to the UltimateGames instance.
+     */
     public SpawnpointManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
-    
+
     @Override
     public boolean load() {
         loaded = true;
@@ -54,7 +62,8 @@ public class SpawnpointManager implements Manager {
 
     @Override
     public void unload() {
-        spawnPoints.clear();
+        playerSpawnPoints.clear();
+        spectatorSpawnPoints.clear();
         loaded = false;
     }
 
@@ -70,22 +79,40 @@ public class SpawnpointManager implements Manager {
      * @return If the arena has a spawnpoint at the index or not.
      */
     public Boolean hasSpawnPointAtIndex(Arena arena, Integer index) {
-        return spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= index;
+        return playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= index;
     }
 
     /**
      * Adds a spawnpoint to the manager.
      * @param spawnPoint The spawnpoint.
      */
-    public void addSpawnPoint(SpawnPoint spawnPoint) {
-        if (spawnPoints.containsKey(spawnPoint.getArena())) {
-            spawnPoints.get(spawnPoint.getArena()).add(spawnPoint);
+    public void addSpawnPoint(PlayerSpawnPoint spawnPoint) {
+        if (playerSpawnPoints.containsKey(spawnPoint.getArena())) {
+            playerSpawnPoints.get(spawnPoint.getArena()).add(spawnPoint);
         } else {
-            List<SpawnPoint> spawn = new ArrayList<SpawnPoint>();
+            List<PlayerSpawnPoint> spawn = new ArrayList<PlayerSpawnPoint>();
             spawn.add(spawnPoint);
-            spawnPoints.put(spawnPoint.getArena(), spawn);
+            playerSpawnPoints.put(spawnPoint.getArena(), spawn);
         }
         ultimateGames.getServer().getPluginManager().registerEvents(spawnPoint, ultimateGames);
+    }
+
+    /**
+     * Creates a new Spectator spawnpoint and adds it to the manager and config.
+     * @param arena The spawnpoint's arena.
+     * @param location The spawnpoint's location.
+     */
+    public void setSpectatorSpawnPoint(Arena arena, Location location) {
+        List<String> newSpawnPoint = new ArrayList<String>();
+        newSpawnPoint.add(String.valueOf(location.getX()));
+        newSpawnPoint.add(String.valueOf(location.getY()));
+        newSpawnPoint.add(String.valueOf(location.getZ()));
+        newSpawnPoint.add(String.valueOf(location.getPitch()));
+        newSpawnPoint.add(String.valueOf(location.getYaw()));
+        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+        String path = "Arenas." + arena.getGame().getName() + PATH_SEPARATOR + arena.getName() + ".SpectatorSpawnpoint";
+        arenaConfig.set(path, newSpawnPoint);
+        spectatorSpawnPoints.put(arena, new SpectatorSpawnPoint(arena, location));
     }
 
     /**
@@ -96,7 +123,7 @@ public class SpawnpointManager implements Manager {
      * @param locked If the spawnpoint prevents the player from moving off of it.
      * @return The spawnpoint created.
      */
-    public SpawnPoint createSpawnPoint(Arena arena, Location location, Boolean locked) {
+    public PlayerSpawnPoint createSpawnPoint(Arena arena, Location location, Boolean locked) {
         List<String> newSpawnPoint = new ArrayList<String>();
         newSpawnPoint.add(String.valueOf(location.getX()));
         newSpawnPoint.add(String.valueOf(location.getY()));
@@ -105,7 +132,7 @@ public class SpawnpointManager implements Manager {
         newSpawnPoint.add(String.valueOf(location.getYaw()));
         newSpawnPoint.add(String.valueOf(locked));
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-        String path = "Arenas." + arena.getGame().getName() + "." + arena.getName() + ".SpawnPoints";
+        String path = "Arenas." + arena.getGame().getName() + PATH_SEPARATOR + arena.getName() + ".SpawnPoints";
         if (ultimateGames.getConfigManager().getArenaConfig().getConfig().contains(path)) {
             @SuppressWarnings("unchecked")
             List<List<String>> arenaSpawnPoints = (ArrayList<List<String>>) arenaConfig.getList(path);
@@ -117,7 +144,7 @@ public class SpawnpointManager implements Manager {
             arenaConfig.set(path, arenaSpawnPoints);
         }
         ultimateGames.getConfigManager().getArenaConfig().saveConfig();
-        SpawnPoint spawnPoint = new SpawnPoint(ultimateGames, arena, location, locked);
+        PlayerSpawnPoint spawnPoint = new PlayerSpawnPoint(ultimateGames, arena, location, locked);
         addSpawnPoint(spawnPoint);
         return spawnPoint;
     }
@@ -128,11 +155,24 @@ public class SpawnpointManager implements Manager {
      * @param index The spawnpoint index.
      * @return The spawnpoint.
      */
-    public SpawnPoint getSpawnPoint(Arena arena, Integer index) {
-        if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= index) {
-            return spawnPoints.get(arena).get(index);
+    public PlayerSpawnPoint getSpawnPoint(Arena arena, Integer index) {
+        if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= index) {
+            return playerSpawnPoints.get(arena).get(index);
         }
         return null;
+    }
+
+    /**
+     * Gets an arena's spectator spawnpoint.
+     * @param arena The arena.
+     * @return The spawnpoint.
+     */
+    public SpectatorSpawnPoint getSpectatorSpawnPoint(Arena arena) {
+        if (spectatorSpawnPoints.containsKey(arena)) {
+            return spectatorSpawnPoints.get(arena);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -140,11 +180,11 @@ public class SpawnpointManager implements Manager {
      * @param arena The arena.
      * @return The spawnpoint.
      */
-    public SpawnPoint getRandomSpawnPoint(Arena arena) {
-        if (spawnPoints.containsKey(arena)) {
+    public PlayerSpawnPoint getRandomSpawnPoint(Arena arena) {
+        if (playerSpawnPoints.containsKey(arena)) {
             Random generator = new Random();
-            Integer index = generator.nextInt(spawnPoints.get(arena).size());
-            return spawnPoints.get(arena).get(index);
+            Integer index = generator.nextInt(playerSpawnPoints.get(arena).size());
+            return playerSpawnPoints.get(arena).get(index);
         }
         return null;
     }
@@ -156,11 +196,11 @@ public class SpawnpointManager implements Manager {
      * @param minIndex The minimum index.
      * @return The spawnpoint.
      */
-    public SpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex) {
-        if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() > minIndex) {
+    public PlayerSpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex) {
+        if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() > minIndex) {
             Random generator = new Random();
-            Integer index = generator.nextInt(spawnPoints.get(arena).size() - minIndex) + minIndex;
-            return spawnPoints.get(arena).get(index);
+            Integer index = generator.nextInt(playerSpawnPoints.get(arena).size() - minIndex) + minIndex;
+            return playerSpawnPoints.get(arena).get(index);
         }
         return null;
     }
@@ -173,11 +213,11 @@ public class SpawnpointManager implements Manager {
      * @param maxIndex The maximum index.
      * @return The spawnpoint.
      */
-    public SpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex, Integer maxIndex) {
-        if (spawnPoints.containsKey(arena) && minIndex < maxIndex && spawnPoints.get(arena).size() > maxIndex) {
+    public PlayerSpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex, Integer maxIndex) {
+        if (playerSpawnPoints.containsKey(arena) && minIndex < maxIndex && playerSpawnPoints.get(arena).size() > maxIndex) {
             Random generator = new Random();
             Integer index = generator.nextInt(maxIndex - minIndex + 1) + minIndex;
-            return spawnPoints.get(arena).get(index);
+            return playerSpawnPoints.get(arena).get(index);
         }
         return null;
     }
@@ -191,14 +231,14 @@ public class SpawnpointManager implements Manager {
      * @param amount The amount of spawnpoints to get.
      * @return The spawnpoints.
      */
-    public List<SpawnPoint> getDistributedSpawnPoints(Arena arena, Integer amount) {
-        if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= amount) {
-            List<SpawnPoint> distributedSpawnPoints = new ArrayList<SpawnPoint>();
-            Integer size = spawnPoints.get(arena).size();
+    public List<PlayerSpawnPoint> getDistributedSpawnPoints(Arena arena, Integer amount) {
+        if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= amount) {
+            List<PlayerSpawnPoint> distributedSpawnPoints = new ArrayList<PlayerSpawnPoint>();
+            Integer size = playerSpawnPoints.get(arena).size();
             Double multiple = (double) size / (double) amount;
             for (int i = 0; i < amount; i++) {
                 Integer index = (int) Math.round(i * multiple);
-                distributedSpawnPoints.add(spawnPoints.get(arena).get(index));
+                distributedSpawnPoints.add(playerSpawnPoints.get(arena).get(index));
             }
             return distributedSpawnPoints;
         }
@@ -210,9 +250,9 @@ public class SpawnpointManager implements Manager {
      * @param arena The arena.
      * @return The spawnpoints.
      */
-    public List<SpawnPoint> getSpawnPointsOfArena(Arena arena) {
-        if (spawnPoints.containsKey(arena)) {
-            return spawnPoints.get(arena);
+    public List<PlayerSpawnPoint> getSpawnPointsOfArena(Arena arena) {
+        if (playerSpawnPoints.containsKey(arena)) {
+            return playerSpawnPoints.get(arena);
         } else {
             return null;
         }
@@ -224,9 +264,9 @@ public class SpawnpointManager implements Manager {
      * @param index The index.
      */
     public void removeSpawnPoint(Arena arena, Integer index) {
-        if (spawnPoints.containsKey(arena) && spawnPoints.get(arena).size() >= index) {
-            spawnPoints.get(arena).remove(index);
-            //TODO: Remove spawnpoint from arena config.
+        if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= index) {
+            playerSpawnPoints.get(arena).remove(index);
+            // TODO: Remove spawnpoint from arena config.
         }
     }
 
@@ -236,17 +276,17 @@ public class SpawnpointManager implements Manager {
      * @param indexes The indexes.
      */
     public void removeSpawnPoints(Arena arena, Integer... indexes) {
-        if (spawnPoints.containsKey(arena)) {
-            ArrayList<SpawnPoint> remove = new ArrayList<SpawnPoint>();
+        if (playerSpawnPoints.containsKey(arena)) {
+            ArrayList<PlayerSpawnPoint> remove = new ArrayList<PlayerSpawnPoint>();
             for (Integer index : indexes) {
-                if (spawnPoints.get(arena).size() >= index) {
-                    remove.add(spawnPoints.get(arena).get(index));
+                if (playerSpawnPoints.get(arena).size() >= index) {
+                    remove.add(playerSpawnPoints.get(arena).get(index));
                 }
             }
             if (remove != null) {
-                spawnPoints.get(arena).removeAll(remove);
+                playerSpawnPoints.get(arena).removeAll(remove);
             }
-            //TODO: Remove spawnpoints from arena config.
+            // TODO: Remove spawnpoints from arena config.
         }
     }
 
@@ -255,10 +295,10 @@ public class SpawnpointManager implements Manager {
      * @param arena The arena.
      */
     public void removeAllSpawnPoints(Arena arena) {
-        if (spawnPoints.containsKey(arena)) {
-            spawnPoints.remove(arena);
-            //TODO: Remove spawnpoints from arena config.
+        if (playerSpawnPoints.containsKey(arena)) {
+            playerSpawnPoints.remove(arena);
+            // TODO: Remove spawnpoints from arena config.
         }
     }
-    
+
 }

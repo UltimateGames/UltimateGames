@@ -3,6 +3,7 @@ messages:
   
   commandusages:
     addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked]"
+    setspectatorspawn: "&4Usage: /ug arena setspectatorspawn [arena] [game]"
     begin: "&4Usage: /ug arena begin [arena] [game]"
     create: "&4Usage: /ug arena create [arena] [game]"
     edit: "&4Usage: /ug arena edit"
@@ -64,6 +65,7 @@ messages:
     queuecleared: "All queues cleared."
     
   spawnpoints:
+    setspectatorspawnpoint: "Set Spectator SpawnPoint for Arena '%s' of Game '%s'"
     create: "Created SpawnPoint for Arena '%s' of Game '%s'"
     leave: "&4You are not allowed to leave the spawnpoint."
   

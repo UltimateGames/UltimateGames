@@ -24,8 +24,11 @@ import me.ampayne2.ultimategames.enums.ArenaStatus;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * A type of countdown used to start the game.
+ */
 public class StartingCountdown extends BukkitRunnable {
-    
+
     private UltimateGames ultimateGames;
     private Arena arena;
     private int initialSeconds;
@@ -34,6 +37,13 @@ public class StartingCountdown extends BukkitRunnable {
     private static final int END_COUNTDOWN_TIME = 0;
     private static final long SECOND_LENGTH = 20L;
 
+    /**
+     * Creates a new Starting Countdown.
+     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param arena The arena of the countdown.
+     * @param initialSeconds Initial seconds of the countdown.
+     * @param secondsLeft How many seconds are left on the countdown.
+     */
     public StartingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds, int secondsLeft) {
         this.ultimateGames = ultimateGames;
         this.arena = arena;
@@ -49,7 +59,7 @@ public class StartingCountdown extends BukkitRunnable {
         } else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
             ultimateGames.getMessageManager().broadcastReplacedMessageToArena(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
         } else if (secondsLeft == END_COUNTDOWN_TIME) {
-        	ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+            ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             ultimateGames.getArenaManager().beginArena(arena);
         }
         if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {

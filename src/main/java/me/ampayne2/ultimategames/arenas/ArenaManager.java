@@ -1,16 +1,20 @@
 /*
  * This file is part of UltimateGames.
+ *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
+ *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
+ *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.arenas;
 
@@ -33,7 +37,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ArenaManager implements Manager {
-    
+
     private boolean loaded = false;
     private UltimateGames ultimateGames;
     private Map<Game, List<Arena>> arenas = new HashMap<Game, List<Arena>>();
@@ -90,9 +94,24 @@ public class ArenaManager implements Manager {
                                     Location location = new Location(world, x, y, z);
                                     location.setPitch(pitch);
                                     location.setYaw(yaw);
-                                    SpawnPoint newSpawnPoint = new SpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(LOCKED_INDEX)));
+                                    PlayerSpawnPoint newSpawnPoint = new PlayerSpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(LOCKED_INDEX)));
                                     ultimateGames.getSpawnpointManager().addSpawnPoint(newSpawnPoint);
                                 }
+                            }
+                        }
+                        if (arenaConfig.contains(arenaPath + ".SpectatorSpawnpoint")) {
+                            @SuppressWarnings("unchecked")
+                            List<String> spawnPoint = (ArrayList<String>) arenaConfig.getList(arenaPath + ".SpectatorSpawnpoint");
+                            if (!spawnPoint.isEmpty()) {
+                                Double x = Double.valueOf(spawnPoint.get(X_INDEX));
+                                Double y = Double.valueOf(spawnPoint.get(Y_INDEX));
+                                Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
+                                Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
+                                Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
+                                Location location = new Location(world, x, y, z);
+                                location.setPitch(pitch);
+                                location.setYaw(yaw);
+                                ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(getArena(arenaKey, gameKey), location);
                             }
                         }
                     }
@@ -258,9 +277,9 @@ public class ArenaManager implements Manager {
                 ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             }
             arena.getGame().getGamePlugin().endArena(arena);
-            
+
             ultimateGames.getScoreboardManager().removeArenaScoreboard(arena);
-            
+
             for (Team team : ultimateGames.getTeamManager().getTeamsOfArena(arena)) {
                 team.removePlayers();
             }

@@ -26,32 +26,59 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class SpawnPoint implements Listener {
+/**
+ * An arena spawnpoint for players.
+ */
+public class PlayerSpawnPoint implements Listener {
+
     private UltimateGames ultimateGames;
     private Arena arena;
     private Location location;
     private Boolean locked;
     private String playerName;
 
-    public SpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, Boolean locked) {
+    /**
+     * Creates a new PlayerSpawnPoint
+     * @param ultimateGames A reference to the ultimateGames instance.
+     * @param arena The arena of the spawnpoint.
+     * @param location The location of the spawnpoint.
+     * @param locked If the spawnpoint is locked.
+     */
+    public PlayerSpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, Boolean locked) {
         this.arena = arena;
         this.location = location;
         this.locked = locked;
         this.ultimateGames = ultimateGames;
     }
 
+    /**
+     * Gets the spawnpoint's arena.
+     * @return The spawnpoint's arena.
+     */
     public Arena getArena() {
         return arena;
     }
 
+    /**
+     * Gets the spawnpoint's location.
+     * @return The spawnpoint's location.
+     */
     public Location getLocation() {
         return location;
     }
 
+    /**
+     * Checks if the spawnpoint is locked.
+     * @return True if the spawnpoint is locked, else false.
+     */
     public Boolean locked() {
         return locked;
     }
 
+    /**
+     * Sets the locked state of a spawnpoint.
+     * @param enabled The state to set. If a player is locked in a spawnpoint when set to false, the player will be released.
+     */
     public void lock(Boolean enabled) {
         this.locked = enabled;
         if (!enabled) {
@@ -59,6 +86,10 @@ public class SpawnPoint implements Listener {
         }
     }
 
+    /**
+     * Teleports a player to the spawnpoint.
+     * @param player The player to teleport.
+     */
     public void teleportPlayer(Player player) {
         if (player != null) {
             player.teleport(location);
@@ -68,19 +99,26 @@ public class SpawnPoint implements Listener {
         } else {
             this.playerName = null;
         }
-        
+
     }
 
+    /**
+     * Gets the player locked to a spawnpoint. Null if nobody is locked.
+     * @return The player locked to a spawnpoint.
+     */
     public String getPlayer() {
         return playerName;
     }
 
+    /**
+     * Stops players from attempting to leave spawnpoints.
+     */
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (locked && playerName != null && ultimateGames.getSpawnpointManager().isLoaded()) {
             Location from = event.getFrom();
             Location to = event.getTo();
-            if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ()) {
+            if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
                 return;
             }
             Player player = event.getPlayer();
@@ -92,4 +130,5 @@ public class SpawnPoint implements Listener {
             }
         }
     }
+
 }

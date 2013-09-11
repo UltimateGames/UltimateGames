@@ -26,13 +26,20 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 
+/**
+ * Manages different types of countdowns for arenas.
+ */
 public class CountdownManager implements Manager {
-    
+
     private boolean loaded = false;
     private UltimateGames ultimateGames;
     private List<Arena> starting = new ArrayList<Arena>();
     private List<Arena> ending = new ArrayList<Arena>();
 
+    /**
+     * Creates a new Countdown Manager.
+     * @param ultimateGames A reference to the UltimateGames instance.
+     */
     public CountdownManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
@@ -129,5 +136,5 @@ public class CountdownManager implements Manager {
             ending.remove(arena);
         }
     }
-    
+
 }

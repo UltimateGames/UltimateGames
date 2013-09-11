@@ -34,6 +34,7 @@ import me.ampayne2.ultimategames.command.commands.arenas.End;
 import me.ampayne2.ultimategames.command.commands.arenas.Join;
 import me.ampayne2.ultimategames.command.commands.arenas.Leave;
 import me.ampayne2.ultimategames.command.commands.arenas.Open;
+import me.ampayne2.ultimategames.command.commands.arenas.SetSpectatorSpawn;
 import me.ampayne2.ultimategames.command.commands.arenas.Spectate;
 import me.ampayne2.ultimategames.command.commands.arenas.Stop;
 
@@ -60,6 +61,7 @@ public class CommandController extends JavaPlugin implements Listener {
         ultimateGames.getServer().getPluginManager().registerEvents(create, ultimateGames);
         arena.addCommand(ultimateGames, "create", "ultimategames.arena.create", create, 2);
         arena.addCommand(ultimateGames, "addspawn", "ultimategames.arena.addspawn", new AddSpawn(ultimateGames), 3);
+        arena.addCommand(ultimateGames, "setspectatorspawn", "ultimategames.arena.setspectatorspawn", new SetSpectatorSpawn(ultimateGames), 2);
         arena.addCommand(ultimateGames, "open", "ultimategames.arena.open", new Open(ultimateGames), 2);
         arena.addCommand(ultimateGames, "begin", "ultimategames.arena.begin", new Begin(ultimateGames), 2);
         arena.addCommand(ultimateGames, "end", "ultimategames.arena.end", new End(ultimateGames), 2);

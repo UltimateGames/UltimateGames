@@ -41,7 +41,7 @@ import org.bukkit.util.Vector;
  * Represents a UltimateGames Arena.
  */
 public class Arena implements Listener {
-    
+
     private boolean enabled = true;
     private UltimateGames ultimateGames;
     private Game game;
@@ -77,7 +77,7 @@ public class Arena implements Listener {
         FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
         String arenaPath = "Arenas." + game.getName() + "." + arenaName;
-        //Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
+        // Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
         storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
         storeArmor = arenaConfig.getBoolean(arenaPath + ".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
         storeExp = arenaConfig.getBoolean(arenaPath + ".Players.Store-Exp", gamesConfig.getBoolean("DefaultSettings.Store-Exp", true));
@@ -96,14 +96,14 @@ public class Arena implements Listener {
         } else if (game.getPlayerType() == PlayerType.CONFIGUREABLE) {
             maxPlayers = arenaConfig.getInt(arenaPath + ".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", DEFAULT_MAX_PLAYERS));
         }
-        //takes the 2 corners and turns them into minLocation and maxLocation
+        // takes the 2 corners and turns them into minLocation and maxLocation
         arenaWorld = corner1.getWorld();
         maxX = corner1.getX() > corner2.getX() ? corner1.getX() : corner2.getX();
         minX = corner1.getX() < corner2.getX() ? corner1.getX() : corner2.getX();
         maxZ = corner1.getZ() > corner2.getZ() ? corner1.getZ() : corner2.getZ();
         minZ = corner1.getZ() < corner2.getZ() ? corner1.getZ() : corner2.getZ();
 
-        //create the arena in the config if it doesn't exist
+        // create the arena in the config if it doesn't exist
         if (arenaConfig.getConfigurationSection(arenaPath) == null) {
             arenaConfig.set(arenaPath + ".Status", "ARENA_STOPPED");
             arenaConfig.set(arenaPath + ".Max-Players", maxPlayers);
@@ -127,7 +127,7 @@ public class Arena implements Listener {
         ultimateGames.getConfigManager().getArenaConfig().saveConfig();
         timesPlayed = 0;
     }
-    
+
     /**
      * Checks to see if an arena is enabled.
      * @return True if the arena is enabled.
@@ -135,7 +135,7 @@ public class Arena implements Listener {
     public boolean isEnabled() {
         return enabled;
     }
-    
+
     /**
      * Disables an arena.
      */
@@ -185,7 +185,7 @@ public class Arena implements Listener {
             return false;
         }
     }
-    
+
     /**
      * Adds a spectator to the arena.
      * @param playerName The name of the spectator to add.
@@ -205,7 +205,7 @@ public class Arena implements Listener {
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
         }
     }
-    
+
     /**
      * Removes a spectator from the arena's spectator list.
      * @param playerName The spectator's name.
@@ -226,7 +226,7 @@ public class Arena implements Listener {
             ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
         }
     }
-    
+
     /**
      * Removes all of the arena's spectators.
      */
@@ -245,7 +245,7 @@ public class Arena implements Listener {
     public boolean hasPlayer(String playerName) {
         return enabled && !players.isEmpty() && players.contains(playerName);
     }
-    
+
     /**
      * Checks to see if the arena has a certain spectator.
      * @param playerName The spectator's name.
@@ -262,7 +262,7 @@ public class Arena implements Listener {
     public List<String> getPlayers() {
         return enabled ? new ArrayList<String>(players) : new ArrayList<String>();
     }
-    
+
     /**
      * Gets the spectators in the arena.
      * @return The spectators.
@@ -294,7 +294,7 @@ public class Arena implements Listener {
     public ArenaStatus getStatus() {
         return arenaStatus;
     }
-    
+
     /**
      * Gets the storeInventory setting.
      * @return True if the game stores your inventory else false.
@@ -302,7 +302,7 @@ public class Arena implements Listener {
     public boolean storeInventory() {
         return storeInventory;
     }
-    
+
     /**
      * Gets the storeArmor setting.
      * @return True if the game stores your armor else false.
@@ -310,7 +310,7 @@ public class Arena implements Listener {
     public boolean storeArmor() {
         return storeArmor;
     }
-    
+
     /**
      * Gets the storeExp setting.
      * @return True if the game stores your exp else false.
@@ -318,7 +318,7 @@ public class Arena implements Listener {
     public boolean storeExp() {
         return storeExp;
     }
-    
+
     /**
      * Gets the storeEffects setting.
      * @return True if the game stores your effects else false.
@@ -326,7 +326,7 @@ public class Arena implements Listener {
     public boolean storeEffects() {
         return storeEffects;
     }
-    
+
     /**
      * Gets the storeGamemode setting.
      * @return True if the game stores your gamemode else false.
@@ -334,7 +334,7 @@ public class Arena implements Listener {
     public boolean storeGamemode() {
         return storeGamemode;
     }
-    
+
     /**
      * Gets the resetAfterMatch setting.
      * @return True if the game resets after each match else false.
@@ -342,7 +342,7 @@ public class Arena implements Listener {
     public boolean resetAfterMatch() {
         return resetAfterMatch;
     }
-    
+
     /**
      * Gets the allowExplosionDamage setting.
      * @return True if the game allows explosion damage else false.
@@ -350,7 +350,7 @@ public class Arena implements Listener {
     public boolean allowExplosionDamage() {
         return allowExplosionDamage;
     }
-    
+
     /**
      * Gets the allowExplosionBlockBreaking setting.
      * @return True if the game allows explosion block breaking else false.
@@ -358,7 +358,7 @@ public class Arena implements Listener {
     public boolean allowExplosionBlockBreaking() {
         return allowExplosionBlockBreaking;
     }
-    
+
     /**
      * Gets the allowMobSpawning setting.
      * @return True if the game allows mob spawning else false.
@@ -374,7 +374,7 @@ public class Arena implements Listener {
     public World getWorld() {
         return arenaWorld;
     }
-    
+
     /**
      * Gets the amount of times played.
      * @return The amount of times played.
@@ -444,7 +444,7 @@ public class Arena implements Listener {
             }
         }
     }
-    
+
     /**
      * Stops players and spectators from teleporting out of an arena.
      */

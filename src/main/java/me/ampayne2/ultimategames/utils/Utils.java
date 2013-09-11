@@ -1,19 +1,24 @@
 /*
  * This file is part of UltimateGames.
+ *
  * Copyright (c) 2013-2013, UltimateGames <http://github.com/ampayne2/>
+ *
  * UltimateGames is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ *
  * UltimateGames is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
+ *
  * You should have received a copy of the GNU Lesser General Public License
- * along with UltimateGames. If not, see <http://www.gnu.org/licenses/>.
+ * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
 package me.ampayne2.ultimategames.utils;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -248,41 +253,59 @@ public class Utils {
      * Gets all the entities in a player's line of sight within a certain range.
      * @param player The player.
      * @param range The range.
+     * @param maxEntities The maximum amount of entities the targeter will get. 0 for no limit.
      * @param highlightPath Whether or not it should 'highlight' the path with firework spark effects.
      * @param highlightEntities Whether or not it should 'highlight' each entity with an explosion effect.
      * @return The entities.
      */
-    public Set<Entity> getEntityTargets(Player player, double range, Boolean goThroughWalls, Boolean highlightPath, Boolean highlightEntities) {
+    public Collection<Entity> getEntityTargets(Player player, double range, int maxEntities, Boolean goThroughWalls, Boolean highlightPath, Boolean highlightEntities) {
         Location location = player.getEyeLocation();
         Vector direction = location.getDirection();
         List<Entity> entities = player.getNearbyEntities(range, range, range);
         Set<Entity> targetedEntities = new HashSet<Entity>();
-        for (int i = 0; i < range; i++) {
-            if (goThroughWalls && location.getBlock().getType() != Material.AIR) {
+        int maxWorldHeight = location.getWorld().getMaxHeight();
+        int distance = 0;
+        while (distance < range && (maxEntities == 0 || targetedEntities.size() <= maxEntities)) {
+            double locationX = location.getX();
+            double locationY = location.getY();
+            double locationZ = location.getZ();
+            if ((goThroughWalls && location.getBlock().getType() != Material.AIR) || locationY < 0 || locationY > maxWorldHeight) {
                 break;
             }
             if (highlightPath) {
                 ParticleEffect.FIREWORKS_SPARK.play(location, 0, 0, 0, 0, 1);
             }
-            double locationX = location.getX();
-            double locationY = location.getY();
-            double locationZ = location.getZ();
             for (Entity entity : entities) {
-                Location entityLocation = entity.getLocation();
-                double entityX = entityLocation.getX();
-                double entityYLower = entityLocation.getY();
-                double entityYHigher = entityYLower + getEntityHeight(entity);
-                double entityZ = entityLocation.getZ();
-                if (Math.abs(locationX - entityX) <= TARGETER_ACCURACY && (locationY >= entityYLower && locationY <= entityYHigher) && Math.abs(locationZ - entityZ) <= TARGETER_ACCURACY) {
-                    targetedEntities.add(entity);
-                    if (highlightEntities) {
-                        ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
+                if (isLocationInEntity(locationX, locationY, locationZ, entity)) {
+                    if (targetedEntities.size() < maxEntities) {
+                        targetedEntities.add(entity);
+                        if (highlightEntities) {
+                            ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
+                        }
+                    } else {
+                        break;
                     }
                 }
             }
             location.add(direction);
+            distance++;
         }
         return targetedEntities;
+    }
+    
+    /**
+     * Checks if a location is near or very close to an entity.
+     * @param locationX The location's x value.
+     * @param locationY The location's y value.
+     * @param locationZ The location's z value.
+     * @param entity The entity.
+     * @return True if the location is within a certain range of the entity.
+     */
+    public Boolean isLocationInEntity(double locationX, double locationY, double locationZ, Entity entity) {
+        Location entityLocation = entity.getLocation();
+        double entityYLower = entityLocation.getY();
+        double entityYHigher = entityYLower + getEntityHeight(entity);
+        return Math.abs(locationX - entityLocation.getX()) <= TARGETER_ACCURACY && (locationY >= entityYLower && locationY <= entityYHigher) && Math.abs(locationZ - entityLocation.getZ()) <= TARGETER_ACCURACY;
     }
 
     /**
