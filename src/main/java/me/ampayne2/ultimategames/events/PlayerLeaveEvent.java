@@ -16,13 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.enums;
+package me.ampayne2.ultimategames.events;
 
-public enum ScoreType {
-    
-    TIME_LONGER,
-    TIME_SHORTER,
-    POINTS_HIGHER,
-    POINTS_LOWER,
-    GOOD_BAD
+import me.ampayne2.ultimategames.arenas.Arena;
+import org.bukkit.entity.Player;
+
+/**
+ * Called after a player leaves an arena.
+ */
+public class PlayerLeaveEvent extends ArenaEvent {
+	private Player player;
+
+	public PlayerLeaveEvent(Player player, Arena arena) {
+		super(arena);
+		this.player = player;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
 }

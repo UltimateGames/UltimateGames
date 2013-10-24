@@ -21,25 +21,24 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Stop implements UGCommand {
-    private UltimateGames ultimateGames;
+	private UltimateGames ultimateGames;
 
-    public Stop(UltimateGames ultimateGames) {
-        this.ultimateGames = ultimateGames;
-    }
+	public Stop(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+	}
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
-        String arenaName = args[0];
-        String gameName = args[1];
-        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-            ultimateGames.getArenaManager().stopArena(arena);
-            ultimateGames.getMessageManager().sendReplacedMessage((Player) sender, "arenas.setstatus", arena.getName(), arena.getGame().getName(), arena.getStatus().name());
-        }
-    }
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		String arenaName = args[0];
+		String gameName = args[1];
+		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+			ultimateGames.getArenaManager().stopArena(arena);
+			ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.setstatus", arena.getName(), arena.getGame().getName(), arena.getStatus().name());
+		}
+	}
 }

@@ -1,5 +1,5 @@
-messages:
-  prefix: "&8[&bUltimateGames&8]"
+Messages:
+  prefix: "&8[&bUltimateGames&8] "
   
   commandusages:
     addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked]"

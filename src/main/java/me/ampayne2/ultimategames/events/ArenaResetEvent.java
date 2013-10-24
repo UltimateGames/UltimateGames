@@ -18,5 +18,13 @@
  */
 package me.ampayne2.ultimategames.events;
 
-public class ArenaResetEvent {
+import me.ampayne2.ultimategames.arenas.Arena;
+
+/**
+ * Called after an arena resets.
+ */
+public class ArenaResetEvent extends ArenaEvent {
+	public ArenaResetEvent(Arena arena) {
+		super(arena);
+	}
 }

@@ -18,37 +18,37 @@
  */
 package me.ampayne2.ultimategames.webapi.handlers;
 
+import com.google.gson.Gson;
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.webapi.WebHandler;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-
-import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.webapi.WebHandler;
-
 public class GeneralInformationHandler implements WebHandler {
 
-    public UltimateGames plugin;
-    public GeneralInformationHandler(UltimateGames ug) {
-        this.plugin = ug;
-    }
+	public UltimateGames plugin;
 
-    @Override
-    public String sendResult() {
-        Gson gson = new Gson();
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        for (Arena arena : plugin.getArenaManager().getArenas()) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("arenaName", arena.getName());
-            map.put("gameName", arena.getGame().getName());
-            map.put("currentPlayers", arena.getPlayers().size() + "");
-            map.put("maxPlayers", arena.getMaxPlayers() + "");
-            map.put("status", arena.getStatus().name());
-            list.add(map);
-        }
-        return gson.toJson(list);
-    }
+	public GeneralInformationHandler(UltimateGames ug) {
+		this.plugin = ug;
+	}
+
+	@Override
+	public String sendResult() {
+		Gson gson = new Gson();
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		for (Arena arena : plugin.getArenaManager().getArenas()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("arenaName", arena.getName());
+			map.put("gameName", arena.getGame().getName());
+			map.put("currentPlayers", arena.getPlayers().size() + "");
+			map.put("maxPlayers", arena.getMaxPlayers() + "");
+			map.put("status", arena.getStatus().name());
+			list.add(map);
+		}
+		return gson.toJson(list);
+	}
 }

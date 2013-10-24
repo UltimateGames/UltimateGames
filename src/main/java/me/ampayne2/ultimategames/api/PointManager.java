@@ -25,5 +25,6 @@ import me.ampayne2.ultimategames.games.Game;
  */
 public class PointManager {
 
-    public void addPoint(Game game, String playerName, String valueName, int amount) {}
+	public void addPoint(Game game, String playerName, String valueName, int amount) {
+	}
 }

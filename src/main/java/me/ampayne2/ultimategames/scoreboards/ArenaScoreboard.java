@@ -18,8 +18,6 @@
  */
 package me.ampayne2.ultimategames.scoreboards;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -28,140 +26,154 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Collection;
+
 public class ArenaScoreboard {
+	private Scoreboard scoreboard;
+	private String name;
 
-    private Scoreboard scoreboard;
-    private String name;
+	/**
+	 * Creates an ArenaScoreboard.
+	 *
+	 * @param name The name of the ArenaScoreboard.
+	 */
+	public ArenaScoreboard(String name) {
+		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		Objective objective = scoreboard.registerNewObjective(name, "dummy");
+		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		this.scoreboard = scoreboard;
+		this.name = name;
+	}
 
-    /**
-     * Creates an ArenaScoreboard.
-     * @param name The name of the ArenaScoreboard.
-     */
-    public ArenaScoreboard(String name) {
-        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective(name, "dummy");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        this.scoreboard = scoreboard;
-        this.name = name;
-    }
+	/**
+	 * Gets the name of an ArenaScoreboard.
+	 *
+	 * @return The name of the ArenaScoreboard.
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Gets the name of an ArenaScoreboard.
-     * @return The name of the ArenaScoreboard.
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * Lets a player see an ArenaScoreboard.
+	 *
+	 * @param playerName The name of the player.
+	 */
+	public void addPlayer(Player player) {
+		player.setScoreboard(scoreboard);
+	}
 
-    /**
-     * Lets a player see an ArenaScoreboard.
-     * @param playerName The name of the player.
-     */
-    public void addPlayer(Player player) {
-        player.setScoreboard(scoreboard);
-    }
+	/**
+	 * Lets multiple players see an ArenaScoreboard.
+	 *
+	 * @param playerNames The names of the players.
+	 */
+	public void addPlayers(Collection<Player> players) {
+		for (Player player : players) {
+			player.setScoreboard(scoreboard);
+		}
+	}
 
-    /**
-     * Lets multiple players see an ArenaScoreboard.
-     * @param playerNames The names of the players.
-     */
-    public void addPlayers(List<Player> players) {
-        for (Player player : players) {
-            player.setScoreboard(scoreboard);
-        }
-    }
+	/**
+	 * Hides an ArenaScoreboard from a player.
+	 *
+	 * @param playerName The name of the player.
+	 */
+	public void removePlayer(Player player) {
+		resetPlayerColor(player.getName());
+		player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+	}
 
-    /**
-     * Hides an ArenaScoreboard from a player.
-     * @param playerName The name of the player.
-     */
-    public void removePlayer(Player player) {
-        resetPlayerColor(player.getName());
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-    }
+	/**
+	 * Hides an ArenaScoreboard from multiple players.
+	 *
+	 * @param playerNames The names of the players.
+	 */
+	public void removePlayers(Collection<Player> players) {
+		for (Player player : players) {
+			player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		}
+	}
 
-    /**
-     * Hides an ArenaScoreboard from multiple players.
-     * @param playerNames The names of the players.
-     */
-    public void removePlayers(List<Player> players) {
-        for (Player player : players) {
-            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        }
-    }
+	/**
+	 * Sets a player's name to a certain color.
+	 *
+	 * @param playerName The player.
+	 * @param chatColor  The color.
+	 */
+	public void setPlayerColor(Player player, ChatColor chatColor) {
+		Team team = scoreboard.getPlayerTeam(player);
+		if (team != null) {
+			team.unregister();
+		}
+		team = scoreboard.registerNewTeam(player.getName());
+		team.setPrefix(chatColor + "");
+		team.addPlayer(player);
+	}
 
-    /**
-     * Sets a player's name to a certain color.
-     * @param playerName The player.
-     * @param chatColor The color.
-     */
-    public void setPlayerColor(Player player, ChatColor chatColor) {
-        Team team = scoreboard.getPlayerTeam(player);
-        if (team != null) {
-            team.unregister();
-        }
-        team = scoreboard.registerNewTeam(player.getName());
-        team.setPrefix(chatColor + "");
-        team.addPlayer(player);
-    }
+	/**
+	 * Resets a player's name's color.
+	 *
+	 * @param playerName The player.
+	 */
+	public void resetPlayerColor(String playerName) {
+		Team team = scoreboard.getTeam(playerName);
+		if (team != null) {
+			team.unregister();
+		}
+	}
 
-    /**
-     * Resets a player's name's color.
-     * @param playerName The player.
-     */
-    public void resetPlayerColor(String playerName) {
-        Team team = scoreboard.getTeam(playerName);
-        if (team != null) {
-            team.unregister();
-        }
-    }
+	/**
+	 * Resets an ArenaScoreboard.
+	 */
+	public void reset() {
+		for (Team team : scoreboard.getTeams()) {
+			team.unregister();
+		}
+		scoreboard.getObjective(name).unregister();
+		Objective objective = scoreboard.registerNewObjective(name, "dummy");
+		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+	}
 
-    /**
-     * Resets an ArenaScoreboard.
-     */
-    public void reset() {
-        for (Team team : scoreboard.getTeams()) {
-            team.unregister();
-        }
-        scoreboard.getObjective(name).unregister();
-        Objective objective = scoreboard.registerNewObjective(name, "dummy");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-    }
+	/**
+	 * Sets the visibility of an ArenaScoreboard.
+	 *
+	 * @param visible Whether or not the ArenaScoreboard should be visible.
+	 */
+	public void setVisible(Boolean visible) {
+		if (visible) {
+			scoreboard.getObjective(name).setDisplaySlot(DisplaySlot.SIDEBAR);
+		} else {
+			scoreboard.clearSlot(DisplaySlot.SIDEBAR);
+		}
+	}
 
-    /**
-     * Sets the visibility of an ArenaScoreboard.
-     * @param visible Whether or not the ArenaScoreboard should be visible.
-     */
-    public void setVisible(Boolean visible) {
-        if (visible) {
-            scoreboard.getObjective(name).setDisplaySlot(DisplaySlot.SIDEBAR);
-        } else {
-            scoreboard.clearSlot(DisplaySlot.SIDEBAR);
-        }
-    }
+	/**
+	 * Gets the score of a scoreboard element.
+	 *
+	 * @param name Name of the element.
+	 *
+	 * @return The score.
+	 */
+	public int getScore(String name) {
+		return scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).getScore();
+	}
 
-    /**
-     * Gets the score of a scoreboard element.
-     * @param name Name of the element.
-     * @return The score.
-     */
-    public int getScore(String name) {
-        return scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).getScore();
-    }
+	/**
+	 * Sets the score of a scoreboard element.
+	 *
+	 * @param name Name of the element.
+	 */
+	public void setScore(String name, Integer score) {
+		scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).setScore(score);
+	}
 
-    /**
-     * Sets the score of a scoreboard element.
-     * @param name Name of the element.
-     */
-    public void setScore(String name, Integer score) {
-        scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).setScore(score);
-    }
-
-    /**
-     * Resets the score of a scoreboard element.
-     * @param name Name of the element.
-     */
-    public void resetScore(String name) {
-        scoreboard.resetScores(Bukkit.getOfflinePlayer(name));
-    }
+	/**
+	 * Resets the score of a scoreboard element.
+	 *
+	 * @param name Name of the element.
+	 */
+	public void resetScore(String name) {
+		scoreboard.resetScores(Bukkit.getOfflinePlayer(name));
+	}
 }

@@ -18,28 +18,27 @@
  */
 package me.ampayne2.ultimategames.database.tables;
 
-import java.util.Map;
-
 import com.alta189.simplesave.Field;
 import com.alta189.simplesave.Id;
 import com.alta189.simplesave.Table;
-
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Map;
 
 @Table("playerData")
 public class PlayerData {
-    @Id
-    public int id;
-    @Field
-    public String playerName;
-    @Field
-    public ItemStack[] inventory;
-    @Field
-    public ItemStack[] armorInventory;
-    @Field
-    public Integer gamemode;
-    @Field
-    public Integer experience;
-    @Field
-    public Map<String, Integer> effects;
+	@Id
+	public int id;
+	@Field
+	public String playerName;
+	@Field
+	public ItemStack[] inventory;
+	@Field
+	public ItemStack[] armorInventory;
+	@Field
+	public Integer gamemode;
+	@Field
+	public Integer experience;
+	@Field
+	public Map<String, Integer> effects;
 }

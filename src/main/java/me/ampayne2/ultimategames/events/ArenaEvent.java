@@ -16,34 +16,37 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames;
+package me.ampayne2.ultimategames.events;
+
+import me.ampayne2.ultimategames.arenas.Arena;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
- * Base for all manager classes.
+ * Base for any arena event.
  */
-public interface Manager {
+public abstract class ArenaEvent extends Event {
+	private static final HandlerList handlers = new HandlerList();
+	private Arena arena;
 
-    /**
-     * Loads the manager. Loads what the manager does, not the class, which is already instantiated.
-     * @return If the manager loaded successfully.
-     */
-    boolean load();
+	public ArenaEvent(Arena arena) {
+		this.arena = arena;
+	}
 
-    /**
-     * Reloads the manager. Reloads what the manager does, doesn't instantiate a new class.
-     * @return If the manager reloaded successfully.
-     */
-    boolean reload();
+	/**
+	 * Gets the arena of the event.
+	 *
+	 * @return The arena.
+	 */
+	public Arena getArena() {
+		return arena;
+	}
 
-    /**
-     * Unloads the manager.
-     */
-    void unload();
-    
-    /**
-     * Checks to see if the manager is loaded.
-     * @return If the manager is loaded.
-     */
-    boolean isLoaded();
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 }

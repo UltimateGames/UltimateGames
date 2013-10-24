@@ -16,8 +16,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.command.interfaces;
+package me.ampayne2.ultimategames.events;
 
-public interface Command {
+import me.ampayne2.ultimategames.arenas.Arena;
+import org.bukkit.event.Cancellable;
 
+/**
+ * Called before an arena is opened, can be cancelled.
+ */
+public class ArenaOpenEvent extends ArenaEvent implements Cancellable {
+	private boolean cancelled;
+
+	public ArenaOpenEvent(Arena arena) {
+		super(arena);
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	@Override
+	public void setCancelled(boolean cancel) {
+		this.cancelled = cancel;
+	}
 }

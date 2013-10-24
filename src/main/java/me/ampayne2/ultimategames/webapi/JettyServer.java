@@ -18,42 +18,42 @@
  */
 package me.ampayne2.ultimategames.webapi;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 import me.ampayne2.ultimategames.UltimateGames;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
 public class JettyServer {
 
-    private Server server;
-    private static final int CORE_POOL_SIZE = 2;
-    private static final int MAX_CONNECTIONS = 30;
-    private static final int KEEP_ALIVE_TIME = 60;
-    
-    public JettyServer(UltimateGames plugin) throws Exception {
-        org.eclipse.jetty.util.log.Log.setLog(new JettyNullLogger());
-        server = new Server(plugin.getConfig().getInt("APIPort"));
-        server.setHandler(new JettyHandler());
-        server.setSessionIdManager(new HashSessionIdManager());
-        
-        LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(MAX_CONNECTIONS);
+	private Server server;
+	private static final int CORE_POOL_SIZE = 2;
+	private static final int MAX_CONNECTIONS = 30;
+	private static final int KEEP_ALIVE_TIME = 60;
 
-        ExecutorThreadPool pool = new ExecutorThreadPool(CORE_POOL_SIZE, MAX_CONNECTIONS, KEEP_ALIVE_TIME, TimeUnit.SECONDS, queue);
-        server.setThreadPool(pool);
-    }
+	public JettyServer(UltimateGames plugin) throws Exception {
+		org.eclipse.jetty.util.log.Log.setLog(new JettyNullLogger());
+		server = new Server(plugin.getConfig().getInt("APIPort"));
+		server.setHandler(new JettyHandler());
+		server.setSessionIdManager(new HashSessionIdManager());
 
-    public JettyHandler getHandler() {
-        return (JettyHandler) server.getHandler();
-    }
+		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(MAX_CONNECTIONS);
 
-    public void startServer() throws Exception {
-        server.start();
-    }
+		ExecutorThreadPool pool = new ExecutorThreadPool(CORE_POOL_SIZE, MAX_CONNECTIONS, KEEP_ALIVE_TIME, TimeUnit.SECONDS, queue);
+		server.setThreadPool(pool);
+	}
 
-    public void stopServer() throws Exception {
-        server.stop();
-    }
+	public JettyHandler getHandler() {
+		return (JettyHandler) server.getHandler();
+	}
+
+	public void startServer() throws Exception {
+		server.start();
+	}
+
+	public void stopServer() throws Exception {
+		server.stop();
+	}
 }

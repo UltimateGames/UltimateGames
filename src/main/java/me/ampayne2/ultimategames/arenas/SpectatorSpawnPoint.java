@@ -26,42 +26,46 @@ import org.bukkit.entity.Player;
  */
 public class SpectatorSpawnPoint {
 
-    private Arena arena;
-    private Location location;
+	private Arena arena;
+	private Location location;
 
-    /**
-     * Creates a new SpectatorSpawnPoint
-     * @param ultimateGames A reference to the ultimateGames instance.
-     * @param arena The arena of the spawnpoint.
-     * @param location The location of the spawnpoint.
-     */
-    public SpectatorSpawnPoint(Arena arena, Location location) {
-        this.arena = arena;
-        this.location = location;
-    }
+	/**
+	 * Creates a new SpectatorSpawnPoint
+	 *
+	 * @param ultimateGames A reference to the ultimateGames instance.
+	 * @param arena         The arena of the spawnpoint.
+	 * @param location      The location of the spawnpoint.
+	 */
+	public SpectatorSpawnPoint(Arena arena, Location location) {
+		this.arena = arena;
+		this.location = location;
+	}
 
-    /**
-     * Gets the spawnpoint's arena.
-     * @return The spawnpoint's arena.
-     */
-    public Arena getArena() {
-        return arena;
-    }
+	/**
+	 * Gets the spawnpoint's arena.
+	 *
+	 * @return The spawnpoint's arena.
+	 */
+	public Arena getArena() {
+		return arena;
+	}
 
-    /**
-     * Gets the spawnpoint's location.
-     * @return The spawnpoint's location.
-     */
-    public Location getLocation() {
-        return location;
-    }
+	/**
+	 * Gets the spawnpoint's location.
+	 *
+	 * @return The spawnpoint's location.
+	 */
+	public Location getLocation() {
+		return location;
+	}
 
-    /**
-     * Teleports a player to the spawnpoint.
-     * @param player The player to teleport.
-     */
-    public void teleportPlayer(Player player) {
-        player.teleport(location);
-    }
+	/**
+	 * Teleports a player to the spawnpoint.
+	 *
+	 * @param player The player to teleport.
+	 */
+	public void teleportPlayer(Player player) {
+		player.teleport(location);
+	}
 
 }

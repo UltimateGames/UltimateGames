@@ -26,23 +26,24 @@ import org.bukkit.Material;
  */
 public class BlockChange {
 
-    public Arena arena;
-    public Material material;
-    public byte data;
-    public Location location;
+	public Arena arena;
+	public Material material;
+	public byte data;
+	public Location location;
 
-    /**
-     * Creates a new BlockChange object.
-     * @param arena The arena the change took place in.
-     * @param material The material of the original block.
-     * @param data The data of the original block.
-     * @param location The location the change took place at.
-     */
-    public BlockChange(Arena arena, Material material, byte data, Location location) {
-        this.arena = arena;
-        this.material = material;
-        this.data = data;
-        this.location = location;
-    }
+	/**
+	 * Creates a new BlockChange object.
+	 *
+	 * @param arena    The arena the change took place in.
+	 * @param material The material of the original block.
+	 * @param data     The data of the original block.
+	 * @param location The location the change took place at.
+	 */
+	public BlockChange(Arena arena, Material material, byte data, Location location) {
+		this.arena = arena;
+		this.material = material;
+		this.data = data;
+		this.location = location;
+	}
 
 }

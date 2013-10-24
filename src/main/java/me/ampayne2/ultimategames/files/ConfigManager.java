@@ -18,130 +18,114 @@
  */
 package me.ampayne2.ultimategames.files;
 
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.games.Game;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.ampayne2.ultimategames.Manager;
-import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.games.Game;
+public class ConfigManager {
+	private UltimateGames ultimateGames;
+	private ConfigAccessor messageConfig;
+	private ConfigAccessor arenaConfig;
+	private ConfigAccessor lobbyConfig;
+	private ConfigAccessor ugSignConfig;
+	private ConfigAccessor ugChestConfig;
+	private Map<Game, ConfigAccessor> gameConfigs;
 
-public class ConfigManager implements Manager {
+	public ConfigManager(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+		File dataFolder = ultimateGames.getDataFolder();
+		messageConfig = new ConfigAccessor(ultimateGames, "Messages.yml", dataFolder);
+		messageConfig.saveDefaultConfig();
+		arenaConfig = new ConfigAccessor(ultimateGames, "Arenas.yml", dataFolder);
+		arenaConfig.saveDefaultConfig();
+		lobbyConfig = new ConfigAccessor(ultimateGames, "Lobbies.yml", dataFolder);
+		lobbyConfig.saveDefaultConfig();
+		ugSignConfig = new ConfigAccessor(ultimateGames, "Signs.yml", dataFolder);
+		ugSignConfig.saveDefaultConfig();
+		ugChestConfig = new ConfigAccessor(ultimateGames, "Chests.yml", dataFolder);
+		ugChestConfig.saveDefaultConfig();
+		gameConfigs = new HashMap<Game, ConfigAccessor>();
+	}
 
-    private boolean loaded = false;
-    private UltimateGames ultimateGames;
-    private ConfigAccessor messageConfig;
-    private ConfigAccessor arenaConfig;
-    private ConfigAccessor lobbyConfig;
-    private ConfigAccessor ugSignConfig;
-    private ConfigAccessor ugChestConfig;
-    private Map<Game, ConfigAccessor> gameConfigs;
+	/**
+	 * Gets the Message Config.
+	 *
+	 * @return The Message Config.
+	 */
+	public ConfigAccessor getMessageConfig() {
+		return messageConfig;
+	}
 
-    public ConfigManager(UltimateGames ultimateGames) {
-        this.ultimateGames = ultimateGames;
-    }
+	/**
+	 * Gets the Arena Config.
+	 *
+	 * @return The Arena Config.
+	 */
+	public ConfigAccessor getArenaConfig() {
+		return arenaConfig;
+	}
 
-    @Override
-    public boolean load() {
-        return reload();
-    }
+	/**
+	 * Gets the Lobby Config.
+	 *
+	 * @return The Lobby Config.
+	 */
+	public ConfigAccessor getLobbyConfig() {
+		return lobbyConfig;
+	}
 
-    @Override
-    public boolean reload() {
-        File dataFolder = ultimateGames.getDataFolder();
-        messageConfig = new ConfigAccessor(ultimateGames, "Messages.yml", dataFolder);
-        messageConfig.saveDefaultConfig();
-        arenaConfig = new ConfigAccessor(ultimateGames, "Arenas.yml", dataFolder);
-        arenaConfig.saveDefaultConfig();
-        lobbyConfig = new ConfigAccessor(ultimateGames, "Lobbies.yml", dataFolder);
-        lobbyConfig.saveDefaultConfig();
-        ugSignConfig = new ConfigAccessor(ultimateGames, "Signs.yml", dataFolder);
-        ugSignConfig.saveDefaultConfig();
-        ugChestConfig = new ConfigAccessor(ultimateGames, "Chests.yml", dataFolder);
-        ugChestConfig.saveDefaultConfig();
-        gameConfigs = new HashMap<Game, ConfigAccessor>();
-        loaded = true;
-        return true;
-    }
+	/**
+	 * Gets the Ultimate Game Sign Config.
+	 *
+	 * @return The Ultimate Game Sign Config.
+	 */
+	public ConfigAccessor getUGSignConfig() {
+		return ugSignConfig;
+	}
 
-    @Override
-    public void unload() {
-        loaded = false;
-    }
+	/**
+	 * Gets the Ultimate Game Chest Config.
+	 *
+	 * @return The Ultimate Game Sign Config.
+	 */
+	public ConfigAccessor getUGChestConfig() {
+		return ugChestConfig;
+	}
 
-    @Override
-    public boolean isLoaded() {
-        return loaded;
-    }
+	/**
+	 * Gets the Game Configs.
+	 *
+	 * @return The Game Configs.
+	 */
+	public Map<Game, ConfigAccessor> getGameConfigs() {
+		return gameConfigs;
+	}
 
-    /**
-     * Gets the Message Config.
-     * @return The Message Config.
-     */
-    public ConfigAccessor getMessageConfig() {
-        return messageConfig;
-    }
+	/**
+	 * Gets a Game's Config.
+	 *
+	 * @return The Game's Config.
+	 */
+	public ConfigAccessor getGameConfig(Game game) {
+		if (!gameConfigs.containsKey(game)) {
+			addGameConfig(game);
+		}
+		return gameConfigs.get(game);
+	}
 
-    /**
-     * Gets the Arena Config.
-     * @return The Arena Config.
-     */
-    public ConfigAccessor getArenaConfig() {
-        return arenaConfig;
-    }
-
-    /**
-     * Gets the Lobby Config.
-     * @return The Lobby Config.
-     */
-    public ConfigAccessor getLobbyConfig() {
-        return lobbyConfig;
-    }
-
-    /**
-     * Gets the Ultimate Game Sign Config.
-     * @return The Ultimate Game Sign Config.
-     */
-    public ConfigAccessor getUGSignConfig() {
-        return ugSignConfig;
-    }
-    
-    /**
-     * Gets the Ultimate Game Chest Config.
-     * @return The Ultimate Game Sign Config.
-     */
-    public ConfigAccessor getUGChestConfig() {
-        return ugChestConfig;
-    }
-
-    /**
-     * Gets the Game Configs.
-     * @return The Game Configs.
-     */
-    public Map<Game, ConfigAccessor> getGameConfigs() {
-        return gameConfigs;
-    }
-
-    /**
-     * Gets a Game's Config.
-     * @return The Game's Config.
-     */
-    public ConfigAccessor getGameConfig(Game game) {
-        if (!gameConfigs.containsKey(game)) {
-            addGameConfig(game);
-        }
-        return gameConfigs.get(game);
-    }
-
-    /**
-     * Adds a Game's Config to the manager.
-     * @param game The Game whose config you want to add.
-     */
-    public void addGameConfig(Game game) {
-        if (!gameConfigs.containsKey(game)) {
-            ConfigAccessor config = new ConfigAccessor(ultimateGames.getPlugin(), game.getName() + ".yml", new File(ultimateGames.getPlugin().getDataFolder() + "/Games"));
-            config.saveConfig();
-            gameConfigs.put(game, config);
-        }
-    }
+	/**
+	 * Adds a Game's Config to the manager.
+	 *
+	 * @param game The Game whose config you want to add.
+	 */
+	public void addGameConfig(Game game) {
+		if (!gameConfigs.containsKey(game)) {
+			ConfigAccessor config = new ConfigAccessor(ultimateGames, game.getName() + ".yml", new File(ultimateGames.getDataFolder() + "/Games"));
+			config.saveConfig();
+			gameConfigs.put(game, config);
+		}
+	}
 }

@@ -18,57 +18,56 @@
  */
 package me.ampayne2.ultimategames.signs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.SignType;
-
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RedstoneInputSign extends UGSign {
 
-    private String label;
-    private List<String> lines = new ArrayList<String>();
-    private Boolean powered;
+	private String label;
+	private List<String> lines = new ArrayList<String>();
+	private Boolean powered;
 
-    public RedstoneInputSign(String label, Sign sign, Arena arena) {
-        super(sign, arena);
-        this.label = label;
-        powered = sign.getBlock().isBlockPowered();
-        arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
-        update();
-    }
+	public RedstoneInputSign(String label, Sign sign, Arena arena) {
+		super(sign, arena);
+		this.label = label;
+		powered = sign.getBlock().isBlockPowered();
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		update();
+	}
 
-    @Override
-    public void onSignTrigger(Event event) {
-        getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
-    }
+	@Override
+	public void onSignTrigger(Event event) {
+		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
+	}
 
-    @Override
-    public List<String> getUpdatedLines() {
-        return lines;
-    }
+	@Override
+	public List<String> getUpdatedLines() {
+		return lines;
+	}
 
-    public void setLines(List<String> lines) {
-        if (lines == null) {
-            this.lines = new ArrayList<String>();
-        } else {
-            this.lines = lines;
-        }
-    }
+	public void setLines(List<String> lines) {
+		if (lines == null) {
+			this.lines = new ArrayList<String>();
+		} else {
+			this.lines = lines;
+		}
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    public Boolean isPowered() {
-        return powered;
-    }
+	public Boolean isPowered() {
+		return powered;
+	}
 
-    public void setPowered(Boolean powered) {
-        this.powered = powered;
-    }
+	public void setPowered(Boolean powered) {
+		this.powered = powered;
+	}
 
 }

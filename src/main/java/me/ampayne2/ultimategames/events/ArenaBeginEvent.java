@@ -19,29 +19,26 @@
 package me.ampayne2.ultimategames.events;
 
 import me.ampayne2.ultimategames.arenas.Arena;
+import org.bukkit.event.Cancellable;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+/**
+ * Called before arena is begun, can be cancelled.<br>
+ * Note that a starting countdown will only attempt to begin the game once.
+ */
+public class ArenaBeginEvent extends ArenaEvent implements Cancellable {
+	private boolean cancelled;
 
-public class ArenaBeginEvent extends Event {
-    
-    private static final HandlerList handlers = new HandlerList();
-    private Arena arena;
+	public ArenaBeginEvent(Arena arena) {
+		super(arena);
+	}
 
-    public ArenaBeginEvent(Arena arena) {
-        this.arena = arena;
-    }
-    
-    public Arena getArena() {
-        return arena;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
+	@Override
+	public void setCancelled(boolean cancel) {
+		this.cancelled = cancel;
+	}
 }

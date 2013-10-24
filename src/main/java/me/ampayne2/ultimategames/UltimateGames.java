@@ -18,9 +18,10 @@
  */
 package me.ampayne2.ultimategames;
 
-import java.util.logging.Level;
-
+import com.alta189.simplesave.exceptions.ConnectionException;
+import com.alta189.simplesave.exceptions.TableRegistrationException;
 import me.ampayne2.ultimategames.api.PointManager;
+import me.ampayne2.ultimategames.arenas.ArenaListener;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.arenas.LogManager;
 import me.ampayne2.ultimategames.arenas.SpawnpointManager;
@@ -33,154 +34,217 @@ import me.ampayne2.ultimategames.files.ConfigManager;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
 import me.ampayne2.ultimategames.misc.MetricsManager;
+import me.ampayne2.ultimategames.misc.PlayerHeadListener;
 import me.ampayne2.ultimategames.players.LobbyManager;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.players.QueueManager;
 import me.ampayne2.ultimategames.scoreboards.ScoreboardManager;
 import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
+import me.ampayne2.ultimategames.signs.SignListener;
 import me.ampayne2.ultimategames.signs.UGSignManager;
 import me.ampayne2.ultimategames.teams.TeamManager;
-import me.ampayne2.ultimategames.utils.Utils;
+import me.ampayne2.ultimategames.webapi.JettyServer;
 import me.ampayne2.ultimategames.webapi.WebHandler;
+import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
 import me.ampayne2.ultimategames.whitelist.WhitelistManager;
-
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.PluginClassLoader;
 
+import java.util.logging.Level;
+
 public class UltimateGames extends JavaPlugin {
-    
-    private JavaPlugin plugin;
-    private ManagerController managerController;
+	private static UltimateGames instance;
+	private ConfigManager configManager;
+	private ClassManager classManager;
+	private GameManager gameManager;
+	private TeamManager teamManager;
+	private ArenaManager arenaManager;
+	private UGSignManager ugSignManager;
+	private UGChestManager ugChestManager;
+	private QueueManager queueManager;
+	private Message messageManager;
+	private SpawnpointManager spawnpointManager;
+	private PlayerManager playerManager;
+	private CountdownManager countdownManager;
+	private LobbyManager lobbyManager;
+	private ScoreboardManager scoreboardManager;
+	private WhitelistManager whitelistManager;
+	private DatabaseManager databaseManager;
+	private LogManager logManager;
+	private MetricsManager metricsManager;
+	private PointManager pointManager;
+	private CommandController commandController;
+	private JettyServer jettyServer;
 
-    public void onEnable() {
-        plugin = this;
-        getConfig().options().copyDefaults(true);
-        saveConfig();
-        managerController = new ManagerController(this);
-        if (!managerController.loadManagers()) {
-            getServer().getPluginManager().disablePlugin(this);
-        }
-    }
+	public void onEnable() {
+		instance = this;
 
-    public void onDisable() {
-        managerController.unloadManagers();
-        for (Game game : managerController.gameManager.getGames()) {
-            for (RedstoneOutputSign sign : managerController.ugSignManager.getRedstoneOutputSignsOfGame(game)) {
-                sign.setPowered(false);
-            }
-        }
-        if (managerController.jettyServer != null) {
-            try {
-                managerController.jettyServer.stopServer();
-            } catch (Exception e) {
-                getLogger().log(Level.SEVERE, "An error occured in unloading the Web API", e);
-            }
-        }
-    }
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 
-    public JavaPlugin getPlugin() {
-        return plugin;
-    }
-    
-    public ManagerController getManager() {
-        return managerController;
-    }
+		configManager = new ConfigManager(this);
+		messageManager = new Message(this);
+		playerManager = new PlayerManager(this);
+		metricsManager = new MetricsManager(this);
+		classManager = new ClassManager();
+		gameManager = new GameManager(this);
+		queueManager = new QueueManager(this);
+		spawnpointManager = new SpawnpointManager(this);
+		scoreboardManager = new ScoreboardManager();
+		teamManager = new TeamManager(this);
+		arenaManager = new ArenaManager(this);
+		metricsManager.addTotalPlayersGraph();
+		if (getConfig().getBoolean("enableAPI")) {
+			try {
+				getLogger().info("Enabling live stats API link");
+				jettyServer = new JettyServer(this);
+				jettyServer.startServer();
+			} catch (Exception e) {
+				getLogger().info("Failed to enable live stats API link");
+				messageManager.debug(e);
+			}
+		}
+		jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
+		ugSignManager = new UGSignManager(this);
+		ugChestManager = new UGChestManager(this);
+		countdownManager = new CountdownManager(this);
+		lobbyManager = new LobbyManager(this);
+		whitelistManager = new WhitelistManager(this);
+		try {
+			databaseManager = new DatabaseManager(this);
+		} catch (TableRegistrationException e) {
+			getLogger().severe("A error occured while connecting to the database!");
+			messageManager.debug(e);
+			getServer().getPluginManager().disablePlugin(this);
+		} catch (ConnectionException e) {
+			getLogger().severe("A error occured while connecting to the database!");
+			messageManager.debug(e);
+			getServer().getPluginManager().disablePlugin(this);
+		}
+		logManager = new LogManager(this);
+		pointManager = new PointManager();
+		getServer().getPluginManager().registerEvents(new SignListener(this), this);
+		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
+		if (getServer().getPluginManager().isPluginEnabled("PlayerHeads")) {
+			getServer().getPluginManager().registerEvents(new PlayerHeadListener(this), this);
+		}
+		getServer().getPluginManager().registerEvents(playerManager, this);
+		commandController = new CommandController(this);
+		getServer().getPluginManager().registerEvents(commandController, this);
+		getCommand("ultimategames").setExecutor(commandController);
+	}
 
-    public ConfigManager getConfigManager() {
-        return managerController.configManager;
-    }
+	public void onDisable() {
+		for (Game game : gameManager.getGames()) {
+			for (RedstoneOutputSign sign : ugSignManager.getRedstoneOutputSignsOfGame(game)) {
+				sign.setPowered(false);
+			}
+		}
+		if (jettyServer != null) {
+			try {
+				jettyServer.stopServer();
+			} catch (Exception e) {
+				getLogger().log(Level.SEVERE, "An error occured in unloading the Web API", e);
+			}
+		}
+		instance = null;
+	}
 
-    public Message getMessageManager() {
-        return managerController.messageManager;
-    }
-    
-    public ClassManager getClassManager() {
-        return managerController.classManager;
-    }
+	public static UltimateGames getInstance() {
+		return instance;
+	}
 
-    public GameManager getGameManager() {
-        return managerController.gameManager;
-    }
-    
-    public TeamManager getTeamManager() {
-        return managerController.teamManager;
-    }
+	public ConfigManager getConfigManager() {
+		return configManager;
+	}
 
-    public ArenaManager getArenaManager() {
-        return managerController.arenaManager;
-    }
+	public Message getMessageManager() {
+		return messageManager;
+	}
 
-    public UGSignManager getUGSignManager() {
-        return managerController.ugSignManager;
-    }
-    
-    public UGChestManager getUGChestManager() {
-        return managerController.ugChestManager;
-    }
+	public ClassManager getClassManager() {
+		return classManager;
+	}
 
-    public QueueManager getQueueManager() {
-        return managerController.queueManager;
-    }
+	public GameManager getGameManager() {
+		return gameManager;
+	}
 
-    public SpawnpointManager getSpawnpointManager() {
-        return managerController.spawnpointManager;
-    }
+	public TeamManager getTeamManager() {
+		return teamManager;
+	}
 
-    public PlayerManager getPlayerManager() {
-        return managerController.playerManager;
-    }
+	public ArenaManager getArenaManager() {
+		return arenaManager;
+	}
 
-    public CountdownManager getCountdownManager() {
-        return managerController.countdownManager;
-    }
+	public UGSignManager getUGSignManager() {
+		return ugSignManager;
+	}
 
-    public LobbyManager getLobbyManager() {
-        return managerController.lobbyManager;
-    }
+	public UGChestManager getUGChestManager() {
+		return ugChestManager;
+	}
 
-    public ScoreboardManager getScoreboardManager() {
-        return managerController.scoreboardManager;
-    }
+	public QueueManager getQueueManager() {
+		return queueManager;
+	}
 
-    public WhitelistManager getWhitelistManager() {
-        return managerController.whitelistManager;
-    }
+	public SpawnpointManager getSpawnpointManager() {
+		return spawnpointManager;
+	}
 
-    public DatabaseManager getDatabaseManager() {
-        return managerController.databaseManager;
-    }
-    
-    public LogManager getLogManager() {
-        return managerController.logManager;
-    }
+	public PlayerManager getPlayerManager() {
+		return playerManager;
+	}
 
-    public Utils getUtils() {
-        return managerController.utils;
-    }
+	public CountdownManager getCountdownManager() {
+		return countdownManager;
+	}
 
-    public MetricsManager getMetricsManager() {
-        return managerController.metricsManager;
-    }
-    
-    public CommandController getCommandController() {
-        return managerController.commandController;
-    }
+	public LobbyManager getLobbyManager() {
+		return lobbyManager;
+	}
 
-    public PluginClassLoader getPluginClassLoader() {
-        return (PluginClassLoader) getClassLoader();
-    }
+	public ScoreboardManager getScoreboardManager() {
+		return scoreboardManager;
+	}
 
-    public void addAPIHandler(String path, WebHandler handler) {
-        if (managerController.jettyServer != null) {
-            managerController.jettyServer.getHandler().addHandler(path, handler);
-        }
-    }
-    
-    public PointManager getPointManager() {
-        return managerController.pointManager;
-    }
+	public WhitelistManager getWhitelistManager() {
+		return whitelistManager;
+	}
 
-    public void setPointManager(PointManager pointManager) {
-        managerController.pointManager = pointManager;
-    }
+	public DatabaseManager getDatabaseManager() {
+		return databaseManager;
+	}
+
+	public LogManager getLogManager() {
+		return logManager;
+	}
+
+	public MetricsManager getMetricsManager() {
+		return metricsManager;
+	}
+
+	public CommandController getCommandController() {
+		return commandController;
+	}
+
+	public PluginClassLoader getPluginClassLoader() {
+		return (PluginClassLoader) getClassLoader();
+	}
+
+	public void addAPIHandler(String path, WebHandler handler) {
+		if (jettyServer != null) {
+			jettyServer.getHandler().addHandler(path, handler);
+		}
+	}
+
+	public PointManager getPointManager() {
+		return pointManager;
+	}
+
+	public void setPointManager(PointManager pointManager) {
+		this.pointManager = pointManager;
+	}
 }

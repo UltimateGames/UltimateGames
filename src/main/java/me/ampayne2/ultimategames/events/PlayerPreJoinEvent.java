@@ -16,8 +16,35 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.command.interfaces;
+package me.ampayne2.ultimategames.events;
 
-public interface Command {
+import me.ampayne2.ultimategames.arenas.Arena;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 
+/**
+ * Called before a player joins an arena, can be cancelled.
+ */
+public class PlayerPreJoinEvent extends ArenaEvent implements Cancellable {
+	private Player player;
+	private boolean cancelled;
+
+	public PlayerPreJoinEvent(Player player, Arena arena) {
+		super(arena);
+		this.player = player;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	@Override
+	public void setCancelled(boolean cancel) {
+		this.cancelled = cancel;
+	}
 }

@@ -18,6 +18,15 @@
  */
 package me.ampayne2.ultimategames;
 
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.games.Game;
+import me.ampayne2.ultimategames.teams.Team;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Server;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,334 +37,195 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.games.Game;
+public class Message {
+	private UltimateGames ultimateGames;
+	private Map<String, String> messages = new HashMap<String, String>();
+	private Map<String, Map<String, String>> gameMessages = new HashMap<String, Map<String, String>>();
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
+	public Message(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+		FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
+		for (String key : messageConfig.getConfigurationSection("Messages").getKeys(true)) {
+			messages.put(key, messageConfig.getString("Messages." + key));
+		}
+	}
 
-public class Message implements Manager {
-    
-    private boolean loaded = false;
-    private UltimateGames ultimateGames;
-    private Map<String, String> messages = new HashMap<String, String>();
-    private Map<String, String> gameMessages = new HashMap<String, String>();
+	/**
+	 * Loads a game's messages.
+	 *
+	 * @param game The game.
+	 */
+	public void loadGameMessages(Game game) {
+		FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+		if (gameConfig.isConfigurationSection("Messages")) {
+			gameMessages.remove(game.getName());
+			Map<String, String> messages = new HashMap<String, String>();
+			for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
+				messages.put(key, gameConfig.getString("Messages." + key));
+			}
+			gameMessages.put(game.getName(), messages);
+		}
+	}
 
-    public Message(UltimateGames ultimateGames) {
-        this.ultimateGames = ultimateGames;
-    }
-    
-    @Override
-    public boolean load() {
-        return reload();
-    }
+	/**
+	 * Gets the message prefix.
+	 *
+	 * @return The message prefix.
+	 */
+	public String getMessagePrefix() {
+		String prefix = messages.get("prefix");
+		if (prefix == null) {
+			prefix = "&8[&bUltimateGames&8] ";
+		}
+		return ChatColor.translateAlternateColorCodes('&', prefix);
+	}
 
-    @Override
-    public boolean reload() {
-        loadMessages();
-        loaded = true;
-        return true;
-    }
+	/**
+	 * Gets a message with translated color codes.
+	 *
+	 * @param path Path to the message in the message config, without "Messages."
+	 *
+	 * @return The message.
+	 */
+	public String getMessage(String path) {
+		String message = messages.get(path);
+		if (message == null) {
+			message = ChatColor.DARK_RED + "No configured message for " + path;
+		}
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
 
-    @Override
-    public void unload() {
-        loaded = false;
-    }
+	/**
+	 * Gets a game message with translated color codes.
+	 *
+	 * @param game The game.
+	 * @param path Path to the message in the game's config, without "Messages."
+	 *
+	 * @return The message.
+	 */
+	public String getGameMessage(Game game, String path) {
+		Map<String, String> messages = gameMessages.get(game.getName());
+		String message = messages == null ? null : messages.get(path);
+		if (message == null) {
+			message = ChatColor.DARK_RED + "No configured message for " + path;
+		}
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
 
-    @Override
-    public boolean isLoaded() {
-        return loaded;
-    }
+	/**
+	 * Sends a message to a recipient.
+	 *
+	 * @param recipient The recipient of the message; Either Player, Team, Arena, or Server.
+	 * @param path      The path to the message.
+	 * @param replace   Strings to replace any occurences of %s in the message with.
+	 *
+	 * @return True if the message was sent, else false.
+	 */
+	public boolean sendMessage(Object recipient, String path, String... replace) {
+		return sendRawMessage(recipient, getMessagePrefix() + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
+	}
 
-    public void loadMessages() {
-        if (!messages.isEmpty()) {
-            messages.clear();
-        }
-        FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
-        for (String key : messageConfig.getConfigurationSection("messages").getKeys(true)) {
-            messages.put(key, messageConfig.getString("messages." + key));
-        }
-    }
+	/**
+	 * Sends a game message to a recipient.
+	 *
+	 * @param recipient The recipient of the message; Either Player, Team, Arena, or Server.
+	 * @param game      The game.
+	 * @param path      The path to the message.
+	 * @param replace   Strings to replace any occurences of %s in the message with.
+	 *
+	 * @return True if the message was sent, else false.
+	 */
+	public boolean sendGameMessage(Object recipient, Game game, String path, String... replace) {
+		return sendRawMessage(recipient, getMessagePrefix() + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
+	}
 
-    public void loadGameMessages() {
-        if (!gameMessages.isEmpty()) {
-            gameMessages.clear();
-        }
-        for (Game game : ultimateGames.getGameManager().getGames()) {
-            FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
-            if (gameConfig.isConfigurationSection("Messages")) {
-                for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
-                    gameMessages.put(game.getName() + "." + key, gameConfig.getString("Messages." + key));
-                }
-            }
-        }
-    }
+	/**
+	 * Sends a raw message to a recipient.
+	 *
+	 * @param recipient The recipient of the message; Either Player, Team, Arena, or Server.
+	 * @param message   The message.
+	 *
+	 * @return True if the message was sent, else false.
+	 */
+	public boolean sendRawMessage(Object recipient, String message) {
+		if (recipient instanceof Player) {
+			((Player) recipient).sendMessage(message);
+		} else if (recipient instanceof Team) {
+			for (String playerName : ((Team) recipient).getPlayers()) {
+				Player player = Bukkit.getPlayerExact(playerName);
+				if (player != null) {
+					player.sendMessage(message);
+				}
+			}
+		} else if (recipient instanceof Arena) {
+			Arena arena = (Arena) recipient;
+			List<String> players = new ArrayList<String>();
+			players.addAll(arena.getPlayers());
+			players.addAll(arena.getSpectators());
+			for (String playerName : players) {
+				Player player = Bukkit.getPlayerExact(playerName);
+				if (player != null) {
+					player.sendMessage(message);
+				}
+			}
+		} else if (recipient instanceof Server) {
+			((Server) recipient).broadcastMessage(message);
+		} else {
+			return false;
+		}
+		return true;
+	}
 
-    /**
-     * Gets the message prefix.
-     * @return The message prefix.
-     */
-    public String getMessagePrefix() {
-        String prefix = messages.get("prefix");
-        if (prefix == null) {
-            prefix = "&8[&bUltimateGames&8]";
-        }
-        return ChatColor.translateAlternateColorCodes('&', prefix);
-    }
+	/**
+	 * Logs one or more messages to the console.
+	 *
+	 * @param level    the level to log the message at.
+	 * @param messages the message(s) to log.
+	 */
+	public void log(Level level, String... messages) {
+		for (String message : messages) {
+			ultimateGames.getLogger().log(level, message);
+		}
+	}
 
-    /**
-     * Gets a message with translated color codes.
-     * @param messageType Path to the message in the message config, without "Messages."
-     * @return The message.
-     */
-    public String getMessage(String messageType) {
-        String message = messages.get(messageType);
-        if (message == null) {
-            message = ChatColor.DARK_RED + "No configured message for " + messageType;
-        }
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
+	/**
+	 * Decides whether or not to print the stack trace of an exception.
+	 *
+	 * @param e the exception to debug.
+	 */
+	public void debug(Exception e) {
+		if (ultimateGames.getConfig().getBoolean("debug")) {
+			Logger log = ultimateGames.getLogger();
+			log.severe("");
+			log.severe("Internal error!");
+			log.severe("If this bug hasn't been reported please open a ticket at https://github.com/ampayne2/UltimateGames/issues");
+			log.severe("Include the following into your bug report:");
+			log.severe(" ======= SNIP HERE =======");
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			for (String l : sw.toString().replace("\r", "").split("\n")) {
+				log.severe(l);
+			}
+			pw.close();
+			try {
+				sw.close();
+			} catch (IOException e1) {
+				log.log(Level.SEVERE, "An error occured in debugging an exception", e);
+			}
+			log.severe(" ======= SNIP HERE =======");
+			log.severe("");
+		}
+	}
 
-    /**
-     * Gets a game message with translated color codes.
-     * @param game The game.
-     * @param messageType Path to the message in the game's config, without "Messages."
-     * @return The message.
-     */
-    public String getGameMessage(Game game, String messageType) {
-        String message = gameMessages.get(game.getName() + "." + messageType);
-        if (message == null) {
-            message = ChatColor.DARK_RED + "No configured message for " + messageType;
-        }
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
-    /**
-     * Sends a message to a specific player.
-     * @param playerName Name of the player to send the message to.
-     * @param messageType Path to the message, without "Messages."
-     */
-    public void sendMessage(Player player, String messageType) {
-        if (loaded) {
-            player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
-        }
-    }
-
-    /**
-     * Sends a message to a specific player, replacing certain strings.
-     * @param playerName Name of the player to send the message to.
-     * @param messageType Path to the message, without "Messages."
-     * @param replace Strings to replace %s with.
-     */
-    public void sendReplacedMessage(Player player, String messageType, String... replace) {
-        if (loaded) {
-            player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
-        }
-    }
-
-    /**
-     * Sends a game message to a specific player.
-     * @param game The game.
-     * @param playerName Name of the player to send the message to.
-     * @param messageType Path to the message in the game's config, without "Messages."
-     */
-    public void sendGameMessage(Game game, Player player, String messageType) {
-        if (loaded) {
-            player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
-        }
-    }
-
-    /**
-     * Sends a message to a specific player, replacing certain strings.
-     * @param game The game.
-     * @param playerName Name of the player to send the message to.
-     * @param messageType Path to the message, without "Messages."
-     * @param replace Strings to replace %s with.
-     */
-    public void sendReplacedGameMessage(Game game, Player player, String messageType, String... replace) {
-        if (loaded) {
-            player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
-        }
-    }
-
-    /**
-     * Broadcasts a message to the server.
-     * @param messageType Path to the message, without "Messages."
-     */
-    public void broadcastMessage(String messageType) {
-        if (loaded) {
-            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getMessage(messageType));
-        }
-    }
-
-    /**
-     * Broadcasts a message to the server, replacing certain strings.
-     * @param messageType Path to the message, without "Messages."
-     * @param replace Strings to replace %s with.
-     */
-    public void broadcastReplacedMessage(String messageType, String... replace) {
-        if (loaded) {
-            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
-        }
-    }
-
-    /**
-     * Broadcasts a game's message to the server.
-     * @param game The game.
-     * @param messageType Path to the message, without "Messages."
-     */
-    public void broadcastGameMessage(Game game, String messageType) {
-        if (loaded) {
-            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
-        }
-    }
-
-    /**
-     * Broadcasts a game's message to the server, replacing certain strings.
-     * @param game The game.
-     * @param messageType Path to the message, without "Messages."
-     * @param replace Strings to replace %s with.
-     */
-    public void broadcastReplacedGameMessage(Game game, String messageType, String... replace) {
-        if (loaded) {
-            Bukkit.getServer().broadcastMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
-        }
-    }
-
-    /**
-     * Broadcasts a message to an arena.
-     * @param arena Arena to broadcast the message to.
-     * @param messageType Path to the message, without "Messages."
-     */
-    public void broadcastMessageToArena(Arena arena, String messageType) {
-        if (loaded) {
-            List<String> players =  new ArrayList<String>();
-            players.addAll(arena.getPlayers());
-            players.addAll(arena.getSpectators());
-            for (String playerName : players) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                if (player == null) {
-                    return;
-                }
-                player.sendMessage(getMessagePrefix() + " " + getMessage(messageType));
-            }
-        }
-    }
-
-    /**
-     * Broadcasts a message to an arena, replacing certain strings.
-     * @param arena Arena to broadcast the message to.
-     * @param messageType Path to the message, without "Messages."
-     * @param replace Strings to replace %s with.
-     */
-    public void broadcastReplacedMessageToArena(Arena arena, String messageType, String... replace) {
-        if (loaded) {
-            List<String> players =  new ArrayList<String>();
-            players.addAll(arena.getPlayers());
-            players.addAll(arena.getSpectators());
-            for (String playerName : players) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                if (player == null) {
-                    return;
-                }
-                player.sendMessage(getMessagePrefix() + " " + String.format(getMessage(messageType), (Object[]) replace));
-            }
-        }
-    }
-
-    /**
-     * Broadcasts a game's message to an arena.
-     * @param game The game.
-     * @param arena Arena to broadcast the message to.
-     * @param messageType Path to the message, without "Messages."
-     */
-    public void broadcastGameMessageToArena(Game game, Arena arena, String messageType) {
-        if (loaded) {
-            List<String> players =  new ArrayList<String>();
-            players.addAll(arena.getPlayers());
-            players.addAll(arena.getSpectators());
-            for (String playerName : players) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                if (player == null) {
-                    return;
-                }
-                player.sendMessage(getMessagePrefix() + " " + getGameMessage(game, messageType));
-            }
-        }
-    }
-
-    /**
-     * Broadcasts a game's message to an arena, replacing certain strings.
-     * @param game The game.
-     * @param arena Arena to broadcast the message to.
-     * @param messageType Path to the message, without "Messages."
-     * @param replace Strings to replace %s with.
-     */
-    public void broadcastReplacedGameMessageToArena(Game game, Arena arena, String messageType, String... replace) {
-        if (loaded) {
-            List<String> players =  new ArrayList<String>();
-            players.addAll(arena.getPlayers());
-            players.addAll(arena.getSpectators());
-            for (String playerName : players) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                if (player == null) {
-                    return;
-                }
-                player.sendMessage(getMessagePrefix() + " " + String.format(getGameMessage(game, messageType), (Object[]) replace));
-            }
-        }
-    }
-
-    /**
-     * Logs one or more messages to the console.
-     * @param level the level to log the message at.
-     * @param messages the message(s) to log.
-     */
-    public void log(Level level, String... messages) {
-        for (String message : messages) {
-            Bukkit.getLogger().log(level, "[ultimategames] " + message);
-        }
-    }
-
-    /**
-     * Decides whether or not to print the stack trace of an exception.
-     * @param e the exception to debug.
-     */
-    public void debug(Exception e) {
-        if (ultimateGames.getConfig().getBoolean("debug")) {
-            Logger log = Bukkit.getLogger();
-            log.severe("");
-            log.severe("Internal error!");
-            log.severe("If this bug hasn't been reported please open a ticket at https://github.com/ampayne2/UltimateGames/issues");
-            log.severe("Include the following into your bug report:");
-            log.severe(" ======= SNIP HERE =======");
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            for (String l: sw.toString().replace("\r", "").split("\n")) {
-               	log.severe(l);
-            }
-            pw.close();
-            try {
-            	sw.close();
-            } catch (IOException e1) {
-                ultimateGames.getLogger().log(Level.SEVERE, "An error occured in debugging an exception", e);
-            }
-            log.severe(" ======= SNIP HERE =======");
-            log.severe("");
-        }
-    }
-    
-    /**
-     * Decides whether or not to print a debug message.
-     * @param message the message to debug.
-     */
-    public void debug(String message) {
-        if (ultimateGames.getConfig().getBoolean("debug")) {
-            Logger log = Bukkit.getLogger();
-            log.log(Level.INFO, message);
-        }
-    }
+	/**
+	 * Decides whether or not to print a debug message.
+	 *
+	 * @param message the message to debug.
+	 */
+	public void debug(String message) {
+		if (ultimateGames.getConfig().getBoolean("debug")) {
+			ultimateGames.getLogger().log(Level.INFO, message);
+		}
+	}
 }

@@ -18,72 +18,49 @@
  */
 package me.ampayne2.ultimategames.scoreboards;
 
+import me.ampayne2.ultimategames.arenas.Arena;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import me.ampayne2.ultimategames.Manager;
-import me.ampayne2.ultimategames.arenas.Arena;
+public class ScoreboardManager {
+	private Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
 
-public class ScoreboardManager implements Manager {
+	/**
+	 * Gets the ArenaScoreboard of an arena.
+	 *
+	 * @param arena The arena.
+	 *
+	 * @return The arena's ArenaScoreboards.
+	 */
+	public ArenaScoreboard getArenaScoreboard(Arena arena) {
+		return scoreboards.get(arena);
+	}
 
-    private boolean loaded = false;
-    private Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
+	/**
+	 * Creates an ArenaScoreboard for an arena.
+	 *
+	 * @param arena The arena.
+	 * @param name  Name of the ArenaScoreboard.
+	 *
+	 * @return The ArenaScoreboard created.
+	 */
+	public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
+		ArenaScoreboard scoreboard = new ArenaScoreboard(name);
+		scoreboards.put(arena, scoreboard);
+		return scoreboard;
+	}
 
-    @Override
-    public boolean load() {
-        loaded = true;
-        return true;
-    }
-
-    @Override
-    public boolean reload() {
-        scoreboards.clear();
-        loaded = true;
-        return true;
-    }
-
-    @Override
-    public void unload() {
-        scoreboards.clear();
-        loaded = false;
-    }
-
-    @Override
-    public boolean isLoaded() {
-        return loaded;
-    }
-
-    /**
-     * Gets the ArenaScoreboard of an arena.
-     * @param arena The arena.
-     * @return The arena's ArenaScoreboards.
-     */
-    public ArenaScoreboard getArenaScoreboard(Arena arena) {
-        return scoreboards.containsKey(arena) ? scoreboards.get(arena) : null;
-    }
-
-    /**
-     * Creates an ArenaScoreboard for an arena.
-     * @param arena The arena.
-     * @param name Name of the ArenaScoreboard.
-     * @return The ArenaScoreboard created.
-     */
-    public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
-        ArenaScoreboard scoreboard = new ArenaScoreboard(name);
-        scoreboards.put(arena, scoreboard);
-        return scoreboard;
-    }
-
-    /**
-     * Removes an Arena's ArenaScoreboard from the manager.
-     * @param arena The arena.
-     */
-    public void removeArenaScoreboard(Arena arena) {
-        if (scoreboards.containsKey(arena)) {
-            ArenaScoreboard scoreboard = scoreboards.get(arena);
-            scoreboard.reset();
-            scoreboards.remove(arena);
-        }
-    }
-
+	/**
+	 * Removes an Arena's ArenaScoreboard from the manager.
+	 *
+	 * @param arena The arena.
+	 */
+	public void removeArenaScoreboard(Arena arena) {
+		if (scoreboards.containsKey(arena)) {
+			ArenaScoreboard scoreboard = scoreboards.get(arena);
+			scoreboard.reset();
+			scoreboards.remove(arena);
+		}
+	}
 }

@@ -18,46 +18,45 @@
  */
 package me.ampayne2.ultimategames.signs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.SignType;
-
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClickInputSign extends UGSign {
-    
-    private String label;
-    private List<String> lines = new ArrayList<String>();
 
-    public ClickInputSign(String label, Sign sign, Arena arena) {
-        super(sign, arena);
-        this.label = label;
-        arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
-        update();
-    }
+	private String label;
+	private List<String> lines = new ArrayList<String>();
 
-    @Override
-    public void onSignTrigger(Event event) {
-        getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
-    }
+	public ClickInputSign(String label, Sign sign, Arena arena) {
+		super(sign, arena);
+		this.label = label;
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		update();
+	}
 
-    @Override
-    public List<String> getUpdatedLines() {
-        return lines;
-    }
+	@Override
+	public void onSignTrigger(Event event) {
+		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
+	}
 
-    public void setLines(List<String> lines) {
-        if (lines == null) {
-            this.lines = new ArrayList<String>();
-        } else {
-            this.lines = lines;
-        }
-    }
+	@Override
+	public List<String> getUpdatedLines() {
+		return lines;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	public void setLines(List<String> lines) {
+		if (lines == null) {
+			this.lines = new ArrayList<String>();
+		} else {
+			this.lines = lines;
+		}
+	}
+
+	public String getLabel() {
+		return label;
+	}
 }

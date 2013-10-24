@@ -21,24 +21,28 @@ package me.ampayne2.ultimategames.enums;
 import org.bukkit.ChatColor;
 
 public enum ArenaStatus {
-    
-    OPEN(ChatColor.GREEN),
-    STARTING(ChatColor.DARK_GRAY),
-    RUNNING(ChatColor.DARK_GRAY),
-    ENDING(ChatColor.DARK_GRAY),
-    RESETTING(ChatColor.DARK_GRAY),
-    RESET_FAILED(ChatColor.DARK_RED),
-    GAME_STOPPED(ChatColor.BLACK),
-    ARENA_STOPPED(ChatColor.BLACK);
-    
-    private ChatColor color;
-    
-    private ArenaStatus(ChatColor color) {
-    	this.color = color;
-    }
-    
-    public ChatColor getColor() {
-    	return color;
-    }
-    
+	OPEN(ChatColor.GREEN, "Open"),
+	STARTING(ChatColor.DARK_GRAY, "Starting"),
+	RUNNING(ChatColor.DARK_GRAY, "Running"),
+	ENDING(ChatColor.DARK_GRAY, "Ending"),
+	RESETTING(ChatColor.DARK_GRAY, "Resetting"),
+	RESET_FAILED(ChatColor.DARK_RED, "Reset Failed"),
+	ARENA_STOPPED(ChatColor.BLACK, "Stopped"),
+	GAME_STOPPED(ChatColor.BLACK, "Stopped");
+
+	private ChatColor color;
+	private String displayName;
+
+	private ArenaStatus(ChatColor color, String displayName) {
+		this.color = color;
+		this.displayName = displayName;
+	}
+
+	public ChatColor getColor() {
+		return color;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
 }

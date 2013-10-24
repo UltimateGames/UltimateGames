@@ -21,27 +21,26 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Begin implements UGCommand {
-    private UltimateGames ultimateGames;
+	private UltimateGames ultimateGames;
 
-    public Begin(UltimateGames ultimateGames) {
-        this.ultimateGames = ultimateGames;
-    }
+	public Begin(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+	}
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
-        String gameName = args[1];
-        String arenaName = args[0];
-        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-            if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
-                ultimateGames.getCountdownManager().createStartingCountdown(arena, 5);
-                ultimateGames.getMessageManager().sendReplacedMessage((Player) sender, "arenas.forcestart", arenaName, gameName);
-            }
-        }
-    }
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		String gameName = args[1];
+		String arenaName = args[0];
+		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+			if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
+				ultimateGames.getCountdownManager().createStartingCountdown(arena, 5);
+				ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.forcestart", arenaName, gameName);
+			}
+		}
+	}
 }

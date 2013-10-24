@@ -22,34 +22,33 @@ import me.ampayne2.ultimategames.Message;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetSpectatorSpawn implements UGCommand {
-    
-    private UltimateGames ultimateGames;
 
-    public SetSpectatorSpawn(UltimateGames ultimateGames) {
-        this.ultimateGames = ultimateGames;
-    }
+	private UltimateGames ultimateGames;
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
-        String arenaName = args[0];
-        String gameName = args[1];
-        Message messageManager = ultimateGames.getMessageManager();
-        ArenaManager arenaManager = ultimateGames.getArenaManager();
-        if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            messageManager.sendMessage((Player) sender, "games.doesntexist");
-            return;
-        } else if (!arenaManager.arenaExists(arenaName, gameName)) {
-            messageManager.sendMessage((Player) sender, "arenas.doesntexist");
-            return;
-        }
-        Player player = (Player) sender;
-        ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(arenaManager.getArena(arenaName, gameName), player.getLocation());
-        messageManager.sendReplacedMessage((Player) sender, "spawnpoints.setspectatorspawnpoint", arenaName, gameName);
-    }
+	public SetSpectatorSpawn(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+	}
+
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		String arenaName = args[0];
+		String gameName = args[1];
+		Message messageManager = ultimateGames.getMessageManager();
+		ArenaManager arenaManager = ultimateGames.getArenaManager();
+		if (!ultimateGames.getGameManager().gameExists(gameName)) {
+			messageManager.sendMessage((Player) sender, "games.doesntexist");
+			return;
+		} else if (!arenaManager.arenaExists(arenaName, gameName)) {
+			messageManager.sendMessage((Player) sender, "arenas.doesntexist");
+			return;
+		}
+		Player player = (Player) sender;
+		ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(arenaManager.getArena(arenaName, gameName), player.getLocation());
+		messageManager.sendMessage((Player) sender, "spawnpoints.setspectatorspawnpoint", arenaName, gameName);
+	}
 
 }

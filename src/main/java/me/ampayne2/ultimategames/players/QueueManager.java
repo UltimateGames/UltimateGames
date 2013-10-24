@@ -18,189 +18,157 @@
  */
 package me.ampayne2.ultimategames.players;
 
+import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+public class QueueManager {
+	private UltimateGames ultimateGames;
+	private Map<Arena, List<String>> queue = new HashMap<Arena, List<String>>();
 
-import me.ampayne2.ultimategames.Manager;
-import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.arenas.Arena;
+	public QueueManager(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+	}
 
-public class QueueManager implements Manager {
-    
-    private boolean loaded = false;
-    private UltimateGames ultimateGames;
-    private Map<Arena, List<String>> queue = new HashMap<Arena, List<String>>();
+	/**
+	 * Checks to see if a player is in the queue of an arena.
+	 *
+	 * @param playerName The player's name.
+	 * @param arena      The arena.
+	 *
+	 * @return If the player is in the arena's queue or not.
+	 */
+	public boolean isPlayerInQueue(String playerName, Arena arena) {
+		if (queue.containsKey(arena)) {
+			List<String> players = queue.get(arena);
+			for (String player : players) {
+				if (playerName.equals(player)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-    public QueueManager(UltimateGames ultimateGames) {
-        this.ultimateGames = ultimateGames;
-    }
-    
-    @Override
-    public boolean load() {
-        loaded = true;
-        return true;
-    }
+	/**
+	 * Gets the next players in an arena's queue.
+	 *
+	 * @param amount The amount of players to get.
+	 * @param arena  The arena.
+	 *
+	 * @return The players.
+	 */
+	public List<String> getNextPlayers(Integer amount, Arena arena) {
+		List<String> nextPlayers = new ArrayList<String>();
+		if (queue.containsKey(arena)) {
+			List<String> arenaQueue = queue.get(arena);
+			for (int i = 0; i < amount; i++) {
+				if (arenaQueue.size() > i) {
+					nextPlayers.add(arenaQueue.get(i));
+				}
+			}
+		}
+		return nextPlayers;
+	}
 
-    @Override
-    public boolean reload() {
-        clearAllQueues();
-        loaded = true;
-        return true;
-    }
+	/**
+	 * Sends the player a queue join message.
+	 *
+	 * @param player The player.
+	 * @param arena  The arena.
+	 */
+	public void sendJoinMessage(Player player, Arena arena) {
+		Integer queuePosition = queue.get(arena).size();
+		String position = queuePosition.toString() + Utils.getOrdinalSuffix(queuePosition);
+		Integer gamePosition = (int) Math.ceil((double) queue.get(arena).size() / arena.getMaxPlayers());
+		ultimateGames.getMessageManager().sendMessage(player, "queues.join", arena.getName(), arena.getGame().getName(), position, gamePosition == 1 ? "next game" : gamePosition + " games from now");
+	}
 
-    @Override
-    public void unload() {
-        clearAllQueues();
-        loaded = false;
-    }
+	/**
+	 * Sends the player a queue leave message.
+	 *
+	 * @param player The player.
+	 * @param arena  The arena.
+	 */
+	public void sendLeaveMessage(Player player, Arena arena) {
+		ultimateGames.getMessageManager().sendMessage(player, "queues.leave", arena.getName(), arena.getGame().getName());
+	}
 
-    @Override
-    public boolean isLoaded() {
-        return loaded;
-    }
+	/**
+	 * Adds a player to an arena's queue.
+	 *
+	 * @param player The player.
+	 * @param arena  The arena.
+	 */
+	public void addPlayerToQueue(Player player, Arena arena) {
+		String playerName = player.getName();
+		removePlayerFromQueues(player);
+		if (queue.containsKey(arena)) {
+			queue.get(arena).add(playerName);
+		} else {
+			List<String> players = new ArrayList<String>();
+			players.add(playerName);
+			queue.put(arena, players);
+		}
+		sendJoinMessage(player, arena);
+		arena.getGame().getGamePlugin().onPlayerJoinQueue(player, arena);
+	}
 
-    /**
-     * Checks to see if a player is in the queue of an arena.
-     * @param playerName The player's name.
-     * @param arena The arena.
-     * @return If the player is in the arena's queue or not.
-     */
-    public boolean isPlayerInQueue(String playerName, Arena arena) {
-        if (queue.containsKey(arena)) {
-            List<String> players = queue.get(arena);
-            for (String player : players) {
-                if (playerName.equals(player)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	/**
+	 * Removes a player from all queues.
+	 *
+	 * @param player The player.
+	 */
+	public void removePlayerFromQueues(Player player) {
+		String playerName = player.getName();
+		Map<Arena, List<String>> copy = new HashMap<Arena, List<String>>(queue);
+		for (Entry<Arena, List<String>> entry : queue.entrySet()) {
+			Arena arena = entry.getKey();
+			for (String queuePlayer : new ArrayList<String>(entry.getValue())) {
+				if (playerName.equals(queuePlayer)) {
+					copy.get(arena).remove(queuePlayer);
+					sendLeaveMessage(player, arena);
+					if (copy.get(arena).isEmpty()) {
+						copy.remove(arena);
+					}
+				}
+			}
+		}
+		queue.clear();
+		queue.putAll(copy);
+	}
 
-    /**
-     * Gets the next players in an arena's queue.
-     * @param amount The amount of players to get.
-     * @param arena The arena.
-     * @return The players.
-     */
-    public List<String> getNextPlayers(Integer amount, Arena arena) {
-        if (queue.containsKey(arena)) {
-            List<String> arenaQueue = queue.get(arena);
-            List<String> nextPlayers = new ArrayList<String>();
-            for (int i = 0; i < amount; i++) {
-                if (arenaQueue.size() > i) {
-                    nextPlayers.add(arenaQueue.get(i));
-                }
-            }
-            return nextPlayers;
-        }
-        return new ArrayList<String>();
-    }
+	/**
+	 * Clears an arena's queue.
+	 *
+	 * @param arena The arena.
+	 */
+	public void clearArenaQueue(Arena arena) {
+		if (queue.containsKey(arena)) {
+			for (String playerName : queue.get(arena)) {
+				sendLeaveMessage(Bukkit.getPlayerExact(playerName), arena);
+			}
+			queue.remove(arena);
+		}
+	}
 
-    /**
-     * Sends the player a queue join message.
-     * @param playerName The player's name.
-     * @param arena The arena.
-     */
-    public void sendJoinMessage(Player player, Arena arena) {
-        Integer queuePosition = queue.get(arena).size();
-        String position = queuePosition.toString() + ultimateGames.getUtils().getOrdinalSuffix(queuePosition);
-        Integer gamePosition = (int) Math.ceil((double) queue.get(arena).size() / arena.getMaxPlayers());
-        String wait;
-        if (gamePosition == 1) {
-            wait = "next game";
-        } else {
-            wait = gamePosition.toString() + " games from now";
-        }
-        ultimateGames.getMessageManager().sendReplacedMessage(player, "queues.join", arena.getName(), arena.getGame().getName(), position, wait);
-    }
-
-    /**
-     * Sends the player a queue leave message.
-     * @param playerName The player's name.
-     * @param arena The arena.
-     */
-    public void sendLeaveMessage(Player player, Arena arena) {
-        ultimateGames.getMessageManager().sendReplacedMessage(player, "queues.leave", arena.getName(), arena.getGame().getName());
-    }
-
-    /**
-     * Adds a player to an arena's queue.
-     * @param playerName The player's name.
-     * @param arena The arena.
-     */
-    public void addPlayerToQueue(Player player, Arena arena) {
-        String playerName = player.getName();
-        removePlayerFromQueues(player);
-        if (queue.containsKey(arena)) {
-            queue.get(arena).add(playerName);
-        } else {
-            List<String> players = new ArrayList<String>();
-            players.add(playerName);
-            queue.put(arena, players);
-        }
-        sendJoinMessage(player, arena);
-        arena.getGame().getGamePlugin().onPlayerJoinQueue(player, arena);
-    }
-
-    /**
-     * Removes a player from all queues.
-     * @param playerName The player's name.
-     */
-    public void removePlayerFromQueues(Player player) {
-        String playerName = player.getName();
-        Map<Arena, List<String>> copy = new HashMap<Arena, List<String>>(queue);
-        Iterator<Entry<Arena, List<String>>> it = queue.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<Arena, List<String>> entry = it.next();
-            Arena arena = entry.getKey();
-            List<String> players = new ArrayList<String>(entry.getValue());
-            for (String queuePlayer : players) {
-                if (playerName.equals(queuePlayer)) {
-                    copy.get(arena).remove(queuePlayer);
-                    sendLeaveMessage(player, arena);
-                    if (copy.get(arena).isEmpty()) {
-                        copy.remove(arena);
-                    }
-                }
-            }
-        }
-        queue.clear();
-        queue.putAll(copy);
-    }
-
-    /**
-     * Clears an arena's queue.
-     * @param arena The arena.
-     */
-    public void clearArenaQueue(Arena arena) {
-        if (queue.containsKey(arena)) {
-            List<String> players = queue.get(arena);
-            for (String playerName : players) {
-                sendLeaveMessage(Bukkit.getPlayerExact(playerName), arena);
-            }
-            queue.remove(arena);
-        }
-    }
-
-    /**
-     * Clears all queues.
-     */
-    public void clearAllQueues() {
-        Iterator<Entry<Arena, List<String>>> it = queue.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<Arena, List<String>> entry = it.next();
-            for (String playerName : entry.getValue()) {
-                sendLeaveMessage(Bukkit.getPlayerExact(playerName), entry.getKey());
-            }
-        }
-        queue.clear();
-    }
+	/**
+	 * Clears all queues.
+	 */
+	public void clearAllQueues() {
+		for (Entry<Arena, List<String>> entry : queue.entrySet()) {
+			for (String playerName : entry.getValue()) {
+				sendLeaveMessage(Bukkit.getPlayerExact(playerName), entry.getKey());
+			}
+		}
+		queue.clear();
+	}
 }

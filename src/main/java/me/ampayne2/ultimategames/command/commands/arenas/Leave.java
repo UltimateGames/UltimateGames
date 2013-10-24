@@ -20,25 +20,24 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Leave implements UGCommand {
-    private UltimateGames ultimateGames;
+	private UltimateGames ultimateGames;
 
-    public Leave(UltimateGames ultimateGames) {
-        this.ultimateGames = ultimateGames;
-    }
+	public Leave(UltimateGames ultimateGames) {
+		this.ultimateGames = ultimateGames;
+	}
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
-        Player player = (Player) sender;
-        String playerName = player.getName();
-        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-            ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
-        } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
-            ultimateGames.getPlayerManager().removeSpectatorFromArena((Player) sender);
-        }
-    }
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		Player player = (Player) sender;
+		String playerName = player.getName();
+		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+			ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
+		} else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+			ultimateGames.getPlayerManager().removeSpectatorFromArena((Player) sender);
+		}
+	}
 }
