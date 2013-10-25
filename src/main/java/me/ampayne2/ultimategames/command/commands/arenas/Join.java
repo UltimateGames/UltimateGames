@@ -27,8 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Join implements UGCommand {
-
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public Join(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -38,24 +37,27 @@ public class Join implements UGCommand {
 	public void execute(CommandSender sender, String[] args) {
 		String arenaName = args[0];
 		String gameName = args[1];
-		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-			Player player = (Player) sender;
-			String playerName = player.getName();
-			if (!ultimateGames.getPlayerManager().isPlayerInArena(playerName) && !ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
-				ArenaStatus arenaStatus = arena.getStatus();
-				if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
-					// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-					ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
-					return;
-				} else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
-					QueueManager queue = ultimateGames.getQueueManager();
-					if (!queue.isPlayerInQueue(playerName, arena)) {
-						queue.addPlayerToQueue(player, arena);
-					}
+		if (!ultimateGames.getGameManager().gameExists(gameName)) {
+			ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
+			return;
+		} else if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+			ultimateGames.getMessageManager().sendMessage(sender, "arenas.alreadyexists");
+			return;
+		}
+		Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+		Player player = (Player) sender;
+		String playerName = player.getName();
+		if (!ultimateGames.getPlayerManager().isPlayerInArena(playerName) && !ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+			ArenaStatus arenaStatus = arena.getStatus();
+			if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
+				// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
+				ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
+			} else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
+				QueueManager queue = ultimateGames.getQueueManager();
+				if (!queue.isPlayerInQueue(playerName, arena)) {
+					queue.addPlayerToQueue(player, arena);
 				}
 			}
 		}
 	}
-
 }

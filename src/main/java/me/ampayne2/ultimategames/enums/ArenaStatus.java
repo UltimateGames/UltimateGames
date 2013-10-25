@@ -30,8 +30,8 @@ public enum ArenaStatus {
 	ARENA_STOPPED(ChatColor.BLACK, "Stopped"),
 	GAME_STOPPED(ChatColor.BLACK, "Stopped");
 
-	private ChatColor color;
-	private String displayName;
+	private final ChatColor color;
+	private final String displayName;
 
 	private ArenaStatus(ChatColor color, String displayName) {
 		this.color = color;

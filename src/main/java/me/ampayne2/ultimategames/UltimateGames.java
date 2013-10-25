@@ -23,10 +23,9 @@ import com.alta189.simplesave.exceptions.TableRegistrationException;
 import me.ampayne2.ultimategames.api.PointManager;
 import me.ampayne2.ultimategames.arenas.ArenaListener;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
-import me.ampayne2.ultimategames.arenas.LogManager;
 import me.ampayne2.ultimategames.arenas.SpawnpointManager;
 import me.ampayne2.ultimategames.chests.UGChestManager;
-import me.ampayne2.ultimategames.classes.ClassManager;
+import me.ampayne2.ultimategames.classes.GameClassManager;
 import me.ampayne2.ultimategames.command.CommandController;
 import me.ampayne2.ultimategames.countdowns.CountdownManager;
 import me.ampayne2.ultimategames.database.DatabaseManager;
@@ -55,7 +54,7 @@ import java.util.logging.Level;
 public class UltimateGames extends JavaPlugin {
 	private static UltimateGames instance;
 	private ConfigManager configManager;
-	private ClassManager classManager;
+	private GameClassManager gameClassManager;
 	private GameManager gameManager;
 	private TeamManager teamManager;
 	private ArenaManager arenaManager;
@@ -70,7 +69,6 @@ public class UltimateGames extends JavaPlugin {
 	private ScoreboardManager scoreboardManager;
 	private WhitelistManager whitelistManager;
 	private DatabaseManager databaseManager;
-	private LogManager logManager;
 	private MetricsManager metricsManager;
 	private PointManager pointManager;
 	private CommandController commandController;
@@ -86,7 +84,7 @@ public class UltimateGames extends JavaPlugin {
 		messageManager = new Message(this);
 		playerManager = new PlayerManager(this);
 		metricsManager = new MetricsManager(this);
-		classManager = new ClassManager();
+		gameClassManager = new GameClassManager();
 		gameManager = new GameManager(this);
 		queueManager = new QueueManager(this);
 		spawnpointManager = new SpawnpointManager(this);
@@ -121,7 +119,6 @@ public class UltimateGames extends JavaPlugin {
 			messageManager.debug(e);
 			getServer().getPluginManager().disablePlugin(this);
 		}
-		logManager = new LogManager(this);
 		pointManager = new PointManager();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
@@ -162,20 +159,16 @@ public class UltimateGames extends JavaPlugin {
 		return messageManager;
 	}
 
-	public ClassManager getClassManager() {
-		return classManager;
-	}
-
 	public GameManager getGameManager() {
 		return gameManager;
 	}
 
-	public TeamManager getTeamManager() {
-		return teamManager;
-	}
-
 	public ArenaManager getArenaManager() {
 		return arenaManager;
+	}
+
+	public PlayerManager getPlayerManager() {
+		return playerManager;
 	}
 
 	public UGSignManager getUGSignManager() {
@@ -186,16 +179,20 @@ public class UltimateGames extends JavaPlugin {
 		return ugChestManager;
 	}
 
+	public GameClassManager getGameClassManager() {
+		return gameClassManager;
+	}
+
+	public TeamManager getTeamManager() {
+		return teamManager;
+	}
+
 	public QueueManager getQueueManager() {
 		return queueManager;
 	}
 
 	public SpawnpointManager getSpawnpointManager() {
 		return spawnpointManager;
-	}
-
-	public PlayerManager getPlayerManager() {
-		return playerManager;
 	}
 
 	public CountdownManager getCountdownManager() {
@@ -216,10 +213,6 @@ public class UltimateGames extends JavaPlugin {
 
 	public DatabaseManager getDatabaseManager() {
 		return databaseManager;
-	}
-
-	public LogManager getLogManager() {
-		return logManager;
 	}
 
 	public MetricsManager getMetricsManager() {

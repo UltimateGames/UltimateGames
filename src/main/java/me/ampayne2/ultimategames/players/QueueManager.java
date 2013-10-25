@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.players;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.utils.Utils;
+import me.ampayne2.ultimategames.utils.UGUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -31,11 +31,29 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class QueueManager {
-	private UltimateGames ultimateGames;
-	private Map<Arena, List<String>> queue = new HashMap<Arena, List<String>>();
+	private final UltimateGames ultimateGames;
+	private final Map<Arena, List<String>> queue = new HashMap<Arena, List<String>>();
 
 	public QueueManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
+	}
+
+	/**
+	 * Checks to see if a player is in a queue.
+	 *
+	 * @param playerName The player's name.
+	 *
+	 * @return If the player is in a queue or not.
+	 */
+	public boolean isPlayerInQueue(String playerName) {
+		for (Entry<Arena, List<String>> arena : queue.entrySet()) {
+			for (String player : arena.getValue()) {
+				if (playerName.equals(player)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -48,8 +66,7 @@ public class QueueManager {
 	 */
 	public boolean isPlayerInQueue(String playerName, Arena arena) {
 		if (queue.containsKey(arena)) {
-			List<String> players = queue.get(arena);
-			for (String player : players) {
+			for (String player : queue.get(arena)) {
 				if (playerName.equals(player)) {
 					return true;
 				}
@@ -87,7 +104,7 @@ public class QueueManager {
 	 */
 	public void sendJoinMessage(Player player, Arena arena) {
 		Integer queuePosition = queue.get(arena).size();
-		String position = queuePosition.toString() + Utils.getOrdinalSuffix(queuePosition);
+		String position = queuePosition.toString() + UGUtils.getOrdinalSuffix(queuePosition);
 		Integer gamePosition = (int) Math.ceil((double) queue.get(arena).size() / arena.getMaxPlayers());
 		ultimateGames.getMessageManager().sendMessage(player, "queues.join", arena.getName(), arena.getGame().getName(), position, gamePosition == 1 ? "next game" : gamePosition + " games from now");
 	}

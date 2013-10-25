@@ -339,5 +339,4 @@ public abstract class GamePlugin implements Listener {
 	 */
 	public void onBlockFade(Arena arena, BlockFadeEvent event) {
 	}
-
 }

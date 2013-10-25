@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
  * Called after a player leaves an arena.
  */
 public class PlayerLeaveEvent extends ArenaEvent {
-	private Player player;
+	private final Player player;
 
 	public PlayerLeaveEvent(Player player, Arena arena) {
 		super(arena);

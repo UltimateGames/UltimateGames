@@ -21,7 +21,6 @@ package me.ampayne2.ultimategames.countdowns;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +29,9 @@ import java.util.Map;
  * Manages different types of countdowns for arenas.
  */
 public class CountdownManager {
-	private UltimateGames ultimateGames;
-	private Map<Arena, Integer> starting = new HashMap<Arena, Integer>();
-	private Map<Arena, Integer> ending = new HashMap<Arena, Integer>();
+	private final UltimateGames ultimateGames;
+	private Map<Arena, StartingCountdown> starting = new HashMap<Arena, StartingCountdown>();
+	private Map<Arena, EndingCountdown> ending = new HashMap<Arena, EndingCountdown>();
 
 	/**
 	 * Creates a new Countdown Manager.
@@ -50,7 +49,7 @@ public class CountdownManager {
 	 *
 	 * @return If the arena has a starting countdown running.
 	 */
-	public boolean isStartingCountdownEnabled(Arena arena) {
+	public boolean hasStartingCountdown(Arena arena) {
 		return starting.containsKey(arena);
 	}
 
@@ -61,8 +60,30 @@ public class CountdownManager {
 	 *
 	 * @return If the arena has an ending countdown running.
 	 */
-	public boolean isEndingCountdownEnabled(Arena arena) {
+	public boolean hasEndingCountdown(Arena arena) {
 		return ending.containsKey(arena);
+	}
+
+	/**
+	 * Gets an arena's starting countdown.
+	 *
+	 * @param arena The arena.
+	 *
+	 * @return The arena's starting countdown.
+	 */
+	public StartingCountdown getStartingCountdown(Arena arena) {
+		return starting.get(arena);
+	}
+
+	/**
+	 * Gets an arena's ending countdown.
+	 *
+	 * @param arena The arena.
+	 *
+	 * @return The arena's ending countdown.
+	 */
+	public EndingCountdown getEndingCountdown(Arena arena) {
+		return ending.get(arena);
 	}
 
 	/**
@@ -74,7 +95,9 @@ public class CountdownManager {
 	public void createStartingCountdown(Arena arena, Integer seconds) {
 		if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
 			if (!starting.containsKey(arena)) {
-				starting.put(arena, Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, new StartingCountdown(ultimateGames, arena, seconds), 20L, seconds * 20));
+				StartingCountdown countdown = new StartingCountdown(ultimateGames, arena, seconds);
+				countdown.start();
+				starting.put(arena, countdown);
 			}
 		}
 	}
@@ -86,7 +109,7 @@ public class CountdownManager {
 	 */
 	public void stopStartingCountdown(Arena arena) {
 		if (starting.containsKey(arena)) {
-			Bukkit.getScheduler().cancelTask(starting.get(arena));
+			starting.get(arena).stop();
 			starting.remove(arena);
 			arena.setStatus(ArenaStatus.OPEN);
 		}
@@ -101,7 +124,9 @@ public class CountdownManager {
 	 */
 	public void createEndingCountdown(Arena arena, Integer seconds, Boolean expDisplay) {
 		if (!ending.containsKey(arena)) {
-			ending.put(arena, Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, new EndingCountdown(ultimateGames, arena, seconds, expDisplay), 20L, seconds * 20));
+			EndingCountdown countdown = new EndingCountdown(ultimateGames, arena, seconds, expDisplay);
+			countdown.start();
+			ending.put(arena, countdown);
 		}
 	}
 
@@ -112,7 +137,7 @@ public class CountdownManager {
 	 */
 	public void stopEndingCountdown(Arena arena) {
 		if (ending.containsKey(arena)) {
-			Bukkit.getScheduler().cancelTask(ending.get(arena));
+			ending.get(arena).stop();
 			ending.remove(arena);
 		}
 	}

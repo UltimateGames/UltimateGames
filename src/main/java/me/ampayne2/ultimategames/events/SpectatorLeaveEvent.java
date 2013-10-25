@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
  * Called after a spectator leaves an arena.
  */
 public class SpectatorLeaveEvent extends ArenaEvent {
-	private Player player;
+	private final Player player;
 
 	public SpectatorLeaveEvent(Player player, Arena arena) {
 		super(arena);

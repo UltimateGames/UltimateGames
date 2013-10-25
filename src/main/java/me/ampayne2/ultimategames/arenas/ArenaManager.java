@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class ArenaManager {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Map<Game, List<Arena>> arenas = new HashMap<Game, List<Arena>>();
 	private static final int X_INDEX = 0;
 	private static final int Y_INDEX = 1;
@@ -299,10 +299,10 @@ public class ArenaManager {
 					}
 					arena.setStatus(ArenaStatus.ENDING);
 
-					if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
+					if (ultimateGames.getCountdownManager().hasStartingCountdown(arena)) {
 						ultimateGames.getCountdownManager().stopStartingCountdown(arena);
 					}
-					if (ultimateGames.getCountdownManager().isEndingCountdownEnabled(arena)) {
+					if (ultimateGames.getCountdownManager().hasEndingCountdown(arena)) {
 						ultimateGames.getCountdownManager().stopEndingCountdown(arena);
 					}
 					arena.getGame().getGamePlugin().endArena(arena);
@@ -326,7 +326,7 @@ public class ArenaManager {
 					Bukkit.getPluginManager().callEvent(event);
 					if (arena.resetAfterMatch()) {
 						arena.setStatus(ArenaStatus.RESETTING);
-						ultimateGames.getLogManager().rollbackArena(arena);
+						// TODO: Reset arena world
 						if (!arena.getGame().getGamePlugin().resetArena(arena)) {
 							arena.setStatus(ArenaStatus.RESET_FAILED);
 						}

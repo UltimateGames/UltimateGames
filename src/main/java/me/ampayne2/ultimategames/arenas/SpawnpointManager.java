@@ -28,10 +28,9 @@ import java.util.*;
  * Manages arena spawnpoints for players and spectators.
  */
 public class SpawnpointManager {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Map<Arena, List<PlayerSpawnPoint>> playerSpawnPoints = new HashMap<Arena, List<PlayerSpawnPoint>>();
 	private Map<Arena, SpectatorSpawnPoint> spectatorSpawnPoints = new HashMap<Arena, SpectatorSpawnPoint>();
-	private static final String PATH_SEPARATOR = ".";
 
 	/**
 	 * Creates a new Spawnpoint Manager.
@@ -84,7 +83,7 @@ public class SpawnpointManager {
 		newSpawnPoint.add(String.valueOf(location.getPitch()));
 		newSpawnPoint.add(String.valueOf(location.getYaw()));
 		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-		String path = "Arenas." + arena.getGame().getName() + PATH_SEPARATOR + arena.getName() + ".SpectatorSpawnpoint";
+		String path = "Arenas." + arena.getGame().getName() + "." + arena.getName() + ".SpectatorSpawnpoint";
 		arenaConfig.set(path, newSpawnPoint);
 		spectatorSpawnPoints.put(arena, new SpectatorSpawnPoint(arena, location));
 	}
@@ -108,7 +107,7 @@ public class SpawnpointManager {
 		newSpawnPoint.add(String.valueOf(location.getYaw()));
 		newSpawnPoint.add(String.valueOf(locked));
 		FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-		String path = "Arenas." + arena.getGame().getName() + PATH_SEPARATOR + arena.getName() + ".SpawnPoints";
+		String path = "Arenas." + arena.getGame().getName() + "." + arena.getName() + ".SpawnPoints";
 		if (ultimateGames.getConfigManager().getArenaConfig().getConfig().contains(path)) {
 			@SuppressWarnings("unchecked") List<List<String>> arenaSpawnPoints = (ArrayList<List<String>>) arenaConfig.getList(path);
 			arenaSpawnPoints.add(newSpawnPoint);
@@ -255,7 +254,7 @@ public class SpawnpointManager {
 	 */
 	public void removeSpawnPoint(Arena arena, Integer index) {
 		if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= index) {
-			playerSpawnPoints.get(arena).remove(index);
+			playerSpawnPoints.get(arena).remove(playerSpawnPoints.get(arena).get(index));
 			// TODO: Remove spawnpoint from arena config.
 		}
 	}
@@ -290,5 +289,4 @@ public class SpawnpointManager {
 			// TODO: Remove spawnpoints from arena config.
 		}
 	}
-
 }

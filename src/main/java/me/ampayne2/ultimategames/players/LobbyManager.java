@@ -28,7 +28,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  * TODO: Support for multiple lobbies per game.
  */
 public class LobbyManager {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Location lobby;
 
 	public LobbyManager(UltimateGames ultimateGames) {

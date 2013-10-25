@@ -16,34 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.arenas;
+package me.ampayne2.ultimategames.files;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * Contains basic information about a block used for logging.
- */
-public class BlockChange {
+import java.io.File;
 
-	public Arena arena;
-	public Material material;
-	public byte data;
-	public Location location;
-
-	/**
-	 * Creates a new BlockChange object.
-	 *
-	 * @param arena    The arena the change took place in.
-	 * @param material The material of the original block.
-	 * @param data     The data of the original block.
-	 * @param location The location the change took place at.
-	 */
-	public BlockChange(Arena arena, Material material, byte data, Location location) {
-		this.arena = arena;
-		this.material = material;
-		this.data = data;
-		this.location = location;
+public class GameConfigAccessor extends ConfigAccessor {
+	public GameConfigAccessor(JavaPlugin plugin, String gameName) {
+		super(plugin, gameName + ".yml", new File(plugin.getDataFolder() + "/Games"));
 	}
 
+	@Override
+	public void saveDefaultConfig() {
+	}
 }

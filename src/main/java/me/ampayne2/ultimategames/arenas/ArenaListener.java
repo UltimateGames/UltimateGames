@@ -23,15 +23,18 @@ import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.teams.Team;
 import me.ampayne2.ultimategames.teams.TeamManager;
-import me.ampayne2.ultimategames.utils.Utils;
+import me.ampayne2.ultimategames.utils.UGUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -43,8 +46,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ArenaListener implements Listener {
-	private UltimateGames ultimateGames;
-	private static final int DOOR_BIT = 0x8;
+	private final UltimateGames ultimateGames;
 
 	public ArenaListener(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -52,9 +54,7 @@ public class ArenaListener implements Listener {
 
 	/**
 	 * Blocks block placing inside an arena for players not in that arena,<br>
-	 * or if the block's material is not whitelisted for placing.<br>
-	 * Logs the block placement for resetting if the arena requires resets,<br>
-	 * and if the game's onBlockPlace method doesn't cancel the event.
+	 * or if the block's material is not whitelisted for placing.
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event) {
@@ -62,15 +62,12 @@ public class ArenaListener implements Listener {
 		if (arena != null) {
 			String playerName = event.getPlayer().getName();
 			if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-				if (ultimateGames.getPlayerManager().getArenaPlayer(playerName).isEditing()) {
-					return;
-				} else if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockPlaceWhitelist().canPlaceMaterial(arena.getGame(), event.getBlock().getType()) && arena.resetAfterMatch()) {
-					arena.getGame().getGamePlugin().onBlockPlace(arena, event);
-					if (!event.isCancelled()) {
-						ultimateGames.getLogManager().logBlockChange(arena, event.getBlockReplacedState().getType(), event.getBlockReplacedState().getRawData(), event.getBlockReplacedState().getLocation());
+				if (!ultimateGames.getPlayerManager().getArenaPlayer(playerName).isEditing()) {
+					if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockPlaceWhitelist().canPlaceMaterial(arena.getGame(), event.getBlock().getType())) {
+						arena.getGame().getGamePlugin().onBlockPlace(arena, event);
+					} else {
+						event.setCancelled(true);
 					}
-				} else {
-					event.setCancelled(true);
 				}
 			} else {
 				event.setCancelled(true);
@@ -80,11 +77,9 @@ public class ArenaListener implements Listener {
 
 	/**
 	 * Blocks block breaking inside an arena for players not in that arena,<br>
-	 * or if the block's material is not whitelisted for breaking.<br>
-	 * Logs the block break for resetting if the arena requires resets,<br>
-	 * and if the game's onBlockBreak method doesn't cancel the event.<br><br>
+	 * or if the block's material is not whitelisted for breaking.
 	 *
-	 * Stops blocks with signs attached from breaking.
+	 * Stops blocks with ug signs attached from breaking.
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event) {
@@ -92,37 +87,23 @@ public class ArenaListener implements Listener {
 		if (arena != null) {
 			String playerName = event.getPlayer().getName();
 			if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-				if (ultimateGames.getPlayerManager().getArenaPlayer(playerName).isEditing()) {
-					return;
-				} else if (arena.getStatus() == ArenaStatus.RUNNING && arena.resetAfterMatch() && ultimateGames.getWhitelistManager().getBlockBreakWhitelist().canBreakMaterial(arena.getGame(), event.getBlock().getType())) {
-					Block block = event.getBlock();
-					Block up = block.getRelative(BlockFace.UP);
-					Block east = block.getRelative(BlockFace.EAST);
-					Block north = block.getRelative(BlockFace.NORTH);
-					Block south = block.getRelative(BlockFace.SOUTH);
-					Block west = block.getRelative(BlockFace.WEST);
-					if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
-						event.setCancelled(true);
-					} else if (up.getType() == Material.SIGN_POST) {
-						event.setCancelled(true);
-					} else if (east.getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(east, block)) {
-						event.setCancelled(true);
-					} else if (north.getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(north, block)) {
-						event.setCancelled(true);
-					} else if (south.getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(south, block)) {
-						event.setCancelled(true);
-					} else if (west.getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(west, block)) {
-						event.setCancelled(true);
-					} else {
-						arena.getGame().getGamePlugin().onBlockBreak(arena, event);
-						if (arena.resetAfterMatch()) {
-							if (!((block.getType() == Material.WOODEN_DOOR || block.getType() == Material.IRON_DOOR_BLOCK) && (block.getData() & DOOR_BIT) == DOOR_BIT)) {
-								ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
+				if (!ultimateGames.getPlayerManager().getArenaPlayer(playerName).isEditing()) {
+					if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockBreakWhitelist().canBreakMaterial(arena.getGame(), event.getBlock().getType())) {
+						Block block = event.getBlock();
+						if ((block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) && ultimateGames.getUGSignManager().isUGSign((Sign) block.getState())) {
+							event.setCancelled(true);
+							return;
+						}
+						for (Sign attachedSign : UGUtils.getAttachedSigns(block, true)) {
+							if (ultimateGames.getUGSignManager().isUGSign(attachedSign)) {
+								event.setCancelled(true);
+								return;
 							}
 						}
+						arena.getGame().getGamePlugin().onBlockBreak(arena, event);
+					} else {
+						event.setCancelled(true);
 					}
-				} else {
-					event.setCancelled(true);
 				}
 			} else {
 				event.setCancelled(true);
@@ -143,20 +124,16 @@ public class ArenaListener implements Listener {
 			Arena arena = ultimateGames.getArenaManager().getLocationArena(entity.getLocation());
 			if (arena != null) {
 				if (arena.getStatus() == ArenaStatus.RUNNING) {
-					if (arena.allowExplosionBlockBreaking() && arena.resetAfterMatch()) {
+					if (arena.allowExplosionBlockBreaking()) {
 						Set<Block> canBeBroken = ultimateGames.getWhitelistManager().getBlockBreakWhitelist().blocksWhitelisted(arena.getGame(), new HashSet<Block>(event.blockList()));
 						event.blockList().clear();
 						event.blockList().addAll(canBeBroken);
 						arena.getGame().getGamePlugin().onEntityExplode(arena, event);
-						if (arena.resetAfterMatch() && !event.isCancelled()) {
-							ultimateGames.getLogManager().logBlockChanges(arena, event.blockList());
-						}
+					} else if (arena.allowExplosionDamage()) {
+						event.blockList().clear();
+						arena.getGame().getGamePlugin().onEntityExplode(arena, event);
 					} else {
-						if (arena.allowExplosionDamage()) {
-							event.blockList().clear();
-						} else {
-							event.setCancelled(true);
-						}
+						event.setCancelled(true);
 					}
 				} else {
 					event.setCancelled(true);
@@ -172,7 +149,7 @@ public class ArenaListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onTntDamage(EntityDamageByEntityEvent event) {
 		Entity entity = event.getDamager();
-		if (event.getEntity() instanceof Player && (entity instanceof TNTPrimed || entity instanceof Creeper || entity instanceof Fireball)) {
+		if (entity instanceof TNTPrimed || entity instanceof Creeper || entity instanceof Fireball) {
 			Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getEntity().getLocation());
 			if (arena != null && !arena.allowExplosionDamage()) {
 				event.setCancelled(true);
@@ -181,78 +158,47 @@ public class ArenaListener implements Listener {
 	}
 
 	/**
-	 * Blocks piston extension in arenas that require resets.
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onPistonExtend(BlockPistonExtendEvent event) {
-		Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
-		if (arena != null && arena.resetAfterMatch()) {
-			event.setCancelled(true);
-		}
-	}
-
-	/**
-	 * Blocks piston retraction in arenas that require resets.
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onPistonRetract(BlockPistonRetractEvent event) {
-		Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
-		if (arena != null && arena.resetAfterMatch()) {
-			event.setCancelled(true);
-		}
-	}
-
-	/**
-	 * Logs block physics events in arenas.
+	 * Cancels block physics events in arenas not currently running.
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockPhysics(BlockPhysicsEvent event) {
 		Material material = event.getChangedType();
-		if (material == Material.WATER || material == Material.LAVA || Utils.hasPhysics(material)) {
-			Block block = event.getBlock();
-			Arena arena = ultimateGames.getArenaManager().getLocationArena(block.getLocation());
-			if (arena != null) {
-				if (arena.resetAfterMatch() && arena.getStatus() == ArenaStatus.RUNNING) {
-					ultimateGames.getLogManager().logBlockChange(arena, material, block.getData(), block.getLocation());
-				} else if (arena.getStatus() == ArenaStatus.RESETTING) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Handles block fading events in arenas.
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onBlockFade(BlockFadeEvent event) {
-		Block block = event.getBlock();
-		Arena arena = ultimateGames.getArenaManager().getLocationArena(block.getLocation());
-		if (arena != null) {
-			arena.getGame().getGamePlugin().onBlockFade(arena, event);
-			if (!event.isCancelled() && arena.resetAfterMatch() && arena.getStatus() == ArenaStatus.RUNNING) {
-				ultimateGames.getLogManager().logBlockChange(arena, block.getType(), block.getData(), block.getLocation());
-			} else if (arena.getStatus() == ArenaStatus.RESETTING) {
+		if (material == Material.WATER || material == Material.LAVA || UGUtils.hasPhysics(material)) {
+			Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
+			if (arena != null && arena.getStatus() != ArenaStatus.RUNNING) {
 				event.setCancelled(true);
 			}
 		}
 	}
 
 	/**
-	 * Calls a game's onPlayerDeath method, and stops death message when a player in an arena is killed.
+	 * Cancels block fade events in arenas not currently running.
+	 */
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onBlockFade(BlockFadeEvent event) {
+		Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
+		if (arena != null && arena.getStatus() == ArenaStatus.RUNNING) {
+			arena.getGame().getGamePlugin().onBlockFade(arena, event);
+		} else {
+			event.setCancelled(true);
+		}
+	}
+
+	/**
+	 * Handles player death events, removes the death message.
 	 */
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		String playerName = event.getEntity().getName();
 		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-			event.setDeathMessage("");
 			Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
 			arena.getGame().getGamePlugin().onPlayerDeath(arena, event);
+			event.setDeathMessage("");
 		}
 	}
 
 	/**
-	 * Calls a game's onPlayerRespawn method when a player in an arena respawns.
+	 * Handles player respawn events.
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -320,7 +266,7 @@ public class ArenaListener implements Listener {
 						TeamManager teamManager = ultimateGames.getTeamManager();
 						Team playerTeam = teamManager.getPlayerTeam(playerName);
 						Team damagerTeam = teamManager.getPlayerTeam(damagerName);
-						if (playerTeam != null && damagerTeam != null && playerTeam.equals(damagerTeam) && !playerTeam.hasFriendlyFire()) {
+						if (playerTeam != null && playerTeam.equals(damagerTeam) && !playerTeam.hasFriendlyFire()) {
 							ultimateGames.getMessageManager().sendMessage(damager, "teams.friendlyfire");
 							event.setCancelled(true);
 						} else {
@@ -363,10 +309,14 @@ public class ArenaListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {
 		if (event.getEntity() instanceof Player) {
-			String playerName = ((Player) event.getEntity()).getName();
+			String playerName = event.getEntity().getName();
 			if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
 				Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-				arena.getGame().getGamePlugin().onPlayerFoodLevelChange(arena, event);
+				if (arena.getStatus() == ArenaStatus.RUNNING) {
+					arena.getGame().getGamePlugin().onPlayerFoodLevelChange(arena, event);
+				} else {
+					event.setCancelled(true);
+				}
 			} else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
 				event.setCancelled(true);
 			}
@@ -383,7 +333,11 @@ public class ArenaListener implements Listener {
 		String playerName = event.getPlayer().getName();
 		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
 			Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-			arena.getGame().getGamePlugin().onItemPickup(arena, event);
+			if (arena.getStatus() == ArenaStatus.RUNNING) {
+				arena.getGame().getGamePlugin().onItemPickup(arena, event);
+			} else {
+				event.setCancelled(true);
+			}
 		} else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
 			event.setCancelled(true);
 		}
@@ -399,7 +353,11 @@ public class ArenaListener implements Listener {
 		String playerName = event.getPlayer().getName();
 		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
 			Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-			arena.getGame().getGamePlugin().onItemDrop(arena, event);
+			if (arena.getStatus() == ArenaStatus.RUNNING) {
+				arena.getGame().getGamePlugin().onItemDrop(arena, event);
+			} else {
+				event.setCancelled(true);
+			}
 		} else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
 			event.setCancelled(true);
 		}
@@ -418,5 +376,4 @@ public class ArenaListener implements Listener {
 			}
 		}
 	}
-
 }

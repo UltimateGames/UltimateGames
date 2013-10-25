@@ -19,12 +19,11 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import org.bukkit.command.CommandSender;
 
 public class End implements UGCommand {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public End(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -34,9 +33,13 @@ public class End implements UGCommand {
 	public void execute(CommandSender sender, String[] args) {
 		String arenaName = args[0];
 		String gameName = args[1];
-		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-			ultimateGames.getArenaManager().endArena(arena);
+		if (!ultimateGames.getGameManager().gameExists(gameName)) {
+			ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
+			return;
+		} else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+			ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
+			return;
 		}
+		ultimateGames.getArenaManager().endArena(ultimateGames.getArenaManager().getArena(arenaName, gameName));
 	}
 }

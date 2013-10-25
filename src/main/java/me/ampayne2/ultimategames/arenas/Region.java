@@ -30,11 +30,11 @@ import java.util.List;
  * Represents a rectangular region in a world.
  */
 public class Region {
-	public World world;
-	public Double minX;
-	public Double maxX;
-	public Double minZ;
-	public Double maxZ;
+	public final World world;
+	public final Double minX;
+	public final Double maxX;
+	public final Double minZ;
+	public final Double maxZ;
 
 	/**
 	 * Creates a new region.

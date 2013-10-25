@@ -31,10 +31,10 @@ import java.util.List;
  * A class that represents a team in an arena.
  */
 public class Team {
-	private UltimateGames ultimateGames;
-	private String name;
-	private ChatColor color;
-	private Arena arena;
+	private final UltimateGames ultimateGames;
+	private final String name;
+	private final ChatColor color;
+	private final Arena arena;
 	private boolean friendlyFire;
 	private List<String> players = new ArrayList<String>();
 	private static final int MAX_NAME_LENGTH = 14;

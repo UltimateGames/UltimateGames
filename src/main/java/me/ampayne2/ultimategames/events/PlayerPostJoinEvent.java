@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
  * Called after a player joins an arena.
  */
 public class PlayerPostJoinEvent extends ArenaEvent {
-	private Player player;
+	private final Player player;
 
 	public PlayerPostJoinEvent(Player player, Arena arena) {
 		super(arena);

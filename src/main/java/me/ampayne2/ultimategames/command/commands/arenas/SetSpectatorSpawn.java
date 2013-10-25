@@ -26,8 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetSpectatorSpawn implements UGCommand {
-
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public SetSpectatorSpawn(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -40,15 +39,13 @@ public class SetSpectatorSpawn implements UGCommand {
 		Message messageManager = ultimateGames.getMessageManager();
 		ArenaManager arenaManager = ultimateGames.getArenaManager();
 		if (!ultimateGames.getGameManager().gameExists(gameName)) {
-			messageManager.sendMessage((Player) sender, "games.doesntexist");
+			messageManager.sendMessage(sender, "games.doesntexist");
 			return;
 		} else if (!arenaManager.arenaExists(arenaName, gameName)) {
-			messageManager.sendMessage((Player) sender, "arenas.doesntexist");
+			messageManager.sendMessage(sender, "arenas.doesntexist");
 			return;
 		}
-		Player player = (Player) sender;
-		ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(arenaManager.getArena(arenaName, gameName), player.getLocation());
-		messageManager.sendMessage((Player) sender, "spawnpoints.setspectatorspawnpoint", arenaName, gameName);
+		ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(arenaManager.getArena(arenaName, gameName), ((Player) sender).getLocation());
+		messageManager.sendMessage(sender, "spawnpoints.setspectatorspawnpoint", arenaName, gameName);
 	}
-
 }

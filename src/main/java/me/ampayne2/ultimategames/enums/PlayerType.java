@@ -18,6 +18,9 @@
  */
 package me.ampayne2.ultimategames.enums;
 
+/**
+ * Player type of an arena.
+ */
 public enum PlayerType {
 	SINGLE_PLAYER,
 	TWO_PLAYER,

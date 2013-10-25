@@ -20,11 +20,12 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.players.QueueManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Leave implements UGCommand {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public Leave(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -34,10 +35,15 @@ public class Leave implements UGCommand {
 	public void execute(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		String playerName = player.getName();
+		QueueManager queue = ultimateGames.getQueueManager();
 		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
 			ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
 		} else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
 			ultimateGames.getPlayerManager().removeSpectatorFromArena((Player) sender);
+		} else if (queue.isPlayerInQueue(playerName)) {
+			queue.removePlayerFromQueues(player);
+		} else {
+			ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.cantleave");
 		}
 	}
 }

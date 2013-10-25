@@ -27,7 +27,7 @@ import org.bukkit.event.HandlerList;
  */
 public abstract class ArenaEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
-	private Arena arena;
+	private final Arena arena;
 
 	public ArenaEvent(Arena arena) {
 		this.arena = arena;

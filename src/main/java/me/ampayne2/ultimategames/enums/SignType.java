@@ -39,8 +39,8 @@ public enum SignType {
 		}
 	}
 
-	private Class<?> signClass;
-	private Boolean hasLabel;
+	private final Class<?> signClass;
+	private final Boolean hasLabel;
 
 	private SignType(Class<?> signClass, Boolean hasLabel) {
 		this.hasLabel = hasLabel;

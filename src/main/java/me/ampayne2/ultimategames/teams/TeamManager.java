@@ -25,8 +25,11 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+/**
+ * Manages teams in arenas.
+ */
 public class TeamManager {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Map<Arena, List<Team>> teams = new HashMap<Arena, List<Team>>();
 
 	public TeamManager(UltimateGames ultimateGames) {
@@ -240,15 +243,16 @@ public class TeamManager {
 		}
 
 		// Make it possible for each team to have the same amount of players.
-		Random generator = new Random();
 		while (playerAmount % teamAmount != 0) {
 			if (playersNotInTeamsAmount > 0) {
 				String playerName = playersNotInTeams.get(playersNotInTeamsAmount - 1);
+				getPlayerTeam(playerName).removePlayer(playerName);
 				Player player = Bukkit.getPlayerExact(playerName);
 				ultimateGames.getPlayerManager().removePlayerFromArena(player, false);
 				ultimateGames.getMessageManager().sendMessage(player, "arenas.kick");
 				playersNotInTeams.remove(playerName);
 				playersNotInTeamsAmount = playersNotInTeams.size();
+				playerAmount--;
 			} else {
 				String playerName = playersInTeams.get(playersInTeamsAmount - 1);
 				getPlayerTeam(playerName).removePlayer(playerName);
@@ -257,9 +261,8 @@ public class TeamManager {
 				ultimateGames.getMessageManager().sendMessage(player, "arenas.kick");
 				playersInTeams.remove(playerName);
 				playersInTeamsAmount = playersInTeams.size();
+				playerAmount--;
 			}
-			players = arena.getPlayers();
-			playerAmount = players.size();
 		}
 
 		// Kick the last players to join each team from their team if the team is too full.
@@ -274,6 +277,7 @@ public class TeamManager {
 		}
 
 		// Add the players not in teams yet to the teams that need players.
+		Random generator = new Random();
 		for (Team team : teams) {
 			while ((playerAmount / teamAmount) > team.getPlayers().size()) {
 				String playerName = playersNotInTeams.get(generator.nextInt(playersNotInTeams.size()));

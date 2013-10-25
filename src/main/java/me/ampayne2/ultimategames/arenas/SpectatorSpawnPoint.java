@@ -25,16 +25,14 @@ import org.bukkit.entity.Player;
  * An arena spawn point for spectators.
  */
 public class SpectatorSpawnPoint {
-
-	private Arena arena;
-	private Location location;
+	private final Arena arena;
+	private final Location location;
 
 	/**
 	 * Creates a new SpectatorSpawnPoint
 	 *
-	 * @param ultimateGames A reference to the ultimateGames instance.
-	 * @param arena         The arena of the spawnpoint.
-	 * @param location      The location of the spawnpoint.
+	 * @param arena    The arena of the spawnpoint.
+	 * @param location The location of the spawnpoint.
 	 */
 	public SpectatorSpawnPoint(Arena arena, Location location) {
 		this.arena = arena;
@@ -67,5 +65,4 @@ public class SpectatorSpawnPoint {
 	public void teleportPlayer(Player player) {
 		player.teleport(location);
 	}
-
 }

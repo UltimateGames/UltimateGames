@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.SignType;
-import me.ampayne2.ultimategames.utils.Utils;
+import me.ampayne2.ultimategames.utils.UGUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -39,15 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SignListener implements Listener {
-
-	private UltimateGames ultimateGames;
-	private static final int SIGN_PREFIX_LINE = 0;
-	private static final int GAME_NAME_LINE = 1;
-	private static final int ARENA_NAME_LINE = 2;
-	private static final int LABEL_LINE = 3;
-	private static final int LINE_AMOUNT = 4;
-	private static final String BLANK_LINE = "";
-	private static final int MINIMUM_REDSTONE_CURRENT = 0;
+	private final UltimateGames ultimateGames;
 
 	public SignListener(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -63,11 +55,11 @@ public class SignListener implements Listener {
 		if (!event.getPlayer().hasPermission("ultimategames.sign.create")) {
 			return;
 		}
-		String signPrefix = event.getLine(SIGN_PREFIX_LINE);
-		String gameName = event.getLine(GAME_NAME_LINE);
-		String arenaName = event.getLine(ARENA_NAME_LINE);
-		String label = event.getLine(LABEL_LINE);
-		if (signPrefix.equals(BLANK_LINE) || gameName.equals(BLANK_LINE) || arenaName.equals(BLANK_LINE)) {
+		String signPrefix = event.getLine(0);
+		String gameName = event.getLine(1);
+		String arenaName = event.getLine(2);
+		String label = event.getLine(3);
+		if (signPrefix.equals("") || gameName.equals("") || arenaName.equals("")) {
 			return;
 		}
 		if (!ultimateGames.getGameManager().gameExists(gameName) || !ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
@@ -90,7 +82,7 @@ public class SignListener implements Listener {
 		}
 		UGSign ugSign = ultimateGames.getUGSignManager().createUGSign(label, (Sign) event.getBlock().getState(), ultimateGames.getArenaManager().getArena(arenaName, gameName), signType);
 		List<String> lines = ugSign.getUpdatedLines();
-		for (int i = 0; i < LINE_AMOUNT; i++) {
+		for (int i = 0; i < 4; i++) {
 			if (lines.size() > i) {
 				event.setLine(i, lines.get(i));
 			}
@@ -132,8 +124,8 @@ public class SignListener implements Listener {
 			Sign sign = (Sign) event.getBlock().getState();
 			if (ultimateGames.getUGSignManager().isRedstoneInputSign(sign)) {
 				RedstoneInputSign redstoneInputSign = ultimateGames.getUGSignManager().getRedstoneInputSign(sign);
-				if ((redstoneInputSign.isPowered() && event.getNewCurrent() == MINIMUM_REDSTONE_CURRENT) || (!redstoneInputSign.isPowered() && event.getNewCurrent() > MINIMUM_REDSTONE_CURRENT)) {
-					redstoneInputSign.setPowered(event.getNewCurrent() > MINIMUM_REDSTONE_CURRENT ? true : false);
+				if ((redstoneInputSign.isPowered() && event.getNewCurrent() == 0) || (!redstoneInputSign.isPowered() && event.getNewCurrent() > 0)) {
+					redstoneInputSign.setPowered(event.getNewCurrent() > 0);
 					redstoneInputSign.onSignTrigger(event);
 				}
 			}
@@ -152,19 +144,19 @@ public class SignListener implements Listener {
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
 			signs.add((Sign) event.getBlock().getState());
 		}
-		if (block.getRelative(BlockFace.UP).getType() == Material.SIGN_POST && Utils.isAttachedToBlock(block.getRelative(BlockFace.UP), block)) {
+		if (block.getRelative(BlockFace.UP).getType() == Material.SIGN_POST && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.UP), block)) {
 			signs.add((Sign) event.getBlock().getRelative(BlockFace.UP).getState());
 		}
-		if (event.getBlock().getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(block.getRelative(BlockFace.EAST), block)) {
+		if (event.getBlock().getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.EAST), block)) {
 			signs.add((Sign) event.getBlock().getRelative(BlockFace.EAST).getState());
 		}
-		if (event.getBlock().getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(block.getRelative(BlockFace.NORTH), block)) {
+		if (event.getBlock().getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.NORTH), block)) {
 			signs.add((Sign) event.getBlock().getRelative(BlockFace.NORTH).getState());
 		}
-		if (event.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(block.getRelative(BlockFace.SOUTH), block)) {
+		if (event.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.SOUTH), block)) {
 			signs.add((Sign) event.getBlock().getRelative(BlockFace.SOUTH).getState());
 		}
-		if (event.getBlock().getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN && Utils.isAttachedToBlock(block.getRelative(BlockFace.WEST), block)) {
+		if (event.getBlock().getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.WEST), block)) {
 			signs.add((Sign) event.getBlock().getRelative(BlockFace.WEST).getState());
 		}
 		for (Sign sign : signs) {

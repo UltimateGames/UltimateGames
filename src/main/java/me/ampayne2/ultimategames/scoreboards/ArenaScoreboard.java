@@ -29,8 +29,8 @@ import org.bukkit.scoreboard.Team;
 import java.util.Collection;
 
 public class ArenaScoreboard {
-	private Scoreboard scoreboard;
-	private String name;
+	private final Scoreboard scoreboard;
+	private final String name;
 
 	/**
 	 * Creates an ArenaScoreboard.
@@ -57,7 +57,7 @@ public class ArenaScoreboard {
 	/**
 	 * Lets a player see an ArenaScoreboard.
 	 *
-	 * @param playerName The name of the player.
+	 * @param player The player.
 	 */
 	public void addPlayer(Player player) {
 		player.setScoreboard(scoreboard);
@@ -66,7 +66,7 @@ public class ArenaScoreboard {
 	/**
 	 * Lets multiple players see an ArenaScoreboard.
 	 *
-	 * @param playerNames The names of the players.
+	 * @param players The players.
 	 */
 	public void addPlayers(Collection<Player> players) {
 		for (Player player : players) {
@@ -77,7 +77,7 @@ public class ArenaScoreboard {
 	/**
 	 * Hides an ArenaScoreboard from a player.
 	 *
-	 * @param playerName The name of the player.
+	 * @param player The player.
 	 */
 	public void removePlayer(Player player) {
 		resetPlayerColor(player.getName());
@@ -87,7 +87,7 @@ public class ArenaScoreboard {
 	/**
 	 * Hides an ArenaScoreboard from multiple players.
 	 *
-	 * @param playerNames The names of the players.
+	 * @param players The players.
 	 */
 	public void removePlayers(Collection<Player> players) {
 		for (Player player : players) {
@@ -98,8 +98,8 @@ public class ArenaScoreboard {
 	/**
 	 * Sets a player's name to a certain color.
 	 *
-	 * @param playerName The player.
-	 * @param chatColor  The color.
+	 * @param player    The player.
+	 * @param chatColor The color.
 	 */
 	public void setPlayerColor(Player player, ChatColor chatColor) {
 		Team team = scoreboard.getPlayerTeam(player);

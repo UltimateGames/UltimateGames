@@ -30,21 +30,12 @@ import java.util.logging.Level;
 public class ConfigAccessor {
 	private final String fileName;
 	private final JavaPlugin plugin;
-	private File configFile;
+	private final File configFile;
 	private FileConfiguration fileConfiguration;
 
 	public ConfigAccessor(JavaPlugin plugin, String fileName, File parent) {
-		if (plugin == null) {
-			throw new IllegalArgumentException("plugin cannot be null");
-		}
-		if (!plugin.isInitialized()) {
-			throw new IllegalArgumentException("plugin must be initialized");
-		}
 		this.plugin = plugin;
 		this.fileName = fileName;
-		if (parent == null) {
-			throw new IllegalStateException();
-		}
 		this.configFile = new File(parent, fileName);
 	}
 
@@ -67,9 +58,7 @@ public class ConfigAccessor {
 	}
 
 	public void saveConfig() {
-		if (fileConfiguration == null || configFile == null) {
-			return;
-		} else {
+		if (fileConfiguration != null && configFile != null) {
 			try {
 				getConfig().save(configFile);
 			} catch (IOException ex) {
@@ -78,10 +67,6 @@ public class ConfigAccessor {
 		}
 	}
 
-	/**
-	 * Saves the defaults to a config file</br>
-	 * DO NOT USE WITH GAME CONFIGS
-	 */
 	public void saveDefaultConfig() {
 		if (!configFile.exists()) {
 			this.plugin.saveResource(fileName, false);

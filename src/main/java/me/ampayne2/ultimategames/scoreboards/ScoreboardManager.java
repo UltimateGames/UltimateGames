@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreboardManager {
-	private Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
+	private final Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
 
 	/**
 	 * Gets the ArenaScoreboard of an arena.

@@ -24,7 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class AddSpawn implements UGCommand {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public AddSpawn(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -33,21 +33,20 @@ public class AddSpawn implements UGCommand {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (!(args[2].equals("true") || args[2].equals("false"))) {
-			ultimateGames.getMessageManager().sendMessage((Player) sender, "commandusages.arena.addspawn");
+			ultimateGames.getMessageManager().sendMessage(sender, "commandusages.arena.addspawn");
 			return;
 		}
 		String arenaName = args[0];
 		String gameName = args[1];
 		Boolean locked = Boolean.valueOf(args[2]);
 		if (!ultimateGames.getGameManager().gameExists(gameName)) {
-			ultimateGames.getMessageManager().sendMessage((Player) sender, "games.doesntexist");
+			ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
 			return;
 		} else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.doesntexist");
+			ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
 			return;
 		}
-		Player player = (Player) sender;
-		ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), player.getLocation(), locked);
-		ultimateGames.getMessageManager().sendMessage((Player) sender, "spawnpoints.create", arenaName, gameName);
+		ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), ((Player) sender).getLocation(), locked);
+		ultimateGames.getMessageManager().sendMessage(sender, "spawnpoints.create", arenaName, gameName);
 	}
 }

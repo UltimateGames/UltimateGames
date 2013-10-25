@@ -33,7 +33,7 @@ import java.util.logging.Level;
 import java.util.zip.ZipFile;
 
 public class GameManager {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Set<Game> games = new HashSet<Game>();
 	private static final int BUFFER_SIZE = 1024;
 
@@ -41,19 +41,14 @@ public class GameManager {
 	public GameManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
 		File gameFolder = new File(ultimateGames.getDataFolder(), "Games");
-		if (!gameFolder.exists()) {
-			gameFolder.mkdirs();
+		if (!gameFolder.exists() && !gameFolder.mkdirs()) {
+			return;
 		}
 		JarFile jarFile = null;
-		PlayerType playerType = null;
+		PlayerType playerType;
 		String name, description, author, version;
 		List<String> instructionPages;
 		for (File file : gameFolder.listFiles(new GameFileFilter())) {
-			playerType = null;
-			description = null;
-			author = null;
-			version = null;
-			instructionPages = null;
 			try {
 				jarFile = new JarFile(file);
 
@@ -89,6 +84,7 @@ public class GameManager {
 					}
 
 					name = file.getName().replace(".jar", "");
+					description = gamePlugin.getString("description");
 					version = gamePlugin.getString("version");
 					author = gamePlugin.getString("author");
 					playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
@@ -159,10 +155,8 @@ public class GameManager {
 	}
 
 	public boolean addGame(Game game) {
-		for (Game aGame : games) {
-			if (game.getName().equals(aGame.getName())) {
-				return false;
-			}
+		if (gameExists(game.getName())) {
+			return false;
 		}
 		games.add(game);
 		ultimateGames.getConfigManager().addGameConfig(game);

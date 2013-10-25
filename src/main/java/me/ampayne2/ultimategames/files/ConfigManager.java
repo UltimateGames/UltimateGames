@@ -25,14 +25,17 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Handles custom configs.
+ */
 public class ConfigManager {
-	private UltimateGames ultimateGames;
-	private ConfigAccessor messageConfig;
-	private ConfigAccessor arenaConfig;
-	private ConfigAccessor lobbyConfig;
-	private ConfigAccessor ugSignConfig;
-	private ConfigAccessor ugChestConfig;
-	private Map<Game, ConfigAccessor> gameConfigs;
+	private final UltimateGames ultimateGames;
+	private final ConfigAccessor messageConfig;
+	private final ConfigAccessor arenaConfig;
+	private final ConfigAccessor lobbyConfig;
+	private final ConfigAccessor ugSignConfig;
+	private final ConfigAccessor ugChestConfig;
+	private final Map<Game, GameConfigAccessor> gameConfigs;
 
 	public ConfigManager(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -47,7 +50,7 @@ public class ConfigManager {
 		ugSignConfig.saveDefaultConfig();
 		ugChestConfig = new ConfigAccessor(ultimateGames, "Chests.yml", dataFolder);
 		ugChestConfig.saveDefaultConfig();
-		gameConfigs = new HashMap<Game, ConfigAccessor>();
+		gameConfigs = new HashMap<Game, GameConfigAccessor>();
 	}
 
 	/**
@@ -100,7 +103,7 @@ public class ConfigManager {
 	 *
 	 * @return The Game Configs.
 	 */
-	public Map<Game, ConfigAccessor> getGameConfigs() {
+	public Map<Game, GameConfigAccessor> getGameConfigs() {
 		return gameConfigs;
 	}
 
@@ -109,7 +112,7 @@ public class ConfigManager {
 	 *
 	 * @return The Game's Config.
 	 */
-	public ConfigAccessor getGameConfig(Game game) {
+	public GameConfigAccessor getGameConfig(Game game) {
 		if (!gameConfigs.containsKey(game)) {
 			addGameConfig(game);
 		}
@@ -123,7 +126,7 @@ public class ConfigManager {
 	 */
 	public void addGameConfig(Game game) {
 		if (!gameConfigs.containsKey(game)) {
-			ConfigAccessor config = new ConfigAccessor(ultimateGames, game.getName() + ".yml", new File(ultimateGames.getDataFolder() + "/Games"));
+			GameConfigAccessor config = new GameConfigAccessor(ultimateGames, game.getName());
 			config.saveConfig();
 			gameConfigs.put(game, config);
 		}

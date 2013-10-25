@@ -1,8 +1,17 @@
 Messages:
   prefix: "&8[&bUltimateGames&8] "
+
+  ultimategames:
+    cantleave: "&4Not in an arena or queue."
+    setlobby: "Set the lobby at your location."
+
+  commands:
+    notaplayer: "&4Must be a player to use this command."
+    invalidsubcommand: "&4%s is not a subcommand of %s."
+    validsubcommands: "Valid subcommands are: %s"
   
   commandusages:
-    addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked]"
+    addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked (true/false)]"
     setspectatorspawn: "&4Usage: /ug arena setspectatorspawn [arena] [game]"
     begin: "&4Usage: /ug arena begin [arena] [game]"
     create: "&4Usage: /ug arena create [arena] [game]"
@@ -21,10 +30,11 @@ Messages:
     nopermission: "&4You do not have permission to use the %s command."
   
   games:
-    doesntexist: "Game doesn't exist."
+    doesntexist: "&4Game doesn't exist."
   
   arenas:
-    select: "Punch two corners of a cuboid to create the Arena '%s' of Game '%s'."
+    select: "Punch two corners of a region to create the Arena '%s' of Game '%s'."
+    deselect: "No longer selecting a region."
     create: "Created Arena '%s' of Game '%s'."
     delete: "Removed Arena '%s' of Game '%s'."
     editon: "Entered Arena editing mode."
@@ -40,7 +50,7 @@ Messages:
 
     join: "%s joined the game! %s"
     leave: "%s left the game! %s"
-    kick: "You were kicked from the arena!"
+    kick: "You were kicked from the arena."
 
     alreadyexists: "&4Arena already exists."
     doesntexist: "&4Arena doesn't exist."
@@ -49,13 +59,14 @@ Messages:
     notinarena: "&4Not in an Arena."
     
   teams:
-    join: "&4Joined Team %s!"
-    kick: "&4Kicked from Team %s!"
-    leave: "&4Left Team %s!"
-    friendlyfire: "&4Friendly Fire is off for your Team!"
+    join: "&4Joined Team %s."
+    kick: "&4Kicked from Team %s."
+    leave: "&4Left Team %s."
+    friendlyfire: "&4Friendly Fire is off for your Team."
+    doesntexist: "&4Team doesn't exist."
     
   classes:
-    join: "&4Joined Class %s!"
+    join: "&4Joined Class %s."
     nextdeath: "&4Joined Class %s! Your inventory will be reset next death."
 
   queues:

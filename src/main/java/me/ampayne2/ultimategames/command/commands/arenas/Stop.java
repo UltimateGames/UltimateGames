@@ -22,10 +22,9 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class Stop implements UGCommand {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public Stop(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -38,7 +37,7 @@ public class Stop implements UGCommand {
 		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
 			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
 			ultimateGames.getArenaManager().stopArena(arena);
-			ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.setstatus", arena.getName(), arena.getGame().getName(), arena.getStatus().name());
+			ultimateGames.getMessageManager().sendMessage(sender, "arenas.forcestop", arenaName, gameName);
 		}
 	}
 }

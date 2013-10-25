@@ -23,8 +23,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ArenaPlayer {
-	private String playerName;
-	private Arena arena;
+	private final String playerName;
+	private final Arena arena;
 	private boolean editing = false;
 
 	/**

@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * Manages player classes for games.
  */
-public class ClassManager {
+public class GameClassManager {
 	private Map<Game, Set<GameClass>> gameClasses = new HashMap<Game, Set<GameClass>>();
 
 	/**

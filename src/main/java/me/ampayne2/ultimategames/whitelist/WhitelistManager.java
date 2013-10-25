@@ -21,8 +21,8 @@ package me.ampayne2.ultimategames.whitelist;
 import me.ampayne2.ultimategames.UltimateGames;
 
 public class WhitelistManager {
-	private BlockPlaceWhitelist blockPlaceWhitelist;
-	private BlockBreakWhitelist blockBreakWhitelist;
+	private final BlockPlaceWhitelist blockPlaceWhitelist;
+	private final BlockBreakWhitelist blockBreakWhitelist;
 
 	/**
 	 * The manager for all ultimategames whitelists.

@@ -30,10 +30,10 @@ import java.util.List;
  * The base class for a GameClass in a game. Games extend this to make their own classes.
  */
 public abstract class GameClass {
-	private UltimateGames ultimateGames;
-	private Game game;
-	private String name;
-	private boolean canSwitchToWithoutDeath;
+	private final UltimateGames ultimateGames;
+	private final Game game;
+	private final String name;
+	private final boolean canSwitchToWithoutDeath;
 	private List<String> players = new ArrayList<String>();
 
 	/**
@@ -99,7 +99,7 @@ public abstract class GameClass {
 	public boolean addPlayerToClass(Player player) {
 		String playerName = player.getName();
 		if (!players.contains(playerName)) {
-			GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(game, playerName);
+			GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(game, playerName);
 			if (gameClass != null) {
 				gameClass.removePlayerFromClass(playerName);
 			}
@@ -128,7 +128,7 @@ public abstract class GameClass {
 	public boolean addPlayerToClass(Player player, Boolean resetInventory) {
 		String playerName = player.getName();
 		if (!players.contains(playerName)) {
-			GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(game, playerName);
+			GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(game, playerName);
 			if (gameClass != null) {
 				gameClass.removePlayerFromClass(playerName);
 			}

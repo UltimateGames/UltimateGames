@@ -22,6 +22,8 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -35,9 +37,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Utils {
+public class UGUtils {
 	private static final long AUTO_RESPAWN_DELAY = 1L;
 	private static final double TARGETER_ACCURACY = 0.8;
+	private static final BlockFace[] faces = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
 	/**
 	 * Gets the ordinal suffix of an integer.
@@ -129,6 +132,7 @@ public class Utils {
 				break;
 			case AQUA:
 				color = Color.TEAL;
+				break;
 			case RED:
 				color = Color.RED;
 				break;
@@ -150,9 +154,7 @@ public class Utils {
 	/**
 	 * Creates an instruction book for a game.
 	 *
-	 * @param title  The book's title.
-	 * @param author The book's author.
-	 * @param pages  The book's pages.
+	 * @param game The game.
 	 *
 	 * @return The book.
 	 */
@@ -305,13 +307,13 @@ public class Utils {
 	 */
 	public static double getEntityHeight(Entity entity) {
 		double y;
-		if (entity instanceof Player || entity instanceof Skeleton || entity instanceof Creeper || entity instanceof Zombie || entity instanceof PigZombie || entity instanceof Snowman || entity instanceof Villager || entity instanceof Blaze) {
+		if (entity instanceof Player || entity instanceof Skeleton || entity instanceof Creeper || entity instanceof Zombie || entity instanceof Snowman || entity instanceof Villager || entity instanceof Blaze) {
 			y = 2.0;
-		} else if (entity instanceof Cow || entity instanceof Pig || entity instanceof Sheep || entity instanceof MushroomCow || entity instanceof MagmaCube || entity instanceof Slime) {
+		} else if (entity instanceof Cow || entity instanceof Pig || entity instanceof Sheep || entity instanceof MagmaCube || entity instanceof Slime) {
 			y = 1.5;
 		} else if (entity instanceof Chicken || entity instanceof Spider || entity instanceof Wolf) {
 			y = 1.0;
-		} else if (entity instanceof Ocelot || entity instanceof CaveSpider || entity instanceof Silverfish) {
+		} else if (entity instanceof Ocelot || entity instanceof Silverfish) {
 			y = 0.5;
 		} else if (entity instanceof Enderman) {
 			y = 2.5;
@@ -400,5 +402,35 @@ public class Utils {
 	public static Boolean isAttachedToBlock(Block attached, Block block) {
 		MaterialData data = attached.getState().getData();
 		return data instanceof Attachable && attached.getRelative(((Attachable) data).getAttachedFace()).equals(block);
+	}
+
+	/**
+	 * Gets all signs extending from a block.
+	 *
+	 * @param block     The main block.
+	 * @param recursive If the attached signs should be checked for attached signs.
+	 *
+	 * @return The extending signs.
+	 */
+	public static Set<Sign> getAttachedSigns(Block block, boolean recursive) {
+		Set<Sign> attachedSigns = new HashSet<Sign>();
+		for (BlockFace face : faces) {
+			Block faceBlock = block.getRelative(face);
+			Material faceMaterial = faceBlock.getType();
+			if (faceMaterial == Material.WALL_SIGN) {
+				if (isAttachedToBlock(faceBlock, block)) {
+					attachedSigns.add((Sign) faceBlock.getState());
+					if (recursive) {
+						attachedSigns.addAll(getAttachedSigns(faceBlock, true));
+					}
+				}
+			} else if (faceMaterial == Material.SIGN_POST && face == BlockFace.UP) {
+				attachedSigns.add((Sign) faceBlock.getState());
+				if (recursive) {
+					attachedSigns.addAll(getAttachedSigns(faceBlock, true));
+				}
+			}
+		}
+		return attachedSigns;
 	}
 }

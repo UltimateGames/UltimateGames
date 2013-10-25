@@ -24,11 +24,11 @@ import me.ampayne2.ultimategames.enums.PlayerType;
 import java.util.List;
 
 public class Game {
+	private final GamePlugin gamePlugin;
+	private final String name, description, version, author;
+	private final PlayerType playerType;
+	private final List<String> instructionPages;
 	private boolean enabled = true;
-	private GamePlugin gamePlugin;
-	private String name, description, version, author;
-	private PlayerType playerType;
-	private List<String> instructionPages;
 
 	public Game(GamePlugin gamePlugin, String name, String description, String version, String author, PlayerType playerType, List<String> instructionPages) {
 		this.gamePlugin = gamePlugin;
@@ -112,59 +112,5 @@ public class Game {
 	 */
 	public List<String> getInstructionPages() {
 		return instructionPages;
-	}
-
-	/**
-	 * Sets the name of the game.
-	 *
-	 * @param name the name.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Sets the description of the game.
-	 *
-	 * @param description the description.
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Sets the version string of the game.
-	 *
-	 * @param version the version.
-	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	/**
-	 * Sets the author of the game.
-	 *
-	 * @param author the author.
-	 */
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	/**
-	 * Sets the PlayerType of the game.
-	 *
-	 * @param playerType the PlayerType.
-	 */
-	public void setPlayerType(PlayerType playerType) {
-		this.playerType = playerType;
-	}
-
-	/**
-	 * Sets the instruction pages of the game.
-	 *
-	 * @param instructionPages the instruction pages.
-	 */
-	public void setInstructionPages(List<String> instructionPages) {
-		this.instructionPages = instructionPages;
 	}
 }

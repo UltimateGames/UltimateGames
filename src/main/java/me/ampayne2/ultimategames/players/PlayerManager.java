@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerManager implements Listener {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Map<String, ArenaPlayer> players = new HashMap<String, ArenaPlayer>();
 	private Map<String, ArenaSpectator> spectators = new HashMap<String, ArenaSpectator>();
 	private static final String LIMBO = "limbo";
@@ -256,7 +256,7 @@ public class PlayerManager implements Listener {
 			ultimateGames.getTeamManager().removePlayerFromTeam(playerName);
 
 			// Removes the player from any classes the player is in
-			GameClass gameClass = ultimateGames.getClassManager().getPlayerClass(arena.getGame(), playerName);
+			GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(arena.getGame(), playerName);
 			if (gameClass != null) {
 				gameClass.removePlayerFromClass(playerName);
 			}
@@ -292,7 +292,7 @@ public class PlayerManager implements Listener {
 
 			// Stops the arena's starting countdown if there is not enough players anymore
 			if (arena.getPlayers().size() < arena.getMinPlayers()) {
-				if (ultimateGames.getCountdownManager().isStartingCountdownEnabled(arena)) {
+				if (ultimateGames.getCountdownManager().hasStartingCountdown(arena)) {
 					ultimateGames.getCountdownManager().stopStartingCountdown(arena);
 				}
 			}

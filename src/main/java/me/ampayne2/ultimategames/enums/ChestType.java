@@ -37,8 +37,8 @@ public enum ChestType {
 		}
 	}
 
-	private Class<?> chestClass;
-	private boolean hasLabel;
+	private final Class<?> chestClass;
+	private final boolean hasLabel;
 
 	private ChestType(Class<?> chestClass, boolean hasLabel) {
 		this.hasLabel = hasLabel;

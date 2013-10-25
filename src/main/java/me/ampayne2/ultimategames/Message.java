@@ -24,6 +24,7 @@ import me.ampayne2.ultimategames.teams.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -38,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Message {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Map<String, String> messages = new HashMap<String, String>();
 	private Map<String, Map<String, String>> gameMessages = new HashMap<String, Map<String, String>>();
 
@@ -148,8 +149,8 @@ public class Message {
 	 * @return True if the message was sent, else false.
 	 */
 	public boolean sendRawMessage(Object recipient, String message) {
-		if (recipient instanceof Player) {
-			((Player) recipient).sendMessage(message);
+		if (recipient instanceof CommandSender) {
+			((CommandSender) recipient).sendMessage(message);
 		} else if (recipient instanceof Team) {
 			for (String playerName : ((Team) recipient).getPlayers()) {
 				Player player = Bukkit.getPlayerExact(playerName);

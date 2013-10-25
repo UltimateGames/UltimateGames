@@ -22,11 +22,9 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import me.ampayne2.ultimategames.players.ArenaPlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class Edit implements UGCommand {
-
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public Edit(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -39,14 +37,12 @@ public class Edit implements UGCommand {
 			ArenaPlayer player = ultimateGames.getPlayerManager().getArenaPlayer(senderName);
 			if (player.isEditing()) {
 				player.setEditing(false);
-				ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.editoff");
 			} else {
 				player.setEditing(true);
-				ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.editon");
+				ultimateGames.getMessageManager().sendMessage(sender, "arenas.editon");
 			}
 		} else {
-			ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.notinarena");
+			ultimateGames.getMessageManager().sendMessage(sender, "arenas.notinarena");
 		}
 	}
-
 }

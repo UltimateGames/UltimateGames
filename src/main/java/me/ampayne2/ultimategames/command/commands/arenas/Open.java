@@ -22,10 +22,9 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class Open implements UGCommand {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public Open(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
@@ -35,10 +34,15 @@ public class Open implements UGCommand {
 	public void execute(CommandSender sender, String[] args) {
 		String arenaName = args[0];
 		String gameName = args[1];
-		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-			ultimateGames.getArenaManager().openArena(arena);
-			ultimateGames.getMessageManager().sendMessage((Player) sender, "arenas.setstatus", arena.getName(), arena.getGame().getName(), arena.getStatus().name());
+		if (!ultimateGames.getGameManager().gameExists(gameName)) {
+			ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
+			return;
+		} else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+			ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
+			return;
 		}
+		Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+		ultimateGames.getArenaManager().openArena(arena);
+		ultimateGames.getMessageManager().sendMessage(sender, "arenas.setstatus", arenaName, gameName, arena.getStatus().name());
 	}
 }

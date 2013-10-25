@@ -26,10 +26,8 @@ import org.bukkit.event.Event;
 import java.util.List;
 
 public abstract class UGSign {
-
 	private Sign sign;
 	private Arena arena;
-	private static final int LINE_AMOUNT = 4;
 
 	/**
 	 * Creates a new sign
@@ -79,7 +77,7 @@ public abstract class UGSign {
 		Material material = sign.getLocation().getBlock().getType();
 		if (material == Material.WALL_SIGN || material == Material.SIGN_POST) {
 			List<String> lines = getUpdatedLines();
-			for (int i = 0; i < LINE_AMOUNT; i++) {
+			for (int i = 0; i < 4; i++) {
 				if (lines.size() > i) {
 					sign.setLine(i, lines.get(i));
 				}

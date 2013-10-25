@@ -28,7 +28,7 @@ import org.mcstats.Metrics.Graph;
 import java.io.IOException;
 
 public class MetricsManager {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private Metrics metrics;
 	private Graph gamesLoadedGraph;
 	private Graph arenasLoadedGraph;
@@ -160,5 +160,4 @@ public class MetricsManager {
 			}
 		});
 	}
-
 }

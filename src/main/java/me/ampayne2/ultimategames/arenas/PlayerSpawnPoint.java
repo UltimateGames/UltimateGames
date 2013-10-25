@@ -29,10 +29,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
  * An arena spawnpoint for players.
  */
 public class PlayerSpawnPoint implements Listener {
-
-	private UltimateGames ultimateGames;
-	private Arena arena;
-	private Location location;
+	private final UltimateGames ultimateGames;
+	private final Arena arena;
+	private final Location location;
 	private Boolean locked;
 	private String playerName;
 
@@ -45,10 +44,10 @@ public class PlayerSpawnPoint implements Listener {
 	 * @param locked        If the spawnpoint is locked.
 	 */
 	public PlayerSpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, Boolean locked) {
+		this.ultimateGames = ultimateGames;
 		this.arena = arena;
 		this.location = location;
 		this.locked = locked;
-		this.ultimateGames = ultimateGames;
 	}
 
 	/**
@@ -136,5 +135,4 @@ public class PlayerSpawnPoint implements Listener {
 			}
 		}
 	}
-
 }

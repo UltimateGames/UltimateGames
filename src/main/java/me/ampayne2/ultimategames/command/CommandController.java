@@ -37,60 +37,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandController extends JavaPlugin implements Listener {
-	private UltimateGames ultimateGames;
-	private final SubCommand mainCommand = new SubCommand();
+	private final UltimateGames ultimateGames;
+	private final SubCommand mainCommand;
 	private List<String> bypassers = new ArrayList<String>();
 
 	public CommandController(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
+		mainCommand = new SubCommand(ultimateGames);
 
-		SubCommand arena = new SubCommand();
+		SubCommand arena = new SubCommand(ultimateGames);
 		Create create = new Create(ultimateGames);
 		ultimateGames.getServer().getPluginManager().registerEvents(create, ultimateGames);
-		arena.addCommand(ultimateGames, "create", "ultimategames.arena.create", create, 2);
-		arena.addCommand(ultimateGames, "addspawn", "ultimategames.arena.addspawn", new AddSpawn(ultimateGames), 3);
-		arena.addCommand(ultimateGames, "setspectatorspawn", "ultimategames.arena.setspectatorspawn", new SetSpectatorSpawn(ultimateGames), 2);
-		arena.addCommand(ultimateGames, "open", "ultimategames.arena.open", new Open(ultimateGames), 2);
-		arena.addCommand(ultimateGames, "begin", "ultimategames.arena.begin", new Begin(ultimateGames), 2);
-		arena.addCommand(ultimateGames, "end", "ultimategames.arena.end", new End(ultimateGames), 2);
-		arena.addCommand(ultimateGames, "stop", "ultimategames.arena.stop", new Stop(ultimateGames), 2);
-		arena.addCommand(ultimateGames, "join", "ultimategames.arena.join", new Join(ultimateGames), 2);
-		arena.addCommand(ultimateGames, "edit", "ultimategames.arena.edit", new Edit(ultimateGames), 0);
-		arena.addCommand(ultimateGames, "spectate", "ultimategames.arena.spectate", new Spectate(ultimateGames), 2);
+		arena.addCommand(create, "create", "ultimategames.arena.create", 2, true);
+		arena.addCommand(new AddSpawn(ultimateGames), "addspawn", "ultimategames.arena.addspawn", 3, true);
+		arena.addCommand(new SetSpectatorSpawn(ultimateGames), "setspectatorspawn", "ultimategames.arena.setspectatorspawn", 2, true);
+		arena.addCommand(new Open(ultimateGames), "open", "ultimategames.arena.open", 2, false);
+		arena.addCommand(new Begin(ultimateGames), "begin", "ultimategames.arena.begin", 2, false);
+		arena.addCommand(new End(ultimateGames), "end", "ultimategames.arena.end", 2, false);
+		arena.addCommand(new Stop(ultimateGames), "stop", "ultimategames.arena.stop", 2, false);
+		arena.addCommand(new Join(ultimateGames), "join", "ultimategames.arena.join", 2, true);
+		arena.addCommand(new Edit(ultimateGames), "edit", "ultimategames.arena.edit", 0, true);
+		arena.addCommand(new Spectate(ultimateGames), "spectate", "ultimategames.arena.spectate", 2, true);
+		mainCommand.addCommand(arena, "arena", null, null, false);
 
-		mainCommand.addCommand(ultimateGames, "arena", null, arena, null);
+		mainCommand.addCommand(new Leave(ultimateGames), "leave", "ultimategames.arena.leave", 0, true);
 
-		mainCommand.addCommand(ultimateGames, "leave", "ultimategames.arena.leave", new Leave(ultimateGames), 0);
+		mainCommand.addCommand(new SetLobby(ultimateGames), "setlobby", "ultimategames.setlobby", 0, true);
 
-		mainCommand.addCommand(ultimateGames, "setlobby", "ultimategames.setlobby", new SetLobby(ultimateGames), 0);
+		mainCommand.addCommand(new ExtCmd(ultimateGames), "cmd", "ultimategames.extcmd", -1, true);
 
-		mainCommand.addCommand(ultimateGames, "cmd", "ultimategames.extcmd", new ExtCmd(ultimateGames), -1);
-
-		mainCommand.addCommand(ultimateGames, "reload", "ultimategames.reload", new Reload(ultimateGames), 0);
+		mainCommand.addCommand(new Reload(ultimateGames), "reload", "ultimategames.reload", 0, false);
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
+		String subCommand = "";
+		if (args.length > 0) {
+			subCommand = args[0];
+		}
 		if (!cmd.getName().equalsIgnoreCase("ultimategames")) {
 			return false;
-		}
-
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("This command can only be run by a player.");
-			return true;
-		}
-
-		if (args.length == 0) {
-			if (mainCommand.commandExist("")) {
-				mainCommand.execute("", sender, args);
-				return true;
-			} else {
-				return true;
-			}
-		}
-
-		if (mainCommand.commandExist(args[0])) {
+		} else if (subCommand.equals("") && mainCommand.commandExists(subCommand)) {
+			mainCommand.execute(subCommand, sender, args);
+		} else if (mainCommand.commandExists(subCommand)) {
 			String[] newArgs;
 			if (args.length == 1) {
 				newArgs = new String[0];
@@ -98,12 +87,12 @@ public class CommandController extends JavaPlugin implements Listener {
 				newArgs = new String[args.length - 1];
 				System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 			}
-
-			mainCommand.execute(args[0], sender, newArgs);
-			return true;
+			mainCommand.execute(subCommand, sender, newArgs);
 		} else {
-			return true;
+			ultimateGames.getMessageManager().sendMessage(sender, "commands.invalidsubcommand", "\"" + subCommand + "\"", "\"ultimategames\"");
+			ultimateGames.getMessageManager().sendMessage(sender, "commands.validsubcommands", mainCommand.getSubCommandList());
 		}
+		return true;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -122,7 +111,7 @@ public class CommandController extends JavaPlugin implements Listener {
 					args = new String[command.length - 1];
 					System.arraycopy(command, 1, args, 0, command.length - 1);
 				}
-				arena.getGame().getGamePlugin().onArenaCommand(arena, command[0].replace("/", ""), (CommandSender) player, args);
+				arena.getGame().getGamePlugin().onArenaCommand(arena, command[0].replace("/", ""), player, args);
 				event.setCancelled(true);
 			}
 		}

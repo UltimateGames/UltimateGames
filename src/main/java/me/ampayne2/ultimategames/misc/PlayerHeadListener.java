@@ -27,7 +27,7 @@ import org.bukkit.event.Listener;
 import org.shininet.bukkit.playerheads.events.LivingEntityDropHeadEvent;
 
 public class PlayerHeadListener implements Listener {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	public PlayerHeadListener(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
