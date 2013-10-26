@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.command;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.commands.ExtCmd;
+import me.ampayne2.ultimategames.command.commands.Lobby;
 import me.ampayne2.ultimategames.command.commands.Reload;
 import me.ampayne2.ultimategames.command.commands.SetLobby;
 import me.ampayne2.ultimategames.command.commands.arenas.*;
@@ -63,6 +64,7 @@ public class CommandController extends JavaPlugin implements Listener {
 		mainCommand.addCommand(new Leave(ultimateGames), "leave", "ultimategames.arena.leave", 0, true);
 
 		mainCommand.addCommand(new SetLobby(ultimateGames), "setlobby", "ultimategames.setlobby", 0, true);
+		mainCommand.addCommand(new Lobby(ultimateGames), "lobby", "ultimategames.lobby", 0, true);
 
 		mainCommand.addCommand(new ExtCmd(ultimateGames), "cmd", "ultimategames.extcmd", -1, true);
 

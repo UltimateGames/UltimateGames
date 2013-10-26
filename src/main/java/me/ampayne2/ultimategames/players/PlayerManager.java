@@ -22,6 +22,7 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.PlayerSpawnPoint;
 import me.ampayne2.ultimategames.classes.GameClass;
+import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.events.*;
 import me.ampayne2.ultimategames.scoreboards.ArenaScoreboard;
 import org.bukkit.Bukkit;
@@ -150,7 +151,7 @@ public class PlayerManager implements Listener {
 				players.put(playerName, new ArenaPlayer(playerName, arena));
 
 				// Update the arena's lobby signs
-				ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+				ultimateGames.getUGSignManager().updateUGSignsOfArena(arena, SignType.LOBBY);
 
 				// Send a message that the player joined to the arena
 				if (sendMessage) {
@@ -298,7 +299,7 @@ public class PlayerManager implements Listener {
 			}
 
 			// Updates the arena's lobby signs
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(arena);
+			ultimateGames.getUGSignManager().updateUGSignsOfArena(arena, SignType.LOBBY);
 
 			// Sends a message that the player left the arena
 			if (sendMessage) {

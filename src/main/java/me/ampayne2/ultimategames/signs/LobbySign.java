@@ -34,15 +34,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LobbySign extends UGSign {
-
-	private UltimateGames ultimateGames;
-	private Arena arena;
+	private final UltimateGames ultimateGames;
+	private final Arena arena;
 
 	public LobbySign(UltimateGames ultimateGames, Sign sign, Arena arena) {
-		super(sign, arena);
+		super(sign, arena, SignType.LOBBY);
 		this.ultimateGames = ultimateGames;
 		this.arena = arena;
-		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, getSignType());
 		update();
 	}
 
@@ -55,7 +54,6 @@ public class LobbySign extends UGSign {
 		if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
 			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
 			ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
-			return;
 		} else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
 			QueueManager queue = ultimateGames.getQueueManager();
 			if (queue.isPlayerInQueue(player.getName(), arena)) {

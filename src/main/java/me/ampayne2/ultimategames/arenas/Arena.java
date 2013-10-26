@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.arenas;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.enums.PlayerType;
+import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -157,7 +158,7 @@ public class Arena implements Listener {
 			return false;
 		} else {
 			players.add(playerName);
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateUGSignsOfArena(this, SignType.LOBBY);
 			return true;
 		}
 	}
@@ -181,7 +182,7 @@ public class Arena implements Listener {
 	public void removePlayer(String playerName) {
 		if (players.contains(playerName)) {
 			players.remove(playerName);
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateUGSignsOfArena(this, SignType.LOBBY);
 		}
 	}
 
@@ -193,7 +194,7 @@ public class Arena implements Listener {
 	public void removeSpectator(String playerName) {
 		if (spectators.contains(playerName)) {
 			spectators.remove(playerName);
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateUGSignsOfArena(this, SignType.LOBBY);
 		}
 	}
 
@@ -203,7 +204,7 @@ public class Arena implements Listener {
 	public void removePlayers() {
 		if (!players.isEmpty()) {
 			players.clear();
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateUGSignsOfArena(this, SignType.LOBBY);
 		}
 	}
 
@@ -213,7 +214,7 @@ public class Arena implements Listener {
 	public void removeSpectators() {
 		if (!spectators.isEmpty()) {
 			spectators.clear();
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateUGSignsOfArena(this, SignType.LOBBY);
 		}
 	}
 
@@ -394,7 +395,7 @@ public class Arena implements Listener {
 		arenaConfig.set("Arenas." + game.getName() + PATH_SEPARATOR + arenaName + ".Status", status.toString());
 		ultimateGames.getConfigManager().getArenaConfig().saveConfig();
 		if (ultimateGames.getUGSignManager() != null) {
-			ultimateGames.getUGSignManager().updateLobbySignsOfArena(this);
+			ultimateGames.getUGSignManager().updateUGSignsOfArena(this, SignType.LOBBY);
 		}
 		if (status == ArenaStatus.RUNNING) {
 			timesPlayed += 1;

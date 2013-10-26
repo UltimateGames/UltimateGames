@@ -29,6 +29,7 @@ import me.ampayne2.ultimategames.classes.GameClassManager;
 import me.ampayne2.ultimategames.command.CommandController;
 import me.ampayne2.ultimategames.countdowns.CountdownManager;
 import me.ampayne2.ultimategames.database.DatabaseManager;
+import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.files.ConfigManager;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
@@ -40,6 +41,7 @@ import me.ampayne2.ultimategames.players.QueueManager;
 import me.ampayne2.ultimategames.scoreboards.ScoreboardManager;
 import me.ampayne2.ultimategames.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.signs.SignListener;
+import me.ampayne2.ultimategames.signs.UGSign;
 import me.ampayne2.ultimategames.signs.UGSignManager;
 import me.ampayne2.ultimategames.teams.TeamManager;
 import me.ampayne2.ultimategames.webapi.JettyServer;
@@ -133,8 +135,8 @@ public class UltimateGames extends JavaPlugin {
 
 	public void onDisable() {
 		for (Game game : gameManager.getGames()) {
-			for (RedstoneOutputSign sign : ugSignManager.getRedstoneOutputSignsOfGame(game)) {
-				sign.setPowered(false);
+			for (UGSign sign : ugSignManager.getUGSignsOfGame(game, SignType.REDSTONE_OUTPUT)) {
+				((RedstoneOutputSign) sign).setPowered(false);
 			}
 		}
 		if (jettyServer != null) {

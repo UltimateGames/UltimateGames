@@ -45,6 +45,10 @@ public class Message {
 
 	public Message(UltimateGames ultimateGames) {
 		this.ultimateGames = ultimateGames;
+		loadMessages();
+	}
+
+	public void loadMessages() {
 		FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
 		for (String key : messageConfig.getConfigurationSection("Messages").getKeys(true)) {
 			messages.put(key, messageConfig.getString("Messages." + key));

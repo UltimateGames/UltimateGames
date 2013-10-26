@@ -27,22 +27,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RedstoneInputSign extends UGSign {
-
-	private String label;
+	private final String label;
 	private List<String> lines = new ArrayList<String>();
 	private Boolean powered;
 
 	public RedstoneInputSign(String label, Sign sign, Arena arena) {
-		super(sign, arena);
+		super(sign, arena, SignType.REDSTONE_INPUT);
 		this.label = label;
 		powered = sign.getBlock().isBlockPowered();
-		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, getSignType());
 		update();
 	}
 
 	@Override
 	public void onSignTrigger(Event event) {
-		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
+		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, getSignType(), event);
 	}
 
 	@Override
@@ -69,5 +68,4 @@ public class RedstoneInputSign extends UGSign {
 	public void setPowered(Boolean powered) {
 		this.powered = powered;
 	}
-
 }

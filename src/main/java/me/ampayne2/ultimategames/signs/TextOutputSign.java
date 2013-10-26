@@ -27,14 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextOutputSign extends UGSign {
-
 	private String label;
 	private List<String> lines = new ArrayList<String>();
 
 	public TextOutputSign(String label, Sign sign, Arena arena) {
-		super(sign, arena);
+		super(sign, arena, SignType.TEXT_OUTPUT);
 		this.label = label;
-		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, getSignType());
 		update();
 	}
 
@@ -59,5 +58,4 @@ public class TextOutputSign extends UGSign {
 	public String getLabel() {
 		return label;
 	}
-
 }

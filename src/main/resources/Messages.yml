@@ -4,6 +4,7 @@ Messages:
   ultimategames:
     cantleave: "&4Not in an arena or queue."
     setlobby: "Set the lobby at your location."
+    lobby: "Teleported to the main lobby."
 
   commands:
     notaplayer: "&4Must be a player to use this command."

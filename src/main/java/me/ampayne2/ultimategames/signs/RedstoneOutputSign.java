@@ -28,16 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RedstoneOutputSign extends UGSign {
-
-	private String label;
+	private final String label;
 	private List<String> lines = new ArrayList<String>();
 	private Boolean powered;
 
 	public RedstoneOutputSign(String label, Sign sign, Arena arena) {
-		super(sign, arena);
+		super(sign, arena, SignType.REDSTONE_OUTPUT);
 		this.label = label;
 		powered = false;
-		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, getSignType());
 		update();
 	}
 
@@ -73,9 +72,8 @@ public class RedstoneOutputSign extends UGSign {
 			getSign().getLocation().getBlock().setType(Material.REDSTONE_BLOCK);
 		} else {
 			getSign().getLocation().getBlock().setType(getSign().getType());
-			getSign().getLocation().getBlock().getState().setData((org.bukkit.material.Sign) getSign().getData());
+			getSign().getLocation().getBlock().getState().setData(getSign().getData());
 			getSign().update();
 		}
 	}
-
 }

@@ -27,20 +27,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClickInputSign extends UGSign {
-
 	private String label;
 	private List<String> lines = new ArrayList<String>();
 
 	public ClickInputSign(String label, Sign sign, Arena arena) {
-		super(sign, arena);
+		super(sign, arena, SignType.CLICK_INPUT);
 		this.label = label;
-		arena.getGame().getGamePlugin().handleUGSignCreate(this, SignType.getSignTypeFromClass(this.getClass()));
+		arena.getGame().getGamePlugin().handleUGSignCreate(this, getSignType());
 		update();
 	}
 
 	@Override
 	public void onSignTrigger(Event event) {
-		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, SignType.getSignTypeFromClass(this.getClass()), event);
+		getArena().getGame().getGamePlugin().handleInputSignTrigger(this, getSignType(), event);
 	}
 
 	@Override

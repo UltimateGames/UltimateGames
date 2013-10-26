@@ -26,9 +26,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.*;
 
 public class BlockPlaceWhitelist implements Whitelist {
-	private UltimateGames ultimateGames;
-	private Map<Game, Set<Material>> blocks;
-	private Map<Game, Boolean> useAsBlacklist = new HashMap<Game, Boolean>();
+	private final UltimateGames ultimateGames;
+	private final Map<Game, Set<Material>> blocks = new HashMap<Game, Set<Material>>();
+	private final Map<Game, Boolean> useAsBlacklist = new HashMap<Game, Boolean>();
 
 	/**
 	 * The Block Place Whitelist.
@@ -40,7 +40,7 @@ public class BlockPlaceWhitelist implements Whitelist {
 	}
 
 	public void reload() {
-		blocks = new HashMap<Game, Set<Material>>();
+		blocks.clear();
 		for (Game game : ultimateGames.getGameManager().getGames()) {
 			FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
 			if (gameConfig.contains("BlockPlaceWhitelist")) {
@@ -50,8 +50,7 @@ public class BlockPlaceWhitelist implements Whitelist {
 					materials.add(Material.valueOf(materialName));
 				}
 				blocks.put(game, materials);
-				Boolean blacklist = gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false);
-				useAsBlacklist.put(game, blacklist);
+				useAsBlacklist.put(game, gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false));
 			}
 		}
 	}
@@ -67,5 +66,4 @@ public class BlockPlaceWhitelist implements Whitelist {
 	public boolean canPlaceMaterial(Game game, Material material) {
 		return blocks.containsKey(game) && (useAsBlacklist.get(game) ^ blocks.get(game).contains(material));
 	}
-
 }

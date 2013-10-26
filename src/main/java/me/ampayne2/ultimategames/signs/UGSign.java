@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.enums.SignType;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
@@ -26,8 +27,9 @@ import org.bukkit.event.Event;
 import java.util.List;
 
 public abstract class UGSign {
-	private Sign sign;
-	private Arena arena;
+	private final Sign sign;
+	private final Arena arena;
+	private final SignType signType;
 
 	/**
 	 * Creates a new sign
@@ -35,9 +37,10 @@ public abstract class UGSign {
 	 * @param sign  Sign to be turned into UGSign.
 	 * @param arena Arena of the sign.
 	 */
-	public UGSign(Sign sign, Arena arena) {
+	public UGSign(Sign sign, Arena arena, SignType signType) {
 		this.sign = sign;
 		this.arena = arena;
+		this.signType = signType;
 	}
 
 	/**
@@ -68,6 +71,15 @@ public abstract class UGSign {
 	 */
 	public Arena getArena() {
 		return arena;
+	}
+
+	/**
+	 * Gets the UGSign's SignType.
+	 *
+	 * @return signType The UGSign's SignType.
+	 */
+	public SignType getSignType() {
+		return signType;
 	}
 
 	/**

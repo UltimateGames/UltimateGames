@@ -36,7 +36,9 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SignListener implements Listener {
 	private final UltimateGames ultimateGames;
@@ -96,19 +98,14 @@ public class SignListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSignClick(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
+		if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK)) {
 			return;
-		} else if (event.getClickedBlock().getType() != Material.WALL_SIGN && event.getClickedBlock().getType() != Material.SIGN_POST) {
+		} else if (!(event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST)) {
 			return;
 		}
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		UGSign ugSign = ultimateGames.getUGSignManager().getUGSign(sign);
-		if (ugSign == null) {
-			return;
-		}
-		if (ugSign instanceof LobbySign) {
-			ugSign.onSignTrigger(event);
-		} else if (ugSign instanceof ClickInputSign) {
+		if (ugSign != null && (ugSign instanceof LobbySign || ugSign instanceof ClickInputSign)) {
 			ugSign.onSignTrigger(event);
 		}
 	}
@@ -122,8 +119,8 @@ public class SignListener implements Listener {
 	public void onSignPower(BlockRedstoneEvent event) {
 		if (event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN) {
 			Sign sign = (Sign) event.getBlock().getState();
-			if (ultimateGames.getUGSignManager().isRedstoneInputSign(sign)) {
-				RedstoneInputSign redstoneInputSign = ultimateGames.getUGSignManager().getRedstoneInputSign(sign);
+			if (ultimateGames.getUGSignManager().isUGSign(sign, SignType.REDSTONE_INPUT)) {
+				RedstoneInputSign redstoneInputSign = (RedstoneInputSign) ultimateGames.getUGSignManager().getUGSign(sign, SignType.REDSTONE_INPUT);
 				if ((redstoneInputSign.isPowered() && event.getNewCurrent() == 0) || (!redstoneInputSign.isPowered() && event.getNewCurrent() > 0)) {
 					redstoneInputSign.setPowered(event.getNewCurrent() > 0);
 					redstoneInputSign.onSignTrigger(event);
@@ -139,41 +136,30 @@ public class SignListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignBreak(BlockBreakEvent event) {
-		List<Sign> signs = new ArrayList<Sign>();
 		Block block = event.getBlock();
+		Set<Sign> signs = new HashSet<Sign>();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
 			signs.add((Sign) event.getBlock().getState());
 		}
-		if (block.getRelative(BlockFace.UP).getType() == Material.SIGN_POST && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.UP), block)) {
-			signs.add((Sign) event.getBlock().getRelative(BlockFace.UP).getState());
-		}
-		if (event.getBlock().getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.EAST), block)) {
-			signs.add((Sign) event.getBlock().getRelative(BlockFace.EAST).getState());
-		}
-		if (event.getBlock().getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.NORTH), block)) {
-			signs.add((Sign) event.getBlock().getRelative(BlockFace.NORTH).getState());
-		}
-		if (event.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.SOUTH), block)) {
-			signs.add((Sign) event.getBlock().getRelative(BlockFace.SOUTH).getState());
-		}
-		if (event.getBlock().getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN && UGUtils.isAttachedToBlock(block.getRelative(BlockFace.WEST), block)) {
-			signs.add((Sign) event.getBlock().getRelative(BlockFace.WEST).getState());
-		}
+		signs.addAll(UGUtils.getAttachedSigns(block, true));
 		for (Sign sign : signs) {
 			UGSign ugSign = ultimateGames.getUGSignManager().getUGSign(sign);
 			if (ugSign != null) {
-				ultimateGames.getUGSignManager().removeUGSign(sign);
+				event.setCancelled(true);
+				return;
 			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onRedstoneBlockBreak(BlockBreakEvent event) {
-		if (event.getBlock().getType() == Material.REDSTONE_BLOCK && ultimateGames.getUGSignManager().isRedstoneOutputSign(event.getBlock().getLocation())) {
-			// TODO: Permission check
+		if (event.getBlock().getType() == Material.REDSTONE_BLOCK) {
 			RedstoneOutputSign redstoneOutputSign = ultimateGames.getUGSignManager().getRedstoneOutputSign(event.getBlock().getLocation());
-			redstoneOutputSign.setPowered(false);
-			ultimateGames.getUGSignManager().removeUGSign(redstoneOutputSign.getSign());
+			if (redstoneOutputSign != null) {
+				// TODO: Permission check
+				redstoneOutputSign.setPowered(false);
+				ultimateGames.getUGSignManager().removeUGSign(redstoneOutputSign.getSign());
+			}
 		}
 	}
 }
