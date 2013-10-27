@@ -26,9 +26,8 @@ import org.bukkit.inventory.Inventory;
  * Represents a chest used for an ultimate game.
  */
 public abstract class UGChest {
-
-	private Chest chest;
-	private Arena arena;
+	private final Chest chest;
+	private final Arena arena;
 
 	/**
 	 * Creates a new chest
@@ -72,5 +71,4 @@ public abstract class UGChest {
 	public Arena getArena() {
 		return arena;
 	}
-
 }

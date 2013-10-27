@@ -26,9 +26,8 @@ import org.bukkit.block.Chest;
  * A type of UGChest that has random configurable contents.
  */
 public class RandomChest extends UGChest {
-
 	@SuppressWarnings("unused")
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 
 	/**
 	 * Creates a new RandomChest.
@@ -49,5 +48,4 @@ public class RandomChest extends UGChest {
 	public void reset() {
 
 	}
-
 }

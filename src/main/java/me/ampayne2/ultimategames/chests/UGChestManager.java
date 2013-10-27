@@ -35,19 +35,14 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * Manages the UG chests for arenas.
+ * Manages the UG chests for arenas.<br>
+ * UNFINISHED.
  */
 @SuppressWarnings("unchecked")
 public class UGChestManager {
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	private List<RandomChest> randomChests = new ArrayList<RandomChest>();
 	private List<StaticChest> staticChests = new ArrayList<StaticChest>();
-	private static final int WORLD_INDEX = 0;
-	private static final int X_INDEX = 1;
-	private static final int Y_INDEX = 2;
-	private static final int Z_INDEX = 3;
-	private static final int LABEL_INDEX = 4;
-	private static final String PATH_SEPARATOR = ".";
 
 	/**
 	 * Creates a new Chest Manager.
@@ -276,14 +271,14 @@ public class UGChestManager {
 	 */
 	public UGChest createUGChest(String label, Chest chest, Arena arena, ChestType chestType) {
 		FileConfiguration ugChestConfig = ultimateGames.getConfigManager().getUGChestConfig().getConfig();
-		String chestPath = chestType.toString() + PATH_SEPARATOR + arena.getGame().getName() + PATH_SEPARATOR + arena.getName();
+		String chestPath = chestType.toString() + "." + arena.getGame().getName() + "." + arena.getName();
 		List<String> chestInfo = new ArrayList<String>();
-		chestInfo.add(WORLD_INDEX, chest.getWorld().getName());
-		chestInfo.add(X_INDEX, Integer.toString(chest.getX()));
-		chestInfo.add(Y_INDEX, Integer.toString(chest.getY()));
-		chestInfo.add(Z_INDEX, Integer.toString(chest.getZ()));
+		chestInfo.add(0, chest.getWorld().getName());
+		chestInfo.add(1, Integer.toString(chest.getX()));
+		chestInfo.add(2, Integer.toString(chest.getY()));
+		chestInfo.add(3, Integer.toString(chest.getZ()));
 		if (chestType.hasLabel()) {
-			chestInfo.add(LABEL_INDEX, label);
+			chestInfo.add(4, label);
 		}
 		List<List<String>> ugChests;
 		if (ugChestConfig.contains(chestPath)) {
@@ -323,13 +318,13 @@ public class UGChestManager {
 			Integer y = chest.getY();
 			Integer z = chest.getZ();
 			ChestType chestType = getChestType(ugChest);
-			String gamePath = chestType.toString() + PATH_SEPARATOR + ugChest.getArena().getGame().getName();
-			String arenaPath = gamePath + PATH_SEPARATOR + ugChest.getArena().getName();
+			String gamePath = chestType.toString() + "." + ugChest.getArena().getGame().getName();
+			String arenaPath = gamePath + "." + ugChest.getArena().getName();
 			if (ugChestConfig.contains(arenaPath)) {
 				List<List<String>> ugChests = (List<List<String>>) ugChestConfig.getList(arenaPath);
 				List<List<String>> newUGChests = new ArrayList<List<String>>(ugChests);
 				for (List<String> chestInfo : ugChests) {
-					if (world.equals(chestInfo.get(WORLD_INDEX)) && x.equals(Integer.parseInt(chestInfo.get(X_INDEX))) && y.equals(Integer.parseInt(chestInfo.get(Y_INDEX))) && z.equals(Integer.parseInt(chestInfo.get(Z_INDEX)))) {
+					if (world.equals(chestInfo.get(0)) && x.equals(Integer.parseInt(chestInfo.get(1))) && y.equals(Integer.parseInt(chestInfo.get(2))) && z.equals(Integer.parseInt(chestInfo.get(3)))) {
 						newUGChests.remove(chestInfo);
 					}
 				}
@@ -365,16 +360,16 @@ public class UGChestManager {
 			if (ugChestConfig.getConfigurationSection(chestTypeName) != null) {
 				for (String gameKey : ugChestConfig.getConfigurationSection(chestTypeName).getKeys(false)) {
 					if (ultimateGames.getGameManager().gameExists(gameKey)) {
-						String gamePath = chestTypeName + PATH_SEPARATOR + gameKey;
+						String gamePath = chestTypeName + "." + gameKey;
 						for (String arenaKey : ugChestConfig.getConfigurationSection(gamePath).getKeys(false)) {
 							if (ultimateGames.getArenaManager().arenaExists(arenaKey, gameKey)) {
-								String arenaPath = gamePath + PATH_SEPARATOR + arenaKey;
+								String arenaPath = gamePath + "." + arenaKey;
 								List<List<String>> ugChests = (List<List<String>>) ugChestConfig.getList(arenaPath);
 								for (List<String> chestInfo : ugChests) {
-									World world = Bukkit.getWorld(chestInfo.get(WORLD_INDEX));
-									Integer x = Integer.parseInt(chestInfo.get(X_INDEX));
-									Integer y = Integer.parseInt(chestInfo.get(Y_INDEX));
-									Integer z = Integer.parseInt(chestInfo.get(Z_INDEX));
+									World world = Bukkit.getWorld(chestInfo.get(0));
+									Integer x = Integer.parseInt(chestInfo.get(1));
+									Integer y = Integer.parseInt(chestInfo.get(2));
+									Integer z = Integer.parseInt(chestInfo.get(3));
 									Block locBlock = new Location(world, x, y, z).getBlock();
 									if (locBlock.getType() == Material.WALL_SIGN || locBlock.getType() == Material.SIGN_POST) {
 										Arena arena = ultimateGames.getArenaManager().getArena(arenaKey, gameKey);
@@ -383,7 +378,7 @@ public class UGChestManager {
 												randomChests.add(new RandomChest(ultimateGames, (Chest) locBlock.getState(), arena));
 												break;
 											case STATIC:
-												staticChests.add(new StaticChest(ultimateGames, chestInfo.get(LABEL_INDEX), (Chest) locBlock.getState(), arena));
+												staticChests.add(new StaticChest(ultimateGames, chestInfo.get(4), (Chest) locBlock.getState(), arena));
 												break;
 										}
 									}

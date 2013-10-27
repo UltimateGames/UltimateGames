@@ -26,11 +26,10 @@ import org.bukkit.block.Chest;
  * A type of UGChest that has static configurable contents.
  */
 public class StaticChest extends UGChest {
-
 	@SuppressWarnings("unused")
-	private UltimateGames ultimateGames;
+	private final UltimateGames ultimateGames;
 	@SuppressWarnings("unused")
-	private String label;
+	private final String label;
 
 	/**
 	 * Creates a new StaticChest.
@@ -53,5 +52,4 @@ public class StaticChest extends UGChest {
 	public void reset() {
 
 	}
-
 }
