@@ -77,7 +77,7 @@ public class Message {
 	 *
 	 * @return The message prefix.
 	 */
-	public String getMessagePrefix() {
+	public String getPrefix() {
 		String prefix = messages.get("prefix");
 		if (prefix == null) {
 			prefix = "&8[&bUltimateGames&8] ";
@@ -120,20 +120,20 @@ public class Message {
 	/**
 	 * Sends a message to a recipient.
 	 *
-	 * @param recipient The recipient of the message; Either Player, Team, Arena, or Server.
+	 * @param recipient The recipient of the message; Either CommandSender, Team, Arena, or Server.
 	 * @param path      The path to the message.
 	 * @param replace   Strings to replace any occurences of %s in the message with.
 	 *
 	 * @return True if the message was sent, else false.
 	 */
 	public boolean sendMessage(Object recipient, String path, String... replace) {
-		return sendRawMessage(recipient, getMessagePrefix() + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
+		return sendRawMessage(recipient, getPrefix() + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
 	}
 
 	/**
 	 * Sends a game message to a recipient.
 	 *
-	 * @param recipient The recipient of the message; Either Player, Team, Arena, or Server.
+	 * @param recipient The recipient of the message; Either CommandSender, Team, Arena, or Server.
 	 * @param game      The game.
 	 * @param path      The path to the message.
 	 * @param replace   Strings to replace any occurences of %s in the message with.
@@ -141,13 +141,13 @@ public class Message {
 	 * @return True if the message was sent, else false.
 	 */
 	public boolean sendGameMessage(Object recipient, Game game, String path, String... replace) {
-		return sendRawMessage(recipient, getMessagePrefix() + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
+		return sendRawMessage(recipient, getPrefix() + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
 	}
 
 	/**
 	 * Sends a raw message to a recipient.
 	 *
-	 * @param recipient The recipient of the message; Either Player, Team, Arena, or Server.
+	 * @param recipient The recipient of the message; Either CommandSender, Team, Arena, or Server.
 	 * @param message   The message.
 	 *
 	 * @return True if the message was sent, else false.

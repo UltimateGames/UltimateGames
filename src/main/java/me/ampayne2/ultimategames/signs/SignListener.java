@@ -23,7 +23,6 @@ import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.utils.UGUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -35,7 +34,6 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

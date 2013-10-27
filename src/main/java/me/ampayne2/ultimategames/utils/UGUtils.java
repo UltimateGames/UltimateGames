@@ -39,7 +39,7 @@ import java.util.Set;
 
 public class UGUtils {
 	private static final long AUTO_RESPAWN_DELAY = 1L;
-	private static final double TARGETER_ACCURACY = 0.8;
+	private static final double TARGETER_ACCURACY = 1.0;
 	private static final BlockFace[] faces = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
 	/**
