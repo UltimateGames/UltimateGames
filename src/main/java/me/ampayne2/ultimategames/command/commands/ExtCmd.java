@@ -24,27 +24,27 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ExtCmd implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public ExtCmd(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public ExtCmd(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		Player player = (Player) sender;
-		String playerName = player.getName();
-		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-			StringBuilder command = new StringBuilder(args[0]);
-			if (args.length != 1) {
-				for (int i = 1; i < args.length; i++) {
-					command.append(" ");
-					command.append(args[i]);
-				}
-			}
-			ultimateGames.getCommandController().addBlockBypasser(playerName);
-			player.performCommand(command.toString());
-			ultimateGames.getCommandController().removeBlockBypasser(playerName);
-		}
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        Player player = (Player) sender;
+        String playerName = player.getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            StringBuilder command = new StringBuilder(args[0]);
+            if (args.length != 1) {
+                for (int i = 1; i < args.length; i++) {
+                    command.append(" ");
+                    command.append(args[i]);
+                }
+            }
+            ultimateGames.getCommandController().addBlockBypasser(playerName);
+            player.performCommand(command.toString());
+            ultimateGames.getCommandController().removeBlockBypasser(playerName);
+        }
+    }
 }

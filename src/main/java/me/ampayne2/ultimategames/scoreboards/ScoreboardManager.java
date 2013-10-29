@@ -24,43 +24,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreboardManager {
-	private final Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
+    private final Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
 
-	/**
-	 * Gets the ArenaScoreboard of an arena.
-	 *
-	 * @param arena The arena.
-	 *
-	 * @return The arena's ArenaScoreboards.
-	 */
-	public ArenaScoreboard getArenaScoreboard(Arena arena) {
-		return scoreboards.get(arena);
-	}
+    /**
+     * Gets the ArenaScoreboard of an arena.
+     *
+     * @param arena The arena.
+     * @return The arena's ArenaScoreboards.
+     */
+    public ArenaScoreboard getArenaScoreboard(Arena arena) {
+        return scoreboards.get(arena);
+    }
 
-	/**
-	 * Creates an ArenaScoreboard for an arena.
-	 *
-	 * @param arena The arena.
-	 * @param name  Name of the ArenaScoreboard.
-	 *
-	 * @return The ArenaScoreboard created.
-	 */
-	public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
-		ArenaScoreboard scoreboard = new ArenaScoreboard(name);
-		scoreboards.put(arena, scoreboard);
-		return scoreboard;
-	}
+    /**
+     * Creates an ArenaScoreboard for an arena.
+     *
+     * @param arena The arena.
+     * @param name  Name of the ArenaScoreboard.
+     * @return The ArenaScoreboard created.
+     */
+    public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
+        ArenaScoreboard scoreboard = new ArenaScoreboard(name);
+        scoreboards.put(arena, scoreboard);
+        return scoreboard;
+    }
 
-	/**
-	 * Removes an Arena's ArenaScoreboard from the manager.
-	 *
-	 * @param arena The arena.
-	 */
-	public void removeArenaScoreboard(Arena arena) {
-		if (scoreboards.containsKey(arena)) {
-			ArenaScoreboard scoreboard = scoreboards.get(arena);
-			scoreboard.reset();
-			scoreboards.remove(arena);
-		}
-	}
+    /**
+     * Removes an Arena's ArenaScoreboard from the manager.
+     *
+     * @param arena The arena.
+     */
+    public void removeArenaScoreboard(Arena arena) {
+        if (scoreboards.containsKey(arena)) {
+            ArenaScoreboard scoreboard = scoreboards.get(arena);
+            scoreboard.reset();
+            scoreboards.remove(arena);
+        }
+    }
 }

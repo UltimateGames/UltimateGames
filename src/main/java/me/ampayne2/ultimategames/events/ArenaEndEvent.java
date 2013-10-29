@@ -25,14 +25,14 @@ import me.ampayne2.ultimategames.enums.EndType;
  * Called after an arena ends.
  */
 public class ArenaEndEvent extends ArenaEvent {
-	private final EndType endType;
+    private final EndType endType;
 
-	public ArenaEndEvent(Arena arena, EndType endType) {
-		super(arena);
-		this.endType = endType;
-	}
+    public ArenaEndEvent(Arena arena, EndType endType) {
+        super(arena);
+        this.endType = endType;
+    }
 
-	public EndType getEndType() {
-		return endType;
-	}
+    public EndType getEndType() {
+        return endType;
+    }
 }

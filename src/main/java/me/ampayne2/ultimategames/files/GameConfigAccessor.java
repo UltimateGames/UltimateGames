@@ -23,11 +23,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 
 public class GameConfigAccessor extends ConfigAccessor {
-	public GameConfigAccessor(JavaPlugin plugin, String gameName) {
-		super(plugin, gameName + ".yml", new File(plugin.getDataFolder() + "/Games"));
-	}
+    public GameConfigAccessor(JavaPlugin plugin, String gameName) {
+        super(plugin, gameName + ".yml", new File(plugin.getDataFolder() + "/Games"));
+    }
 
-	@Override
-	public void saveDefaultConfig() {
-	}
+    @Override
+    public void saveDefaultConfig() {
+    }
 }

@@ -26,27 +26,27 @@ import org.bukkit.event.HandlerList;
  * Base for any arena event.
  */
 public abstract class ArenaEvent extends Event {
-	private static final HandlerList handlers = new HandlerList();
-	private final Arena arena;
+    private static final HandlerList handlers = new HandlerList();
+    private final Arena arena;
 
-	public ArenaEvent(Arena arena) {
-		this.arena = arena;
-	}
+    public ArenaEvent(Arena arena) {
+        this.arena = arena;
+    }
 
-	/**
-	 * Gets the arena of the event.
-	 *
-	 * @return The arena.
-	 */
-	public Arena getArena() {
-		return arena;
-	}
+    /**
+     * Gets the arena of the event.
+     *
+     * @return The arena.
+     */
+    public Arena getArena() {
+        return arena;
+    }
 
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

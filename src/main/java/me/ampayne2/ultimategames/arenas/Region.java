@@ -30,102 +30,100 @@ import java.util.List;
  * Represents a rectangular region in a world.
  */
 public class Region {
-	public final World world;
-	public final Double minX;
-	public final Double maxX;
-	public final Double minZ;
-	public final Double maxZ;
+    public final World world;
+    public final Double minX;
+    public final Double maxX;
+    public final Double minZ;
+    public final Double maxZ;
 
-	/**
-	 * Creates a new region.
-	 *
-	 * @param world The world of the region.
-	 * @param minX  The region's minimum x.
-	 * @param maxX  The region's maximum x.
-	 * @param minZ  The region's minimum z.
-	 * @param maxZ  The region's maximum z.
-	 */
-	public Region(World world, double minX, double maxX, double minZ, double maxZ) {
-		this.world = world;
-		this.minX = minX;
-		this.maxX = maxX;
-		this.minZ = minZ;
-		this.maxZ = maxZ;
-	}
+    /**
+     * Creates a new region.
+     *
+     * @param world The world of the region.
+     * @param minX  The region's minimum x.
+     * @param maxX  The region's maximum x.
+     * @param minZ  The region's minimum z.
+     * @param maxZ  The region's maximum z.
+     */
+    public Region(World world, double minX, double maxX, double minZ, double maxZ) {
+        this.world = world;
+        this.minX = minX;
+        this.maxX = maxX;
+        this.minZ = minZ;
+        this.maxZ = maxZ;
+    }
 
-	/**
-	 * Converts a region to a string list for saving to config.
-	 *
-	 * @return The region in list form.
-	 */
-	public List<String> toList() {
-		List<String> list = new ArrayList<String>();
-		list.add(world.getName());
-		list.add(minX.toString());
-		list.add(maxX.toString());
-		list.add(minZ.toString());
-		list.add(maxZ.toString());
-		return list;
-	}
+    /**
+     * Converts a region to a string list for saving to config.
+     *
+     * @return The region in list form.
+     */
+    public List<String> toList() {
+        List<String> list = new ArrayList<String>();
+        list.add(world.getName());
+        list.add(minX.toString());
+        list.add(maxX.toString());
+        list.add(minZ.toString());
+        list.add(maxZ.toString());
+        return list;
+    }
 
-	/**
-	 * Gets the maximum location of the region.
-	 *
-	 * @return The region's maximum location.
-	 */
-	public Location getMaximumLocation() {
-		return new Location(world, maxX, 0, maxZ);
-	}
+    /**
+     * Gets the maximum location of the region.
+     *
+     * @return The region's maximum location.
+     */
+    public Location getMaximumLocation() {
+        return new Location(world, maxX, 0, maxZ);
+    }
 
-	/**
-	 * Gets the minimum location of the region.
-	 *
-	 * @return The region's minimum location.
-	 */
-	public Location getMinimumLocation() {
-		return new Location(world, minX, 0, minZ);
-	}
+    /**
+     * Gets the minimum location of the region.
+     *
+     * @return The region's minimum location.
+     */
+    public Location getMinimumLocation() {
+        return new Location(world, minX, 0, minZ);
+    }
 
-	/**
-	 * Converts a region in list form back to a region.
-	 *
-	 * @param list The string list.
-	 *
-	 * @return The region.
-	 */
-	public static Region fromList(List<String> list) {
-		if (list != null && list.size() == 5) {
-			try {
-				World world = Bukkit.getServer().getWorld(list.get(0));
-				Double minX = Double.parseDouble(list.get(1));
-				Double maxX = Double.parseDouble(list.get(2));
-				Double minZ = Double.parseDouble(list.get(3));
-				Double maxZ = Double.parseDouble(list.get(4));
-				if (world != null) {
-					return new Region(world, minX, maxX, minZ, maxZ);
-				}
-			} catch (Exception e) {
-				UltimateGames.getInstance().getMessageManager().debug(e);
-			}
-		}
-		return null;
-	}
+    /**
+     * Converts a region in list form back to a region.
+     *
+     * @param list The string list.
+     * @return The region.
+     */
+    public static Region fromList(List<String> list) {
+        if (list != null && list.size() == 5) {
+            try {
+                World world = Bukkit.getServer().getWorld(list.get(0));
+                Double minX = Double.parseDouble(list.get(1));
+                Double maxX = Double.parseDouble(list.get(2));
+                Double minZ = Double.parseDouble(list.get(3));
+                Double maxZ = Double.parseDouble(list.get(4));
+                if (world != null) {
+                    return new Region(world, minX, maxX, minZ, maxZ);
+                }
+            } catch (Exception e) {
+                UltimateGames.getInstance().getMessageManager().debug(e);
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Converts two locations into a region.<br>
-	 * The two locations are automatically converted into min/max, you don't have to worry about it yourself.
-	 *
-	 * @param corner1 Location 1 of the region.
-	 * @param corner2 Location 2 of the region.
-	 *
-	 * @return The region.
-	 */
-	public static Region fromCorners(Location corner1, Location corner2) {
-		World world = corner1.getWorld();
-		Double minX = corner1.getX() < corner2.getX() ? corner1.getX() : corner2.getX();
-		Double maxX = corner1.getX() > corner2.getX() ? corner1.getX() : corner2.getX();
-		Double minZ = corner1.getZ() < corner2.getZ() ? corner1.getZ() : corner2.getZ();
-		Double maxZ = corner1.getZ() > corner2.getZ() ? corner1.getZ() : corner2.getZ();
-		return new Region(world, minX, maxX, minZ, maxZ);
-	}
+    /**
+     * Converts two locations into a region.<br>
+     * The two locations are automatically converted into min/max, you don't have to worry about it yourself.
+     *
+     * @param corner1 Location 1 of the region.
+     * @param corner2 Location 2 of the region.
+     * @return The region.
+     */
+    public static Region fromCorners(Location corner1, Location corner2) {
+        World world = corner1.getWorld();
+        Double minX = corner1.getX() < corner2.getX() ? corner1.getX() : corner2.getX();
+        Double maxX = corner1.getX() > corner2.getX() ? corner1.getX() : corner2.getX();
+        Double minZ = corner1.getZ() < corner2.getZ() ? corner1.getZ() : corner2.getZ();
+        Double maxZ = corner1.getZ() > corner2.getZ() ? corner1.getZ() : corner2.getZ();
+        return new Region(world, minX, maxX, minZ, maxZ);
+    }
 }

@@ -25,19 +25,19 @@ import org.bukkit.event.Cancellable;
  * Called before an arena is started, can be cancelled.
  */
 public class ArenaStartEvent extends ArenaEvent implements Cancellable {
-	private boolean cancelled;
+    private boolean cancelled;
 
-	public ArenaStartEvent(Arena arena) {
-		super(arena);
-	}
+    public ArenaStartEvent(Arena arena) {
+        super(arena);
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
-	}
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

@@ -24,16 +24,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetLobby implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public SetLobby(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public SetLobby(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		Player player = (Player) sender;
-		ultimateGames.getLobbyManager().setLobby(player.getLocation());
-		ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.setlobby");
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        Player player = (Player) sender;
+        ultimateGames.getLobbyManager().setLobby(player.getLocation());
+        ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.setlobby");
+    }
 }

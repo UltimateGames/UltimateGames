@@ -26,26 +26,26 @@ import org.bukkit.block.Chest;
  * A type of UGChest that has random configurable contents.
  */
 public class RandomChest extends UGChest {
-	@SuppressWarnings("unused")
-	private final UltimateGames ultimateGames;
+    @SuppressWarnings("unused")
+    private final UltimateGames ultimateGames;
 
-	/**
-	 * Creates a new RandomChest.
-	 *
-	 * @param ultimateGames A reference to the UltimateGames instance.
-	 * @param chest         The chest.
-	 * @param arena         The arena.
-	 */
-	public RandomChest(UltimateGames ultimateGames, Chest chest, Arena arena) {
-		super(chest, arena);
-		this.ultimateGames = ultimateGames;
-	}
+    /**
+     * Creates a new RandomChest.
+     *
+     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param chest         The chest.
+     * @param arena         The arena.
+     */
+    public RandomChest(UltimateGames ultimateGames, Chest chest, Arena arena) {
+        super(chest, arena);
+        this.ultimateGames = ultimateGames;
+    }
 
-	/**
-	 * Resets the contents of the chest.
-	 */
-	@Override
-	public void reset() {
+    /**
+     * Resets the contents of the chest.
+     */
+    @Override
+    public void reset() {
 
-	}
+    }
 }

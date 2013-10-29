@@ -26,25 +26,25 @@ import org.bukkit.event.Cancellable;
  * Called before a player joins an arena, can be cancelled.
  */
 public class PlayerPreJoinEvent extends ArenaEvent implements Cancellable {
-	private final Player player;
-	private boolean cancelled;
+    private final Player player;
+    private boolean cancelled;
 
-	public PlayerPreJoinEvent(Player player, Arena arena) {
-		super(arena);
-		this.player = player;
-	}
+    public PlayerPreJoinEvent(Player player, Arena arena) {
+        super(arena);
+        this.player = player;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
-	}
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

@@ -26,19 +26,19 @@ import org.bukkit.event.Cancellable;
  * Note that a starting countdown will only attempt to begin the game once.
  */
 public class ArenaBeginEvent extends ArenaEvent implements Cancellable {
-	private boolean cancelled;
+    private boolean cancelled;
 
-	public ArenaBeginEvent(Arena arena) {
-		super(arena);
-	}
+    public ArenaBeginEvent(Arena arena) {
+        super(arena);
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
-	}
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

@@ -27,74 +27,74 @@ import org.bukkit.event.Event;
 import java.util.List;
 
 public abstract class UGSign {
-	private final Sign sign;
-	private final Arena arena;
-	private final SignType signType;
+    private final Sign sign;
+    private final Arena arena;
+    private final SignType signType;
 
-	/**
-	 * Creates a new sign
-	 *
-	 * @param sign  Sign to be turned into UGSign.
-	 * @param arena Arena of the sign.
-	 */
-	public UGSign(Sign sign, Arena arena, SignType signType) {
-		this.sign = sign;
-		this.arena = arena;
-		this.signType = signType;
-	}
+    /**
+     * Creates a new sign
+     *
+     * @param sign  Sign to be turned into UGSign.
+     * @param arena Arena of the sign.
+     */
+    public UGSign(Sign sign, Arena arena, SignType signType) {
+        this.sign = sign;
+        this.arena = arena;
+        this.signType = signType;
+    }
 
-	/**
-	 * Called when the UGSign is triggered.
-	 */
-	public abstract void onSignTrigger(Event event);
+    /**
+     * Called when the UGSign is triggered.
+     */
+    public abstract void onSignTrigger(Event event);
 
-	/**
-	 * Gets the UGSign's updated lines.
-	 *
-	 * @return sign The UGSign's updated lines.
-	 */
-	public abstract List<String> getUpdatedLines();
+    /**
+     * Gets the UGSign's updated lines.
+     *
+     * @return sign The UGSign's updated lines.
+     */
+    public abstract List<String> getUpdatedLines();
 
-	/**
-	 * Gets the UGSign's Sign.
-	 *
-	 * @return sign The UGSign's Sign.
-	 */
-	public Sign getSign() {
-		return sign;
-	}
+    /**
+     * Gets the UGSign's Sign.
+     *
+     * @return sign The UGSign's Sign.
+     */
+    public Sign getSign() {
+        return sign;
+    }
 
-	/**
-	 * Gets the UGSign's Arena.
-	 *
-	 * @return arena The UGSign's Arena.
-	 */
-	public Arena getArena() {
-		return arena;
-	}
+    /**
+     * Gets the UGSign's Arena.
+     *
+     * @return arena The UGSign's Arena.
+     */
+    public Arena getArena() {
+        return arena;
+    }
 
-	/**
-	 * Gets the UGSign's SignType.
-	 *
-	 * @return signType The UGSign's SignType.
-	 */
-	public SignType getSignType() {
-		return signType;
-	}
+    /**
+     * Gets the UGSign's SignType.
+     *
+     * @return signType The UGSign's SignType.
+     */
+    public SignType getSignType() {
+        return signType;
+    }
 
-	/**
-	 * Updates the UGSign.
-	 */
-	public void update() {
-		Material material = sign.getLocation().getBlock().getType();
-		if (material == Material.WALL_SIGN || material == Material.SIGN_POST) {
-			List<String> lines = getUpdatedLines();
-			for (int i = 0; i < 4; i++) {
-				if (lines.size() > i) {
-					sign.setLine(i, lines.get(i));
-				}
-			}
-			sign.update();
-		}
-	}
+    /**
+     * Updates the UGSign.
+     */
+    public void update() {
+        Material material = sign.getLocation().getBlock().getType();
+        if (material == Material.WALL_SIGN || material == Material.SIGN_POST) {
+            List<String> lines = getUpdatedLines();
+            for (int i = 0; i < 4; i++) {
+                if (lines.size() > i) {
+                    sign.setLine(i, lines.get(i));
+                }
+            }
+            sign.update();
+        }
+    }
 }

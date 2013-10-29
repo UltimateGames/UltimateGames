@@ -34,59 +34,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LobbySign extends UGSign {
-	private final UltimateGames ultimateGames;
-	private final Arena arena;
+    private final UltimateGames ultimateGames;
+    private final Arena arena;
 
-	public LobbySign(UltimateGames ultimateGames, Sign sign, Arena arena) {
-		super(sign, arena, SignType.LOBBY);
-		this.ultimateGames = ultimateGames;
-		this.arena = arena;
-		arena.getGame().getGamePlugin().handleUGSignCreate(this, getSignType());
-		update();
-	}
+    public LobbySign(UltimateGames ultimateGames, Sign sign, Arena arena) {
+        super(sign, arena, SignType.LOBBY);
+        this.ultimateGames = ultimateGames;
+        this.arena = arena;
+        arena.getGame().getGamePlugin().handleUGSignCreate(this, getSignType());
+        update();
+    }
 
-	@Override
-	public void onSignTrigger(Event event) {
-		// TODO: Permission check
-		PlayerInteractEvent interactEvent = (PlayerInteractEvent) event;
-		Player player = interactEvent.getPlayer();
-		ArenaStatus arenaStatus = arena.getStatus();
-		if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
-			// TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-			ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
-		} else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
-			QueueManager queue = ultimateGames.getQueueManager();
-			if (queue.isPlayerInQueue(player.getName(), arena)) {
-				queue.removePlayerFromQueues(player);
-			} else {
-				queue.addPlayerToQueue(player, arena);
-			}
-		}
-	}
+    @Override
+    public void onSignTrigger(Event event) {
+        // TODO: Permission check
+        PlayerInteractEvent interactEvent = (PlayerInteractEvent) event;
+        Player player = interactEvent.getPlayer();
+        ArenaStatus arenaStatus = arena.getStatus();
+        if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
+            // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
+            ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
+        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
+            QueueManager queue = ultimateGames.getQueueManager();
+            if (queue.isPlayerInQueue(player.getName(), arena)) {
+                queue.removePlayerFromQueues(player);
+            } else {
+                queue.addPlayerToQueue(player, arena);
+            }
+        }
+    }
 
-	@Override
-	public List<String> getUpdatedLines() {
-		List<String> lines = new ArrayList<String>();
+    @Override
+    public List<String> getUpdatedLines() {
+        List<String> lines = new ArrayList<String>();
 
-		ArenaStatus arenaStatus = arena.getStatus();
-		ChatColor statusColor = arenaStatus.getColor();
+        ArenaStatus arenaStatus = arena.getStatus();
+        ChatColor statusColor = arenaStatus.getColor();
 
-		if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
-			lines.add(statusColor + "[STOPPED]");
-		} else {
-			lines.add(statusColor + "[" + arenaStatus.toString() + "]");
-		}
+        if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
+            lines.add(statusColor + "[STOPPED]");
+        } else {
+            lines.add(statusColor + "[" + arenaStatus.toString() + "]");
+        }
 
-		lines.add(arena.getGame().getName());
-		lines.add(arena.getName());
+        lines.add(arena.getGame().getName());
+        lines.add(arena.getName());
 
-		PlayerType playerType = arena.getGame().getPlayerType();
-		if (playerType == PlayerType.INFINITE) {
-			lines.add("");
-		} else {
-			lines.add(statusColor + Integer.toString(arena.getPlayers().size()) + " / " + Integer.toString(arena.getMaxPlayers()));
-		}
+        PlayerType playerType = arena.getGame().getPlayerType();
+        if (playerType == PlayerType.INFINITE) {
+            lines.add("");
+        } else {
+            lines.add(statusColor + Integer.toString(arena.getPlayers().size()) + " / " + Integer.toString(arena.getMaxPlayers()));
+        }
 
-		return lines;
-	}
+        return lines;
+    }
 }

@@ -26,34 +26,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ChestType {
-	RANDOM(RandomChest.class, false),
-	STATIC(StaticChest.class, true);
+    RANDOM(RandomChest.class, false),
+    STATIC(StaticChest.class, true);
 
-	private static final Map<Class<?>, ChestType> CLASS_TYPES = new HashMap<Class<?>, ChestType>();
+    private static final Map<Class<?>, ChestType> CLASS_TYPES = new HashMap<Class<?>, ChestType>();
 
-	static {
-		for (ChestType chestType : EnumSet.allOf(ChestType.class)) {
-			CLASS_TYPES.put(chestType.getClassType(), chestType);
-		}
-	}
+    static {
+        for (ChestType chestType : EnumSet.allOf(ChestType.class)) {
+            CLASS_TYPES.put(chestType.getClassType(), chestType);
+        }
+    }
 
-	private final Class<?> chestClass;
-	private final boolean hasLabel;
+    private final Class<?> chestClass;
+    private final boolean hasLabel;
 
-	private ChestType(Class<?> chestClass, boolean hasLabel) {
-		this.hasLabel = hasLabel;
-		this.chestClass = chestClass;
-	}
+    private ChestType(Class<?> chestClass, boolean hasLabel) {
+        this.hasLabel = hasLabel;
+        this.chestClass = chestClass;
+    }
 
-	public boolean hasLabel() {
-		return hasLabel;
-	}
+    public boolean hasLabel() {
+        return hasLabel;
+    }
 
-	public Class<?> getClassType() {
-		return chestClass;
-	}
+    public Class<?> getClassType() {
+        return chestClass;
+    }
 
-	public static ChestType getChestTypeFromClass(Class<?> signClass) {
-		return CLASS_TYPES.get(signClass);
-	}
+    public static ChestType getChestTypeFromClass(Class<?> signClass) {
+        return CLASS_TYPES.get(signClass);
+    }
 }

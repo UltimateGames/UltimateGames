@@ -24,25 +24,25 @@ import me.ampayne2.ultimategames.players.ArenaPlayer;
 import org.bukkit.command.CommandSender;
 
 public class Edit implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public Edit(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public Edit(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		String senderName = sender.getName();
-		if (ultimateGames.getPlayerManager().isPlayerInArena(senderName)) {
-			ArenaPlayer player = ultimateGames.getPlayerManager().getArenaPlayer(senderName);
-			if (player.isEditing()) {
-				player.setEditing(false);
-			} else {
-				player.setEditing(true);
-				ultimateGames.getMessageManager().sendMessage(sender, "arenas.editon");
-			}
-		} else {
-			ultimateGames.getMessageManager().sendMessage(sender, "arenas.notinarena");
-		}
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        String senderName = sender.getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(senderName)) {
+            ArenaPlayer player = ultimateGames.getPlayerManager().getArenaPlayer(senderName);
+            if (player.isEditing()) {
+                player.setEditing(false);
+            } else {
+                player.setEditing(true);
+                ultimateGames.getMessageManager().sendMessage(sender, "arenas.editon");
+            }
+        } else {
+            ultimateGames.getMessageManager().sendMessage(sender, "arenas.notinarena");
+        }
+    }
 }

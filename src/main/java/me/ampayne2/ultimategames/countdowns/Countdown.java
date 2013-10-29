@@ -24,44 +24,44 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class Countdown extends BukkitRunnable {
-	protected final UltimateGames ultimateGames;
-	protected final Arena arena;
-	protected int ticksLeft;
-	protected long period;
-	private Integer taskId = null;
+    protected final UltimateGames ultimateGames;
+    protected final Arena arena;
+    protected int ticksLeft;
+    protected long period;
+    private Integer taskId = null;
 
-	/**
-	 * Creates a new Countdown.
-	 *
-	 * @param ultimateGames A reference to the UltimateGames instance.
-	 * @param arena         The arena of the countdown.
-	 * @param initialTicks  Initial ticks of the countdown.
-	 * @param period        Amount of ticks to wait between each run.
-	 */
-	public Countdown(UltimateGames ultimateGames, Arena arena, int initialTicks, long period) {
-		this.ultimateGames = ultimateGames;
-		this.arena = arena;
-		this.ticksLeft = initialTicks;
-		this.period = period;
-	}
+    /**
+     * Creates a new Countdown.
+     *
+     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param arena         The arena of the countdown.
+     * @param initialTicks  Initial ticks of the countdown.
+     * @param period        Amount of ticks to wait between each run.
+     */
+    public Countdown(UltimateGames ultimateGames, Arena arena, int initialTicks, long period) {
+        this.ultimateGames = ultimateGames;
+        this.arena = arena;
+        this.ticksLeft = initialTicks;
+        this.period = period;
+    }
 
-	public boolean start() {
-		if (taskId == null) {
-			taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, this, 0, period);
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public boolean start() {
+        if (taskId == null) {
+            taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, this, 0, period);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public void stop() {
-		if (taskId != null) {
-			Bukkit.getScheduler().cancelTask(taskId);
-			taskId = null;
-		}
-	}
+    public void stop() {
+        if (taskId != null) {
+            Bukkit.getScheduler().cancelTask(taskId);
+            taskId = null;
+        }
+    }
 
-	public int getTicksLeft() {
-		return ticksLeft;
-	}
+    public int getTicksLeft() {
+        return ticksLeft;
+    }
 }

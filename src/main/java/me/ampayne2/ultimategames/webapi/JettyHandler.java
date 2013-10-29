@@ -29,21 +29,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JettyHandler extends AbstractHandler {
-	private Map<String, WebHandler> handlerMap = new HashMap<String, WebHandler>();
+    private Map<String, WebHandler> handlerMap = new HashMap<String, WebHandler>();
 
-	@Override
-	public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
-		if (handlerMap.containsKey(s)) {
-			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-			httpServletResponse.setContentType("application/json;charset=utf-8");
-			request.setHandled(true);
-			httpServletResponse.getWriter().println(handlerMap.get(s).sendResult());
-		} else {
-			httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
-		}
-	}
+    @Override
+    public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
+        if (handlerMap.containsKey(s)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            httpServletResponse.setContentType("application/json;charset=utf-8");
+            request.setHandled(true);
+            httpServletResponse.getWriter().println(handlerMap.get(s).sendResult());
+        } else {
+            httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
 
-	public void addHandler(String path, WebHandler handler) {
-		handlerMap.put(path, handler);
-	}
+    public void addHandler(String path, WebHandler handler) {
+        handlerMap.put(path, handler);
+    }
 }

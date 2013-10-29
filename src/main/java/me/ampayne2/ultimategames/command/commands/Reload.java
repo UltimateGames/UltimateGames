@@ -23,14 +23,14 @@ import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import org.bukkit.command.CommandSender;
 
 public class Reload implements UGCommand {
-	@SuppressWarnings("unused")
-	private final UltimateGames ultimateGames;
+    @SuppressWarnings("unused")
+    private final UltimateGames ultimateGames;
 
-	public Reload(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public Reload(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+    }
 }

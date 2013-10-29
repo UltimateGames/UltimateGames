@@ -25,7 +25,7 @@ import me.ampayne2.ultimategames.games.Game;
  */
 public interface PointManager {
 
-	public void addPoint(Game game, String playerName, String valueName, int amount);
+    public void addPoint(Game game, String playerName, String valueName, int amount);
 
     public boolean hasPerk(Game game, String playerName, String valueName);
 }

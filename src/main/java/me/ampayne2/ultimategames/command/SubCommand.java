@@ -29,72 +29,72 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SubCommand implements Command {
-	private final UltimateGames ultimateGames;
-	private Map<String, Command> commandList = new HashMap<String, Command>();
-	private Map<String, String> permissionList = new HashMap<String, String>();
-	private Map<String, Integer> argsLength = new HashMap<String, Integer>();
-	private Map<String, Boolean> playerOnly = new HashMap<String, Boolean>();
+    private final UltimateGames ultimateGames;
+    private Map<String, Command> commandList = new HashMap<String, Command>();
+    private Map<String, String> permissionList = new HashMap<String, String>();
+    private Map<String, Integer> argsLength = new HashMap<String, Integer>();
+    private Map<String, Boolean> playerOnly = new HashMap<String, Boolean>();
 
-	public SubCommand(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public SubCommand(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	public void addCommand(Command command, String name, String permission, Integer argsLength, boolean playerOnly) {
-		commandList.put(name, command);
-		if (command instanceof UGCommand) {
-			permissionList.put(name, permission);
-			this.argsLength.put(name, argsLength);
-			this.playerOnly.put(name, playerOnly);
-		}
-	}
+    public void addCommand(Command command, String name, String permission, Integer argsLength, boolean playerOnly) {
+        commandList.put(name, command);
+        if (command instanceof UGCommand) {
+            permissionList.put(name, permission);
+            this.argsLength.put(name, argsLength);
+            this.playerOnly.put(name, playerOnly);
+        }
+    }
 
-	public boolean commandExists(String name) {
-		return commandList.containsKey(name);
-	}
+    public boolean commandExists(String name) {
+        return commandList.containsKey(name);
+    }
 
-	public void execute(String command, CommandSender sender, String[] args) {
-		if (commandExists(command)) {
-			Command entry = commandList.get(command);
-			if (entry instanceof UGCommand) {
-				if (argsLength.get(command) == -1 || argsLength.get(command) == args.length) {
-					if (sender.hasPermission(permissionList.get(command))) {
-						if (sender instanceof Player || !playerOnly.get(command)) {
-							((UGCommand) entry).execute(sender, args);
-						} else {
-							ultimateGames.getMessageManager().sendMessage(sender, "commands.notaplayer");
-						}
-					} else {
-						ultimateGames.getMessageManager().sendMessage(sender, "permissions.nopermission", command);
-					}
-				} else {
-					ultimateGames.getMessageManager().sendMessage(sender, "commandusages." + command);
-				}
-			} else if (entry instanceof SubCommand) {
-				SubCommand subCommand = (SubCommand) entry;
+    public void execute(String command, CommandSender sender, String[] args) {
+        if (commandExists(command)) {
+            Command entry = commandList.get(command);
+            if (entry instanceof UGCommand) {
+                if (argsLength.get(command) == -1 || argsLength.get(command) == args.length) {
+                    if (sender.hasPermission(permissionList.get(command))) {
+                        if (sender instanceof Player || !playerOnly.get(command)) {
+                            ((UGCommand) entry).execute(sender, args);
+                        } else {
+                            ultimateGames.getMessageManager().sendMessage(sender, "commands.notaplayer");
+                        }
+                    } else {
+                        ultimateGames.getMessageManager().sendMessage(sender, "permissions.nopermission", command);
+                    }
+                } else {
+                    ultimateGames.getMessageManager().sendMessage(sender, "commandusages." + command);
+                }
+            } else if (entry instanceof SubCommand) {
+                SubCommand subCommand = (SubCommand) entry;
 
-				String subSubCommand = "";
-				if (args.length != 0) {
-					subSubCommand = args[0];
-				}
+                String subSubCommand = "";
+                if (args.length != 0) {
+                    subSubCommand = args[0];
+                }
 
-				if (subCommand.commandExists(subSubCommand)) {
-					String[] newArgs;
-					if (args.length == 0) {
-						newArgs = args;
-					} else {
-						newArgs = new String[args.length - 1];
-						System.arraycopy(args, 1, newArgs, 0, args.length - 1);
-					}
-					subCommand.execute(subSubCommand, sender, newArgs);
-				} else {
-					ultimateGames.getMessageManager().sendMessage(sender, "commands.invalidsubcommand", "\"" + subSubCommand + "\"", "\"" + command + "\"");
-					ultimateGames.getMessageManager().sendMessage(sender, "commands.validsubcommands", subCommand.getSubCommandList());
-				}
-			}
-		}
-	}
+                if (subCommand.commandExists(subSubCommand)) {
+                    String[] newArgs;
+                    if (args.length == 0) {
+                        newArgs = args;
+                    } else {
+                        newArgs = new String[args.length - 1];
+                        System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+                    }
+                    subCommand.execute(subSubCommand, sender, newArgs);
+                } else {
+                    ultimateGames.getMessageManager().sendMessage(sender, "commands.invalidsubcommand", "\"" + subSubCommand + "\"", "\"" + command + "\"");
+                    ultimateGames.getMessageManager().sendMessage(sender, "commands.validsubcommands", subCommand.getSubCommandList());
+                }
+            }
+        }
+    }
 
-	public String getSubCommandList() {
-		return Arrays.toString(commandList.keySet().toArray());
-	}
+    public String getSubCommandList() {
+        return Arrays.toString(commandList.keySet().toArray());
+    }
 }

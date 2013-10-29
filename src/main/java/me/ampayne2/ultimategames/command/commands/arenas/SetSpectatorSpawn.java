@@ -26,26 +26,26 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetSpectatorSpawn implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public SetSpectatorSpawn(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public SetSpectatorSpawn(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		String arenaName = args[0];
-		String gameName = args[1];
-		Message messageManager = ultimateGames.getMessageManager();
-		ArenaManager arenaManager = ultimateGames.getArenaManager();
-		if (!ultimateGames.getGameManager().gameExists(gameName)) {
-			messageManager.sendMessage(sender, "games.doesntexist");
-			return;
-		} else if (!arenaManager.arenaExists(arenaName, gameName)) {
-			messageManager.sendMessage(sender, "arenas.doesntexist");
-			return;
-		}
-		ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(arenaManager.getArena(arenaName, gameName), ((Player) sender).getLocation());
-		messageManager.sendMessage(sender, "spawnpoints.setspectatorspawnpoint", arenaName, gameName);
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        String arenaName = args[0];
+        String gameName = args[1];
+        Message messageManager = ultimateGames.getMessageManager();
+        ArenaManager arenaManager = ultimateGames.getArenaManager();
+        if (!ultimateGames.getGameManager().gameExists(gameName)) {
+            messageManager.sendMessage(sender, "games.doesntexist");
+            return;
+        } else if (!arenaManager.arenaExists(arenaName, gameName)) {
+            messageManager.sendMessage(sender, "arenas.doesntexist");
+            return;
+        }
+        ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(arenaManager.getArena(arenaName, gameName), ((Player) sender).getLocation());
+        messageManager.sendMessage(sender, "spawnpoints.setspectatorspawnpoint", arenaName, gameName);
+    }
 }

@@ -28,32 +28,32 @@ import java.util.concurrent.TimeUnit;
 
 public class JettyServer {
 
-	private Server server;
-	private static final int CORE_POOL_SIZE = 2;
-	private static final int MAX_CONNECTIONS = 30;
-	private static final int KEEP_ALIVE_TIME = 60;
+    private Server server;
+    private static final int CORE_POOL_SIZE = 2;
+    private static final int MAX_CONNECTIONS = 30;
+    private static final int KEEP_ALIVE_TIME = 60;
 
-	public JettyServer(UltimateGames plugin) throws Exception {
-		org.eclipse.jetty.util.log.Log.setLog(new JettyNullLogger());
-		server = new Server(plugin.getConfig().getInt("APIPort"));
-		server.setHandler(new JettyHandler());
-		server.setSessionIdManager(new HashSessionIdManager());
+    public JettyServer(UltimateGames plugin) throws Exception {
+        org.eclipse.jetty.util.log.Log.setLog(new JettyNullLogger());
+        server = new Server(plugin.getConfig().getInt("APIPort"));
+        server.setHandler(new JettyHandler());
+        server.setSessionIdManager(new HashSessionIdManager());
 
-		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(MAX_CONNECTIONS);
+        LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(MAX_CONNECTIONS);
 
-		ExecutorThreadPool pool = new ExecutorThreadPool(CORE_POOL_SIZE, MAX_CONNECTIONS, KEEP_ALIVE_TIME, TimeUnit.SECONDS, queue);
-		server.setThreadPool(pool);
-	}
+        ExecutorThreadPool pool = new ExecutorThreadPool(CORE_POOL_SIZE, MAX_CONNECTIONS, KEEP_ALIVE_TIME, TimeUnit.SECONDS, queue);
+        server.setThreadPool(pool);
+    }
 
-	public JettyHandler getHandler() {
-		return (JettyHandler) server.getHandler();
-	}
+    public JettyHandler getHandler() {
+        return (JettyHandler) server.getHandler();
+    }
 
-	public void startServer() throws Exception {
-		server.start();
-	}
+    public void startServer() throws Exception {
+        server.start();
+    }
 
-	public void stopServer() throws Exception {
-		server.stop();
-	}
+    public void stopServer() throws Exception {
+        server.stop();
+    }
 }

@@ -29,110 +29,110 @@ import org.bukkit.event.player.PlayerMoveEvent;
  * An arena spawnpoint for players.
  */
 public class PlayerSpawnPoint implements Listener {
-	private final UltimateGames ultimateGames;
-	private final Arena arena;
-	private final Location location;
-	private Boolean locked;
-	private String playerName;
+    private final UltimateGames ultimateGames;
+    private final Arena arena;
+    private final Location location;
+    private Boolean locked;
+    private String playerName;
 
-	/**
-	 * Creates a new PlayerSpawnPoint
-	 *
-	 * @param ultimateGames A reference to the ultimateGames instance.
-	 * @param arena         The arena of the spawnpoint.
-	 * @param location      The location of the spawnpoint.
-	 * @param locked        If the spawnpoint is locked.
-	 */
-	public PlayerSpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, Boolean locked) {
-		this.ultimateGames = ultimateGames;
-		this.arena = arena;
-		this.location = location;
-		this.locked = locked;
-	}
+    /**
+     * Creates a new PlayerSpawnPoint
+     *
+     * @param ultimateGames A reference to the ultimateGames instance.
+     * @param arena         The arena of the spawnpoint.
+     * @param location      The location of the spawnpoint.
+     * @param locked        If the spawnpoint is locked.
+     */
+    public PlayerSpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, Boolean locked) {
+        this.ultimateGames = ultimateGames;
+        this.arena = arena;
+        this.location = location;
+        this.locked = locked;
+    }
 
-	/**
-	 * Gets the spawnpoint's arena.
-	 *
-	 * @return The spawnpoint's arena.
-	 */
-	public Arena getArena() {
-		return arena;
-	}
+    /**
+     * Gets the spawnpoint's arena.
+     *
+     * @return The spawnpoint's arena.
+     */
+    public Arena getArena() {
+        return arena;
+    }
 
-	/**
-	 * Gets the spawnpoint's location.
-	 *
-	 * @return The spawnpoint's location.
-	 */
-	public Location getLocation() {
-		return location;
-	}
+    /**
+     * Gets the spawnpoint's location.
+     *
+     * @return The spawnpoint's location.
+     */
+    public Location getLocation() {
+        return location;
+    }
 
-	/**
-	 * Checks if the spawnpoint is locked.
-	 *
-	 * @return True if the spawnpoint is locked, else false.
-	 */
-	public Boolean locked() {
-		return locked;
-	}
+    /**
+     * Checks if the spawnpoint is locked.
+     *
+     * @return True if the spawnpoint is locked, else false.
+     */
+    public Boolean locked() {
+        return locked;
+    }
 
-	/**
-	 * Sets the locked state of a spawnpoint.
-	 *
-	 * @param enabled The state to set. If a player is locked in a spawnpoint when set to false, the player will be released.
-	 */
-	public void lock(Boolean enabled) {
-		this.locked = enabled;
-		if (!enabled) {
-			playerName = null;
-		}
-	}
+    /**
+     * Sets the locked state of a spawnpoint.
+     *
+     * @param enabled The state to set. If a player is locked in a spawnpoint when set to false, the player will be released.
+     */
+    public void lock(Boolean enabled) {
+        this.locked = enabled;
+        if (!enabled) {
+            playerName = null;
+        }
+    }
 
-	/**
-	 * Teleports a player to the spawnpoint.
-	 *
-	 * @param player The player to teleport.
-	 */
-	public void teleportPlayer(Player player) {
-		if (player != null) {
-			player.teleport(location);
-			if (locked) {
-				this.playerName = player.getName();
-			}
-		} else {
-			this.playerName = null;
-		}
+    /**
+     * Teleports a player to the spawnpoint.
+     *
+     * @param player The player to teleport.
+     */
+    public void teleportPlayer(Player player) {
+        if (player != null) {
+            player.teleport(location);
+            if (locked) {
+                this.playerName = player.getName();
+            }
+        } else {
+            this.playerName = null;
+        }
 
-	}
+    }
 
-	/**
-	 * Gets the player locked to a spawnpoint. Null if nobody is locked.
-	 *
-	 * @return The player locked to a spawnpoint.
-	 */
-	public String getPlayer() {
-		return playerName;
-	}
+    /**
+     * Gets the player locked to a spawnpoint. Null if nobody is locked.
+     *
+     * @return The player locked to a spawnpoint.
+     */
+    public String getPlayer() {
+        return playerName;
+    }
 
-	/**
-	 * Stops players from attempting to leave spawnpoints.
-	 */
-	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event) {
-		if (locked && playerName != null) {
-			Location from = event.getFrom();
-			Location to = event.getTo();
-			if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
-				return;
-			}
-			Player player = event.getPlayer();
-			if (player.getName().equals(playerName) && (Math.abs(to.getX() - location.getX()) >= 1 || Math.abs(to.getZ() - location.getZ()) >= 1)) {
-				location.setPitch(event.getFrom().getPitch());
-				location.setYaw(event.getFrom().getYaw());
-				player.teleport(location);
-				ultimateGames.getMessageManager().sendMessage(player, "spawnpoints.leave");
-			}
-		}
-	}
+    /**
+     * Stops players from attempting to leave spawnpoints.
+     */
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (locked && playerName != null) {
+            Location from = event.getFrom();
+            Location to = event.getTo();
+            if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
+                return;
+            }
+            Player player = event.getPlayer();
+            if (player.getName().equals(playerName) && (Math.abs(to.getX() - location.getX()) >= 1 || Math.abs(to.getZ() - location.getZ()) >= 1)) {
+                location.setPitch(event.getFrom().getPitch());
+                location.setYaw(event.getFrom().getYaw());
+                player.teleport(location);
+                ultimateGames.getMessageManager().sendMessage(player, "spawnpoints.leave");
+            }
+        }
+    }
 }

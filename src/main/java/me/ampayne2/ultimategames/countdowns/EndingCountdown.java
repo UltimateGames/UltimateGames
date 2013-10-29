@@ -27,46 +27,46 @@ import org.bukkit.entity.Player;
  * A type of countdown used to end the game.
  */
 public class EndingCountdown extends Countdown {
-	private final Boolean expDisplay;
-	private static final int FINAL_COUNTDOWN_THRESHOLD = 10;
-	private static final int END_COUNTDOWN_TIME = 0;
-	private static final int TPS = 20;
+    private final Boolean expDisplay;
+    private static final int FINAL_COUNTDOWN_THRESHOLD = 10;
+    private static final int END_COUNTDOWN_TIME = 0;
+    private static final int TPS = 20;
 
-	/**
-	 * Creates a new Ending Countdown.
-	 *
-	 * @param ultimateGames A reference to the UltimateGames instance.
-	 * @param arena         The arena of the countdown.
-	 * @param expDisplay    If the countdown should display exp.
-	 */
-	public EndingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds, Boolean expDisplay) {
-		super(ultimateGames, arena, initialSeconds * TPS, TPS);
-		this.expDisplay = expDisplay;
-	}
+    /**
+     * Creates a new Ending Countdown.
+     *
+     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param arena         The arena of the countdown.
+     * @param expDisplay    If the countdown should display exp.
+     */
+    public EndingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds, Boolean expDisplay) {
+        super(ultimateGames, arena, initialSeconds * TPS, TPS);
+        this.expDisplay = expDisplay;
+    }
 
-	public int getSecondsLeft() {
-		return ticksLeft / TPS;
-	}
+    public int getSecondsLeft() {
+        return ticksLeft / TPS;
+    }
 
-	public boolean hasExpDisplay() {
-		return expDisplay;
-	}
+    public boolean hasExpDisplay() {
+        return expDisplay;
+    }
 
-	@Override
-	public void run() {
-		int secondsLeft = getSecondsLeft();
-		if (expDisplay) {
-			for (String playerName : arena.getPlayers()) {
-				Player player = Bukkit.getPlayerExact(playerName);
-				player.setLevel(secondsLeft);
-			}
-		}
-		if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
-			ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
-		} else if (secondsLeft == END_COUNTDOWN_TIME) {
-			ultimateGames.getCountdownManager().stopEndingCountdown(arena);
-			ultimateGames.getArenaManager().endArena(arena);
-		}
-		ticksLeft -= TPS;
-	}
+    @Override
+    public void run() {
+        int secondsLeft = getSecondsLeft();
+        if (expDisplay) {
+            for (String playerName : arena.getPlayers()) {
+                Player player = Bukkit.getPlayerExact(playerName);
+                player.setLevel(secondsLeft);
+            }
+        }
+        if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
+            ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
+        } else if (secondsLeft == END_COUNTDOWN_TIME) {
+            ultimateGames.getCountdownManager().stopEndingCountdown(arena);
+            ultimateGames.getArenaManager().endArena(arena);
+        }
+        ticksLeft -= TPS;
+    }
 }

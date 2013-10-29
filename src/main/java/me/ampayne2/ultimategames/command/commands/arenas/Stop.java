@@ -24,20 +24,20 @@ import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import org.bukkit.command.CommandSender;
 
 public class Stop implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public Stop(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public Stop(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		String arenaName = args[0];
-		String gameName = args[1];
-		if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-			ultimateGames.getArenaManager().stopArena(arena);
-			ultimateGames.getMessageManager().sendMessage(sender, "arenas.forcestop", arenaName, gameName);
-		}
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        String arenaName = args[0];
+        String gameName = args[1];
+        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+            ultimateGames.getArenaManager().stopArena(arena);
+            ultimateGames.getMessageManager().sendMessage(sender, "arenas.forcestop", arenaName, gameName);
+        }
+    }
 }

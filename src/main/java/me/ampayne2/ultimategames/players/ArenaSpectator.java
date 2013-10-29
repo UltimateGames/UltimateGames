@@ -23,44 +23,44 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ArenaSpectator {
-	private final String playerName;
-	private final Arena arena;
+    private final String playerName;
+    private final Arena arena;
 
-	/**
-	 * Represents a player spectating an arena.
-	 *
-	 * @param playerName The player's name.
-	 * @param arena      The arena.
-	 */
-	public ArenaSpectator(String playerName, Arena arena) {
-		this.playerName = playerName;
-		this.arena = arena;
-	}
+    /**
+     * Represents a player spectating an arena.
+     *
+     * @param playerName The player's name.
+     * @param arena      The arena.
+     */
+    public ArenaSpectator(String playerName, Arena arena) {
+        this.playerName = playerName;
+        this.arena = arena;
+    }
 
-	/**
-	 * Gets the player. Calls Bukkit.getPlayerExact(), so is an expensive call.
-	 *
-	 * @return The player.
-	 */
-	public Player getPlayer() {
-		return Bukkit.getPlayerExact(playerName);
-	}
+    /**
+     * Gets the player. Calls Bukkit.getPlayerExact(), so is an expensive call.
+     *
+     * @return The player.
+     */
+    public Player getPlayer() {
+        return Bukkit.getPlayerExact(playerName);
+    }
 
-	/**
-	 * Gets a player's name.
-	 *
-	 * @return The player's name.
-	 */
-	public String getPlayerName() {
-		return playerName;
-	}
+    /**
+     * Gets a player's name.
+     *
+     * @return The player's name.
+     */
+    public String getPlayerName() {
+        return playerName;
+    }
 
-	/**
-	 * Gets the player's arena.
-	 *
-	 * @return The player's arena.
-	 */
-	public Arena getArena() {
-		return arena;
-	}
+    /**
+     * Gets the player's arena.
+     *
+     * @return The player's arena.
+     */
+    public Arena getArena() {
+        return arena;
+    }
 }

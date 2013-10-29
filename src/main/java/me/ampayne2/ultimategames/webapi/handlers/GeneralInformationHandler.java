@@ -30,25 +30,25 @@ import java.util.Map;
 
 public class GeneralInformationHandler implements WebHandler {
 
-	public UltimateGames plugin;
+    public UltimateGames plugin;
 
-	public GeneralInformationHandler(UltimateGames ug) {
-		this.plugin = ug;
-	}
+    public GeneralInformationHandler(UltimateGames ug) {
+        this.plugin = ug;
+    }
 
-	@Override
-	public String sendResult() {
-		Gson gson = new Gson();
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		for (Arena arena : plugin.getArenaManager().getArenas()) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("arenaName", arena.getName());
-			map.put("gameName", arena.getGame().getName());
-			map.put("currentPlayers", arena.getPlayers().size() + "");
-			map.put("maxPlayers", arena.getMaxPlayers() + "");
-			map.put("status", arena.getStatus().name());
-			list.add(map);
-		}
-		return gson.toJson(list);
-	}
+    @Override
+    public String sendResult() {
+        Gson gson = new Gson();
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        for (Arena arena : plugin.getArenaManager().getArenas()) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("arenaName", arena.getName());
+            map.put("gameName", arena.getGame().getName());
+            map.put("currentPlayers", arena.getPlayers().size() + "");
+            map.put("maxPlayers", arena.getMaxPlayers() + "");
+            map.put("status", arena.getStatus().name());
+            list.add(map);
+        }
+        return gson.toJson(list);
+    }
 }

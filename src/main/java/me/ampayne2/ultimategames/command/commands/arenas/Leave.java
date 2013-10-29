@@ -25,25 +25,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Leave implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public Leave(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public Leave(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		Player player = (Player) sender;
-		String playerName = player.getName();
-		QueueManager queue = ultimateGames.getQueueManager();
-		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-			ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
-		} else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
-			ultimateGames.getPlayerManager().removeSpectatorFromArena((Player) sender);
-		} else if (queue.isPlayerInQueue(playerName)) {
-			queue.removePlayerFromQueues(player);
-		} else {
-			ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.cantleave");
-		}
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        Player player = (Player) sender;
+        String playerName = player.getName();
+        QueueManager queue = ultimateGames.getQueueManager();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
+        } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+            ultimateGames.getPlayerManager().removeSpectatorFromArena((Player) sender);
+        } else if (queue.isPlayerInQueue(playerName)) {
+            queue.removePlayerFromQueues(player);
+        } else {
+            ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.cantleave");
+        }
+    }
 }

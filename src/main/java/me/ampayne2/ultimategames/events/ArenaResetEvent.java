@@ -24,7 +24,7 @@ import me.ampayne2.ultimategames.arenas.Arena;
  * Called after an arena resets.
  */
 public class ArenaResetEvent extends ArenaEvent {
-	public ArenaResetEvent(Arena arena) {
-		super(arena);
-	}
+    public ArenaResetEvent(Arena arena) {
+        super(arena);
+    }
 }

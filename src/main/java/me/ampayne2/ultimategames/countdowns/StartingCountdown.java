@@ -26,38 +26,38 @@ import me.ampayne2.ultimategames.enums.ArenaStatus;
  * A type of countdown used to start the game.
  */
 public class StartingCountdown extends Countdown {
-	private final int initialSeconds;
-	private static final int FINAL_COUNTDOWN_THRESHOLD = 10;
-	private static final int END_COUNTDOWN_TIME = 0;
-	private static final int TPS = 20;
+    private final int initialSeconds;
+    private static final int FINAL_COUNTDOWN_THRESHOLD = 10;
+    private static final int END_COUNTDOWN_TIME = 0;
+    private static final int TPS = 20;
 
-	/**
-	 * Creates a new Ending Countdown.
-	 *
-	 * @param ultimateGames A reference to the UltimateGames instance.
-	 * @param arena         The arena of the countdown.
-	 */
-	public StartingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds) {
-		super(ultimateGames, arena, initialSeconds * TPS, TPS);
-		this.initialSeconds = initialSeconds;
-	}
+    /**
+     * Creates a new Ending Countdown.
+     *
+     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param arena         The arena of the countdown.
+     */
+    public StartingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds) {
+        super(ultimateGames, arena, initialSeconds * TPS, TPS);
+        this.initialSeconds = initialSeconds;
+    }
 
-	public int getSecondsLeft() {
-		return ticksLeft / TPS;
-	}
+    public int getSecondsLeft() {
+        return ticksLeft / TPS;
+    }
 
-	@Override
-	public void run() {
-		int secondsLeft = getSecondsLeft();
-		if (secondsLeft > END_COUNTDOWN_TIME && initialSeconds == secondsLeft) {
-			ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-			arena.setStatus(ArenaStatus.STARTING);
-		} else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
-			ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-		} else if (secondsLeft == END_COUNTDOWN_TIME) {
-			ultimateGames.getCountdownManager().stopStartingCountdown(arena);
-			ultimateGames.getArenaManager().beginArena(arena);
-		}
-		ticksLeft -= TPS;
-	}
+    @Override
+    public void run() {
+        int secondsLeft = getSecondsLeft();
+        if (secondsLeft > END_COUNTDOWN_TIME && initialSeconds == secondsLeft) {
+            ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
+            arena.setStatus(ArenaStatus.STARTING);
+        } else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
+            ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
+        } else if (secondsLeft == END_COUNTDOWN_TIME) {
+            ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+            ultimateGames.getArenaManager().beginArena(arena);
+        }
+        ticksLeft -= TPS;
+    }
 }

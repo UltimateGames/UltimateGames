@@ -24,23 +24,23 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Lobby implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public Lobby(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public Lobby(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		Player player = (Player) sender;
-		String playerName = player.getName();
-		if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-			ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
-		} else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
-			ultimateGames.getPlayerManager().removeSpectatorFromArena((Player) sender);
-		} else {
-			player.teleport(ultimateGames.getLobbyManager().getLobby());
-		}
-		ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.lobby");
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        Player player = (Player) sender;
+        String playerName = player.getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            ultimateGames.getPlayerManager().removePlayerFromArena((Player) sender, true);
+        } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+            ultimateGames.getPlayerManager().removeSpectatorFromArena((Player) sender);
+        } else {
+            player.teleport(ultimateGames.getLobbyManager().getLobby());
+        }
+        ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.lobby");
+    }
 }

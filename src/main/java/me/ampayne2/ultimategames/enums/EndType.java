@@ -19,6 +19,6 @@
 package me.ampayne2.ultimategames.enums;
 
 public enum EndType {
-	FORCED,
-	UNFORCED
+    FORCED,
+    UNFORCED
 }

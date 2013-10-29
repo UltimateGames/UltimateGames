@@ -24,7 +24,7 @@ import me.ampayne2.ultimategames.arenas.Arena;
  * Called after an arena stops.
  */
 public class ArenaStopEvent extends ArenaEvent {
-	public ArenaStopEvent(Arena arena) {
-		super(arena);
-	}
+    public ArenaStopEvent(Arena arena) {
+        super(arena);
+    }
 }

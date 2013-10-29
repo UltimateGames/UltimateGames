@@ -25,14 +25,14 @@ import org.bukkit.entity.Player;
  * Called after a spectator joins an arena.
  */
 public class SpectatorPostJoinEvent extends ArenaEvent {
-	private final Player player;
+    private final Player player;
 
-	public SpectatorPostJoinEvent(Player player, Arena arena) {
-		super(arena);
-		this.player = player;
-	}
+    public SpectatorPostJoinEvent(Player player, Arena arena) {
+        super(arena);
+        this.player = player;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 }

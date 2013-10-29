@@ -23,23 +23,23 @@ import me.ampayne2.ultimategames.command.interfaces.UGCommand;
 import org.bukkit.command.CommandSender;
 
 public class End implements UGCommand {
-	private final UltimateGames ultimateGames;
+    private final UltimateGames ultimateGames;
 
-	public End(UltimateGames ultimateGames) {
-		this.ultimateGames = ultimateGames;
-	}
+    public End(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		String arenaName = args[0];
-		String gameName = args[1];
-		if (!ultimateGames.getGameManager().gameExists(gameName)) {
-			ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
-			return;
-		} else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-			ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
-			return;
-		}
-		ultimateGames.getArenaManager().endArena(ultimateGames.getArenaManager().getArena(arenaName, gameName));
-	}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        String arenaName = args[0];
+        String gameName = args[1];
+        if (!ultimateGames.getGameManager().gameExists(gameName)) {
+            ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
+            return;
+        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
+            return;
+        }
+        ultimateGames.getArenaManager().endArena(ultimateGames.getArenaManager().getArena(arenaName, gameName));
+    }
 }
