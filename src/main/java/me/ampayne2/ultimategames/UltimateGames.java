@@ -43,6 +43,7 @@ import me.ampayne2.ultimategames.signs.SignListener;
 import me.ampayne2.ultimategames.signs.UGSign;
 import me.ampayne2.ultimategames.signs.UGSignManager;
 import me.ampayne2.ultimategames.teams.TeamManager;
+import me.ampayne2.ultimategames.utils.NullPointManager;
 import me.ampayne2.ultimategames.webapi.JettyServer;
 import me.ampayne2.ultimategames.webapi.WebHandler;
 import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
@@ -120,7 +121,7 @@ public class UltimateGames extends JavaPlugin {
 			messageManager.debug(e);
 			getServer().getPluginManager().disablePlugin(this);
 		}
-		pointManager = new PointManager();
+		pointManager = new NullPointManager();
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
 		if (getServer().getPluginManager().isPluginEnabled("PlayerHeads")) {
