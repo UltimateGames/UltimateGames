@@ -94,12 +94,12 @@ public abstract class GameClass {
      * @param player The player to add to the GameClass.
      * @return True if the player is added to the GameClass, else false.
      */
-    public boolean addPlayerToClass(Player player) {
+    public boolean addPlayer(Player player) {
         String playerName = player.getName();
         if (!players.contains(playerName)) {
             GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(game, playerName);
             if (gameClass != null) {
-                gameClass.removePlayerFromClass(playerName);
+                gameClass.removePlayer(playerName);
             }
             players.add(playerName);
             ArenaStatus arenaStatus = ultimateGames.getPlayerManager().getPlayerArena(playerName).getStatus();
@@ -122,12 +122,12 @@ public abstract class GameClass {
      * @param resetInventory If the player's inventory should be reset immediately.
      * @return True if the player is added to the GameClass, else false.
      */
-    public boolean addPlayerToClass(Player player, Boolean resetInventory) {
+    public boolean addPlayer(Player player, Boolean resetInventory) {
         String playerName = player.getName();
         if (!players.contains(playerName)) {
             GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(game, playerName);
             if (gameClass != null) {
-                gameClass.removePlayerFromClass(playerName);
+                gameClass.removePlayer(playerName);
             }
             players.add(playerName);
             if (resetInventory) {
@@ -147,7 +147,7 @@ public abstract class GameClass {
      *
      * @param playerName The name of the player to remove from the GameClass.
      */
-    public void removePlayerFromClass(String playerName) {
+    public void removePlayer(String playerName) {
         if (players.contains(playerName)) {
             players.remove(playerName);
         }
@@ -156,7 +156,7 @@ public abstract class GameClass {
     /**
      * Removes all players from the GameClass.
      */
-    public void removePlayersFromClass() {
+    public void removePlayers() {
         players.clear();
     }
 

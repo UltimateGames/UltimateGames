@@ -256,7 +256,7 @@ public class PlayerManager implements Listener {
             // Removes the player from any classes the player is in
             GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(arena.getGame(), playerName);
             if (gameClass != null) {
-                gameClass.removePlayerFromClass(playerName);
+                gameClass.removePlayer(playerName);
             }
 
             // Removes the player from any spawnpoints the player is locked in

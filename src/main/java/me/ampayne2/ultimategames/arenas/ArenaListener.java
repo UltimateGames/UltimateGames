@@ -20,6 +20,8 @@ package me.ampayne2.ultimategames.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
+import me.ampayne2.ultimategames.games.Game;
+import me.ampayne2.ultimategames.items.GameItem;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.teams.Team;
 import me.ampayne2.ultimategames.teams.TeamManager;
@@ -41,6 +43,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -292,10 +295,22 @@ public class ArenaListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        String playerName = event.getPlayer().getName();
+        Player player = event.getPlayer();
+        String playerName = player.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
             Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
-            arena.getGame().getGamePlugin().onPlayerInteract(arena, event);
+            Game game = arena.getGame();
+            ItemStack item = player.getItemInHand();
+            if (item != null && ultimateGames.getGameItemManager().isRegistered(game, item)) {
+                GameItem gameItem = ultimateGames.getGameItemManager().getGameItem(game, item);
+                if (gameItem.click(event) && gameItem.isConsumable()) {
+                    ItemStack itemStack = player.getItemInHand();
+                    itemStack.setAmount(itemStack.getAmount() - 1);
+                    player.setItemInHand(itemStack.getAmount() == 0 ? null : itemStack);
+                }
+            } else {
+                game.getGamePlugin().onPlayerInteract(arena, event);
+            }
         } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
             event.setCancelled(true);
         }

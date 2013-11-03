@@ -32,6 +32,7 @@ import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.files.ConfigManager;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
+import me.ampayne2.ultimategames.items.GameItemManager;
 import me.ampayne2.ultimategames.misc.MetricsManager;
 import me.ampayne2.ultimategames.misc.PlayerHeadListener;
 import me.ampayne2.ultimategames.players.LobbyManager;
@@ -57,6 +58,7 @@ public class UltimateGames extends JavaPlugin {
     private static UltimateGames instance;
     private ConfigManager configManager;
     private GameClassManager gameClassManager;
+    private GameItemManager gameItemManager;
     private GameManager gameManager;
     private TeamManager teamManager;
     private ArenaManager arenaManager;
@@ -87,6 +89,7 @@ public class UltimateGames extends JavaPlugin {
         playerManager = new PlayerManager(this);
         metricsManager = new MetricsManager(this);
         gameClassManager = new GameClassManager();
+        gameItemManager = new GameItemManager();
         gameManager = new GameManager(this);
         queueManager = new QueueManager(this);
         spawnpointManager = new SpawnpointManager(this);
@@ -185,6 +188,10 @@ public class UltimateGames extends JavaPlugin {
 
     public GameClassManager getGameClassManager() {
         return gameClassManager;
+    }
+
+    public GameItemManager getGameItemManager() {
+        return gameItemManager;
     }
 
     public TeamManager getTeamManager() {

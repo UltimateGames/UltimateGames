@@ -29,55 +29,95 @@ import java.util.Set;
  * Manages player classes for games.
  */
 public class GameClassManager {
-    private Map<Game, Set<GameClass>> gameClasses = new HashMap<Game, Set<GameClass>>();
+    private final Map<Game, Set<GameClass>> gameClasses = new HashMap<Game, Set<GameClass>>();
 
     /**
-     * Checks if a game has a certain GameClass.
+     * Checks if a GameClass is registered.
      *
      * @param game      The game.
      * @param gameClass The GameClass.
-     * @return True if the game has the GameClass, else false.
+     * @return True if the GameClass is registered, else false.
      */
-    public boolean hasGameClass(Game game, GameClass gameClass) {
+    public boolean isRegistered(Game game, GameClass gameClass) {
         return gameClasses.containsKey(game) && gameClasses.get(game).contains(gameClass);
     }
 
     /**
-     * Gets the classes of a game.
+     * Gets a GameClass of a game.
      *
      * @param game The game.
-     * @return The classes of a game.
+     * @param name The name of the GameClass.
+     * @return The GameClass, null if none by the name exist.
+     */
+    public GameClass getGameClass(Game game, String name) {
+        if (gameClasses.containsKey(game)) {
+            for (GameClass gameClass : gameClasses.get(game)) {
+                if (gameClass.getName().equals(name)) {
+                    return gameClass;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets the GameClasses of a game.
+     *
+     * @param game The game.
+     * @return The GameClasses of a game.
      */
     public Set<GameClass> getGameClasses(Game game) {
         return gameClasses.containsKey(game) ? new HashSet<GameClass>(gameClasses.get(game)) : new HashSet<GameClass>();
     }
 
     /**
-     * Adds a GameClass to the list of game classes.
+     * Registers a GameClass.
      *
      * @param gameClass The GameClass.
-     * @return True if the GameClass was added successfully, else false.
+     * @return True if the GameClass was registered successfully, else false.
      */
-    public boolean addGameClass(GameClass gameClass) {
+    public boolean registerGameClass(GameClass gameClass) {
         Game game = gameClass.getGame();
-        Set<GameClass> classes = gameClasses.containsKey(game) ? gameClasses.get(game) : new HashSet<GameClass>();
-        if (classes.add(gameClass)) {
+        if (gameClasses.containsKey(game)) {
+            Set<GameClass> classes = gameClasses.get(game);
+            for (GameClass gClass : classes) {
+                if (gameClass.getName().equals(gClass.getName())) {
+                    return false;
+                }
+            }
+            classes.add(gameClass);
+        } else {
+            Set<GameClass> classes = new HashSet<GameClass>();
+            classes.add(gameClass);
             gameClasses.put(game, classes);
-            return true;
         }
-        return false;
+        return true;
     }
 
     /**
-     * Removes a GameClass from the list of game classes.
+     * Unregisters a GameClass.
      *
      * @param gameClass The GameClass.
      */
-    public void removeGameClass(GameClass gameClass) {
-        gameClass.removePlayersFromClass();
+    public void unregisterGameClass(GameClass gameClass) {
+        gameClass.removePlayers();
         Game game = gameClass.getGame();
         if (gameClasses.containsKey(game)) {
             gameClasses.get(game).remove(gameClass);
+        }
+    }
+
+    /**
+     * Unregisters all of a game's GameClasses.
+     *
+     * @param game The Game.
+     */
+    public void unregisterGameClasses(Game game) {
+        if (gameClasses.containsKey(game)) {
+            for (GameClass gameClass : gameClasses.get(game)) {
+                gameClass.removePlayers();
+            }
+            gameClasses.remove(game);
         }
     }
 
