@@ -201,7 +201,7 @@ public class UGUtils {
                 Double relativeX = x / divisor;
                 Double relativeZ = z / divisor;
                 Location particleLocation = new Location(player.getWorld(), playerX + relativeX, playerY + 1, playerZ + relativeZ);
-                particleEffect.play(player, particleLocation, 0, 0, 0, speed, amount);
+                particleEffect.display(particleLocation, 0, 0, 0, speed, amount, player);
             }
         }
     }
@@ -256,14 +256,14 @@ public class UGUtils {
                 break;
             }
             if (highlightPath) {
-                ParticleEffect.FIREWORKS_SPARK.play(location, 0, 0, 0, 0, 1);
+                ParticleEffect.FIREWORKS_SPARK.display(location, 0, 0, 0, 0, 1);
             }
             for (Entity entity : entities) {
                 if (entity instanceof LivingEntity && isLocationInEntity(locationX, locationY, locationZ, entity)) {
                     if (maxEntities == 0 || targetedEntities.size() < maxEntities) {
                         targetedEntities.add((LivingEntity) entity);
                         if (highlightEntities) {
-                            ParticleEffect.HUGE_EXPLOSION.play(entity.getLocation(), 0, 0, 0, 0, 1);
+                            ParticleEffect.HUGE_EXPLOSION.display(entity.getLocation(), 0, 0, 0, 0, 1);
                         }
                     } else {
                         break;
