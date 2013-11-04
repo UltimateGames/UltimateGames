@@ -40,8 +40,8 @@ public class Join implements UGCommand {
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
             ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
             return;
-        } else if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.alreadyexists");
+        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
             return;
         }
         Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);

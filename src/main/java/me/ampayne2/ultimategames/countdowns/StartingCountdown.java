@@ -56,23 +56,22 @@ public class StartingCountdown extends Countdown {
     @Override
     public void run() {
         int secondsLeft = getSecondsLeft();
+        if (secondsLeft <= TICK_SOUND_THRESHOLD && secondsLeft > END_COUNTDOWN_TIME) {
+            for (String playerName : arena.getPlayers()) {
+                Player player = Bukkit.getPlayerExact(playerName);
+                TICK_SOUND.play(player, player.getLocation());
+            }
+        }
         if (secondsLeft > END_COUNTDOWN_TIME && initialSeconds == secondsLeft) {
             ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
             arena.setStatus(ArenaStatus.STARTING);
         } else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
             ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-            if (secondsLeft == END_COUNTDOWN_TIME) {
-                for (String playerName : arena.getPlayers()) {
-                    Player player = Bukkit.getPlayerExact(playerName);
-                    FINAL_SOUND.play(player, player.getLocation());
-                }
-            } else if (secondsLeft <= TICK_SOUND_THRESHOLD) {
-                for (String playerName : arena.getPlayers()) {
-                    Player player = Bukkit.getPlayerExact(playerName);
-                    TICK_SOUND.play(player, player.getLocation());
-                }
-            }
         } else if (secondsLeft == END_COUNTDOWN_TIME) {
+            for (String playerName : arena.getPlayers()) {
+                Player player = Bukkit.getPlayerExact(playerName);
+                FINAL_SOUND.play(player, player.getLocation());
+            }
             ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             ultimateGames.getArenaManager().beginArena(arena);
         }
