@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.utils;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.effects.ParticleEffect;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.*;
 import org.bukkit.block.Block;

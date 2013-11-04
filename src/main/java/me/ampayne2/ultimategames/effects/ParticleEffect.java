@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.utils;
+package me.ampayne2.ultimategames.effects;
 
+import me.ampayne2.ultimategames.utils.ReflectionUtil;
 import me.ampayne2.ultimategames.utils.ReflectionUtil.DynamicPackage;
 import me.ampayne2.ultimategames.utils.ReflectionUtil.FieldEntry;
 import org.bukkit.Bukkit;

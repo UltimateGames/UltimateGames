@@ -20,13 +20,20 @@ package me.ampayne2.ultimategames.countdowns;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.effects.GameSound;
 import me.ampayne2.ultimategames.enums.ArenaStatus;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 /**
  * A type of countdown used to start the game.
  */
 public class StartingCountdown extends Countdown {
     private final int initialSeconds;
+    private static final GameSound TICK_SOUND = new GameSound(Sound.NOTE_PLING, 1, 1);
+    private static final GameSound FINAL_SOUND = new GameSound(Sound.NOTE_PLING, 1, 5);
+    private static final int TICK_SOUND_THRESHOLD = 5;
     private static final int FINAL_COUNTDOWN_THRESHOLD = 10;
     private static final int END_COUNTDOWN_TIME = 0;
     private static final int TPS = 20;
@@ -54,6 +61,17 @@ public class StartingCountdown extends Countdown {
             arena.setStatus(ArenaStatus.STARTING);
         } else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
             ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
+            if (secondsLeft == END_COUNTDOWN_TIME) {
+                for (String playerName : arena.getPlayers()) {
+                    Player player = Bukkit.getPlayerExact(playerName);
+                    FINAL_SOUND.play(player, player.getLocation());
+                }
+            } else if (secondsLeft <= TICK_SOUND_THRESHOLD) {
+                for (String playerName : arena.getPlayers()) {
+                    Player player = Bukkit.getPlayerExact(playerName);
+                    TICK_SOUND.play(player, player.getLocation());
+                }
+            }
         } else if (secondsLeft == END_COUNTDOWN_TIME) {
             ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             ultimateGames.getArenaManager().beginArena(arena);
