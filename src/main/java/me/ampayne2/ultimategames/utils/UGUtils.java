@@ -41,7 +41,7 @@ import java.util.Set;
 public class UGUtils {
     private static final long AUTO_RESPAWN_DELAY = 1L;
     private static final double TARGETER_ACCURACY = 1.0;
-    private static final BlockFace[] faces = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    private static final BlockFace[] FACES = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
     /**
      * Gets the ordinal suffix of an integer.
@@ -404,7 +404,7 @@ public class UGUtils {
      */
     public static Set<Sign> getAttachedSigns(Block block, boolean recursive) {
         Set<Sign> attachedSigns = new HashSet<Sign>();
-        for (BlockFace face : faces) {
+        for (BlockFace face : FACES) {
             Block faceBlock = block.getRelative(face);
             Material faceMaterial = faceBlock.getType();
             if (faceMaterial == Material.WALL_SIGN) {

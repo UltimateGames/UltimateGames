@@ -289,10 +289,8 @@ public class PlayerManager implements Listener {
             }
 
             // Stops the arena's starting countdown if there is not enough players anymore
-            if (arena.getPlayers().size() < arena.getMinPlayers()) {
-                if (ultimateGames.getCountdownManager().hasStartingCountdown(arena)) {
-                    ultimateGames.getCountdownManager().stopStartingCountdown(arena);
-                }
+            if (arena.getPlayers().size() < arena.getMinPlayers() && ultimateGames.getCountdownManager().hasStartingCountdown(arena)) {
+                ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             }
 
             // Updates the arena's lobby signs

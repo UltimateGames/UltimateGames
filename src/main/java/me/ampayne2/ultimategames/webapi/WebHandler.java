@@ -20,5 +20,5 @@ package me.ampayne2.ultimategames.webapi;
 
 public interface WebHandler {
 
-    public String sendResult();
+    String sendResult();
 }

@@ -89,12 +89,10 @@ public class CountdownManager {
      * @param seconds Initial seconds on the countdown.
      */
     public void createStartingCountdown(Arena arena, Integer seconds) {
-        if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
-            if (!starting.containsKey(arena)) {
-                StartingCountdown countdown = new StartingCountdown(ultimateGames, arena, seconds);
-                countdown.start();
-                starting.put(arena, countdown);
-            }
+        if (arena.getGame().getGamePlugin().isStartPossible(arena) && !starting.containsKey(arena)) {
+            StartingCountdown countdown = new StartingCountdown(ultimateGames, arena, seconds);
+            countdown.start();
+            starting.put(arena, countdown);
         }
     }
 
