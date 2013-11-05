@@ -19,12 +19,11 @@
 package me.ampayne2.ultimategames.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.enums.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
-import me.ampayne2.ultimategames.items.GameItem;
+import me.ampayne2.ultimategames.games.items.GameItem;
 import me.ampayne2.ultimategames.players.PlayerManager;
-import me.ampayne2.ultimategames.teams.Team;
-import me.ampayne2.ultimategames.teams.TeamManager;
+import me.ampayne2.ultimategames.players.teams.Team;
+import me.ampayne2.ultimategames.players.teams.TeamManager;
 import me.ampayne2.ultimategames.utils.UGUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -303,7 +302,7 @@ public class ArenaListener implements Listener {
             ItemStack item = player.getItemInHand();
             if (item != null && ultimateGames.getGameItemManager().isRegistered(game, item)) {
                 GameItem gameItem = ultimateGames.getGameItemManager().getGameItem(game, item);
-                if (gameItem.click(event) && gameItem.isConsumable()) {
+                if (gameItem.click(event) && gameItem.hasSingleUse()) {
                     ItemStack itemStack = player.getItemInHand();
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.setItemInHand(itemStack.getAmount() == 0 ? null : itemStack);

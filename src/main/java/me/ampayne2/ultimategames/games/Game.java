@@ -19,7 +19,6 @@
 package me.ampayne2.ultimategames.games;
 
 import me.ampayne2.ultimategames.api.GamePlugin;
-import me.ampayne2.ultimategames.enums.PlayerType;
 
 import java.util.List;
 

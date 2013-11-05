@@ -19,11 +19,10 @@
 package me.ampayne2.ultimategames.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.enums.ArenaStatus;
-import me.ampayne2.ultimategames.enums.EndType;
-import me.ampayne2.ultimategames.events.*;
+import me.ampayne2.ultimategames.arenas.spawnpoints.PlayerSpawnPoint;
+import me.ampayne2.ultimategames.events.arenas.*;
 import me.ampayne2.ultimategames.games.Game;
-import me.ampayne2.ultimategames.teams.Team;
+import me.ampayne2.ultimategames.players.teams.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

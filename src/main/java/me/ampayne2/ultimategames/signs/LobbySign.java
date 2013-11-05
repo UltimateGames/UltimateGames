@@ -20,9 +20,8 @@ package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.enums.ArenaStatus;
-import me.ampayne2.ultimategames.enums.PlayerType;
-import me.ampayne2.ultimategames.enums.SignType;
+import me.ampayne2.ultimategames.arenas.ArenaStatus;
+import me.ampayne2.ultimategames.games.PlayerType;
 import me.ampayne2.ultimategames.players.QueueManager;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;

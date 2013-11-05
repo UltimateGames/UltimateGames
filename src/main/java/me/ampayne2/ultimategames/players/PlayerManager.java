@@ -20,11 +20,11 @@ package me.ampayne2.ultimategames.players;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.arenas.PlayerSpawnPoint;
-import me.ampayne2.ultimategames.classes.GameClass;
-import me.ampayne2.ultimategames.enums.SignType;
-import me.ampayne2.ultimategames.events.*;
-import me.ampayne2.ultimategames.scoreboards.ArenaScoreboard;
+import me.ampayne2.ultimategames.arenas.scoreboards.ArenaScoreboard;
+import me.ampayne2.ultimategames.arenas.spawnpoints.PlayerSpawnPoint;
+import me.ampayne2.ultimategames.events.players.*;
+import me.ampayne2.ultimategames.players.classes.GameClass;
+import me.ampayne2.ultimategames.signs.SignType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

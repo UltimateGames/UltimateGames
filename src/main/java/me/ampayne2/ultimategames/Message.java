@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames;
 
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.games.Game;
-import me.ampayne2.ultimategames.teams.Team;
+import me.ampayne2.ultimategames.players.teams.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;

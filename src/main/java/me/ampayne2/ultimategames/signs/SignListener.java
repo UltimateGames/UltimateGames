@@ -19,7 +19,6 @@
 package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.utils.UGUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

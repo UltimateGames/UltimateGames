@@ -19,7 +19,6 @@
 package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.enums.SignType;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 

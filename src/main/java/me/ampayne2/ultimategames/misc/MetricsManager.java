@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.misc;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.enums.ArenaStatus;
+import me.ampayne2.ultimategames.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;

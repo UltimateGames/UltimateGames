@@ -19,10 +19,9 @@
 package me.ampayne2.ultimategames.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.enums.ArenaStatus;
-import me.ampayne2.ultimategames.enums.PlayerType;
-import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.games.Game;
+import me.ampayne2.ultimategames.games.PlayerType;
+import me.ampayne2.ultimategames.signs.SignType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

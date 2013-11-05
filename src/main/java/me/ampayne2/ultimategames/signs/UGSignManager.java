@@ -20,7 +20,6 @@ package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.enums.SignType;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
