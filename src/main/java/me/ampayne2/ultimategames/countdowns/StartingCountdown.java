@@ -39,7 +39,7 @@ public class StartingCountdown extends Countdown {
     private static final int TPS = 20;
 
     /**
-     * Creates a new Ending Countdown.
+     * Creates a new Starting Countdown.
      *
      * @param ultimateGames A reference to the UltimateGames instance.
      * @param arena         The arena of the countdown.
@@ -47,6 +47,7 @@ public class StartingCountdown extends Countdown {
     public StartingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds) {
         super(ultimateGames, arena, initialSeconds * TPS, TPS);
         this.initialSeconds = initialSeconds;
+        arena.setStatus(ArenaStatus.STARTING);
     }
 
     public int getSecondsLeft() {
@@ -64,16 +65,15 @@ public class StartingCountdown extends Countdown {
         }
         if (secondsLeft > END_COUNTDOWN_TIME && initialSeconds == secondsLeft) {
             ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-            arena.setStatus(ArenaStatus.STARTING);
         } else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
             ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
         } else if (secondsLeft == END_COUNTDOWN_TIME) {
+            ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+            ultimateGames.getArenaManager().beginArena(arena);
             for (String playerName : arena.getPlayers()) {
                 Player player = Bukkit.getPlayerExact(playerName);
                 FINAL_SOUND.play(player, player.getLocation());
             }
-            ultimateGames.getCountdownManager().stopStartingCountdown(arena);
-            ultimateGames.getArenaManager().beginArena(arena);
         }
         ticksLeft -= TPS;
     }

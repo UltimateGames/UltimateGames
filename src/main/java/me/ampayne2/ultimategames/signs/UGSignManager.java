@@ -209,6 +209,7 @@ public class UGSignManager {
         for (UGSign ugSign : getUGSignsOfArena(arena, signType)) {
             ugSign.update();
         }
+        ultimateGames.getMessageManager().debug("Updated signs of arena " + arena.getName() + " of game " + arena.getGame().getName() + " of type " + signType.name());
     }
 
     /**
@@ -220,6 +221,7 @@ public class UGSignManager {
         for (UGSign ugSign : getUGSignsOfArena(arena)) {
             ugSign.update();
         }
+        ultimateGames.getMessageManager().debug("Updated signs of arena " + arena.getName() + " of game " + arena.getGame().getName());
     }
 
     /**

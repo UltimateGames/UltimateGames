@@ -396,6 +396,7 @@ public class Arena implements Listener {
         if (status == ArenaStatus.RUNNING) {
             timesPlayed += 1;
         }
+        ultimateGames.getMessageManager().debug("Set status of arena " + arenaName + " of game " + game.getName() + " to " + status.toString());
     }
 
     /**

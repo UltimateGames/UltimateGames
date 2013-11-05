@@ -146,6 +146,7 @@ public class PlayerManager implements Listener {
             // Add the player to the arena and make the player an ArenaPlayer object
             if (arena.addPlayer(player.getName()) && arena.getGame().getGamePlugin().addPlayer(player, arena)) {
                 players.put(playerName, new ArenaPlayer(playerName, arena));
+                ultimateGames.getMessageManager().debug("Added player " + playerName + " to arena " + arena.getName() + " of game " + arena.getGame().getName());
 
                 // Update the arena's lobby signs
                 ultimateGames.getUGSignManager().updateUGSignsOfArena(arena, SignType.LOBBY);
@@ -287,6 +288,8 @@ public class PlayerManager implements Listener {
             if (location != null) {
                 player.teleport(location);
             }
+
+            ultimateGames.getMessageManager().debug("Removed player " + playerName + " from arena " + arena.getName() + " of game " + arena.getGame().getName());
 
             // Stops the arena's starting countdown if there is not enough players anymore
             if (arena.getPlayers().size() < arena.getMinPlayers() && ultimateGames.getCountdownManager().hasStartingCountdown(arena)) {

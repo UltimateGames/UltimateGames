@@ -214,6 +214,7 @@ public class ArenaManager {
                             for (String playerName : ultimateGames.getQueueManager().getNextPlayers(arena.getMaxPlayers() - arena.getPlayers().size(), arena)) {
                                 ultimateGames.getPlayerManager().addPlayerToArena(Bukkit.getPlayerExact(playerName), arena, true);
                             }
+                            ultimateGames.getMessageManager().debug("Opened arena " + arena.getName() + " of game " + arena.getGame().getName());
                         }
                         break;
                     default:
@@ -241,6 +242,7 @@ public class ArenaManager {
                         if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
                             arena.setStatus(ArenaStatus.STARTING);
                             arena.getGame().getGamePlugin().startArena(arena);
+                            ultimateGames.getMessageManager().debug("Started arena " + arena.getName() + " of game " + arena.getGame().getName());
                         }
                     default:
                 }
@@ -270,6 +272,7 @@ public class ArenaManager {
                         if (arena.getGame().getGamePlugin().beginArena(arena)) {
                             arena.setStatus(ArenaStatus.RUNNING);
                             ultimateGames.getMessageManager().sendMessage(arena, "arenas.begin");
+                            ultimateGames.getMessageManager().debug("Began arena " + arena.getName() + " of game " + arena.getGame().getName());
                         }
                     default:
                 }
@@ -318,6 +321,7 @@ public class ArenaManager {
                         ultimateGames.getPlayerManager().removePlayerFromArena(Bukkit.getPlayerExact(playerName), false);
                     }
 
+                    ultimateGames.getMessageManager().debug("Ended arena " + arena.getName() + " of game " + arena.getGame().getName());
                     Bukkit.getPluginManager().callEvent(event);
                     if (arena.resetAfterMatch()) {
                         arena.setStatus(ArenaStatus.RESETTING);
@@ -350,6 +354,7 @@ public class ArenaManager {
                 case RESET_FAILED:
                     arena.setStatus(ArenaStatus.ARENA_STOPPED);
                     arena.getGame().getGamePlugin().stopArena(arena);
+                    ultimateGames.getMessageManager().debug("Stopped arena " + arena.getName() + " of game " + arena.getGame().getName());
                     Bukkit.getPluginManager().callEvent(new ArenaStopEvent(arena));
                 default:
             }
