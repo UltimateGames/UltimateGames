@@ -302,7 +302,7 @@ public class ArenaListener implements Listener {
             ItemStack item = player.getItemInHand();
             if (item != null && ultimateGames.getGameItemManager().isRegistered(game, item)) {
                 GameItem gameItem = ultimateGames.getGameItemManager().getGameItem(game, item);
-                if (gameItem.click(event) && gameItem.hasSingleUse()) {
+                if (gameItem.click(arena, event) && gameItem.hasSingleUse()) {
                     ItemStack itemStack = player.getItemInHand();
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.setItemInHand(itemStack.getAmount() == 0 ? null : itemStack);

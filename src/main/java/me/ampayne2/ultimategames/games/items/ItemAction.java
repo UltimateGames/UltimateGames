@@ -18,9 +18,13 @@
  */
 package me.ampayne2.ultimategames.games.items;
 
+import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+/**
+ * Performs an action when a GameItem is clicked with a certain interact action.
+ */
 public abstract class ItemAction {
     protected Action action;
 
@@ -28,9 +32,21 @@ public abstract class ItemAction {
         this.action = action;
     }
 
+    /**
+     * Gets the interact action that performs this ItemAction.
+     *
+     * @return The Action.
+     */
     public Action getAction() {
         return action;
     }
 
-    public abstract boolean perform(PlayerInteractEvent event);
+    /**
+     * Performs the action.
+     *
+     * @param arena The arena the action was performed in.
+     * @param event The PlayerInteractEvent.
+     * @return True if the action was performed successfuly. Used for single use items.
+     */
+    public abstract boolean perform(Arena arena, PlayerInteractEvent event);
 }

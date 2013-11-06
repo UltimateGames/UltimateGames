@@ -18,6 +18,7 @@
  */
 package me.ampayne2.ultimategames.games.items;
 
+import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -75,10 +76,10 @@ public class GameItem {
      *
      * @param event The PlayerInteractEvent.
      */
-    public boolean click(PlayerInteractEvent event) {
+    public boolean click(Arena arena, PlayerInteractEvent event) {
         for (ItemAction action : actions) {
             if (event.getAction() == action.getAction()) {
-                return action.perform(event);
+                return action.perform(arena, event);
             }
         }
         return false;
