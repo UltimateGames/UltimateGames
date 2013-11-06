@@ -70,12 +70,7 @@ public class LobbySign extends UGSign {
         ArenaStatus arenaStatus = arena.getStatus();
         ChatColor statusColor = arenaStatus.getColor();
 
-        if (arenaStatus == ArenaStatus.ARENA_STOPPED || arenaStatus == ArenaStatus.GAME_STOPPED) {
-            lines.add(statusColor + "[STOPPED]");
-        } else {
-            lines.add(statusColor + "[" + arenaStatus.toString() + "]");
-        }
-
+        lines.add(statusColor + "[" + arenaStatus.toString() + "]");
         lines.add(arena.getGame().getName());
         lines.add(arena.getName());
 
