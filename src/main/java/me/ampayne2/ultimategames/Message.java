@@ -40,18 +40,26 @@ import java.util.logging.Logger;
 
 public class Message {
     private final UltimateGames ultimateGames;
+    private final boolean debug;
+    private final String messagePrefix;
     private Map<String, String> messages = new HashMap<String, String>();
     private Map<String, Map<String, String>> gameMessages = new HashMap<String, Map<String, String>>();
 
     public Message(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
+        debug = ultimateGames.getConfig().getBoolean("debug");
+        String prefix = messages.get("prefix");
+        if (prefix == null) {
+            prefix = "&8[&bUltimateGames&8] ";
+        }
+        messagePrefix = ChatColor.translateAlternateColorCodes('&', prefix);
         loadMessages();
     }
 
     public void loadMessages() {
         FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
         for (String key : messageConfig.getConfigurationSection("Messages").getKeys(true)) {
-            messages.put(key, messageConfig.getString("Messages." + key));
+            messages.put(key, ChatColor.translateAlternateColorCodes('&', messageConfig.getString("Messages." + key)));
         }
     }
 
@@ -66,7 +74,7 @@ public class Message {
             gameMessages.remove(game.getName());
             Map<String, String> messages = new HashMap<String, String>();
             for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
-                messages.put(key, gameConfig.getString("Messages." + key));
+                messages.put(key, ChatColor.translateAlternateColorCodes('&', gameConfig.getString("Messages." + key)));
             }
             gameMessages.put(game.getName(), messages);
         }
@@ -78,11 +86,7 @@ public class Message {
      * @return The message prefix.
      */
     public String getPrefix() {
-        String prefix = messages.get("prefix");
-        if (prefix == null) {
-            prefix = "&8[&bUltimateGames&8] ";
-        }
-        return ChatColor.translateAlternateColorCodes('&', prefix);
+        return messagePrefix;
     }
 
     /**
@@ -96,7 +100,7 @@ public class Message {
         if (message == null) {
             message = ChatColor.DARK_RED + "No configured message for " + path;
         }
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return message;
     }
 
     /**
@@ -112,7 +116,7 @@ public class Message {
         if (message == null) {
             message = ChatColor.DARK_RED + "No configured message for " + path;
         }
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return message;
     }
 
     /**
@@ -124,7 +128,7 @@ public class Message {
      * @return True if the message was sent, else false.
      */
     public boolean sendMessage(Object recipient, String path, String... replace) {
-        return sendRawMessage(recipient, getPrefix() + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
+        return sendRawMessage(recipient, messagePrefix + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
     }
 
     /**
@@ -137,7 +141,7 @@ public class Message {
      * @return True if the message was sent, else false.
      */
     public boolean sendGameMessage(Object recipient, Game game, String path, String... replace) {
-        return sendRawMessage(recipient, getPrefix() + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
+        return sendRawMessage(recipient, messagePrefix + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
     }
 
     /**
@@ -183,8 +187,9 @@ public class Message {
      * @param messages the message(s) to log.
      */
     public void log(Level level, String... messages) {
+        Logger log = ultimateGames.getLogger();
         for (String message : messages) {
-            ultimateGames.getLogger().log(level, message);
+            log.log(level, message);
         }
     }
 
@@ -224,7 +229,7 @@ public class Message {
      * @param message the message to debug.
      */
     public void debug(String message) {
-        if (ultimateGames.getConfig().getBoolean("debug")) {
+        if (debug) {
             ultimateGames.getLogger().log(Level.INFO, message);
         }
     }

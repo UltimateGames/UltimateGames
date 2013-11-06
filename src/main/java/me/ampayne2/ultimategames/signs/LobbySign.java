@@ -78,7 +78,7 @@ public class LobbySign extends UGSign {
         if (playerType == PlayerType.INFINITE) {
             lines.add("");
         } else {
-            lines.add(statusColor + arena.getPlayers().size() + " / " + arena.getMaxPlayers());
+            lines.add(statusColor + "" + arena.getPlayers().size() + " / " + arena.getMaxPlayers());
         }
 
         return lines;
