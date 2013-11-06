@@ -70,7 +70,7 @@ public class LobbySign extends UGSign {
         ArenaStatus arenaStatus = arena.getStatus();
         ChatColor statusColor = arenaStatus.getColor();
 
-        lines.add(statusColor + "[" + arenaStatus.toString() + "]");
+        lines.add(statusColor + "[" + arenaStatus.getDisplayName() + "]");
         lines.add(arena.getGame().getName());
         lines.add(arena.getName());
 
@@ -78,7 +78,7 @@ public class LobbySign extends UGSign {
         if (playerType == PlayerType.INFINITE) {
             lines.add("");
         } else {
-            lines.add(statusColor + Integer.toString(arena.getPlayers().size()) + " / " + Integer.toString(arena.getMaxPlayers()));
+            lines.add(statusColor + arena.getPlayers().size() + " / " + arena.getMaxPlayers());
         }
 
         return lines;
