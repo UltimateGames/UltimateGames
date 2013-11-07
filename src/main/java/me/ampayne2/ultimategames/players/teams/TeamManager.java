@@ -217,17 +217,17 @@ public class TeamManager {
      * @param arena The arena to sort the players of.
      */
     public void sortPlayersIntoTeams(Arena arena) {
-        List<Team> teams = getTeamsOfArena(arena);
+        List<Team> arenaTeams = getTeamsOfArena(arena);
         List<String> players = arena.getPlayers();
         List<String> playersInTeams = new ArrayList<String>();
         List<String> playersNotInTeams = arena.getPlayers();
-        for (Team team : teams) {
+        for (Team team : arenaTeams) {
             for (String playerName : team.getPlayers()) {
                 playersInTeams.add(playerName);
                 playersNotInTeams.remove(playerName);
             }
         }
-        int teamAmount = teams.size();
+        int teamAmount = arenaTeams.size();
         int playerAmount = players.size();
         int playersInTeamsAmount = playersInTeams.size();
         int playersNotInTeamsAmount = playersNotInTeams.size();
@@ -259,7 +259,7 @@ public class TeamManager {
         }
 
         // Kick the last players to join each team from their team if the team is too full.
-        for (Team team : teams) {
+        for (Team team : arenaTeams) {
             List<String> teamPlayers = team.getPlayers();
             while ((playerAmount / teamAmount) < teamPlayers.size()) {
                 String playerName = teamPlayers.get(teamPlayers.size() - 1);
@@ -271,7 +271,7 @@ public class TeamManager {
 
         // Add the players not in teams yet to the teams that need players.
         Random generator = new Random();
-        for (Team team : teams) {
+        for (Team team : arenaTeams) {
             while ((playerAmount / teamAmount) > team.getPlayers().size()) {
                 String playerName = playersNotInTeams.get(generator.nextInt(playersNotInTeams.size()));
                 Player player = Bukkit.getPlayerExact(playerName);

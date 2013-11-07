@@ -43,6 +43,6 @@ public class SpectatorSpawnPoint extends SpawnPoint {
      * @param player The player to teleport.
      */
     public void teleportPlayer(Player player) {
-        player.teleport(location);
+        player.teleport(getLocation());
     }
 }

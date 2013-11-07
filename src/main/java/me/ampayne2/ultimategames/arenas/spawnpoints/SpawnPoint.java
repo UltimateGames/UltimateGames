@@ -26,8 +26,8 @@ import org.bukkit.entity.Player;
  * The base class for a spawnpoint.
  */
 public abstract class SpawnPoint {
-    protected final Arena arena;
-    protected final Location location;
+    private final Arena arena;
+    private final Location location;
 
     /**
      * Creates a new SpawnPoint

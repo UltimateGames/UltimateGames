@@ -31,4 +31,13 @@ public abstract class GameEffect implements Effect {
     public GameEffect(Effect... effects) {
         this.effects.addAll(Arrays.asList(effects));
     }
+
+    /**
+     * Gets the GameEffect's effects.
+     *
+     * @return The effects of the GameEffect.
+     */
+    public Set<Effect> getEffects() {
+        return effects;
+    }
 }

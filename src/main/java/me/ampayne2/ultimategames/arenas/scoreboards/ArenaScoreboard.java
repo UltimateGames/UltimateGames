@@ -38,10 +38,8 @@ public class ArenaScoreboard {
      * @param name The name of the ArenaScoreboard.
      */
     public ArenaScoreboard(String name) {
-        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective(name, "dummy");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        this.scoreboard = scoreboard;
+        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        scoreboard.registerNewObjective(name, "dummy").setDisplaySlot(DisplaySlot.SIDEBAR);
         this.name = name;
     }
 

@@ -405,7 +405,7 @@ public class Arena implements Listener {
      * @return If the location is inside the arena or not.
      */
     public boolean locationIsInArena(Location location) {
-        return location.getWorld().equals(region.world) && location.getX() >= region.minX && location.getX() <= region.maxX && location.getZ() >= region.minZ && location.getZ() <= region.maxZ;
+        return location.getWorld().equals(region.getWorld()) && location.getX() >= region.getMinX() && location.getX() <= region.getMaxX() && location.getZ() >= region.getMinZ() && location.getZ() <= region.getMaxZ();
     }
 
     /**
@@ -420,18 +420,18 @@ public class Arena implements Listener {
             boolean left = false;
             int x = 0;
             int z = 0;
-            if (to.getX() < region.minX) {
-                x = (int) (region.minX - to.getX());
+            if (to.getX() < region.getMinX()) {
+                x = (int) (region.getMinX() - to.getX());
                 left = true;
-            } else if (to.getX() > region.maxX) {
-                x = (int) (region.maxX - to.getX());
+            } else if (to.getX() > region.getMaxX()) {
+                x = (int) (region.getMaxX() - to.getX());
                 left = true;
             }
-            if (to.getZ() < region.minZ) {
-                z = (int) (region.minZ - to.getZ());
+            if (to.getZ() < region.getMinZ()) {
+                z = (int) (region.getMinZ() - to.getZ());
                 left = true;
-            } else if (to.getZ() > region.maxZ) {
-                z = (int) (region.maxZ - to.getZ());
+            } else if (to.getZ() > region.getMaxZ()) {
+                z = (int) (region.getMaxZ() - to.getZ());
                 left = true;
             }
             if (left) {

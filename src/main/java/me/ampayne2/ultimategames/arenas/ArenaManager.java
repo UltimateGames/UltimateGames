@@ -66,7 +66,7 @@ public class ArenaManager {
                                         Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
                                         Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
                                         Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
-                                        Location location = new Location(region.world, x, y, z);
+                                        Location location = new Location(region.getWorld(), x, y, z);
                                         location.setPitch(pitch);
                                         location.setYaw(yaw);
                                         PlayerSpawnPoint newSpawnPoint = new PlayerSpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(LOCKED_INDEX)));
@@ -82,7 +82,7 @@ public class ArenaManager {
                                     Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
                                     Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
                                     Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
-                                    Location location = new Location(region.world, x, y, z);
+                                    Location location = new Location(region.getWorld(), x, y, z);
                                     location.setPitch(pitch);
                                     location.setYaw(yaw);
                                     ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(getArena(arenaKey, gameKey), location);

@@ -76,7 +76,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
      */
     public void teleportPlayer(Player player) {
         if (player != null) {
-            player.teleport(location);
+            player.teleport(getLocation());
             if (locked) {
                 this.playerName = player.getName();
             }
@@ -107,6 +107,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
                 return;
             }
             Player player = event.getPlayer();
+            Location location = getLocation();
             if (player.getName().equals(playerName) && (Math.abs(to.getX() - location.getX()) >= 1 || Math.abs(to.getZ() - location.getZ()) >= 1)) {
                 location.setPitch(event.getFrom().getPitch());
                 location.setYaw(event.getFrom().getYaw());

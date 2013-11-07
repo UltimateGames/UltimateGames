@@ -30,11 +30,11 @@ import java.util.List;
  * Represents a rectangular region in a world.
  */
 public class Region {
-    public final World world;
-    public final Double minX;
-    public final Double maxX;
-    public final Double minZ;
-    public final Double maxZ;
+    private final World world;
+    private final Double minX;
+    private final Double maxX;
+    private final Double minZ;
+    private final Double maxZ;
 
     /**
      * Creates a new region.
@@ -51,6 +51,51 @@ public class Region {
         this.maxX = maxX;
         this.minZ = minZ;
         this.maxZ = maxZ;
+    }
+
+    /**
+     * Gets the world of the region.
+     *
+     * @return The region's world.
+     */
+    public World getWorld() {
+        return world;
+    }
+
+    /**
+     * Gets the minimum x of the region.
+     *
+     * @return The region's minX.
+     */
+    public Double getMinX() {
+        return minX;
+    }
+
+    /**
+     * Gets the maximum x of the region.
+     *
+     * @return The region's maxX.
+     */
+    public Double getMaxX() {
+        return maxX;
+    }
+
+    /**
+     * Gets the minimum z of the region.
+     *
+     * @return The region's minZ.
+     */
+    public Double getMinZ() {
+        return minZ;
+    }
+
+    /**
+     * Gets the maximum z of the region.
+     *
+     * @return The region's maxZ.
+     */
+    public Double getMaxZ() {
+        return maxZ;
     }
 
     /**

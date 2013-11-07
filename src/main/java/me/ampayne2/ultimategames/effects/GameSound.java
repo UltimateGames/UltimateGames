@@ -26,9 +26,9 @@ import org.bukkit.entity.Player;
  * Holds the information needed to play a sound to simplify playing it.
  */
 public class GameSound implements Effect {
-    protected final Sound sound;
-    protected final float volume;
-    protected final float pitch;
+    private final Sound sound;
+    private final float volume;
+    private final float pitch;
 
     /**
      * Creates a new GameSound.

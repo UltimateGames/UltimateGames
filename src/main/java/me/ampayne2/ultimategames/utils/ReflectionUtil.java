@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,8 +64,8 @@ public abstract class ReflectionUtil {
     }
 
     public static class FieldEntry {
-        String key;
-        Object value;
+        private String key;
+        private Object value;
 
         public FieldEntry(String key, Object value) {
             this.key = key;
@@ -114,11 +115,11 @@ public abstract class ReflectionUtil {
         return true;
     }
 
-    public static Class<?> getClass(String name, DynamicPackage pack, String subPackage) throws Exception {
+    public static Class<?> getClass(String name, DynamicPackage pack, String subPackage) throws ClassNotFoundException {
         return Class.forName(pack + (subPackage != null && subPackage.length() > 0 ? "." + subPackage : "") + "." + name);
     }
 
-    public static Class<?> getClass(String name, DynamicPackage pack) throws Exception {
+    public static Class<?> getClass(String name, DynamicPackage pack) throws ClassNotFoundException {
         return getClass(name, pack, null);
     }
 
@@ -133,15 +134,15 @@ public abstract class ReflectionUtil {
         return null;
     }
 
-    public static Object newInstance(Class<?> clazz, Object... args) throws Exception {
+    public static Object newInstance(Class<?> clazz, Object... args) throws InstantiationException, IllegalAccessException, InvocationTargetException {
         return getConstructor(clazz, toPrimitiveTypeArray(args)).newInstance(args);
     }
 
-    public static Object newInstance(String name, DynamicPackage pack, String subPackage, Object... args) throws Exception {
+    public static Object newInstance(String name, DynamicPackage pack, String subPackage, Object... args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
         return newInstance(getClass(name, pack, subPackage), args);
     }
 
-    public static Object newInstance(String name, DynamicPackage pack, Object... args) throws Exception {
+    public static Object newInstance(String name, DynamicPackage pack, Object... args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
         return newInstance(getClass(name, pack, null), args);
     }
 
@@ -156,27 +157,27 @@ public abstract class ReflectionUtil {
         return null;
     }
 
-    public static Object invokeMethod(String name, Class<?> clazz, Object obj, Object... args) throws Exception {
+    public static Object invokeMethod(String name, Class<?> clazz, Object obj, Object... args) throws IllegalAccessException, InvocationTargetException {
         return getMethod(name, clazz, toPrimitiveTypeArray(args)).invoke(obj, args);
     }
 
-    public static Field getField(String name, Class<?> clazz) throws Exception {
+    public static Field getField(String name, Class<?> clazz) throws NoSuchFieldException {
         return clazz.getDeclaredField(name);
     }
 
-    public static Object getValue(String name, Object obj) throws Exception {
+    public static Object getValue(String name, Object obj) throws NoSuchFieldException, IllegalAccessException {
         Field f = getField(name, obj.getClass());
         f.setAccessible(true);
         return f.get(obj);
     }
 
-    public static void setValue(Object obj, FieldEntry entry) throws Exception {
+    public static void setValue(Object obj, FieldEntry entry) throws NoSuchFieldException, IllegalAccessException {
         Field f = getField(entry.getKey(), obj.getClass());
         f.setAccessible(true);
         f.set(obj, entry.getValue());
     }
 
-    public static void setValues(Object obj, FieldEntry... entrys) throws Exception {
+    public static void setValues(Object obj, FieldEntry... entrys) throws NoSuchFieldException, IllegalAccessException {
         for (FieldEntry f : entrys) {
             setValue(obj, f);
         }

@@ -38,10 +38,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class UGUtils {
+public final class UGUtils {
     private static final long AUTO_RESPAWN_DELAY = 1L;
     private static final double TARGETER_ACCURACY = 1.0;
     private static final BlockFace[] FACES = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+
+    private UGUtils() {
+
+    }
 
     /**
      * Gets the ordinal suffix of an integer.

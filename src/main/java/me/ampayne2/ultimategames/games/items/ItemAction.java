@@ -26,7 +26,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * Performs an action when a GameItem is clicked with a certain interact action.
  */
 public abstract class ItemAction {
-    protected Action action;
+    private Action action;
 
     public ItemAction(Action action) {
         this.action = action;

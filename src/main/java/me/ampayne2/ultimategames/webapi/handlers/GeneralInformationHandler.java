@@ -29,8 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GeneralInformationHandler implements WebHandler {
-
-    public UltimateGames plugin;
+    private UltimateGames plugin;
 
     public GeneralInformationHandler(UltimateGames ug) {
         this.plugin = ug;

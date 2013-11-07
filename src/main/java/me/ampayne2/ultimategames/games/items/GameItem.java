@@ -27,9 +27,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GameItem {
-    protected final ItemStack item;
-    protected final Set<ItemAction> actions;
-    protected boolean singleUse;
+    private final ItemStack item;
+    private final Set<ItemAction> actions;
+    private boolean singleUse;
 
     /**
      * Creates a new GameItem.
