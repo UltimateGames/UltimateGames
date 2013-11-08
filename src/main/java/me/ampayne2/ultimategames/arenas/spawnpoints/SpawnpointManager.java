@@ -66,7 +66,6 @@ public class SpawnpointManager {
             spawn.add(spawnPoint);
             playerSpawnPoints.put(spawnPoint.getArena(), spawn);
         }
-        ultimateGames.getServer().getPluginManager().registerEvents(spawnPoint, ultimateGames);
     }
 
     /**

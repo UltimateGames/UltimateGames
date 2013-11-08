@@ -111,6 +111,8 @@ public class Arena implements Listener {
         ultimateGames.getConfigManager().getGameConfig(game).saveConfig();
         ultimateGames.getConfigManager().getArenaConfig().saveConfig();
         timesPlayed = 0;
+
+        ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
     }
 
     /**

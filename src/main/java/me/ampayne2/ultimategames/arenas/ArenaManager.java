@@ -56,7 +56,6 @@ public class ArenaManager {
                             Region region = Region.fromList(arenaConfig.getStringList(arenaPath + ".Arena-Region"));
                             Arena arena = new Arena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, region.getMinimumLocation(), region.getMaximumLocation());
                             addArena(arena);
-                            Bukkit.getServer().getPluginManager().registerEvents(arena, ultimateGames);
                             if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
                                 @SuppressWarnings("unchecked") List<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
                                 if (!spawnPoints.isEmpty()) {

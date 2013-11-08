@@ -46,6 +46,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
         super(arena, location);
         this.ultimateGames = ultimateGames;
         this.locked = locked;
+        ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
     }
 
     /**
