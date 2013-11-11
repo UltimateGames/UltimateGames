@@ -28,6 +28,8 @@ import org.bukkit.inventory.Inventory;
 public abstract class UGChest {
     private final Chest chest;
     private final Arena arena;
+    private final ChestType chestType;
+    private final String label;
 
     /**
      * Creates a new chest
@@ -35,9 +37,11 @@ public abstract class UGChest {
      * @param chest Chest to be turned into UGChest.
      * @param arena Arena of the chest.
      */
-    public UGChest(Chest chest, Arena arena) {
+    public UGChest(Chest chest, Arena arena, ChestType chestType, String label) {
         this.chest = chest;
         this.arena = arena;
+        this.chestType = chestType;
+        this.label = label;
     }
 
     /**
@@ -70,5 +74,23 @@ public abstract class UGChest {
      */
     public Arena getArena() {
         return arena;
+    }
+
+    /**
+     * Gets the UGChest's ChestType.
+     *
+     * @return chestType The UGChest's ChestType.
+     */
+    public ChestType getChestType() {
+        return chestType;
+    }
+
+    /**
+     * Gets the UGChest's label.
+     *
+     * @return label The UGChest's label.
+     */
+    public String getLabel() {
+        return label;
     }
 }

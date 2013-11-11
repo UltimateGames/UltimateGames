@@ -39,7 +39,6 @@ public class Edit implements UGCommand {
                 player.setEditing(false);
             } else {
                 player.setEditing(true);
-                ultimateGames.getMessageManager().sendMessage(sender, "arenas.editon");
             }
         } else {
             ultimateGames.getMessageManager().sendMessage(sender, "arenas.notinarena");

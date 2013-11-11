@@ -23,8 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ChestType {
-    RANDOM(RandomChest.class, false),
-    STATIC(StaticChest.class, true);
+    RANDOM(RandomChest.class),
+    STATIC(StaticChest.class),
+    SPECIAL(SpecialChest.class);
 
     private static final Map<Class<?>, ChestType> CLASS_TYPES = new HashMap<Class<?>, ChestType>();
 
@@ -35,15 +36,9 @@ public enum ChestType {
     }
 
     private final Class<?> chestClass;
-    private final boolean hasLabel;
 
-    private ChestType(Class<?> chestClass, boolean hasLabel) {
-        this.hasLabel = hasLabel;
+    private ChestType(Class<?> chestClass) {
         this.chestClass = chestClass;
-    }
-
-    public boolean hasLabel() {
-        return hasLabel;
     }
 
     public Class<?> getClassType() {

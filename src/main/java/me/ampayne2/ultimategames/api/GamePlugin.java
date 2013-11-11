@@ -31,10 +31,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 
 /**
  * The API used for creating an Ultimate Game.
@@ -318,6 +315,15 @@ public abstract class GamePlugin implements Listener {
      * @param event The PlayerDropItemEvent.
      */
     public void onItemDrop(Arena arena, PlayerDropItemEvent event) {
+    }
+
+    /**
+     * Handles players moving in arenas.
+     *
+     * @param arena The arena the player is in.
+     * @param event The PlayerMoveEvent.
+     */
+    public void onPlayerMove(Arena arena, PlayerMoveEvent event) {
     }
 
     /**

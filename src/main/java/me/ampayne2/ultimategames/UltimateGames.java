@@ -26,6 +26,7 @@ import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.arenas.countdowns.CountdownManager;
 import me.ampayne2.ultimategames.arenas.scoreboards.ScoreboardManager;
 import me.ampayne2.ultimategames.arenas.spawnpoints.SpawnpointManager;
+import me.ampayne2.ultimategames.chests.UGChestManager;
 import me.ampayne2.ultimategames.command.CommandController;
 import me.ampayne2.ultimategames.config.ConfigManager;
 import me.ampayne2.ultimategames.database.DatabaseManager;
@@ -59,7 +60,7 @@ public class UltimateGames extends JavaPlugin {
     private TeamManager teamManager;
     private ArenaManager arenaManager;
     private UGSignManager ugSignManager;
-    //private UGChestManager ugChestManager;
+    private UGChestManager ugChestManager;
     private QueueManager queueManager;
     private Message messageManager;
     private SpawnpointManager spawnpointManager;
@@ -105,7 +106,7 @@ public class UltimateGames extends JavaPlugin {
         }
         jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
         ugSignManager = new UGSignManager(this);
-        //ugChestManager = new UGChestManager(this);
+        ugChestManager = new UGChestManager(this);
         countdownManager = new CountdownManager(this);
         lobbyManager = new LobbyManager(this);
         whitelistManager = new WhitelistManager(this);
@@ -176,11 +177,9 @@ public class UltimateGames extends JavaPlugin {
         return ugSignManager;
     }
 
-	/*
     public UGChestManager getUGChestManager() {
-		return ugChestManager;
-	}
-	*/
+        return ugChestManager;
+    }
 
     public GameClassManager getGameClassManager() {
         return gameClassManager;

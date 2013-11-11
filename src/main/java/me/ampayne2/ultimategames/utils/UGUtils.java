@@ -91,69 +91,6 @@ public final class UGUtils {
     }
 
     /**
-     * Converts a ChatColor to a Color.
-     *
-     * @param chatColor The ChatColor.
-     * @return The Color.
-     */
-    public static Color chatColorToColor(ChatColor chatColor) {
-        Color color;
-        switch (chatColor) {
-            case BLACK:
-                color = Color.BLACK;
-                break;
-            case DARK_BLUE:
-                color = Color.NAVY;
-                break;
-            case DARK_GREEN:
-                color = Color.GREEN;
-                break;
-            case DARK_AQUA:
-                color = Color.AQUA;
-                break;
-            case DARK_RED:
-                color = Color.MAROON;
-                break;
-            case DARK_PURPLE:
-                color = Color.PURPLE;
-                break;
-            case GOLD:
-                color = Color.ORANGE;
-                break;
-            case GRAY:
-                color = Color.SILVER;
-                break;
-            case DARK_GRAY:
-                color = Color.GRAY;
-                break;
-            case BLUE:
-                color = Color.BLUE;
-                break;
-            case GREEN:
-                color = Color.LIME;
-                break;
-            case AQUA:
-                color = Color.TEAL;
-                break;
-            case RED:
-                color = Color.RED;
-                break;
-            case LIGHT_PURPLE:
-                color = Color.FUCHSIA;
-                break;
-            case YELLOW:
-                color = Color.YELLOW;
-                break;
-            case WHITE:
-                color = Color.WHITE;
-                break;
-            default:
-                color = Color.WHITE;
-        }
-        return color;
-    }
-
-    /**
      * Creates an instruction book for a game.
      *
      * @param game The game.

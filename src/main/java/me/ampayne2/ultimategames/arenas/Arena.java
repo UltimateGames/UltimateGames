@@ -441,6 +441,7 @@ public class Arena implements Listener {
                 player.setVelocity(vector);
                 ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
             }
+            game.getGamePlugin().onPlayerMove(this, event);
         }
     }
 

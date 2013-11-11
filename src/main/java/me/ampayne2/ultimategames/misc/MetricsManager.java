@@ -31,7 +31,6 @@ public class MetricsManager {
     private final UltimateGames ultimateGames;
     private Metrics metrics;
     private Graph gamesLoadedGraph;
-    private Graph arenasLoadedGraph;
     private Graph totalArenasPlayedGraph;
     private Graph arenasBeingPlayedGraph;
     private Graph totalPlayersInArenasGraph;
@@ -43,7 +42,6 @@ public class MetricsManager {
             metrics = new Metrics(ultimateGames);
 
             gamesLoadedGraph = metrics.createGraph("Games Loaded");
-            arenasLoadedGraph = metrics.createGraph("Arenas Loaded");
             totalArenasPlayedGraph = metrics.createGraph("Total Arenas Played");
             arenasBeingPlayedGraph = metrics.createGraph("Arenas Currently Being Played");
             playersInArenasGraph = metrics.createGraph("Players Currently In Arenas");
@@ -100,12 +98,6 @@ public class MetricsManager {
     }
 
     public void addArena(final Arena arena) {
-        arenasLoadedGraph.addPlotter(new Metrics.Plotter(arena.getGame().getName() + " : " + arena.getName()) {
-            @Override
-            public int getValue() {
-                return 1;
-            }
-        });
         totalArenasPlayedGraph.addPlotter(new Metrics.Plotter(arena.getGame().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {
@@ -131,12 +123,6 @@ public class MetricsManager {
     }
 
     public void removeArena(final Arena arena) {
-        arenasLoadedGraph.removePlotter(new Metrics.Plotter(arena.getGame().getName() + " : " + arena.getName()) {
-            @Override
-            public int getValue() {
-                return 1;
-            }
-        });
         totalArenasPlayedGraph.removePlotter(new Metrics.Plotter(arena.getGame().getName() + " : " + arena.getName()) {
             @Override
             public int getValue() {

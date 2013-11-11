@@ -89,6 +89,15 @@ public abstract class GameClass {
     }
 
     /**
+     * Gets the players in the GameClass.
+     *
+     * @return The players in the class.
+     */
+    public List<String> getPlayers() {
+        return new ArrayList<String>(players);
+    }
+
+    /**
      * Adds a player to the GameClass.
      *
      * @param player The player to add to the GameClass.

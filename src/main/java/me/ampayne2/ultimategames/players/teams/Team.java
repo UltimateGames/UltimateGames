@@ -127,7 +127,7 @@ public class Team {
      * @return The players in a team.
      */
     public List<String> getPlayers() {
-        return players;
+        return new ArrayList<String>(players);
     }
 
     /**

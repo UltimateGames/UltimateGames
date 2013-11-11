@@ -23,26 +23,23 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.block.Chest;
 
 /**
- * A type of UGChest that has static configurable contents.
+ * A type of UGChest that contains static contents.
  */
 public class StaticChest extends UGChest {
     @SuppressWarnings("unused")
     private final UltimateGames ultimateGames;
-    @SuppressWarnings("unused")
-    private final String label;
 
     /**
      * Creates a new StaticChest.
      *
      * @param ultimateGames A reference to the UltimateGames instance.
-     * @param label         The label of the StaticChest.
      * @param chest         The chest.
      * @param arena         The arena.
+     * @param label         The label.
      */
-    public StaticChest(UltimateGames ultimateGames, String label, Chest chest, Arena arena) {
-        super(chest, arena);
+    public StaticChest(UltimateGames ultimateGames, Chest chest, Arena arena, String label) {
+        super(chest, arena, ChestType.STATIC, label);
         this.ultimateGames = ultimateGames;
-        this.label = label;
     }
 
     /**
@@ -50,6 +47,6 @@ public class StaticChest extends UGChest {
      */
     @Override
     public void reset() {
-
+        // TODO: Resetting static chests
     }
 }

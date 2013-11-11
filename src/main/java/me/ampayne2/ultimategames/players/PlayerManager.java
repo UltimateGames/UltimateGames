@@ -145,7 +145,7 @@ public class PlayerManager implements Listener {
 
             // Add the player to the arena and make the player an ArenaPlayer object
             if (arena.addPlayer(player.getName()) && arena.getGame().getGamePlugin().addPlayer(player, arena)) {
-                players.put(playerName, new ArenaPlayer(playerName, arena));
+                players.put(playerName, new ArenaPlayer(ultimateGames, playerName, arena));
                 ultimateGames.getMessageManager().debug("Added player " + playerName + " to arena " + arena.getName() + " of game " + arena.getGame().getName());
 
                 // Update the arena's lobby signs

@@ -18,11 +18,13 @@
  */
 package me.ampayne2.ultimategames.players;
 
+import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ArenaPlayer {
+    private final UltimateGames ultimateGames;
     private final String playerName;
     private final Arena arena;
     private boolean editing = false;
@@ -33,7 +35,8 @@ public class ArenaPlayer {
      * @param playerName The player's name.
      * @param arena      The arena.
      */
-    public ArenaPlayer(String playerName, Arena arena) {
+    public ArenaPlayer(UltimateGames ultimateGames, String playerName, Arena arena) {
+        this.ultimateGames = ultimateGames;
         this.playerName = playerName;
         this.arena = arena;
     }
@@ -81,5 +84,6 @@ public class ArenaPlayer {
      */
     public void setEditing(boolean editing) {
         this.editing = editing;
+        ultimateGames.getMessageManager().sendMessage(getPlayer(), editing ? "arenas.editon" : "arenas.editoff");
     }
 }

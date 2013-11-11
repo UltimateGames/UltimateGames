@@ -23,7 +23,7 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.block.Chest;
 
 /**
- * A type of UGChest that has random configurable contents.
+ * A type of UGChest that contains random contents.
  */
 public class RandomChest extends UGChest {
     @SuppressWarnings("unused")
@@ -35,9 +35,10 @@ public class RandomChest extends UGChest {
      * @param ultimateGames A reference to the UltimateGames instance.
      * @param chest         The chest.
      * @param arena         The arena.
+     * @param label         The label.
      */
-    public RandomChest(UltimateGames ultimateGames, Chest chest, Arena arena) {
-        super(chest, arena);
+    public RandomChest(UltimateGames ultimateGames, Chest chest, Arena arena, String label) {
+        super(chest, arena, ChestType.RANDOM, label);
         this.ultimateGames = ultimateGames;
     }
 
@@ -46,6 +47,6 @@ public class RandomChest extends UGChest {
      */
     @Override
     public void reset() {
-
+        // TODO: Resetting random chests
     }
 }
