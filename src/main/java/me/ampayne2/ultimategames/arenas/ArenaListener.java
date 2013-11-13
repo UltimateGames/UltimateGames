@@ -254,9 +254,9 @@ public class ArenaListener implements Listener {
                 Player damager = null;
                 if (damagerEntity instanceof Player) {
                     damager = (Player) damagerEntity;
-                } else if (damagerEntity instanceof Arrow) {
-                    Arrow arrow = (Arrow) damagerEntity;
-                    LivingEntity shooter = arrow.getShooter();
+                } else if (damagerEntity instanceof Projectile) {
+                    Projectile projectile = (Projectile) damagerEntity;
+                    LivingEntity shooter = projectile.getShooter();
                     if (shooter instanceof Player) {
                         damager = (Player) shooter;
                     }
