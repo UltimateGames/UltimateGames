@@ -42,7 +42,7 @@ public class GameItemManager {
     public boolean isRegistered(Game game, ItemStack item) {
         if (gameItems.containsKey(game)) {
             for (GameItem gameItem : gameItems.get(game)) {
-                if (gameItem.getItem().equals(item)) {
+                if (gameItem.getItem().getType().equals(item.getType()) && gameItem.getItem().getItemMeta().getDisplayName().equals(item.getItemMeta().getDisplayName())) {
                     return true;
                 }
             }
@@ -71,7 +71,7 @@ public class GameItemManager {
     public GameItem getGameItem(Game game, ItemStack item) {
         if (gameItems.containsKey(game)) {
             for (GameItem gameItem : gameItems.get(game)) {
-                if (gameItem.getItem().equals(item)) {
+                if (gameItem.getItem().getType().equals(item.getType()) && gameItem.getItem().getItemMeta().getDisplayName().equals(item.getItemMeta().getDisplayName())) {
                     return gameItem;
                 }
             }

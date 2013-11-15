@@ -306,6 +306,7 @@ public class ArenaListener implements Listener {
                     ItemStack itemStack = player.getItemInHand();
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.setItemInHand(itemStack.getAmount() == 0 ? null : itemStack);
+                    event.setCancelled(true);
                 }
             } else {
                 game.getGamePlugin().onPlayerInteract(arena, event);

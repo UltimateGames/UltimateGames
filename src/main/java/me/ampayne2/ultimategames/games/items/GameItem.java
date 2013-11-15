@@ -50,7 +50,7 @@ public class GameItem {
      * @return The ItemStack.
      */
     public ItemStack getItem() {
-        return item;
+        return item.clone();
     }
 
     /**
