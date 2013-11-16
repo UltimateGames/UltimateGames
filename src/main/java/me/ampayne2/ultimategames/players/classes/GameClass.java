@@ -104,24 +104,8 @@ public abstract class GameClass {
      * @return True if the player is added to the GameClass, else false.
      */
     public boolean addPlayer(Player player) {
-        String playerName = player.getName();
-        if (!players.contains(playerName)) {
-            GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(game, playerName);
-            if (gameClass != null) {
-                gameClass.removePlayer(playerName);
-            }
-            players.add(playerName);
-            ArenaStatus arenaStatus = ultimateGames.getPlayerManager().getPlayerArena(playerName).getStatus();
-            if (canSwitchToWithoutDeath || arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
-                ultimateGames.getMessageManager().sendMessage(player, "classes.join", name);
-                resetInventory(player);
-            } else {
-                ultimateGames.getMessageManager().sendMessage(player, "classes.nextdeath", name);
-            }
-            return true;
-        } else {
-            return false;
-        }
+        ArenaStatus arenaStatus = ultimateGames.getPlayerManager().getPlayerArena(player.getName()).getStatus();
+        return addPlayer(player, canSwitchToWithoutDeath || arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING, true);
     }
 
     /**
@@ -131,7 +115,19 @@ public abstract class GameClass {
      * @param resetInventory If the player's inventory should be reset immediately.
      * @return True if the player is added to the GameClass, else false.
      */
-    public boolean addPlayer(Player player, Boolean resetInventory) {
+    public boolean addPlayer(Player player, boolean resetInventory) {
+        return addPlayer(player, resetInventory, true);
+    }
+
+    /**
+     * Adds a player to the GameClass.
+     *
+     * @param player         The player to add to the GameClass.
+     * @param resetInventory If the player's inventory should be reset immediately.
+     * @param sendMessage    If a message should be sent to the player.
+     * @return True if the player is added to the GameClass, else false.
+     */
+    public boolean addPlayer(Player player, boolean resetInventory, boolean sendMessage) {
         String playerName = player.getName();
         if (!players.contains(playerName)) {
             GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(game, playerName);
@@ -140,9 +136,11 @@ public abstract class GameClass {
             }
             players.add(playerName);
             if (resetInventory) {
-                ultimateGames.getMessageManager().sendMessage(player, "classes.join", name);
+                if (sendMessage) {
+                    ultimateGames.getMessageManager().sendMessage(player, "classes.join", name);
+                }
                 resetInventory(player);
-            } else {
+            } else if (sendMessage) {
                 ultimateGames.getMessageManager().sendMessage(player, "classes.nextdeath", name);
             }
             return true;
