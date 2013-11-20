@@ -25,6 +25,7 @@ import me.ampayne2.ultimategames.signs.SignType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -438,7 +439,11 @@ public class Arena implements Listener {
             }
             if (left) {
                 Vector vector = new Vector(x, 0, z);
-                player.setVelocity(vector);
+                Entity toMove = player;
+                while (toMove.getVehicle() != null) {
+                    toMove = toMove.getVehicle();
+                }
+                toMove.setVelocity(vector);
                 ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
             }
             game.getGamePlugin().onPlayerMove(this, event);
