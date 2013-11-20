@@ -239,7 +239,6 @@ public class TeamManager {
         while (playerAmount % teamAmount != 0) {
             if (playersNotInTeamsAmount > 0) {
                 String playerName = playersNotInTeams.get(playersNotInTeamsAmount - 1);
-                getPlayerTeam(playerName).removePlayer(playerName);
                 Player player = Bukkit.getPlayerExact(playerName);
                 ultimateGames.getPlayerManager().removePlayerFromArena(player, false);
                 ultimateGames.getMessageManager().sendMessage(player, "arenas.kick");
