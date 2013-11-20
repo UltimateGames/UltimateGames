@@ -457,4 +457,25 @@ public class Arena implements Listener {
             ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Arena arena = (Arena) o;
+
+        return arenaName.equalsIgnoreCase(arena.arenaName) && game.equals(arena.game);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = game.hashCode();
+        result = 31 * result + arenaName.hashCode();
+        return result;
+    }
 }

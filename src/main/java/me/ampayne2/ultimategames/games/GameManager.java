@@ -89,30 +89,31 @@ public class GameManager {
                     playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
                     instructionPages = (ArrayList<String>) gamePlugin.getList("Instructions");
 
-
-                    //Is the game already loaded?
-                    if (gameExists(name)) {
-                        ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + name + " already exists!");
-                        jarFile.close();
-                        continue;
-                    }
-
                     //We try to load the main class..
                     ultimateGames.getPluginClassLoader().addURL(file.toURI().toURL());
                     Class<?> aclass = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
 
                     Object object = aclass.newInstance();
+
                     //Is the class a valid game plugin?
                     if (object instanceof GamePlugin) {
                         ultimateGames.getMessageManager().log(Level.INFO, "Loading " + name);
                         GamePlugin plugin = (GamePlugin) object;
 
-                        //Well, everything loaded.
                         Game game = new Game(plugin, name, description, version, author, playerType, instructionPages);
+
+                        // Does the game already exist?
+                        if (gameExists(game)) {
+                            ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + name + " already exists!");
+                            jarFile.close();
+                            continue;
+                        }
+
                         //We load the game
-                        plugin.loadGame(ultimateGames, game);
-                        addGame(game);
-                        ultimateGames.getServer().getPluginManager().registerEvents(plugin, ultimateGames);
+                        if (plugin.loadGame(ultimateGames, game)) {
+                            addGame(game);
+                            ultimateGames.getServer().getPluginManager().registerEvents(plugin, ultimateGames);
+                        }
                     } else {
                         ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + name + " has an invalid main class!");
                     }
@@ -137,7 +138,16 @@ public class GameManager {
 
     public boolean gameExists(String gameName) {
         for (Game game : games) {
-            if (gameName.equals(game.getName())) {
+            if (game.getName().equalsIgnoreCase(gameName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean gameExists(Game game) {
+        for (Game aGame : games) {
+            if (aGame.equals(game)) {
                 return true;
             }
         }
@@ -146,7 +156,7 @@ public class GameManager {
 
     public Game getGame(String gameName) {
         for (Game game : games) {
-            if (gameName.equals(game.getName())) {
+            if (gameName.equalsIgnoreCase(game.getName())) {
                 return game;
             }
         }
@@ -154,15 +164,16 @@ public class GameManager {
     }
 
     public boolean addGame(Game game) {
-        if (gameExists(game.getName())) {
+        if (gameExists(game)) {
             return false;
+        } else {
+            games.add(game);
+            ultimateGames.getConfigManager().addGameConfig(game);
+            ultimateGames.getMessageManager().loadGameMessages(game);
+            ultimateGames.getMetricsManager().addGame(game);
+            ultimateGames.getMessageManager().log(Level.INFO, "Added game " + game.getName());
+            return true;
         }
-        games.add(game);
-        ultimateGames.getConfigManager().addGameConfig(game);
-        ultimateGames.getMessageManager().loadGameMessages(game);
-        ultimateGames.getMetricsManager().addGame(game);
-        ultimateGames.getMessageManager().log(Level.INFO, "Added game " + game.getName());
-        return true;
     }
 
     public void disableAll() {

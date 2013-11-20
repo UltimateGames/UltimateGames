@@ -105,7 +105,7 @@ public class ArenaManager {
         if (ultimateGames.getGameManager().gameExists(gameName) && arenas.containsKey(ultimateGames.getGameManager().getGame(gameName))) {
             List<Arena> gameArenas = arenas.get(ultimateGames.getGameManager().getGame(gameName));
             for (Arena arena : gameArenas) {
-                if (arenaName.equals(arena.getName())) {
+                if (arenaName.equalsIgnoreCase(arena.getName())) {
                     return true;
                 }
             }
@@ -150,7 +150,7 @@ public class ArenaManager {
     public Arena getArena(String arenaName, String gameName) {
         if (ultimateGames.getGameManager().gameExists(gameName)) {
             for (Arena arena : arenas.get(ultimateGames.getGameManager().getGame(gameName))) {
-                if (arenaName.equals(arena.getName())) {
+                if (arenaName.equalsIgnoreCase(arena.getName())) {
                     return arena;
                 }
             }

@@ -112,4 +112,23 @@ public class Game {
     public List<String> getInstructionPages() {
         return instructionPages;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Game game = (Game) o;
+
+        return name.equalsIgnoreCase(game.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
