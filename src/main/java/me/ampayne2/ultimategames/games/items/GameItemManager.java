@@ -100,7 +100,7 @@ public class GameItemManager {
         if (gameItems.containsKey(game)) {
             Set<GameItem> items = gameItems.get(game);
             for (GameItem item : items) {
-                if (!gameItem.getItem().equals(item.getItem())) {
+                if (gameItem.equals(item)) {
                     return this;
                 }
             }

@@ -84,4 +84,25 @@ public class GameItem {
         }
         return false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        GameItem gameItem = (GameItem) o;
+
+        return item.getType().equals(gameItem.item.getType()) && item.getItemMeta().getDisplayName().equals(gameItem.getItem().getItemMeta().getDisplayName()) && singleUse == gameItem.singleUse;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = item.getType().hashCode() + item.getItemMeta().getDisplayName().hashCode();
+        result = 31 * result + (singleUse ? 1 : 0);
+        return result;
+    }
 }

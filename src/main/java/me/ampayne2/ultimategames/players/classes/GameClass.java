@@ -173,4 +173,25 @@ public abstract class GameClass {
      * @param player The player whose inventory you want to reset.
      */
     public abstract void resetInventory(Player player);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        GameClass gameClass = (GameClass) o;
+
+        return game.equals(gameClass.game) && name.equals(gameClass.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = game.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

@@ -18,10 +18,10 @@
  */
 package me.ampayne2.ultimategames.command.commands.arenas;
 
-import me.ampayne2.ultimategames.Message;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.message.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

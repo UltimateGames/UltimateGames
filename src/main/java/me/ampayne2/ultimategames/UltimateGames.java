@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames;
 import com.alta189.simplesave.exceptions.ConnectionException;
 import com.alta189.simplesave.exceptions.TableRegistrationException;
 import me.ampayne2.ultimategames.api.PointManager;
+import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.ArenaListener;
 import me.ampayne2.ultimategames.arenas.ArenaManager;
 import me.ampayne2.ultimategames.arenas.countdowns.CountdownManager;
@@ -33,12 +34,15 @@ import me.ampayne2.ultimategames.database.DatabaseManager;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
 import me.ampayne2.ultimategames.games.items.GameItemManager;
+import me.ampayne2.ultimategames.message.Message;
+import me.ampayne2.ultimategames.message.MessageRecipient;
 import me.ampayne2.ultimategames.misc.MetricsManager;
 import me.ampayne2.ultimategames.misc.PlayerHeadListener;
 import me.ampayne2.ultimategames.players.LobbyManager;
 import me.ampayne2.ultimategames.players.PlayerManager;
 import me.ampayne2.ultimategames.players.QueueManager;
 import me.ampayne2.ultimategames.players.classes.GameClassManager;
+import me.ampayne2.ultimategames.players.teams.Team;
 import me.ampayne2.ultimategames.players.teams.TeamManager;
 import me.ampayne2.ultimategames.signs.*;
 import me.ampayne2.ultimategames.utils.NullPointManager;
@@ -46,9 +50,15 @@ import me.ampayne2.ultimategames.webapi.JettyServer;
 import me.ampayne2.ultimategames.webapi.WebHandler;
 import me.ampayne2.ultimategames.webapi.handlers.GeneralInformationHandler;
 import me.ampayne2.ultimategames.whitelist.WhitelistManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.PluginClassLoader;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class UltimateGames extends JavaPlugin {
@@ -82,7 +92,45 @@ public class UltimateGames extends JavaPlugin {
         saveConfig();
 
         configManager = new ConfigManager(this);
-        messageManager = new Message(this);
+        messageManager = new Message(this)
+                .registerRecipient(CommandSender.class, new MessageRecipient() {
+                    @Override
+                    public void sendMessage(Object recipient, String message) {
+                        ((CommandSender) recipient).sendMessage(message);
+                    }
+                })
+                .registerRecipient(Team.class, new MessageRecipient() {
+                    @Override
+                    public void sendMessage(Object recipient, String message) {
+                        for (String playerName : ((Team) recipient).getPlayers()) {
+                            Player player = Bukkit.getPlayerExact(playerName);
+                            if (player != null) {
+                                player.sendMessage(message);
+                            }
+                        }
+                    }
+                })
+                .registerRecipient(Arena.class, new MessageRecipient() {
+                    @Override
+                    public void sendMessage(Object recipient, String message) {
+                        Arena arena = (Arena) recipient;
+                        List<String> players = new ArrayList<String>();
+                        players.addAll(arena.getPlayers());
+                        players.addAll(arena.getSpectators());
+                        for (String playerName : players) {
+                            Player player = Bukkit.getPlayerExact(playerName);
+                            if (player != null) {
+                                player.sendMessage(message);
+                            }
+                        }
+                    }
+                })
+                .registerRecipient(Server.class, new MessageRecipient() {
+                    @Override
+                    public void sendMessage(Object recipient, String message) {
+                        ((Server) recipient).broadcastMessage(message);
+                    }
+                });
         playerManager = new PlayerManager(this);
         metricsManager = new MetricsManager(this);
         gameClassManager = new GameClassManager();

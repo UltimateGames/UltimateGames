@@ -81,7 +81,7 @@ public class GameClassManager {
         if (gameClasses.containsKey(game)) {
             Set<GameClass> classes = gameClasses.get(game);
             for (GameClass gClass : classes) {
-                if (gameClass.getName().equals(gClass.getName())) {
+                if (gameClass.equals(gClass)) {
                     return this;
                 }
             }

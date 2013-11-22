@@ -16,24 +16,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames;
+package me.ampayne2.ultimategames.message;
 
-import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
-import me.ampayne2.ultimategames.players.teams.Team;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,17 +35,17 @@ public class Message {
     private final UltimateGames ultimateGames;
     private final boolean debug;
     private final String messagePrefix;
+    private final Logger log;
     private Map<String, String> messages = new HashMap<String, String>();
     private Map<String, Map<String, String>> gameMessages = new HashMap<String, Map<String, String>>();
+    private Map<Class<?>, MessageRecipient> recipients = new HashMap<Class<?>, MessageRecipient>();
 
     public Message(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
         debug = ultimateGames.getConfig().getBoolean("debug");
         String prefix = messages.get("prefix");
-        if (prefix == null) {
-            prefix = "&8[&bUltimateGames&8] ";
-        }
-        messagePrefix = ChatColor.translateAlternateColorCodes('&', prefix);
+        messagePrefix = ChatColor.translateAlternateColorCodes('&', prefix == null ? "&8[&bUltimateGames&8] " : prefix);
+        log = ultimateGames.getLogger();
         loadMessages();
     }
 
@@ -78,6 +71,11 @@ public class Message {
             }
             gameMessages.put(game.getName(), messages);
         }
+    }
+
+    public Message registerRecipient(Class recipientClass, MessageRecipient recipient) {
+        recipients.put(recipientClass, recipient);
+        return this;
     }
 
     /**
@@ -147,37 +145,20 @@ public class Message {
     /**
      * Sends a raw message to a recipient.
      *
-     * @param recipient The recipient of the message; Either CommandSender, Team, Arena, or Server.
+     * @param recipient The recipient of the message. Type of recipient must be registered.
      * @param message   The message.
      * @return True if the message was sent, else false.
      */
     public boolean sendRawMessage(Object recipient, String message) {
-        if (recipient instanceof CommandSender) {
-            ((CommandSender) recipient).sendMessage(message);
-        } else if (recipient instanceof Team) {
-            for (String playerName : ((Team) recipient).getPlayers()) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                if (player != null) {
-                    player.sendMessage(message);
+        if (recipient != null && message != null) {
+            for (Class<?> recipientClass : recipients.keySet()) {
+                if (recipientClass.isAssignableFrom(recipient.getClass())) {
+                    recipients.get(recipientClass).sendMessage(recipient, message);
+                    return true;
                 }
             }
-        } else if (recipient instanceof Arena) {
-            Arena arena = (Arena) recipient;
-            List<String> players = new ArrayList<String>();
-            players.addAll(arena.getPlayers());
-            players.addAll(arena.getSpectators());
-            for (String playerName : players) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                if (player != null) {
-                    player.sendMessage(message);
-                }
-            }
-        } else if (recipient instanceof Server) {
-            ((Server) recipient).broadcastMessage(message);
-        } else {
-            return false;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -187,7 +168,6 @@ public class Message {
      * @param messages the message(s) to log.
      */
     public void log(Level level, String... messages) {
-        Logger log = ultimateGames.getLogger();
         for (String message : messages) {
             log.log(level, message);
         }
@@ -199,8 +179,7 @@ public class Message {
      * @param e the exception to debug.
      */
     public void debug(Exception e) {
-        if (ultimateGames.getConfig().getBoolean("debug")) {
-            Logger log = ultimateGames.getLogger();
+        if (debug) {
             log.severe("");
             log.severe("Internal error!");
             log.severe("If this bug hasn't been reported please open a ticket at https://github.com/ampayne2/UltimateGames/issues");
@@ -230,7 +209,16 @@ public class Message {
      */
     public void debug(String message) {
         if (debug) {
-            ultimateGames.getLogger().log(Level.INFO, message);
+            log.log(Level.INFO, message);
         }
+    }
+
+    /**
+     * Gets the logger.
+     *
+     * @return The logger.
+     */
+    public Logger getLogger() {
+        return log;
     }
 }
