@@ -30,4 +30,9 @@ public class NullPointManager implements PointManager {
     public boolean hasPerk(Game game, String playerName, String valueName) {
         return false;
     }
+
+    @Override
+    public boolean hasPerk(Game game, String playerName, String valueName, boolean defaultValue) {
+        return defaultValue;
+    }
 }

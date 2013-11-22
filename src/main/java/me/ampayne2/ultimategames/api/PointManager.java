@@ -28,4 +28,6 @@ public interface PointManager {
     void addPoint(Game game, String playerName, String valueName, int amount);
 
     boolean hasPerk(Game game, String playerName, String valueName);
+
+    boolean hasPerk(Game game, String playerName, String valueName, boolean defaultValue);
 }
