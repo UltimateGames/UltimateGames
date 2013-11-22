@@ -76,13 +76,13 @@ public class GameClassManager {
      * @param gameClass The GameClass.
      * @return True if the GameClass was registered successfully, else false.
      */
-    public boolean registerGameClass(GameClass gameClass) {
+    public GameClassManager registerGameClass(GameClass gameClass) {
         Game game = gameClass.getGame();
         if (gameClasses.containsKey(game)) {
             Set<GameClass> classes = gameClasses.get(game);
             for (GameClass gClass : classes) {
                 if (gameClass.getName().equals(gClass.getName())) {
-                    return false;
+                    return this;
                 }
             }
             classes.add(gameClass);
@@ -91,7 +91,7 @@ public class GameClassManager {
             classes.add(gameClass);
             gameClasses.put(game, classes);
         }
-        return true;
+        return this;
     }
 
     /**
@@ -99,12 +99,13 @@ public class GameClassManager {
      *
      * @param gameClass The GameClass.
      */
-    public void unregisterGameClass(GameClass gameClass) {
+    public GameClassManager unregisterGameClass(GameClass gameClass) {
         gameClass.removePlayers();
         Game game = gameClass.getGame();
         if (gameClasses.containsKey(game)) {
             gameClasses.get(game).remove(gameClass);
         }
+        return this;
     }
 
     /**
@@ -112,13 +113,14 @@ public class GameClassManager {
      *
      * @param game The Game.
      */
-    public void unregisterGameClasses(Game game) {
+    public GameClassManager unregisterGameClasses(Game game) {
         if (gameClasses.containsKey(game)) {
             for (GameClass gameClass : gameClasses.get(game)) {
                 gameClass.removePlayers();
             }
             gameClasses.remove(game);
         }
+        return this;
     }
 
     /**

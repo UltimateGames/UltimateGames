@@ -96,12 +96,12 @@ public class GameItemManager {
      * @param gameItem The GameItem.
      * @return True if the GameItem was registered successfully, else false.
      */
-    public boolean registerGameItem(Game game, GameItem gameItem) {
+    public GameItemManager registerGameItem(Game game, GameItem gameItem) {
         if (gameItems.containsKey(game)) {
             Set<GameItem> items = gameItems.get(game);
             for (GameItem item : items) {
-                if (gameItem.getItem().equals(item.getItem())) {
-                    return false;
+                if (!gameItem.getItem().equals(item.getItem())) {
+                    return this;
                 }
             }
             items.add(gameItem);
@@ -110,7 +110,7 @@ public class GameItemManager {
             items.add(gameItem);
             gameItems.put(game, items);
         }
-        return true;
+        return this;
     }
 
     /**
@@ -119,10 +119,11 @@ public class GameItemManager {
      * @param game The Game.
      * @param item The GameItem.
      */
-    public void unregisterGameItem(Game game, GameItem item) {
+    public GameItemManager unregisterGameItem(Game game, GameItem item) {
         if (gameItems.containsKey(game)) {
             gameItems.get(game).remove(item);
         }
+        return this;
     }
 
     /**
@@ -130,7 +131,8 @@ public class GameItemManager {
      *
      * @param game The Game.
      */
-    public void unregisterGameItems(Game game) {
+    public GameItemManager unregisterGameItems(Game game) {
         gameItems.remove(game);
+        return this;
     }
 }

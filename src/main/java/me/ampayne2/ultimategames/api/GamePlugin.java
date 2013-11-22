@@ -46,7 +46,7 @@ public abstract class GamePlugin implements Listener {
      * @param game          The game that is being loaded.
      * @return True if everything went well else false.
      */
-    public abstract Boolean loadGame(UltimateGames ultimateGames, Game game);
+    public abstract boolean loadGame(UltimateGames ultimateGames, Game game);
 
     /**
      * Called when a game is being unloaded.
@@ -58,14 +58,14 @@ public abstract class GamePlugin implements Listener {
      *
      * @return True if everything went well else false.
      */
-    public abstract Boolean reloadGame();
+    public abstract boolean reloadGame();
 
     /**
      * Sets all arenas to ArenaStatus.GAME_STOPPED. Disables the game.
      *
      * @return True if everything went well else false.
      */
-    public abstract Boolean stopGame();
+    public abstract boolean stopGame();
 
     /**
      * Called when an arena is being loaded.
@@ -73,7 +73,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena being loaded.
      * @return True if everything went well else false.
      */
-    public abstract Boolean loadArena(Arena arena);
+    public abstract boolean loadArena(Arena arena);
 
     /**
      * Called when an arena is being unloaded.
@@ -81,7 +81,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena being unloaded.
      * @return True if everything went well else false.
      */
-    public abstract Boolean unloadArena(Arena arena);
+    public abstract boolean unloadArena(Arena arena);
 
     /**
      * Checks to see if a start is possible. Used in force starting etc.
@@ -89,7 +89,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena to attempt to start.
      * @return True if everything went well else false.
      */
-    public abstract Boolean isStartPossible(Arena arena);
+    public abstract boolean isStartPossible(Arena arena);
 
     /**
      * Sets to ArenaStatus.STARTING, called at countdown start. Should be used for preparing an arena.
@@ -97,7 +97,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena to start.
      * @return True if everything went well else false.
      */
-    public abstract Boolean startArena(Arena arena);
+    public abstract boolean startArena(Arena arena);
 
     /**
      * Sets to ArenaStatus.RUNNING, called at countdown end.
@@ -105,7 +105,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena to begin.
      * @return True if everything went well else false.
      */
-    public abstract Boolean beginArena(Arena arena);
+    public abstract boolean beginArena(Arena arena);
 
     /**
      * Sets to ArenaStatus.ENDING. Called when the arena ends.
@@ -120,7 +120,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena to reset.
      * @return True if everything went well else false.
      */
-    public abstract Boolean resetArena(Arena arena);
+    public abstract boolean resetArena(Arena arena);
 
     /**
      * Sets to ArenaStatus.OPEN. Called when a arena is open.
@@ -128,7 +128,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena being opened.
      * @return True if everything went well else false.
      */
-    public abstract Boolean openArena(Arena arena);
+    public abstract boolean openArena(Arena arena);
 
     /**
      * Sets to ArenaStatus.ARENA_STOPPED. Disables the arena.
@@ -136,7 +136,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena to disable.
      * @return True if everything went well else false.
      */
-    public abstract Boolean stopArena(Arena arena);
+    public abstract boolean stopArena(Arena arena);
 
     /**
      * Handle player joining.
@@ -145,7 +145,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena  The arena the player is joining.
      * @return True if the player is added else false.
      */
-    public abstract Boolean addPlayer(Player player, Arena arena);
+    public abstract boolean addPlayer(Player player, Arena arena);
 
     /**
      * Handle player leaving.
@@ -162,7 +162,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena  The arena the spectator is joining.
      * @return True if the spectator is added else false.
      */
-    public abstract Boolean addSpectator(Player player, Arena arena);
+    public abstract boolean addSpectator(Player player, Arena arena);
 
     /**
      * Handle spectator leaving.
