@@ -57,7 +57,7 @@ public class SubCommand implements Command {
             Command entry = commandList.get(command);
             if (entry instanceof UGCommand) {
                 if (argsLength.get(command) == -1 || argsLength.get(command) == args.length) {
-                    if (sender.hasPermission(permissionList.get(command))) {
+                    if (checkPermission(sender,permissionList.get(command))) {
                         if (sender instanceof Player || !playerOnly.get(command)) {
                             ((UGCommand) entry).execute(sender, args);
                         } else {
@@ -96,5 +96,13 @@ public class SubCommand implements Command {
 
     public String getSubCommandList() {
         return Arrays.toString(commandList.keySet().toArray());
+    }
+
+    private boolean checkPermission(CommandSender sender, String permission) {
+        boolean result = true;
+        if (permission != null) {
+            result = sender.hasPermission(permission);
+        }
+        return result;
     }
 }
