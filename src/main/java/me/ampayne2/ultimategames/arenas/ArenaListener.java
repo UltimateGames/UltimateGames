@@ -38,6 +38,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -389,6 +390,21 @@ public class ArenaListener implements Listener {
             if (arena != null && !arena.allowMobSpawning()) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            if (arena.getStatus() == ArenaStatus.RUNNING) {
+                arena.getGame().getGamePlugin().onInventoryOpen(arena, event);
+            } else {
+                event.setCancelled(true);
+            }
+        } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+            event.setCancelled(true);
         }
     }
 }

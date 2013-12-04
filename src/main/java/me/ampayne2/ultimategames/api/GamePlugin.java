@@ -31,6 +31,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 
 /**
@@ -333,5 +334,8 @@ public abstract class GamePlugin implements Listener {
      * @param event The BlockFadeEvent.
      */
     public void onBlockFade(Arena arena, BlockFadeEvent event) {
+    }
+
+    public void onInventoryOpen(Arena arena, InventoryOpenEvent event) {
     }
 }
