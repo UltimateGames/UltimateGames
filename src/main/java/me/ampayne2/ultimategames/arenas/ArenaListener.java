@@ -39,10 +39,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -400,6 +397,21 @@ public class ArenaListener implements Listener {
             Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
             if (arena.getStatus() == ArenaStatus.RUNNING) {
                 arena.getGame().getGamePlugin().onInventoryOpen(arena, event);
+            } else {
+                event.setCancelled(true);
+            }
+        } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerItemConsome(PlayerItemConsumeEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            if (arena.getStatus() == ArenaStatus.RUNNING) {
+                arena.getGame().getGamePlugin().onPlayerItemConsume(arena, event);
             } else {
                 event.setCancelled(true);
             }

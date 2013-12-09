@@ -338,4 +338,7 @@ public abstract class GamePlugin implements Listener {
 
     public void onInventoryOpen(Arena arena, InventoryOpenEvent event) {
     }
+
+    public void onPlayerItemConsume(Arena arena, PlayerItemConsumeEvent event) {
+    }
 }
