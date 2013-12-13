@@ -220,7 +220,7 @@ public class TeamManager {
         List<Team> arenaTeams = getTeamsOfArena(arena);
         List<String> players = arena.getPlayers();
         List<String> playersInTeams = new ArrayList<String>();
-        List<String> playersNotInTeams = arena.getPlayers();
+        List<String> playersNotInTeams = new ArrayList<String>(arena.getPlayers());
         for (Team team : arenaTeams) {
             for (String playerName : team.getPlayers()) {
                 playersInTeams.add(playerName);
