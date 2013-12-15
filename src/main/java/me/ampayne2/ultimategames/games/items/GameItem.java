@@ -99,10 +99,10 @@ public class GameItem {
         return item.getType().equals(gameItem.item.getType()) && item.getItemMeta().getDisplayName().equals(gameItem.getItem().getItemMeta().getDisplayName()) && singleUse == gameItem.singleUse;
     }
 
-    /**@Override
+    @Override
     public int hashCode() {
         int result = item.getType().hashCode() + item.getItemMeta().getDisplayName().hashCode();
         result = 31 * result + (singleUse ? 1 : 0);
         return result;
-    }*/
+    }
 }
