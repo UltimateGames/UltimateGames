@@ -18,12 +18,13 @@
  */
 package me.ampayne2.ultimategames.players.classes;
 
+import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
+import me.ampayne2.ultimategames.utils.IconMenu;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Manages player classes for games.
@@ -137,5 +138,22 @@ public class GameClassManager {
             }
         }
         return null;
+    }
+
+    public IconMenu getMenu(UltimateGames ultimateGames, Game game, Player player) {
+        Set<GameClass> gameClasses = getGameClasses(game);
+        IconMenu menu = new IconMenu(game.getName() + " classes", ((int)Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
+            @Override
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+
+            }
+        },ultimateGames);
+        //TODO: Don't make that haxed badly
+        Iterator<GameClass> gameClassIterator = gameClasses.iterator();
+        for (int i = 0; i < gameClasses.size(); i++) {
+            GameClass gameClass = gameClassIterator.next();
+            menu.setOption(i, gameClass.getClassIcon(), gameClass.getName(), gameClass.haveAccess(player) ? ChatColor.GREEN + "Unlocked": ChatColor.DARK_RED + "Locked");
+        }
+        return menu;
     }
 }
