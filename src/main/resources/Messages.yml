@@ -69,6 +69,7 @@ Messages:
   classes:
     join: "&4Joined Class %s."
     nextdeath: "&4Joined Class %s! Your inventory will be reset next death."
+    noaccess: "&4Can't join class %s! You don't have access!"
 
   queues:
     join: "Joined queue for Arena '%s' of Game '%s'. You are %s in line and will be able to join %s."

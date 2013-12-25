@@ -30,7 +30,7 @@ import java.util.*;
  * Manages player classes for games.
  */
 public class GameClassManager {
-    private final Map<Game, Set<GameClass>> gameClasses = new HashMap<Game, Set<GameClass>>();
+    private final Map<Game, List<GameClass>> gameClasses = new HashMap<Game, List<GameClass>>();
 
     /**
      * Checks if a GameClass is registered.
@@ -67,8 +67,8 @@ public class GameClassManager {
      * @param game The game.
      * @return The GameClasses of a game.
      */
-    public Set<GameClass> getGameClasses(Game game) {
-        return gameClasses.containsKey(game) ? new HashSet<GameClass>(gameClasses.get(game)) : new HashSet<GameClass>();
+    public List<GameClass> getGameClasses(Game game) {
+        return gameClasses.containsKey(game) ? new ArrayList<GameClass>(gameClasses.get(game)) : new ArrayList<GameClass>();
     }
 
     /**
@@ -80,15 +80,13 @@ public class GameClassManager {
     public GameClassManager registerGameClass(GameClass gameClass) {
         Game game = gameClass.getGame();
         if (gameClasses.containsKey(game)) {
-            Set<GameClass> classes = gameClasses.get(game);
-            for (GameClass gClass : classes) {
-                if (gameClass.equals(gClass)) {
-                    return this;
-                }
+            List<GameClass> classes = gameClasses.get(game);
+            if (classes.contains(gameClass)) {
+                return this;
             }
             classes.add(gameClass);
         } else {
-            Set<GameClass> classes = new HashSet<GameClass>();
+            List<GameClass> classes = new ArrayList<GameClass>();
             classes.add(gameClass);
             gameClasses.put(game, classes);
         }
@@ -140,19 +138,22 @@ public class GameClassManager {
         return null;
     }
 
-    public IconMenu getMenu(UltimateGames ultimateGames, Game game, Player player) {
-        Set<GameClass> gameClasses = getGameClasses(game);
+    public IconMenu getMenu(final UltimateGames ultimateGames, Game game, final Player player) {
+        final List<GameClass> gameClasses = getGameClasses(game);
         IconMenu menu = new IconMenu(game.getName() + " classes", ((int)Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
-
+                GameClass gameClass = gameClasses.get(event.getPosition());
+                if (gameClass.haveAccess(event.getPlayer())) {
+                    gameClass.addPlayer(event.getPlayer());
+                } else {
+                    ultimateGames.getMessageManager().sendMessage(player, "classes.noaccess", gameClass.getName());
+                }
+                event.setWillDestroy(true);
             }
         },ultimateGames);
-        //TODO: Don't make that haxed badly
-        Iterator<GameClass> gameClassIterator = gameClasses.iterator();
         for (int i = 0; i < gameClasses.size(); i++) {
-            GameClass gameClass = gameClassIterator.next();
-            menu.setOption(i, gameClass.getClassIcon(), gameClass.getName(), gameClass.haveAccess(player) ? ChatColor.GREEN + "Unlocked": ChatColor.DARK_RED + "Locked");
+            menu.setOption(i, gameClasses.get(i).getClassIcon(), gameClasses.get(i).getName(), gameClasses.get(i).haveAccess(player) ? ChatColor.GREEN + "Unlocked": ChatColor.DARK_RED + "Locked");
         }
         return menu;
     }
