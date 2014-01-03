@@ -31,6 +31,7 @@ import java.util.*;
 public class TeamManager {
     private final UltimateGames ultimateGames;
     private Map<Arena, List<Team>> teams = new HashMap<Arena, List<Team>>();
+    private static final Random RANDOM = new Random();
 
     public TeamManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -220,63 +221,51 @@ public class TeamManager {
         List<Team> arenaTeams = getTeamsOfArena(arena);
         List<String> players = arena.getPlayers();
         List<String> playersInTeams = new ArrayList<String>();
-        List<String> playersNotInTeams = new ArrayList<String>(arena.getPlayers());
+        List<String> playersNotInTeams = new ArrayList<String>(players);
+
+        // Populate the players in teams and players not in teams lists
         for (Team team : arenaTeams) {
             for (String playerName : team.getPlayers()) {
                 playersInTeams.add(playerName);
                 playersNotInTeams.remove(playerName);
             }
         }
+
+        // Don't sort if there are no teams
         int teamAmount = arenaTeams.size();
-        int playerAmount = players.size();
-        int playersInTeamsAmount = playersInTeams.size();
-        int playersNotInTeamsAmount = playersNotInTeams.size();
-        if (teamAmount <= 0) {
+        if (teamAmount <= 0 || players.size() < teamAmount) {
             return;
         }
 
-        // Make it possible for each team to have the same amount of players.
-        while (playerAmount % teamAmount != 0) {
-            if (playersNotInTeamsAmount > 0) {
-                String playerName = playersNotInTeams.get(playersNotInTeamsAmount - 1);
-                Player player = Bukkit.getPlayerExact(playerName);
-                ultimateGames.getPlayerManager().removePlayerFromArena(player, false);
-                ultimateGames.getMessageManager().sendMessage(player, "arenas.kick");
-                playersNotInTeams.remove(playerName);
-                playersNotInTeamsAmount = playersNotInTeams.size();
-                playerAmount--;
-            } else {
-                String playerName = playersInTeams.get(playersInTeamsAmount - 1);
-                getPlayerTeam(playerName).removePlayer(playerName);
-                Player player = Bukkit.getPlayerExact(playerName);
-                ultimateGames.getPlayerManager().removePlayerFromArena(player, false);
-                ultimateGames.getMessageManager().sendMessage(player, "arenas.kick");
-                playersInTeams.remove(playerName);
-                playersInTeamsAmount = playersInTeams.size();
-                playerAmount--;
-            }
+        // Kick the last player(s) to join from the game if the teams cannot be balanced
+        while (players.size() % teamAmount != 0) {
+            Player playerToKick = Bukkit.getPlayerExact(playersNotInTeams.size() > 0 ? playersNotInTeams.get(playersNotInTeams.size() - 1) : playersInTeams.get(playersInTeams.size() - 1));
+            ultimateGames.getPlayerManager().removePlayerFromArena(playerToKick, false);
+            ultimateGames.getMessageManager().sendMessage(playerToKick, "arenas.kick");
+            playersInTeams.remove(playerToKick.getName());
+            playersNotInTeams.remove(playerToKick.getName());
+            players = arena.getPlayers();
         }
 
-        // Kick the last players to join each team from their team if the team is too full.
+        // Kick the last player(s) to join from their team if the teams cannot be balanced
         for (Team team : arenaTeams) {
             List<String> teamPlayers = team.getPlayers();
-            while ((playerAmount / teamAmount) < teamPlayers.size()) {
+            while ((players.size() / teamAmount) < teamPlayers.size()) {
                 String playerName = teamPlayers.get(teamPlayers.size() - 1);
                 team.removePlayer(playerName);
                 ultimateGames.getMessageManager().sendMessage(Bukkit.getPlayerExact(playerName), "teams.kick", team.getColor() + team.getName());
                 playersNotInTeams.add(playerName);
+                teamPlayers = team.getPlayers();
             }
         }
 
         // Add the players not in teams yet to the teams that need players.
-        Random generator = new Random();
         for (Team team : arenaTeams) {
-            while ((playerAmount / teamAmount) > team.getPlayers().size()) {
-                String playerName = playersNotInTeams.get(generator.nextInt(playersNotInTeams.size()));
-                Player player = Bukkit.getPlayerExact(playerName);
+            while ((players.size() / teamAmount) > team.getPlayers().size()) {
+                Player player = Bukkit.getPlayerExact(playersNotInTeams.get(RANDOM.nextInt(playersNotInTeams.size())));
                 team.addPlayer(player);
                 ultimateGames.getMessageManager().sendMessage(player, "teams.join", team.getColor() + team.getName());
-                playersNotInTeams.remove(playerName);
+                playersNotInTeams.remove(player.getName());
             }
         }
     }

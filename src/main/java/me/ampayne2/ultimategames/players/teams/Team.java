@@ -118,7 +118,7 @@ public class Team {
      * @return True if the team has space, else false.
      */
     public boolean hasSpace() {
-        return Math.floor(arena.getPlayers().size() / ultimateGames.getTeamManager().getTeamsOfArena(arena).size()) >= players.size();
+        return Math.floor(arena.getPlayers().size() / ultimateGames.getTeamManager().getTeamsOfArena(arena).size()) > players.size();
     }
 
     /**
