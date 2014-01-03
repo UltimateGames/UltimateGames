@@ -21,10 +21,13 @@ package me.ampayne2.ultimategames.utils;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.effects.ParticleEffect;
 import me.ampayne2.ultimategames.games.Game;
+import net.minecraft.server.v1_7_R1.EnumClientCommand;
+import net.minecraft.server.v1_7_R1.PacketPlayInClientCommand;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -158,16 +161,8 @@ public final class UGUtils {
         Bukkit.getScheduler().scheduleSyncDelayedTask(UltimateGames.getInstance(), new Runnable() {
             @Override
             public void run() {
-                try {
-                    Object nmsPlayer = player.getClass().getMethod("getHandle").invoke(player);
-
-                    Object packet = Class.forName(nmsPlayer.getClass().getPackage().getName() + ".Packet205ClientCommand").newInstance();
-                    packet.getClass().getField("a").set(packet, 1);
-
-                    Object con = nmsPlayer.getClass().getField("playerConnection").get(nmsPlayer);
-                    con.getClass().getMethod("a", packet.getClass()).invoke(con, packet);
-                } catch (Exception e) {
-                    UltimateGames.getInstance().getMessageManager().debug(e);
+                if (player.isDead()) {
+                    ((CraftPlayer)player).getHandle().playerConnection.a(new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN));
                 }
             }
         }, AUTO_RESPAWN_DELAY);
