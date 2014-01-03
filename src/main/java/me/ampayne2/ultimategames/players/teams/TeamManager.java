@@ -276,6 +276,7 @@ public class TeamManager {
                 Player player = Bukkit.getPlayerExact(playerName);
                 team.addPlayer(player);
                 ultimateGames.getMessageManager().sendMessage(player, "teams.join", team.getColor() + team.getName());
+                playersNotInTeams.remove(playerName);
             }
         }
     }
