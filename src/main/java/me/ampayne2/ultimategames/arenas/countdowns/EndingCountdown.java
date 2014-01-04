@@ -57,8 +57,10 @@ public class EndingCountdown extends Countdown {
         int secondsLeft = getSecondsLeft();
         if (expDisplay) {
             for (String playerName : arena.getPlayers()) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                player.setLevel(secondsLeft);
+                Bukkit.getPlayerExact(playerName).setLevel(secondsLeft);
+            }
+            for (String playerName : arena.getSpectators()) {
+                Bukkit.getPlayerExact(playerName).setLevel(secondsLeft);
             }
         }
         if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {

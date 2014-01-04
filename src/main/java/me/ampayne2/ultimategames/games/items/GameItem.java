@@ -26,21 +26,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GameItem {
+public abstract  class GameItem {
     private final ItemStack item;
-    private final Set<ItemAction> actions;
-    private boolean singleUse;
+    private final boolean singleUse;
 
     /**
      * Creates a new GameItem.
      *
      * @param item      The ItemStack of the GameItem.
-     * @param actions   The ItemActions of the GameItem.
      * @param singleUse If the GameItem can only be used once.
      */
-    public GameItem(ItemStack item, boolean singleUse, ItemAction... actions) {
+    public GameItem(ItemStack item, boolean singleUse) {
         this.item = item;
-        this.actions = new HashSet<ItemAction>(Arrays.asList(actions));
         this.singleUse = singleUse;
     }
 
@@ -63,27 +60,11 @@ public class GameItem {
     }
 
     /**
-     * Gets the GameItem's ItemAction.
-     *
-     * @return The ItemAction.
-     */
-    public Set<ItemAction> getActions() {
-        return actions;
-    }
-
-    /**
      * Handles clicking the GameItem.
      *
      * @param event The PlayerInteractEvent.
      */
-    public boolean click(Arena arena, PlayerInteractEvent event) {
-        for (ItemAction action : actions) {
-            if (event.getAction() == action.getAction()) {
-                return action.perform(arena, event);
-            }
-        }
-        return false;
-    }
+    public abstract boolean click(Arena arena, PlayerInteractEvent event);
 
     @Override
     public boolean equals(Object o) {

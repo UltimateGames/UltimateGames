@@ -1,5 +1,6 @@
 Messages:
   prefix: "&8[&bUltimateGames&8] "
+  gameprefix: "&8[&b%s&8] "
 
   ultimategames:
     cantleave: "&4Not in an arena or queue."

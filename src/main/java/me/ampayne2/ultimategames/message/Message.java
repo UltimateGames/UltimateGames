@@ -35,6 +35,7 @@ public class Message {
     private final UltimateGames ultimateGames;
     private final boolean debug;
     private final String messagePrefix;
+    private final String gamePrefix;
     private final Logger log;
     private Map<String, String> messages = new HashMap<String, String>();
     private Map<String, Map<String, String>> gameMessages = new HashMap<String, Map<String, String>>();
@@ -45,6 +46,8 @@ public class Message {
         debug = ultimateGames.getConfig().getBoolean("debug");
         String prefix = messages.get("prefix");
         messagePrefix = ChatColor.translateAlternateColorCodes('&', prefix == null ? "&8[&bUltimateGames&8] " : prefix);
+        String gPrefix = messages.get("gameprefix");
+        gamePrefix = ChatColor.translateAlternateColorCodes('&', gPrefix == null ? "&8[&b%s&8] " : gPrefix);
         log = ultimateGames.getLogger();
         loadMessages();
     }
@@ -88,6 +91,16 @@ public class Message {
     }
 
     /**
+     * Gets a game's message prefix.
+     *
+     * @param game The game.
+     * @return The game's message prefix.
+     */
+    public String getGamePrefix(Game game) {
+        return String.format(gamePrefix, game.getName());
+    }
+
+    /**
      * Gets a message with translated color codes.
      *
      * @param path Path to the message in the message config, without "Messages."
@@ -126,7 +139,8 @@ public class Message {
      * @return True if the message was sent, else false.
      */
     public boolean sendMessage(Object recipient, String path, String... replace) {
-        return sendRawMessage(recipient, messagePrefix + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
+        String message = getMessage(path);
+        return sendRawMessage(recipient, getPrefix() + (replace == null ? message : String.format(message, (Object[]) replace)));
     }
 
     /**
@@ -139,7 +153,8 @@ public class Message {
      * @return True if the message was sent, else false.
      */
     public boolean sendGameMessage(Object recipient, Game game, String path, String... replace) {
-        return sendRawMessage(recipient, messagePrefix + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
+        String message = getGameMessage(game, path);
+        return sendRawMessage(recipient, getGamePrefix(game) + (replace == null ? message : String.format(message, (Object[]) replace)));
     }
 
     /**
