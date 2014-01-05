@@ -21,30 +21,26 @@ package me.ampayne2.ultimategames.utils;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.effects.ParticleEffect;
 import me.ampayne2.ultimategames.games.Game;
-import net.minecraft.server.v1_7_R1.EnumClientCommand;
-import net.minecraft.server.v1_7_R1.PacketPlayInClientCommand;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class UGUtils {
     private static final long AUTO_RESPAWN_DELAY = 1L;
     private static final double TARGETER_ACCURACY = 1.0;
     private static final BlockFace[] FACES = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    private static final Random RANDOM = new Random();
 
     private UGUtils() {
 
@@ -70,6 +66,128 @@ public final class UGUtils {
             default:
                 return "th";
         }
+    }
+
+    /**
+     * Gets a random enum value from an enum.
+     *
+     * @param clazz The enum's class.
+     * @return The random enum value.
+     */
+    public static <T extends Enum> T randomEnum(Class<T> clazz) {
+        return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
+    }
+
+    /**
+     * Gets a random color.
+     *
+     * @return The random color.
+     */
+    public static Color randomColor() {
+        switch (RANDOM.nextInt(17)) {
+            case 0:
+                return Color.AQUA;
+            case 1:
+                return Color.BLACK;
+            case 2:
+                return Color.BLUE;
+            case 3:
+                return Color.FUCHSIA;
+            case 4:
+                return Color.GRAY;
+            case 5:
+                return Color.GREEN;
+            case 6:
+                return Color.LIME;
+            case 7:
+                return Color.MAROON;
+            case 8:
+                return Color.NAVY;
+            case 9:
+                return Color.OLIVE;
+            case 10:
+                return Color.ORANGE;
+            case 11:
+                return Color.PURPLE;
+            case 12:
+                return Color.RED;
+            case 13:
+                return Color.SILVER;
+            case 14:
+                return Color.TEAL;
+            case 15:
+                return Color.WHITE;
+            case 16:
+                return Color.YELLOW;
+            default:
+                return Color.WHITE;
+        }
+    }
+
+    /**
+     * Gets a random firework effect.
+     *
+     * @return The random firework effect.
+     */
+    public static FireworkEffect randomFireworkEffect() {
+        FireworkEffect.Type type = randomEnum(FireworkEffect.Type.class);
+        Color c1 = randomColor();
+        Color c2 = randomColor();
+
+        return FireworkEffect.builder().flicker(RANDOM.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(RANDOM.nextBoolean()).build();
+    }
+
+    /**
+     * Spawns a firework.
+     *
+     * @param location Location to spawn the firework.
+     * @param effect   Effect to give the firework.
+     * @param power    Power of the firework.
+     * @param detonate If the firework should detonate immediately.
+     */
+    public static void spawnFirework(Location location, FireworkEffect effect, int power, boolean detonate) {
+        Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+
+        FireworkMeta fireworkMeta = firework.getFireworkMeta();
+        fireworkMeta.addEffect(effect);
+        fireworkMeta.setPower(power);
+        firework.setFireworkMeta(fireworkMeta);
+
+        if (detonate) {
+            firework.detonate();
+        }
+    }
+
+    /**
+     * Spawns a firework with a random power.
+     *
+     * @param location Location to spawn the firework.
+     * @param effect   Effect to give the firework.
+     * @param detonate If the firework should detonate immediately.
+     */
+    public static void spawnFirework(Location location, FireworkEffect effect, boolean detonate) {
+        spawnFirework(location, effect, RANDOM.nextInt(2) + 1, detonate);
+    }
+
+    /**
+     * Spawns a firework with a random effect.
+     *
+     * @param location Location to spawn the firework.
+     * @param power    Power of the firework.
+     * @param detonate If the firework should detonate immediately.
+     */
+    public static void spawnFirework(Location location, int power, boolean detonate) {
+        spawnFirework(location, randomFireworkEffect(), power, detonate);
+    }
+
+    /**
+     * Spawns a firework with a random effect and power.
+     *
+     * @param location Location to spawn the firework.
+     * @param detonate If the firework should detonate immediately.
+     */
+    public static void spawnFirework(Location location, boolean detonate) {
+        spawnFirework(location, randomFireworkEffect(), RANDOM.nextInt(2) + 1, detonate);
     }
 
     /**
@@ -162,7 +280,22 @@ public final class UGUtils {
             @Override
             public void run() {
                 if (player.isDead()) {
-                    ((CraftPlayer)player).getHandle().playerConnection.a(new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN));
+                    try {
+                        Object nmsPlayer = player.getClass().getMethod("getHandle").invoke(player);
+                        Object packet = Class.forName(nmsPlayer.getClass().getPackage().getName() + ".PacketPlayInClientCommand").newInstance();
+                        Class<?> enumClass = Class.forName(nmsPlayer.getClass().getPackage().getName() + ".EnumClientCommand");
+
+                        for(Object ob : enumClass.getEnumConstants()){
+                            if(ob.toString().equals("PERFORM_RESPAWN")){
+                                packet = packet.getClass().getConstructor(enumClass).newInstance(ob);
+                            }
+                        }
+
+                        Object con = nmsPlayer.getClass().getField("playerConnection").get(nmsPlayer);
+                        con.getClass().getMethod("a", packet.getClass()).invoke(con, packet);
+                    } catch (Exception e) {
+                        // Respawn code broke
+                    }
                 }
             }
         }, AUTO_RESPAWN_DELAY);
