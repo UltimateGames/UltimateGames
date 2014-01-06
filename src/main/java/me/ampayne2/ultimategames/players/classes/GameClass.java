@@ -23,19 +23,20 @@ import me.ampayne2.ultimategames.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The base class for a GameClass in a game. Games extend this to make their own classes.
+ * A basic game class that handles resetting inventories and more.
  */
 public abstract class GameClass {
     private final UltimateGames ultimateGames;
     private final Game game;
     private final String name;
     private final boolean canSwitchToWithoutDeath;
-    private ItemStack itemStack;
+    private ItemStack icon;
     private boolean isUnlockable = false;
     private String unlockableString = null;
     private List<String> players = new ArrayList<String>();
@@ -180,30 +181,29 @@ public abstract class GameClass {
 
     /**
      * Set the Class icon of this class when using the menu.
-     * @param stack The {@link org.bukkit.inventory.ItemStack} that represents this class
+     *
+     * @param icon The {@link org.bukkit.inventory.ItemStack} that represents this class
      */
-    public void setClassIcon(ItemStack stack) {
-        this.itemStack = stack;
+    public void setClassIcon(ItemStack icon) {
+        ItemMeta meta = icon.getItemMeta();
+        meta.setDisplayName(name);
+        icon.setItemMeta(meta);
+        icon.setAmount(1);
+        this.icon = icon;
     }
 
     /**
      * Get the class icon of this class.
+     *
      * @return The {@link org.bukkit.inventory.ItemStack} that represents this class
      */
     public ItemStack getClassIcon() {
-        return itemStack;
-    }
-
-    /**
-     * Set if this class is a unlockable one. If true, it will search if the player have that perk in the PointManager.
-     * @param unlockable If the class is unlockable or not
-     */
-    public void setIsUnlockable(boolean unlockable) {
-        this.isUnlockable = unlockable;
+        return icon;
     }
 
     /**
      * Checks if this class is a unlockable one or not
+     *
      * @return True if the class is a unlockable one else false
      */
     public boolean isUnlockable() {
@@ -211,7 +211,17 @@ public abstract class GameClass {
     }
 
     /**
+     * Set if this class is a unlockable one. If true, it will search if the player have that perk in the PointManager.
+     *
+     * @param unlockable If the class is unlockable or not
+     */
+    public void setIsUnlockable(boolean unlockable) {
+        this.isUnlockable = unlockable;
+    }
+
+    /**
      * Set the unlockable string. Aka the value used to search if the player have that perk.
+     *
      * @param value The string that represents this class
      */
     public void setUnlockableString(String value) {
@@ -220,6 +230,7 @@ public abstract class GameClass {
 
     /**
      * Retrieve the unlockable string.
+     *
      * @return The string that represents this class
      */
     public String getUnlockableString() {
@@ -227,16 +238,13 @@ public abstract class GameClass {
     }
 
     /**
-     * Checks if a player have access to this class.
+     * Checks if a player has access to this class.
+     *
      * @param player The player to check for
-     * @return True if the player have access, else false.
+     * @return True if the player has access, else false.
      */
-    public boolean haveAccess(Player player) {
-        if (isUnlockable && getUnlockableString() != null) {
-            return ultimateGames.getPointManager().hasPerk(game, player.getName(), getUnlockableString());
-        } else {
-            return true;
-        }
+    public boolean hasAccess(Player player) {
+        return isUnlockable && getUnlockableString() != null && ultimateGames.getPointManager().hasPerk(game, player.getName(), getUnlockableString());
     }
 
     @Override

@@ -140,11 +140,11 @@ public class GameClassManager {
 
     public IconMenu getMenu(final UltimateGames ultimateGames, Game game, final Player player) {
         final List<GameClass> gameClasses = getGameClasses(game);
-        IconMenu menu = new IconMenu(game.getName() + " classes", ((int)Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
+        IconMenu menu = new IconMenu(game.getName() + " Classes", ((int)Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
                 GameClass gameClass = gameClasses.get(event.getPosition());
-                if (gameClass.haveAccess(event.getPlayer())) {
+                if (gameClass.hasAccess(event.getPlayer())) {
                     gameClass.addPlayer(event.getPlayer());
                 } else {
                     ultimateGames.getMessageManager().sendMessage(player, "classes.noaccess", gameClass.getName());
@@ -153,7 +153,12 @@ public class GameClassManager {
             }
         },ultimateGames);
         for (int i = 0; i < gameClasses.size(); i++) {
-            menu.setOption(i, gameClasses.get(i).getClassIcon(), gameClasses.get(i).getName(), gameClasses.get(i).haveAccess(player) ? ChatColor.GREEN + "Unlocked": ChatColor.DARK_RED + "Locked");
+            GameClass gameClass = gameClasses.get(i);
+            String name = gameClass.getName();
+            if (gameClass instanceof TieredClass) {
+                name = name + " " + ((TieredClass) gameClass).getTier(player);
+            }
+            menu.setOption(i, gameClass.getClassIcon(), name, gameClass.hasAccess(player) ? ChatColor.GREEN + "Unlocked": ChatColor.DARK_RED + "Locked");
         }
         return menu;
     }
