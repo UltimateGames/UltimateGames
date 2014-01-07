@@ -244,7 +244,7 @@ public abstract class GameClass {
      * @return True if the player has access, else false.
      */
     public boolean hasAccess(Player player) {
-        return isUnlockable && getUnlockableString() != null && ultimateGames.getPointManager().hasPerk(game, player.getName(), getUnlockableString());
+        return !(isUnlockable && getUnlockableString() != null) || ultimateGames.getPointManager().hasPerk(game, player.getName(), getUnlockableString());
     }
 
     @Override
