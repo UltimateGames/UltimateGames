@@ -31,7 +31,7 @@ public abstract class TieredClass extends GameClass {
      */
     public int getTier(Player player) {
         int tier = 1;
-        while (ultimateGames.getPointManager().hasPerk(getGame(), player.getName(), getName() + (tier + 1))) {
+        while (ultimateGames.getPointManager().hasPerk(getGame(), player.getName(), getName().toLowerCase() + (tier + 1))) {
             tier++;
         }
         return tier;
