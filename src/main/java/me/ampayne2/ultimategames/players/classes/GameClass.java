@@ -23,7 +23,6 @@ import me.ampayne2.ultimategames.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,11 +184,9 @@ public abstract class GameClass {
      * @param icon The {@link org.bukkit.inventory.ItemStack} that represents this class
      */
     public void setClassIcon(ItemStack icon) {
-        ItemMeta meta = icon.getItemMeta();
-        meta.setDisplayName(name);
-        icon.setItemMeta(meta);
-        icon.setAmount(1);
-        this.icon = icon;
+        ItemStack newIcon = icon.clone();
+        newIcon.setAmount(1);
+        this.icon = newIcon;
     }
 
     /**

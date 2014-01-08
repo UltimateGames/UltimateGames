@@ -23,6 +23,11 @@ public abstract class TieredClass extends GameClass {
         this.ultimateGames = ultimateGames;
     }
 
+    @Override
+    public boolean hasAccess(Player player) {
+        return !(isUnlockable() && getUnlockableString() != null) || ultimateGames.getPointManager().hasPerk(getGame(), player.getName(), getUnlockableString() + "1");
+    }
+
     /**
      * Gets the highest tier of this class the player has unlocked.
      *
