@@ -173,4 +173,33 @@ public class ArenaScoreboard {
     public void resetScore(String name) {
         scoreboard.resetScores(Bukkit.getOfflinePlayer(name));
     }
+
+    /**
+     * Gets the score of a team.
+     *
+     * @param team The team.
+     * @return The team's score.
+     */
+    public int getScore(me.ampayne2.ultimategames.players.teams.Team team) {
+        return getScore(team.getColor() + team.getName());
+    }
+
+    /**
+     * Sets the score of a team.
+     *
+     * @param team  The scoreboard.
+     * @param score The new score.
+     */
+    public void setScore(me.ampayne2.ultimategames.players.teams.Team team, int score) {
+        setScore(team.getColor() + team.getName(), score);
+    }
+
+    /**
+     * Resets the score of a team.
+     *
+     * @param team The team.
+     */
+    public void resetScore(me.ampayne2.ultimategames.players.teams.Team team) {
+        resetScore(team.getColor() + team.getName());
+    }
 }
