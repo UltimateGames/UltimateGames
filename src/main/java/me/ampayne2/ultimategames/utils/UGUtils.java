@@ -32,6 +32,8 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -285,8 +287,8 @@ public final class UGUtils {
                         Object packet = Class.forName(nmsPlayer.getClass().getPackage().getName() + ".PacketPlayInClientCommand").newInstance();
                         Class<?> enumClass = Class.forName(nmsPlayer.getClass().getPackage().getName() + ".EnumClientCommand");
 
-                        for(Object ob : enumClass.getEnumConstants()){
-                            if(ob.toString().equals("PERFORM_RESPAWN")){
+                        for (Object ob : enumClass.getEnumConstants()) {
+                            if (ob.toString().equals("PERFORM_RESPAWN")) {
                                 packet = packet.getClass().getConstructor(enumClass).newInstance(ob);
                             }
                         }
@@ -491,5 +493,75 @@ public final class UGUtils {
             }
         }
         return attachedSigns;
+    }
+
+    /**
+     * Increases the amplifier of a player's potion effect.
+     *
+     * @param player The player.
+     * @param type   The type of potion effect.
+     * @param amount The amount to increase the amplifier by.
+     */
+    public void increasePotionEffect(Player player, PotionEffectType type, int amount) {
+        if (player.hasPotionEffect(type)) {
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                if (effect.getType() == type) {
+                    player.addPotionEffect(new PotionEffect(type, effect.getDuration(), effect.getAmplifier() + amount));
+                }
+            }
+        }
+    }
+
+    /**
+     * Increases the amplifier of a player's potion effect by 1.
+     *
+     * @param player The player.
+     * @param type   The type of potion effect.
+     */
+    public void increasePotionEffect(Player player, PotionEffectType type) {
+        increasePotionEffect(player, type, 1);
+    }
+
+    /**
+     * Decreases the amplifier of a player's potion effect. If amplifier is decreased to less than or equal to 0, the effect is removed.
+     *
+     * @param player The player.
+     * @param type   The type of potion effect.
+     * @param amount The amount to decrease the amplifier by.
+     */
+    public void decreasePotionEffect(Player player, PotionEffectType type, int amount) {
+        if (player.hasPotionEffect(type)) {
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                if (effect.getType() == type) {
+                    if (effect.getAmplifier() > 1) {
+                        player.addPotionEffect(new PotionEffect(type, effect.getDuration(), effect.getAmplifier() - amount));
+                    } else {
+                        player.removePotionEffect(type);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Decreases the amplifier of a player's potion effect by 1. If amplifier is decreased to less than or equal to 0, the effect is removed.
+     *
+     * @param player The player.
+     * @param type   The type of potion effect.
+     */
+    public void decreasePotionEffect(Player player, PotionEffectType type) {
+        decreasePotionEffect(player, type, 1);
+    }
+
+    /**
+     * Removes a potion effect from a player.
+     *
+     * @param player The player.
+     * @param type   The type of potion effect.
+     */
+    public void removePotionEffect(Player player, PotionEffectType type) {
+        if (player.hasPotionEffect(type)) {
+            player.removePotionEffect(type);
+        }
     }
 }
