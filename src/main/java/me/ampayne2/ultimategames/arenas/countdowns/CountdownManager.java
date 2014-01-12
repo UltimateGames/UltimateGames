@@ -35,7 +35,7 @@ public class CountdownManager {
     /**
      * Creates a new Countdown Manager.
      *
-     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      */
     public CountdownManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -92,7 +92,7 @@ public class CountdownManager {
             StartingCountdown countdown = new StartingCountdown(ultimateGames, arena, seconds);
             countdown.start();
             starting.put(arena, countdown);
-            ultimateGames.getMessageManager().debug("Created starting countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
+            ultimateGames.getMessenger().debug("Created starting countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
         }
     }
 
@@ -105,7 +105,7 @@ public class CountdownManager {
         if (starting.containsKey(arena)) {
             starting.get(arena).stop();
             starting.remove(arena);
-            ultimateGames.getMessageManager().debug("Stopped starting countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
+            ultimateGames.getMessenger().debug("Stopped starting countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
         }
     }
 
@@ -121,7 +121,7 @@ public class CountdownManager {
             EndingCountdown countdown = new EndingCountdown(ultimateGames, arena, seconds, expDisplay);
             countdown.start();
             ending.put(arena, countdown);
-            ultimateGames.getMessageManager().debug("Created ending countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
+            ultimateGames.getMessenger().debug("Created ending countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
         }
     }
 
@@ -134,7 +134,7 @@ public class CountdownManager {
         if (ending.containsKey(arena)) {
             ending.get(arena).stop();
             ending.remove(arena);
-            ultimateGames.getMessageManager().debug("Stopped ending countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
+            ultimateGames.getMessenger().debug("Stopped ending countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
         }
     }
 }

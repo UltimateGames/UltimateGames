@@ -19,21 +19,32 @@
 package me.ampayne2.ultimategames.command.commands;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class SetLobby implements UGCommand {
+/**
+ * A command that sets the ultimate games lobby.
+ */
+public class SetLobby extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the SetLobby command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public SetLobby(UltimateGames ultimateGames) {
+        super(ultimateGames, "setlobby", "Sets the ug lobby.", "/ug setlobby", new Permission("ultimategames.setlobby", PermissionDefault.OP), true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         Player player = (Player) sender;
         ultimateGames.getLobbyManager().setLobby(player.getLocation());
-        ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.setlobby");
+        ultimateGames.getMessenger().sendMessage(sender, "ultimategames.setlobby");
     }
 }

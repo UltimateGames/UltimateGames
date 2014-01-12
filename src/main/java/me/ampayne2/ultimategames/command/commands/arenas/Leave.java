@@ -19,20 +19,31 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import me.ampayne2.ultimategames.players.QueueManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class Leave implements UGCommand {
+/**
+ * A command that makes the sender leave an arena.
+ */
+public class Leave extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the Leave command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public Leave(UltimateGames ultimateGames) {
+        super(ultimateGames, "leave", "Leaves an arena", "/ug leave", new Permission("ultimategames.leave", PermissionDefault.TRUE), true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         Player player = (Player) sender;
         String playerName = player.getName();
         QueueManager queue = ultimateGames.getQueueManager();
@@ -43,7 +54,7 @@ public class Leave implements UGCommand {
         } else if (queue.isPlayerInQueue(playerName)) {
             queue.removePlayerFromQueues(player);
         } else {
-            ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.cantleave");
+            ultimateGames.getMessenger().sendMessage(sender, "ultimategames.cantleave");
         }
     }
 }

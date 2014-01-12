@@ -18,8 +18,6 @@
  */
 package me.ampayne2.ultimategames;
 
-import com.alta189.simplesave.exceptions.ConnectionException;
-import com.alta189.simplesave.exceptions.TableRegistrationException;
 import me.ampayne2.ultimategames.api.PointManager;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.ArenaListener;
@@ -30,12 +28,11 @@ import me.ampayne2.ultimategames.arenas.spawnpoints.SpawnpointManager;
 import me.ampayne2.ultimategames.chests.UGChestManager;
 import me.ampayne2.ultimategames.command.CommandController;
 import me.ampayne2.ultimategames.config.ConfigManager;
-import me.ampayne2.ultimategames.database.DatabaseManager;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.GameManager;
 import me.ampayne2.ultimategames.games.items.GameItemManager;
-import me.ampayne2.ultimategames.message.Message;
-import me.ampayne2.ultimategames.message.MessageRecipient;
+import me.ampayne2.ultimategames.message.Messenger;
+import me.ampayne2.ultimategames.message.RecipientHandler;
 import me.ampayne2.ultimategames.misc.MetricsManager;
 import me.ampayne2.ultimategames.misc.PlayerHeadListener;
 import me.ampayne2.ultimategames.players.LobbyManager;
@@ -61,6 +58,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+/**
+ * The UltimateGames plugin's main class.
+ */
 public class UltimateGames extends JavaPlugin {
     private static UltimateGames instance;
     private ConfigManager configManager;
@@ -72,14 +72,13 @@ public class UltimateGames extends JavaPlugin {
     private UGSignManager ugSignManager;
     private UGChestManager ugChestManager;
     private QueueManager queueManager;
-    private Message messageManager;
+    private Messenger messenger;
     private SpawnpointManager spawnpointManager;
     private PlayerManager playerManager;
     private CountdownManager countdownManager;
     private LobbyManager lobbyManager;
     private ScoreboardManager scoreboardManager;
     private WhitelistManager whitelistManager;
-    private DatabaseManager databaseManager;
     private MetricsManager metricsManager;
     private PointManager pointManager;
     private CommandController commandController;
@@ -92,48 +91,44 @@ public class UltimateGames extends JavaPlugin {
         saveConfig();
 
         configManager = new ConfigManager(this);
-        messageManager = new Message(this)
-                .registerRecipient(CommandSender.class, new MessageRecipient() {
-                    @Override
-                    public void sendMessage(Object recipient, String message) {
-                        ((CommandSender) recipient).sendMessage(message);
+        messenger = new Messenger(this).registerRecipient(CommandSender.class, new RecipientHandler() {
+            @Override
+            public void sendMessage(Object recipient, String message) {
+                ((CommandSender) recipient).sendMessage(message);
+            }
+        }).registerRecipient(Team.class, new RecipientHandler() {
+            @Override
+            public void sendMessage(Object recipient, String message) {
+                for (String playerName : ((Team) recipient).getPlayers()) {
+                    Player player = Bukkit.getPlayerExact(playerName);
+                    if (player != null) {
+                        player.sendMessage(message);
                     }
-                })
-                .registerRecipient(Team.class, new MessageRecipient() {
-                    @Override
-                    public void sendMessage(Object recipient, String message) {
-                        for (String playerName : ((Team) recipient).getPlayers()) {
-                            Player player = Bukkit.getPlayerExact(playerName);
-                            if (player != null) {
-                                player.sendMessage(message);
-                            }
-                        }
+                }
+            }
+        }).registerRecipient(Arena.class, new RecipientHandler() {
+            @Override
+            public void sendMessage(Object recipient, String message) {
+                Arena arena = (Arena) recipient;
+                List<String> players = new ArrayList<String>();
+                players.addAll(arena.getPlayers());
+                players.addAll(arena.getSpectators());
+                for (String playerName : players) {
+                    Player player = Bukkit.getPlayerExact(playerName);
+                    if (player != null) {
+                        player.sendMessage(message);
                     }
-                })
-                .registerRecipient(Arena.class, new MessageRecipient() {
-                    @Override
-                    public void sendMessage(Object recipient, String message) {
-                        Arena arena = (Arena) recipient;
-                        List<String> players = new ArrayList<String>();
-                        players.addAll(arena.getPlayers());
-                        players.addAll(arena.getSpectators());
-                        for (String playerName : players) {
-                            Player player = Bukkit.getPlayerExact(playerName);
-                            if (player != null) {
-                                player.sendMessage(message);
-                            }
-                        }
-                    }
-                })
-                .registerRecipient(Server.class, new MessageRecipient() {
-                    @Override
-                    public void sendMessage(Object recipient, String message) {
-                        ((Server) recipient).broadcastMessage(message);
-                    }
-                });
+                }
+            }
+        }).registerRecipient(Server.class, new RecipientHandler() {
+            @Override
+            public void sendMessage(Object recipient, String message) {
+                ((Server) recipient).broadcastMessage(message);
+            }
+        });
         playerManager = new PlayerManager(this);
         metricsManager = new MetricsManager(this);
-        gameClassManager = new GameClassManager();
+        gameClassManager = new GameClassManager(this);
         gameItemManager = new GameItemManager();
         gameManager = new GameManager(this);
         queueManager = new QueueManager(this);
@@ -149,7 +144,7 @@ public class UltimateGames extends JavaPlugin {
                 jettyServer.startServer();
             } catch (Exception e) {
                 getLogger().info("Failed to enable live stats API link");
-                messageManager.debug(e);
+                messenger.debug(e);
             }
         }
         jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
@@ -158,17 +153,6 @@ public class UltimateGames extends JavaPlugin {
         countdownManager = new CountdownManager(this);
         lobbyManager = new LobbyManager(this);
         whitelistManager = new WhitelistManager(this);
-        try {
-            databaseManager = new DatabaseManager(this);
-        } catch (TableRegistrationException e) {
-            getLogger().severe("A error occured while connecting to the database!");
-            messageManager.debug(e);
-            getServer().getPluginManager().disablePlugin(this);
-        } catch (ConnectionException e) {
-            getLogger().severe("A error occured while connecting to the database!");
-            messageManager.debug(e);
-            getServer().getPluginManager().disablePlugin(this);
-        }
         pointManager = new NullPointManager();
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
@@ -177,8 +161,6 @@ public class UltimateGames extends JavaPlugin {
         }
         getServer().getPluginManager().registerEvents(playerManager, this);
         commandController = new CommandController(this);
-        getServer().getPluginManager().registerEvents(commandController, this);
-        getCommand("ultimategames").setExecutor(commandController);
     }
 
     public void onDisable() {
@@ -205,8 +187,8 @@ public class UltimateGames extends JavaPlugin {
         return configManager;
     }
 
-    public Message getMessageManager() {
-        return messageManager;
+    public Messenger getMessenger() {
+        return messenger;
     }
 
     public GameManager getGameManager() {
@@ -263,10 +245,6 @@ public class UltimateGames extends JavaPlugin {
 
     public WhitelistManager getWhitelistManager() {
         return whitelistManager;
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
     }
 
     public MetricsManager getMetricsManager() {

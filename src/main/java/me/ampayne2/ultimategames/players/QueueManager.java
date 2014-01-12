@@ -30,10 +30,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Manages the queue of an arena.
+ */
 public class QueueManager {
     private final UltimateGames ultimateGames;
     private final Map<Arena, List<String>> queue = new HashMap<Arena, List<String>>();
 
+    /**
+     * Creates a new QueueManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public QueueManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
@@ -103,7 +111,7 @@ public class QueueManager {
         Integer queuePosition = queue.get(arena).size();
         String position = queuePosition.toString() + UGUtils.getOrdinalSuffix(queuePosition);
         Integer gamePosition = (int) Math.ceil((double) queue.get(arena).size() / arena.getMaxPlayers());
-        ultimateGames.getMessageManager().sendMessage(player, "queues.join", arena.getName(), arena.getGame().getName(), position, gamePosition == 1 ? "next game" : gamePosition + " games from now");
+        ultimateGames.getMessenger().sendMessage(player, "queues.join", arena.getName(), arena.getGame().getName(), position, gamePosition == 1 ? "next game" : gamePosition + " games from now");
     }
 
     /**
@@ -113,7 +121,7 @@ public class QueueManager {
      * @param arena  The arena.
      */
     public void sendLeaveMessage(Player player, Arena arena) {
-        ultimateGames.getMessageManager().sendMessage(player, "queues.leave", arena.getName(), arena.getGame().getName());
+        ultimateGames.getMessenger().sendMessage(player, "queues.leave", arena.getName(), arena.getGame().getName());
     }
 
     /**

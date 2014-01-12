@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.config;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.games.Game;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.util.HashMap;
@@ -30,93 +31,51 @@ import java.util.Map;
  */
 public class ConfigManager {
     private final UltimateGames ultimateGames;
-    private final ConfigAccessor messageConfig;
-    private final ConfigAccessor arenaConfig;
-    private final ConfigAccessor lobbyConfig;
-    private final ConfigAccessor ugSignConfig;
-    private final ConfigAccessor ugChestConfig;
-    private final Map<Game, GameConfigAccessor> gameConfigs;
+    private final Map<ConfigType, ConfigAccessor> configs = new HashMap<ConfigType, ConfigAccessor>();
+    private final Map<Game, GameConfigAccessor> gameConfigs = new HashMap<Game, GameConfigAccessor>();
 
+    /**
+     * Creates a new ConfigManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public ConfigManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
         File dataFolder = ultimateGames.getDataFolder();
-        messageConfig = new ConfigAccessor(ultimateGames, "Messages.yml", dataFolder);
-        messageConfig.saveDefaultConfig();
-        arenaConfig = new ConfigAccessor(ultimateGames, "Arenas.yml", dataFolder);
-        arenaConfig.saveDefaultConfig();
-        lobbyConfig = new ConfigAccessor(ultimateGames, "Lobbies.yml", dataFolder);
-        lobbyConfig.saveDefaultConfig();
-        ugSignConfig = new ConfigAccessor(ultimateGames, "Signs.yml", dataFolder);
-        ugSignConfig.saveDefaultConfig();
-        ugChestConfig = new ConfigAccessor(ultimateGames, "Chests.yml", dataFolder);
-        ugChestConfig.saveDefaultConfig();
-        gameConfigs = new HashMap<Game, GameConfigAccessor>();
-    }
 
-    /**
-     * Gets the Message Config.
-     *
-     * @return The Message Config.
-     */
-    public ConfigAccessor getMessageConfig() {
-        return messageConfig;
-    }
-
-    /**
-     * Gets the Arena Config.
-     *
-     * @return The Arena Config.
-     */
-    public ConfigAccessor getArenaConfig() {
-        return arenaConfig;
-    }
-
-    /**
-     * Gets the Lobby Config.
-     *
-     * @return The Lobby Config.
-     */
-    public ConfigAccessor getLobbyConfig() {
-        return lobbyConfig;
-    }
-
-    /**
-     * Gets the Ultimate Game Sign Config.
-     *
-     * @return The Ultimate Game Sign Config.
-     */
-    public ConfigAccessor getUGSignConfig() {
-        return ugSignConfig;
-    }
-
-    /**
-     * Gets the Ultimate Game Chest Config.
-     *
-     * @return The Ultimate Game Sign Config.
-     */
-    public ConfigAccessor getUGChestConfig() {
-        return ugChestConfig;
-    }
-
-    /**
-     * Gets the Game Configs.
-     *
-     * @return The Game Configs.
-     */
-    public Map<Game, GameConfigAccessor> getGameConfigs() {
-        return gameConfigs;
-    }
-
-    /**
-     * Gets a Game's Config.
-     *
-     * @return The Game's Config.
-     */
-    public GameConfigAccessor getGameConfig(Game game) {
-        if (!gameConfigs.containsKey(game)) {
-            addGameConfig(game);
+        ultimateGames.saveDefaultConfig();
+        for (ConfigType configType : ConfigType.class.getEnumConstants()) {
+            addConfigAccessor(new ConfigAccessor(ultimateGames, configType, dataFolder).saveDefaultConfig());
         }
-        return gameConfigs.get(game);
+    }
+
+    /**
+     * Adds a ConfigAccessor to the config manager.
+     *
+     * @param configAccessor The ConfigAccessor.
+     */
+    public void addConfigAccessor(ConfigAccessor configAccessor) {
+        configs.put(configAccessor.getConfigType(), configAccessor);
+    }
+
+    /**
+     * Gets a certain ConfigAccessor.
+     *
+     * @param configType The type of the config.
+     * @return The config accessor.
+     */
+    public ConfigAccessor getConfigAccessor(ConfigType configType) {
+        return configs.get(configType);
+    }
+
+    /**
+     * Gets a certain FileConfiguration.
+     *
+     * @param configType The type of the config.
+     * @return The config.
+     */
+    public FileConfiguration getConfig(ConfigType configType) {
+        return configs.get(configType).getConfig();
     }
 
     /**
@@ -130,5 +89,27 @@ public class ConfigManager {
             config.saveConfig();
             gameConfigs.put(game, config);
         }
+    }
+
+    /**
+     * Gets a Game's Config.
+     *
+     * @return The Game's Config.
+     */
+    public GameConfigAccessor getGameConfigAccessor(Game game) {
+        if (!gameConfigs.containsKey(game)) {
+            addGameConfig(game);
+        }
+        return gameConfigs.get(game);
+    }
+
+    /**
+     * Gets a game's FileConfiguration
+     *
+     * @param game The game.
+     * @return The config.
+     */
+    public FileConfiguration getGameConfig(Game game) {
+        return getGameConfigAccessor(game).getConfig();
     }
 }

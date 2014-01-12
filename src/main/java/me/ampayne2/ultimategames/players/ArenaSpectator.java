@@ -22,12 +22,15 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+/**
+ * Represents a player spectating an arena.
+ */
 public class ArenaSpectator {
     private final String playerName;
     private final Arena arena;
 
     /**
-     * Represents a player spectating an arena.
+     * Creates a new ArenaSpectator.
      *
      * @param playerName The player's name.
      * @param arena      The arena.

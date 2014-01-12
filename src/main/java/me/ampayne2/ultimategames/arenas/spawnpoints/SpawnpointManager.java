@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.arenas.spawnpoints;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.config.ConfigType;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -36,7 +37,7 @@ public class SpawnpointManager {
     /**
      * Creates a new Spawnpoint Manager.
      *
-     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      */
     public SpawnpointManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -81,7 +82,7 @@ public class SpawnpointManager {
         newSpawnPoint.add(String.valueOf(location.getZ()));
         newSpawnPoint.add(String.valueOf(location.getPitch()));
         newSpawnPoint.add(String.valueOf(location.getYaw()));
-        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getConfig(ConfigType.ARENA);
         String path = "Arenas." + arena.getGame().getName() + "." + arena.getName() + ".SpectatorSpawnpoint";
         arenaConfig.set(path, newSpawnPoint);
         spectatorSpawnPoints.put(arena, new SpectatorSpawnPoint(arena, location));
@@ -104,9 +105,9 @@ public class SpawnpointManager {
         newSpawnPoint.add(String.valueOf(location.getPitch()));
         newSpawnPoint.add(String.valueOf(location.getYaw()));
         newSpawnPoint.add(String.valueOf(locked));
-        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getConfig(ConfigType.ARENA);
         String path = "Arenas." + arena.getGame().getName() + "." + arena.getName() + ".SpawnPoints";
-        if (ultimateGames.getConfigManager().getArenaConfig().getConfig().contains(path)) {
+        if (arenaConfig.contains(path)) {
             @SuppressWarnings("unchecked") List<List<String>> arenaSpawnPoints = (ArrayList<List<String>>) arenaConfig.getList(path);
             arenaSpawnPoints.add(newSpawnPoint);
             arenaConfig.set(path, arenaSpawnPoints);
@@ -115,7 +116,7 @@ public class SpawnpointManager {
             arenaSpawnPoints.add(newSpawnPoint);
             arenaConfig.set(path, arenaSpawnPoints);
         }
-        ultimateGames.getConfigManager().getArenaConfig().saveConfig();
+        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
         PlayerSpawnPoint spawnPoint = new PlayerSpawnPoint(ultimateGames, arena, location, locked);
         addSpawnPoint(spawnPoint);
         return spawnPoint;

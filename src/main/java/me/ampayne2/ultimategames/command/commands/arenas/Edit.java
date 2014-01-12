@@ -19,19 +19,30 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import me.ampayne2.ultimategames.players.ArenaPlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class Edit implements UGCommand {
+/**
+ * A command that sets the sender to arena editing mode.
+ */
+public class Edit extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the Edit command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public Edit(UltimateGames ultimateGames) {
+        super(ultimateGames, "edit", "Sets you to arena editing mode.", "/ug arena edit", new Permission("ultimategames.arena.edit", PermissionDefault.OP), true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         String senderName = sender.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(senderName)) {
             ArenaPlayer player = ultimateGames.getPlayerManager().getArenaPlayer(senderName);
@@ -41,7 +52,7 @@ public class Edit implements UGCommand {
                 player.setEditing(true);
             }
         } else {
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.notinarena");
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.notinarena");
         }
     }
 }

@@ -16,9 +16,30 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.message;
+package me.ampayne2.ultimategames.config;
 
-public abstract class MessageRecipient {
+/**
+ * An enum of ultimate games configs.
+ */
+public enum ConfigType {
+    MESSAGE("Messages.yml"),
+    ARENA("Arenas.yml"),
+    LOBBY("Lobbies.yml"),
+    SIGN("Signs.yml"),
+    CHEST("Chests.yml");
 
-    public abstract void sendMessage(Object recipient, String message);
+    private final String fileName;
+
+    private ConfigType(String fileName) {
+        this.fileName = fileName;
+    }
+
+    /**
+     * Gets the ConfigType's file name.
+     *
+     * @return The file name of the ConfigType.
+     */
+    public String getFileName() {
+        return fileName;
+    }
 }

@@ -26,15 +26,22 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.shininet.bukkit.playerheads.events.LivingEntityDropHeadEvent;
 
+/**
+ * Handles head dropping with the PlayerHeads plugin.<br>
+ */
 public class PlayerHeadListener implements Listener {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates a new PlayerHeadListener.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public PlayerHeadListener(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
 
     /**
-     * Handles head dropping with the PlayerHeads plugin.<br>
      * Cancels the event if the entity is a player in an arena,<br>
      * or if the entity is not a player and its location is inside an arena.<br>
      * http://dev.bukkit.org/bukkit-plugins/player-heads/

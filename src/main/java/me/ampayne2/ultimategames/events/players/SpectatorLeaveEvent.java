@@ -19,21 +19,20 @@
 package me.ampayne2.ultimategames.events.players;
 
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.events.arenas.ArenaEvent;
 import org.bukkit.entity.Player;
 
 /**
- * Called after a spectator leaves an arena.
+ * An event called after a spectator leaves.
  */
-public class SpectatorLeaveEvent extends ArenaEvent {
-    private final Player player;
+public class SpectatorLeaveEvent extends PlayerEvent {
 
+    /**
+     * Creates a new SpectatorLeaveEvent.
+     *
+     * @param player The spectator who left.
+     * @param arena  The arena the spectator left.
+     */
     public SpectatorLeaveEvent(Player player, Arena arena) {
-        super(arena);
-        this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
+        super(player, arena);
     }
 }

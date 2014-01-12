@@ -22,6 +22,7 @@ import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.scoreboards.ArenaScoreboard;
 import me.ampayne2.ultimategames.arenas.spawnpoints.PlayerSpawnPoint;
+import me.ampayne2.ultimategames.config.ConfigType;
 import me.ampayne2.ultimategames.events.players.*;
 import me.ampayne2.ultimategames.players.classes.GameClass;
 import me.ampayne2.ultimategames.signs.SignType;
@@ -39,12 +40,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Manages players both in and out of arenas.
+ */
 public class PlayerManager implements Listener {
     private final UltimateGames ultimateGames;
     private Map<String, ArenaPlayer> players = new HashMap<String, ArenaPlayer>();
     private Map<String, ArenaSpectator> spectators = new HashMap<String, ArenaSpectator>();
     private static final String LIMBO = "limbo";
 
+    /**
+     * Creates a new PlayerManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public PlayerManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
@@ -146,18 +155,18 @@ public class PlayerManager implements Listener {
             // Add the player to the arena and make the player an ArenaPlayer object
             if (arena.addPlayer(player.getName()) && arena.getGame().getGamePlugin().addPlayer(player, arena)) {
                 players.put(playerName, new ArenaPlayer(ultimateGames, playerName, arena));
-                ultimateGames.getMessageManager().debug("Added player " + playerName + " to arena " + arena.getName() + " of game " + arena.getGame().getName());
+                ultimateGames.getMessenger().debug("Added player " + playerName + " to arena " + arena.getName() + " of game " + arena.getGame().getName());
 
                 // Update the arena's lobby signs
                 ultimateGames.getUGSignManager().updateUGSignsOfArena(arena, SignType.LOBBY);
 
                 // Send a message that the player joined to the arena
                 if (sendMessage) {
-                    ultimateGames.getMessageManager().sendMessage(arena, "arenas.join", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
+                    ultimateGames.getMessenger().sendMessage(arena, "arenas.join", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
                 }
 
                 // Add the player to all of the arena's scoreboards
-                ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
+                ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
                 if (scoreBoard != null) {
                     scoreBoard.addPlayer(player);
                 }
@@ -203,7 +212,7 @@ public class PlayerManager implements Listener {
                 spectators.put(playerName, new ArenaSpectator(playerName, arena));
 
                 // Add the spectator to all of the arena's scoreboards
-                ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
+                ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
                 if (scoreBoard != null) {
                     scoreBoard.addPlayer(player);
                 }
@@ -268,7 +277,7 @@ public class PlayerManager implements Listener {
             }
 
             // Removes the player from the arena scoreboard
-            ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
+            ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
             if (scoreBoard != null) {
                 scoreBoard.removePlayer(player);
             }
@@ -289,7 +298,7 @@ public class PlayerManager implements Listener {
                 player.teleport(location);
             }
 
-            ultimateGames.getMessageManager().debug("Removed player " + playerName + " from arena " + arena.getName() + " of game " + arena.getGame().getName());
+            ultimateGames.getMessenger().debug("Removed player " + playerName + " from arena " + arena.getName() + " of game " + arena.getGame().getName());
 
             // Stops the arena's starting countdown if there is not enough players anymore
             if (arena.getPlayers().size() < arena.getMinPlayers() && ultimateGames.getCountdownManager().hasStartingCountdown(arena)) {
@@ -301,7 +310,7 @@ public class PlayerManager implements Listener {
 
             // Sends a message that the player left the arena
             if (sendMessage) {
-                ultimateGames.getMessageManager().sendMessage(arena, "arenas.leave", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
+                ultimateGames.getMessenger().sendMessage(arena, "arenas.leave", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
             }
 
             // Shows all spectators to the player
@@ -338,7 +347,7 @@ public class PlayerManager implements Listener {
             }
 
             // Removes the spectator from all arena scoreboards
-            ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
+            ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
             if (scoreBoard != null) {
                 scoreBoard.removePlayer(player);
             }
@@ -402,15 +411,15 @@ public class PlayerManager implements Listener {
     public void removePlayerFromLimbo(Player player) {
         String playerName = player.getName();
         List<String> playersInLimbo;
-        if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains(LIMBO)) {
-            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList(LIMBO);
+        if (ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).contains(LIMBO)) {
+            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).getList(LIMBO);
         } else {
             playersInLimbo = new ArrayList<String>();
         }
         if (playersInLimbo.contains(playerName)) {
             playersInLimbo.remove(playerName);
-            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set(LIMBO, playersInLimbo);
-            ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
+            ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).set(LIMBO, playersInLimbo);
+            ultimateGames.getConfigManager().getConfigAccessor(ConfigType.LOBBY).saveConfig();
         }
     }
 
@@ -423,14 +432,14 @@ public class PlayerManager implements Listener {
     public void addPlayerToLimbo(Player player) {
         String playerName = player.getName();
         List<String> playersInLimbo;
-        if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains(LIMBO)) {
-            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList(LIMBO);
+        if (ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).contains(LIMBO)) {
+            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).getList(LIMBO);
         } else {
             playersInLimbo = new ArrayList<String>();
         }
         playersInLimbo.add(playerName);
-        ultimateGames.getConfigManager().getLobbyConfig().getConfig().set(LIMBO, playersInLimbo);
-        ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
+        ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).set(LIMBO, playersInLimbo);
+        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.LOBBY).saveConfig();
     }
 
     /**
@@ -441,16 +450,16 @@ public class PlayerManager implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         String playerName = event.getPlayer().getName();
         List<String> playersInLimbo;
-        if (ultimateGames.getConfigManager().getLobbyConfig().getConfig().contains(LIMBO)) {
-            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getLobbyConfig().getConfig().getList(LIMBO);
+        if (ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).contains(LIMBO)) {
+            playersInLimbo = (ArrayList<String>) ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).getList(LIMBO);
         } else {
             playersInLimbo = new ArrayList<String>();
         }
         if (playersInLimbo.contains(playerName)) {
             Bukkit.getPlayerExact(playerName).teleport(ultimateGames.getLobbyManager().getLobby());
             playersInLimbo.remove(playerName);
-            ultimateGames.getConfigManager().getLobbyConfig().getConfig().set(LIMBO, playersInLimbo);
-            ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
+            ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY).set(LIMBO, playersInLimbo);
+            ultimateGames.getConfigManager().getConfigAccessor(ConfigType.LOBBY).saveConfig();
         }
     }
 

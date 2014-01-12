@@ -16,37 +16,43 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.chests;
+package me.ampayne2.ultimategames.players.classes;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import org.bukkit.block.Chest;
+import me.ampayne2.ultimategames.games.items.GameItem;
+import org.bukkit.Material;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * A type of UGChest that contains static contents.
+ * A class selector game item.
  */
-public class StaticChest extends UGChest {
-    @SuppressWarnings("unused")
+public class ClassSelector extends GameItem {
     private final UltimateGames ultimateGames;
+    private static final ItemStack CLASS_SELECTOR;
 
     /**
-     * Creates a new StaticChest.
+     * Creates a new class selector item.
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
-     * @param chest         The chest.
-     * @param arena         The arena.
-     * @param label         The label.
      */
-    public StaticChest(UltimateGames ultimateGames, Chest chest, Arena arena, String label) {
-        super(chest, arena, ChestType.STATIC, label);
+    public ClassSelector(UltimateGames ultimateGames) {
+        super(CLASS_SELECTOR, false);
         this.ultimateGames = ultimateGames;
     }
 
-    /**
-     * Resets the contents of the chest.
-     */
     @Override
-    public void reset() {
-        // TODO: Resetting static chests
+    public boolean click(Arena arena, PlayerInteractEvent event) {
+        ultimateGames.getGameClassManager().getClassSelector(arena.getGame(), event.getPlayer()).open(event.getPlayer());
+        return true;
+    }
+
+    static {
+        CLASS_SELECTOR = new ItemStack(Material.NETHER_STAR);
+        ItemMeta meta = CLASS_SELECTOR.getItemMeta();
+        meta.setDisplayName("Class selector");
+        CLASS_SELECTOR.setItemMeta(meta);
     }
 }

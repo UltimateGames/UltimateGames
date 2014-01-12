@@ -28,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class that represents a team in an arena.
+ * A class that represents a team in an arena.<br>
+ * Must be registered with the {@link me.ampayne2.ultimategames.players.teams.TeamManager}.
  */
 public class Team {
     private final UltimateGames ultimateGames;
@@ -42,7 +43,7 @@ public class Team {
     /**
      * Creates a new team.
      *
-     * @param ultimateGames A reference to the ultimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      * @param name          The name of the team.
      * @param arena         The arena of the team.
      * @param color         The color of the team.
@@ -154,7 +155,7 @@ public class Team {
      */
     public void removePlayer(String playerName) {
         if (players.contains(playerName)) {
-            ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
+            ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
             if (scoreBoard != null) {
                 scoreBoard.resetPlayerColor(playerName);
             }
@@ -166,7 +167,7 @@ public class Team {
      * Removes all players from the team.
      */
     public void removePlayers() {
-        ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
+        ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
         if (scoreBoard != null) {
             for (String playerName : players) {
                 scoreBoard.resetPlayerColor(playerName);
@@ -181,7 +182,7 @@ public class Team {
      * @param player The player.
      */
     public void setPlayerColorToTeamColor(Player player) {
-        ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getArenaScoreboard(arena);
+        ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
         if (scoreBoard != null) {
             scoreBoard.setPlayerColor(player, color);
         }

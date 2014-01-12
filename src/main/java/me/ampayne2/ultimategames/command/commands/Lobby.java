@@ -19,19 +19,30 @@
 package me.ampayne2.ultimategames.command.commands;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class Lobby implements UGCommand {
+/**
+ * A command that teleports the sender to the ultimate games lobby.
+ */
+public class Lobby extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the Lobby command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public Lobby(UltimateGames ultimateGames) {
+        super(ultimateGames, "lobby", "Teleports you to the lobby", "/ug lobby", new Permission("ultimategames.lobby", PermissionDefault.TRUE), true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         Player player = (Player) sender;
         String playerName = player.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
@@ -41,6 +52,6 @@ public class Lobby implements UGCommand {
         } else {
             player.teleport(ultimateGames.getLobbyManager().getLobby());
         }
-        ultimateGames.getMessageManager().sendMessage(sender, "ultimategames.lobby");
+        ultimateGames.getMessenger().sendMessage(sender, "ultimategames.lobby");
     }
 }

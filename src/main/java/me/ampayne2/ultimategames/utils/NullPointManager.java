@@ -21,6 +21,9 @@ package me.ampayne2.ultimategames.utils;
 import me.ampayne2.ultimategames.api.PointManager;
 import me.ampayne2.ultimategames.games.Game;
 
+/**
+ * The ultimate games point manager unless replaced.
+ */
 public class NullPointManager implements PointManager {
     @Override
     public void addPoint(Game game, String playerName, String valueName, int amount) {

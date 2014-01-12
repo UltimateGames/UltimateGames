@@ -20,31 +20,42 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class Begin implements UGCommand {
+/**
+ * A command that begins an arena.
+ */
+public class Begin extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the Begin command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public Begin(UltimateGames ultimateGames) {
+        super(ultimateGames, "begin", "Begins an arena.", "/ug arena begin <arena> <game>", new Permission("ultimategames.arena.begin", PermissionDefault.OP), 2, false);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
             return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
             return;
         }
         Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
         if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
             ultimateGames.getCountdownManager().createStartingCountdown(arena, 5);
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.forcestart", arenaName, gameName);
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.forcestart", arenaName, gameName);
         }
     }
 }

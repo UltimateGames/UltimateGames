@@ -16,44 +16,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.whitelist;
+package me.ampayne2.ultimategames.command;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.message.PageList;
+import org.bukkit.ChatColor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The manager for ultimate games whitelists.
+ * A PageList that lists all of the ultimate games commands and their description.
  */
-public class WhitelistManager {
-    private final BlockPlaceWhitelist blockPlaceWhitelist;
-    private final BlockBreakWhitelist blockBreakWhitelist;
+public class CommandPageList extends PageList {
 
     /**
-     * Creates a new WhitelistManager.
+     * Creates the PageList of ultimate games commands.
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      */
-    public WhitelistManager(UltimateGames ultimateGames) {
-        blockPlaceWhitelist = new BlockPlaceWhitelist(ultimateGames);
-        blockPlaceWhitelist.reload();
-        blockBreakWhitelist = new BlockBreakWhitelist(ultimateGames);
-        blockBreakWhitelist.reload();
-    }
-
-    /**
-     * Gets the Block Place Whitelist.
-     *
-     * @return The Block Place Whitelist.
-     */
-    public BlockPlaceWhitelist getBlockPlaceWhitelist() {
-        return blockPlaceWhitelist;
-    }
-
-    /**
-     * Gets the Block Break Whitelist.
-     *
-     * @return The Block Break Whitelist.
-     */
-    public BlockBreakWhitelist getBlockBreakWhitelist() {
-        return blockBreakWhitelist;
+    public CommandPageList(UltimateGames ultimateGames, Command command) {
+        super(ultimateGames, "Commands", 8);
+        List<String> strings = new ArrayList<String>();
+        for (Command subCommand : command.getChildren(true)) {
+            strings.add(ChatColor.AQUA + ((UGCommand) subCommand).getCommandUsage());
+            strings.add(ChatColor.DARK_GRAY + "-" + ((UGCommand) subCommand).getDescription());
+        }
+        setStrings(strings);
     }
 }

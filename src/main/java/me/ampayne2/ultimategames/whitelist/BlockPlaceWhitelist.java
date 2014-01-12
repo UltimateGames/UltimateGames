@@ -25,24 +25,28 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 
+/**
+ * The block break whitelist.
+ */
 public class BlockPlaceWhitelist implements Whitelist {
     private final UltimateGames ultimateGames;
     private final Map<Game, Set<Material>> blocks = new HashMap<Game, Set<Material>>();
     private final Map<Game, Boolean> useAsBlacklist = new HashMap<Game, Boolean>();
 
     /**
-     * The Block Place Whitelist.
+     * Creates a new BlockPlaceWhitelist.
      *
-     * @param ultimateGames The UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      */
     public BlockPlaceWhitelist(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
 
+    @Override
     public void reload() {
         blocks.clear();
         for (Game game : ultimateGames.getGameManager().getGames()) {
-            FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+            FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game);
             if (gameConfig.contains("BlockPlaceWhitelist")) {
                 List<String> materialNames = gameConfig.getStringList("BlockPlaceWhitelist");
                 Set<Material> materials = new HashSet<Material>();

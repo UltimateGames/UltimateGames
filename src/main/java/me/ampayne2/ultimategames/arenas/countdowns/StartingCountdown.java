@@ -41,7 +41,7 @@ public class StartingCountdown extends Countdown {
     /**
      * Creates a new Starting Countdown.
      *
-     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      * @param arena         The arena of the countdown.
      */
     public StartingCountdown(UltimateGames ultimateGames, Arena arena, int initialSeconds) {
@@ -50,6 +50,11 @@ public class StartingCountdown extends Countdown {
         arena.setStatus(ArenaStatus.STARTING);
     }
 
+    /**
+     * Gets the seconds left on the starting countdown.
+     *
+     * @return The seconds left.
+     */
     public int getSecondsLeft() {
         return ticksLeft / TPS;
     }
@@ -57,17 +62,17 @@ public class StartingCountdown extends Countdown {
     @Override
     public void run() {
         int secondsLeft = getSecondsLeft();
-        if (secondsLeft <= TICK_SOUND_THRESHOLD && secondsLeft > END_COUNTDOWN_TIME) {
-            for (String playerName : arena.getPlayers()) {
-                Player player = Bukkit.getPlayerExact(playerName);
-                TICK_SOUND.play(player, player.getLocation());
+        if (secondsLeft > END_COUNTDOWN_TIME) {
+            if (secondsLeft <= TICK_SOUND_THRESHOLD) {
+                for (String playerName : arena.getPlayers()) {
+                    Player player = Bukkit.getPlayerExact(playerName);
+                    TICK_SOUND.play(player, player.getLocation());
+                }
             }
-        }
-        if (secondsLeft > END_COUNTDOWN_TIME && initialSeconds == secondsLeft) {
-            ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-        } else if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
-            ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
-        } else if (secondsLeft == END_COUNTDOWN_TIME) {
+            if (secondsLeft == initialSeconds || secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
+                ultimateGames.getMessenger().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
+            }
+        } else {
             ultimateGames.getCountdownManager().stopStartingCountdown(arena);
             ultimateGames.getArenaManager().beginArena(arena);
             for (String playerName : arena.getPlayers()) {

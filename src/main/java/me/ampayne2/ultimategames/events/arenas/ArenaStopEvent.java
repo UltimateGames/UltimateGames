@@ -21,9 +21,15 @@ package me.ampayne2.ultimategames.events.arenas;
 import me.ampayne2.ultimategames.arenas.Arena;
 
 /**
- * Called after an arena stops.
+ * An event called after an arena stops.
  */
 public class ArenaStopEvent extends ArenaEvent {
+
+    /**
+     * Creates a new ArenaStopEvent.
+     *
+     * @param arena The arena about to stop.
+     */
     public ArenaStopEvent(Arena arena) {
         super(arena);
     }

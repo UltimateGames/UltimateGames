@@ -22,11 +22,11 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-public abstract  class GameItem {
+/**
+ * An easy way to create items that do something when clicked.<br>
+ * Must be registered with the {@link me.ampayne2.ultimategames.games.items.GameItemManager}.
+ */
+public abstract class GameItem {
     private final ItemStack item;
     private final boolean singleUse;
 

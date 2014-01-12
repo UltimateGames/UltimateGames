@@ -149,7 +149,7 @@ public class Region {
                     return new Region(world, minX, maxX, minZ, maxZ);
                 }
             } catch (Exception e) {
-                UltimateGames.getInstance().getMessageManager().debug(e);
+                UltimateGames.getInstance().getMessenger().debug(e);
             }
         }
         return null;

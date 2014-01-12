@@ -22,11 +22,16 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.event.Cancellable;
 
 /**
- * Called before an arena is opened, can be cancelled.
+ * An event called before an arena opens.
  */
 public class ArenaOpenEvent extends ArenaEvent implements Cancellable {
     private boolean cancelled;
 
+    /**
+     * Creates a new ArenaOpenEvent.
+     *
+     * @param arena The arena about to open.
+     */
     public ArenaOpenEvent(Arena arena) {
         super(arena);
     }

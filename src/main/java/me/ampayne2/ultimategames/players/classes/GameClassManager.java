@@ -19,18 +19,34 @@
 package me.ampayne2.ultimategames.players.classes;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.events.players.PlayerPostJoinEvent;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.utils.IconMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Manages player classes for games.
  */
 public class GameClassManager {
+    private final UltimateGames ultimateGames;
     private final Map<Game, List<GameClass>> gameClasses = new HashMap<Game, List<GameClass>>();
+    private final Map<String, Map<Game, IconMenu>> classSelectors = new HashMap<String, Map<Game, IconMenu>>();
+
+    /**
+     * Creates a new GameClassManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
+    public GameClassManager(UltimateGames ultimateGames) {
+        this.ultimateGames = ultimateGames;
+    }
 
     /**
      * Checks if a GameClass is registered.
@@ -138,28 +154,57 @@ public class GameClassManager {
         return null;
     }
 
-    public IconMenu getMenu(final UltimateGames ultimateGames, Game game, final Player player) {
+    /**
+     * Gets the class selector of a game.
+     *
+     * @param game   The class selector of a game.
+     * @param player The player of the class selector.
+     * @return The player's class selector of a game.
+     */
+    public IconMenu getClassSelector(Game game, final Player player) {
+        String playerName = player.getName();
+        if (classSelectors.containsKey(playerName) && classSelectors.get(playerName).containsKey(game)) {
+            return classSelectors.get(playerName).get(game);
+        }
+
         final List<GameClass> gameClasses = getGameClasses(game);
-        IconMenu menu = new IconMenu(game.getName() + " Classes", ((int)Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
+        IconMenu menu = new IconMenu(playerName + "'s " + " Classes", ((int) Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
                 GameClass gameClass = gameClasses.get(event.getPosition());
                 if (gameClass.hasAccess(event.getPlayer())) {
                     gameClass.addPlayer(event.getPlayer());
                 } else {
-                    ultimateGames.getMessageManager().sendMessage(player, "classes.noaccess", gameClass.getName());
+                    ultimateGames.getMessenger().sendMessage(event.getPlayer(), "classes.noaccess", gameClass.getName());
                 }
-                event.setWillDestroy(true);
             }
-        },ultimateGames);
+        }, ultimateGames);
         for (int i = 0; i < gameClasses.size(); i++) {
             GameClass gameClass = gameClasses.get(i);
             String name = gameClass.getName();
             if (gameClass instanceof TieredClass) {
                 name = name + " " + ((TieredClass) gameClass).getTier(player);
             }
-            menu.setOption(i, gameClass.getClassIcon(), name, gameClass.hasAccess(player) ? ChatColor.GREEN + "Unlocked": ChatColor.DARK_RED + "Locked");
+            menu.setOption(i, gameClass.getClassIcon(), name, gameClass.hasAccess(player) ? ChatColor.GREEN + "Unlocked" : ChatColor.DARK_RED + "Locked");
         }
         return menu;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerPostJoinEvent event) {
+        Game game = event.getArena().getGame();
+        if (ultimateGames.getGameClassManager().getGameClasses(game).size() > 0) {
+            String playerName = event.getPlayer().getName();
+            if (classSelectors.containsKey(playerName)) {
+                if (classSelectors.get(playerName).containsKey(game)) {
+                    classSelectors.get(playerName).get(game).destroy();
+                }
+                classSelectors.get(playerName).put(game, getClassSelector(game, event.getPlayer()));
+            } else {
+                Map<Game, IconMenu> playerGameClassSelectors = new HashMap<Game, IconMenu>();
+                playerGameClassSelectors.put(game, getClassSelector(game, event.getPlayer()));
+                classSelectors.put(playerName, playerGameClassSelectors);
+            }
+        }
     }
 }

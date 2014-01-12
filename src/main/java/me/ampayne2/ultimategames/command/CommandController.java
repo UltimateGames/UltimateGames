@@ -16,85 +16,139 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
+/*
+ * This file is part of DropParty.
+ *
+ * Copyright (c) 2013-2013 <http://dev.bukkit.org/server-mods/dropparty//>
+ *
+ * DropParty is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DropParty is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with DropParty.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package me.ampayne2.ultimategames.command;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.commands.ExtCmd;
 import me.ampayne2.ultimategames.command.commands.Lobby;
-import me.ampayne2.ultimategames.command.commands.Reload;
 import me.ampayne2.ultimategames.command.commands.SetLobby;
 import me.ampayne2.ultimategames.command.commands.arenas.*;
-import org.bukkit.command.Command;
+import me.ampayne2.ultimategames.message.PageList;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class CommandController extends JavaPlugin implements Listener {
+/**
+ * The ultimategames command executor.
+ */
+public class CommandController implements TabExecutor, Listener {
     private final UltimateGames ultimateGames;
-    private final SubCommand mainCommand;
-    private List<String> bypassers = new ArrayList<String>();
+    private final Command mainCommand;
+    private final PageList pageList;
+    private final Set<String> bypassers = new HashSet<String>();
 
+    /**
+     * Creates a new command controller.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public CommandController(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        mainCommand = new SubCommand(ultimateGames);
 
-        SubCommand arena = new SubCommand(ultimateGames);
-        Create create = new Create(ultimateGames);
-        ultimateGames.getServer().getPluginManager().registerEvents(create, ultimateGames);
-        arena.addCommand(create, "create", "ultimategames.arena.create", 2, true);
-        arena.addCommand(new AddSpawn(ultimateGames), "addspawn", "ultimategames.arena.addspawn", 3, true);
-        arena.addCommand(new SetSpectatorSpawn(ultimateGames), "setspectatorspawn", "ultimategames.arena.setspectatorspawn", 2, true);
-        arena.addCommand(new Open(ultimateGames), "open", "ultimategames.arena.open", 2, false);
-        arena.addCommand(new Begin(ultimateGames), "begin", "ultimategames.arena.begin", 2, false);
-        arena.addCommand(new End(ultimateGames), "end", "ultimategames.arena.end", 2, false);
-        arena.addCommand(new Stop(ultimateGames), "stop", "ultimategames.arena.stop", 2, false);
-        arena.addCommand(new Join(ultimateGames), "join", "ultimategames.arena.join", 2, true);
-        arena.addCommand(new Edit(ultimateGames), "edit", "ultimategames.arena.edit", 0, true);
-        arena.addCommand(new Spectate(ultimateGames), "spectate", "ultimategames.arena.spectate", 2, true);
-        mainCommand.addCommand(arena, "arena", null, null, false);
+        mainCommand = new Command(ultimateGames, "ultimategames", new Permission("ultimategames.all", PermissionDefault.OP), false)
+                .addChildCommand(new About(ultimateGames))
+                .addChildCommand(new Help(ultimateGames))
+                .addChildCommand(new Leave(ultimateGames))
+                .addChildCommand(new Lobby(ultimateGames))
+                .addChildCommand(new SetLobby(ultimateGames))
+                .addChildCommand(new ExtCmd(ultimateGames))
+                .addChildCommand(new Command(ultimateGames, "arena", new Permission("ultimategames.arena.all", PermissionDefault.OP), false)
+                        .addChildCommand(new Join(ultimateGames))
+                        .addChildCommand(new Spectate(ultimateGames))
+                        .addChildCommand(new Edit(ultimateGames))
+                        .addChildCommand(new Open(ultimateGames))
+                        .addChildCommand(new Begin(ultimateGames))
+                        .addChildCommand(new End(ultimateGames))
+                        .addChildCommand(new Stop(ultimateGames))
+                        .addChildCommand(new AddSpawn(ultimateGames))
+                        .addChildCommand(new SetSpectatorSpawn(ultimateGames)));
 
-        mainCommand.addCommand(new Leave(ultimateGames), "leave", null, 0, true);
+        ultimateGames.getCommand(mainCommand.getName()).setExecutor(this);
+        ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
 
-        mainCommand.addCommand(new SetLobby(ultimateGames), "setlobby", "ultimategames.setlobby", 0, true);
-        mainCommand.addCommand(new Lobby(ultimateGames), "lobby", "ultimategames.lobby", 0, true);
-
-        mainCommand.addCommand(new ExtCmd(ultimateGames), "cmd", "ultimategames.extcmd", -1, true);
-
-        mainCommand.addCommand(new Reload(ultimateGames), "reload", "ultimategames.reload", 0, false);
+        pageList = new CommandPageList(ultimateGames, mainCommand);
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        String subCommand = "";
-        if (args.length > 0) {
-            subCommand = args[0];
-        }
-        if (!cmd.getName().equalsIgnoreCase("ultimategames")) {
-            return false;
-        } else if (subCommand.equals("") && mainCommand.commandExists(subCommand)) {
-            mainCommand.execute(subCommand, sender, args);
-        } else if (mainCommand.commandExists(subCommand)) {
-            String[] newArgs;
-            if (args.length == 1) {
-                newArgs = new String[0];
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("ultimategames")) {
+            String subCommand = args.length > 0 ? args[0] : "";
+            if (mainCommand.hasChildCommand(subCommand)) {
+                if (subCommand.equals("")) {
+                    mainCommand.execute(subCommand, sender, args);
+                } else {
+                    String[] newArgs;
+                    if (args.length == 1) {
+                        newArgs = new String[0];
+                    } else {
+                        newArgs = new String[args.length - 1];
+                        System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+                    }
+                    mainCommand.execute(subCommand, sender, newArgs);
+                }
             } else {
-                newArgs = new String[args.length - 1];
-                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+                ultimateGames.getMessenger().sendMessage(sender, "error.command.invalidsubcommand", "\"" + subCommand + "\"", "\"ultimategames\"");
             }
-            mainCommand.execute(subCommand, sender, newArgs);
+            return true;
         } else {
-            ultimateGames.getMessageManager().sendMessage(sender, "commands.invalidsubcommand", "\"" + subCommand + "\"", "\"ultimategames\"");
-            ultimateGames.getMessageManager().sendMessage(sender, "commands.validsubcommands", mainCommand.getSubCommandList());
+            return false;
         }
-        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("ultimategames")) {
+            Command command = mainCommand;
+            if (args.length > 0) {
+                int commandAmount = 1;
+                for (String arg : args) {
+                    if (command.hasChildCommand(arg)) {
+                        command = command.getChildCommand(arg);
+                        commandAmount++;
+                    }
+                }
+                String[] newArgs;
+                if (args.length == 1) {
+                    newArgs = new String[0];
+                } else {
+                    newArgs = new String[args.length - commandAmount];
+                    System.arraycopy(args, commandAmount, newArgs, 0, args.length - commandAmount);
+                }
+                return command.getTabCompleteList(newArgs);
+            }
+            return command.getTabCompleteList(args);
+        }
+        return new ArrayList<String>();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -103,7 +157,7 @@ public class CommandController extends JavaPlugin implements Listener {
         String playerName = player.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
             String[] command = event.getMessage().split(" ");
-            if (command.length > 0 && !command[0].equalsIgnoreCase("/ug") && !command[0].equalsIgnoreCase("/ultimategames") && !bypassers.contains(player.getName())) {
+            if (command.length > 0 && !command[0].equalsIgnoreCase("/ug") && !command[0].equalsIgnoreCase("/ultimategames") && !bypassers.contains(playerName)) {
                 event.setCancelled(true);
                 Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
                 String[] args;
@@ -119,13 +173,41 @@ public class CommandController extends JavaPlugin implements Listener {
         }
     }
 
+    /**
+     * Adds a bypasser to the arena command blocker.
+     *
+     * @param playerName The name of the player to add a bypass for.
+     */
     public void addBlockBypasser(String playerName) {
         bypassers.add(playerName);
     }
 
+    /**
+     * Removes a bypasser from the arena command blocker.
+     *
+     * @param playerName The name of the player to remove the bypass from.
+     */
     public void removeBlockBypasser(String playerName) {
         if (bypassers.contains(playerName)) {
             bypassers.remove(playerName);
         }
+    }
+
+    /**
+     * Gets the main ultimate games command.
+     *
+     * @return The main command.
+     */
+    public Command getMainCommand() {
+        return mainCommand;
+    }
+
+    /**
+     * Gets the PageList of the ultimate games commands.
+     *
+     * @return The PageList.
+     */
+    public PageList getPageList() {
+        return pageList;
     }
 }

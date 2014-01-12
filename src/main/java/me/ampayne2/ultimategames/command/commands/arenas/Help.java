@@ -19,41 +19,38 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 /**
- * A command that opens an arena.
+ * A command that lists all of the ultimate games commands to the sender.
  */
-public class Open extends UGCommand {
+public class Help extends UGCommand {
     private final UltimateGames ultimateGames;
 
     /**
-     * Creates the Open command.
+     * Creates the Help command.
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      */
-    public Open(UltimateGames ultimateGames) {
-        super(ultimateGames, "open", "Opens an arena", "/ug arena open <arena> <game>", new Permission("ultimategames.arena.open", PermissionDefault.OP), 2, false);
+    public Help(UltimateGames ultimateGames) {
+        super(ultimateGames, "help", "Lists all of the ultimate games commands.", "/ug help [page]", new Permission("ultimategames.help", PermissionDefault.TRUE), 0, 1, false);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
     public void execute(String command, CommandSender sender, String[] args) {
-        String arenaName = args[0];
-        String gameName = args[1];
-        if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
-            return;
-        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
-            return;
+        int pageNumber = 1;
+        if (args.length == 1) {
+            try {
+                pageNumber = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                ultimateGames.getMessenger().sendMessage(sender, "error.numberformat");
+                return;
+            }
         }
-        Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-        ultimateGames.getArenaManager().openArena(arena);
-        ultimateGames.getMessenger().sendMessage(sender, "arenas.setstatus", arenaName, gameName, arena.getStatus().name());
+        ultimateGames.getCommandController().getPageList().sendPage(pageNumber, sender);
     }
 }

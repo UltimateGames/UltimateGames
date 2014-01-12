@@ -20,24 +20,39 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class Stop implements UGCommand {
+/**
+ * A command that stops an arena.
+ */
+public class Stop extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the Stop command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public Stop(UltimateGames ultimateGames) {
+        super(ultimateGames, "stop", "Stops an arena", "/ug arena stop <arena> <game>", new Permission("ultimategames.arena.stop", PermissionDefault.OP), 2, false);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
-        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-            ultimateGames.getArenaManager().stopArena(arena);
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.forcestop", arenaName, gameName);
+        if (!ultimateGames.getGameManager().gameExists(gameName)) {
+            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            return;
+        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
+            return;
         }
+        ultimateGames.getArenaManager().stopArena(ultimateGames.getArenaManager().getArena(arenaName, gameName));
+        ultimateGames.getMessenger().sendMessage(sender, "arenas.forcestop", arenaName, gameName);
     }
 }

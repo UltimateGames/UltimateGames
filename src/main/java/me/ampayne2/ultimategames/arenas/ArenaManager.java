@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.spawnpoints.PlayerSpawnPoint;
+import me.ampayne2.ultimategames.config.ConfigType;
 import me.ampayne2.ultimategames.events.arenas.*;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.players.teams.Team;
@@ -33,6 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Manages the ultimate games arenas.
+ */
 public class ArenaManager {
     private final UltimateGames ultimateGames;
     private Map<Game, List<Arena>> arenas = new HashMap<Game, List<Arena>>();
@@ -43,9 +47,14 @@ public class ArenaManager {
     private static final int YAW_INDEX = 4;
     private static final int LOCKED_INDEX = 5;
 
+    /**
+     * Creates a new ArenaManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public ArenaManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getConfig(ConfigType.ARENA);
         if (arenaConfig.getConfigurationSection("Arenas") != null) {
             for (String gameKey : arenaConfig.getConfigurationSection("Arenas").getKeys(false)) {
                 if (ultimateGames.getGameManager().gameExists(gameKey)) {
@@ -212,7 +221,7 @@ public class ArenaManager {
                             for (String playerName : ultimateGames.getQueueManager().getNextPlayers(arena.getMaxPlayers() - arena.getPlayers().size(), arena)) {
                                 ultimateGames.getPlayerManager().addPlayerToArena(Bukkit.getPlayerExact(playerName), arena, true);
                             }
-                            ultimateGames.getMessageManager().debug("Opened arena " + arena.getName() + " of game " + arena.getGame().getName());
+                            ultimateGames.getMessenger().debug("Opened arena " + arena.getName() + " of game " + arena.getGame().getName());
                         }
                         break;
                     default:
@@ -240,7 +249,7 @@ public class ArenaManager {
                         if (arena.getGame().getGamePlugin().isStartPossible(arena)) {
                             arena.setStatus(ArenaStatus.STARTING);
                             arena.getGame().getGamePlugin().startArena(arena);
-                            ultimateGames.getMessageManager().debug("Started arena " + arena.getName() + " of game " + arena.getGame().getName());
+                            ultimateGames.getMessenger().debug("Started arena " + arena.getName() + " of game " + arena.getGame().getName());
                         }
                     default:
                 }
@@ -269,8 +278,8 @@ public class ArenaManager {
                     case STARTING:
                         if (arena.getGame().getGamePlugin().beginArena(arena)) {
                             arena.setStatus(ArenaStatus.RUNNING);
-                            ultimateGames.getMessageManager().sendMessage(arena, "arenas.begin");
-                            ultimateGames.getMessageManager().debug("Began arena " + arena.getName() + " of game " + arena.getGame().getName());
+                            ultimateGames.getMessenger().sendMessage(arena, "arenas.begin");
+                            ultimateGames.getMessenger().debug("Began arena " + arena.getName() + " of game " + arena.getGame().getName());
                         }
                     default:
                 }
@@ -303,13 +312,13 @@ public class ArenaManager {
                     }
                     arena.getGame().getGamePlugin().endArena(arena);
 
-                    ultimateGames.getScoreboardManager().removeArenaScoreboard(arena);
+                    ultimateGames.getScoreboardManager().removeScoreboard(arena);
 
                     for (Team team : ultimateGames.getTeamManager().getTeamsOfArena(arena)) {
                         team.removePlayers();
                     }
 
-                    ultimateGames.getMessageManager().sendMessage(arena, "arenas.end");
+                    ultimateGames.getMessenger().sendMessage(arena, "arenas.end");
 
                     // Teleport everybody out of the arena
                     for (String playerName : arena.getSpectators()) {
@@ -319,7 +328,7 @@ public class ArenaManager {
                         ultimateGames.getPlayerManager().removePlayerFromArena(Bukkit.getPlayerExact(playerName), false);
                     }
 
-                    ultimateGames.getMessageManager().debug("Ended arena " + arena.getName() + " of game " + arena.getGame().getName());
+                    ultimateGames.getMessenger().debug("Ended arena " + arena.getName() + " of game " + arena.getGame().getName());
                     Bukkit.getPluginManager().callEvent(event);
                     if (arena.resetAfterMatch()) {
                         arena.setStatus(ArenaStatus.RESETTING);
@@ -352,7 +361,7 @@ public class ArenaManager {
                 case RESET_FAILED:
                     arena.setStatus(ArenaStatus.ARENA_STOPPED);
                     arena.getGame().getGamePlugin().stopArena(arena);
-                    ultimateGames.getMessageManager().debug("Stopped arena " + arena.getName() + " of game " + arena.getGame().getName());
+                    ultimateGames.getMessenger().debug("Stopped arena " + arena.getName() + " of game " + arena.getGame().getName());
                     Bukkit.getPluginManager().callEvent(new ArenaStopEvent(arena));
                 default:
             }

@@ -18,19 +18,14 @@
  */
 package me.ampayne2.ultimategames.effects;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import me.ampayne2.ultimategames.utils.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import java.lang.reflect.Constructor;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 /**
@@ -45,7 +40,6 @@ import org.bukkit.entity.Player;
  * @author DarkBlade12
  */
 public enum ParticleEffect {
-
     HUGE_EXPLOSION("hugeexplosion", 0),
     LARGE_EXPLODE("largeexplode", 1),
     FIREWORKS_SPARK("fireworksSpark", 2),
@@ -139,8 +133,7 @@ public enum ParticleEffect {
             throw new IllegalArgumentException("Amount of particles has to be greater than 0");
         try {
             Object p = PARTICLE_PACKET_CONSTRUCTOR.newInstance();
-            ReflectionUtil.setValues(p, new ReflectionUtil.FieldEntry("a", name), new ReflectionUtil.FieldEntry("b", (float) loc.getX()), new ReflectionUtil.FieldEntry("c", (float) loc.getY()), new ReflectionUtil.FieldEntry("d", (float) loc.getZ()), new ReflectionUtil.FieldEntry("e",
-                    offsetX), new ReflectionUtil.FieldEntry("f", offsetY), new ReflectionUtil.FieldEntry("g", offsetZ), new ReflectionUtil.FieldEntry("h", speed), new ReflectionUtil.FieldEntry("i", amount));
+            ReflectionUtil.setValues(p, new ReflectionUtil.FieldEntry("a", name), new ReflectionUtil.FieldEntry("b", (float) loc.getX()), new ReflectionUtil.FieldEntry("c", (float) loc.getY()), new ReflectionUtil.FieldEntry("d", (float) loc.getZ()), new ReflectionUtil.FieldEntry("e", offsetX), new ReflectionUtil.FieldEntry("f", offsetY), new ReflectionUtil.FieldEntry("g", offsetZ), new ReflectionUtil.FieldEntry("h", speed), new ReflectionUtil.FieldEntry("i", amount));
             return p;
         } catch (Exception e) {
             Bukkit.getLogger().warning("[ParticleEffect] Failed to create a particle packet!");

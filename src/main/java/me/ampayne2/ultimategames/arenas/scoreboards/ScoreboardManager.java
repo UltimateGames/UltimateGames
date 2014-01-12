@@ -23,8 +23,21 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages the arena scoreboards.
+ */
 public class ScoreboardManager {
     private final Map<Arena, ArenaScoreboard> scoreboards = new HashMap<Arena, ArenaScoreboard>();
+
+    /**
+     * Checks if an arena has an associated ArenaScoreboard.
+     *
+     * @param arena The arena.
+     * @return True if the arena has a scoreboard, else false.
+     */
+    public boolean hasScoreboard(Arena arena) {
+        return scoreboards.containsKey(arena);
+    }
 
     /**
      * Gets the ArenaScoreboard of an arena.
@@ -32,7 +45,7 @@ public class ScoreboardManager {
      * @param arena The arena.
      * @return The arena's ArenaScoreboards.
      */
-    public ArenaScoreboard getArenaScoreboard(Arena arena) {
+    public ArenaScoreboard getScoreboard(Arena arena) {
         return scoreboards.get(arena);
     }
 
@@ -43,7 +56,7 @@ public class ScoreboardManager {
      * @param name  Name of the ArenaScoreboard.
      * @return The ArenaScoreboard created.
      */
-    public ArenaScoreboard createArenaScoreboard(Arena arena, String name) {
+    public ArenaScoreboard createScoreboard(Arena arena, String name) {
         ArenaScoreboard scoreboard = new ArenaScoreboard(name);
         scoreboards.put(arena, scoreboard);
         return scoreboard;
@@ -54,7 +67,7 @@ public class ScoreboardManager {
      *
      * @param arena The arena.
      */
-    public void removeArenaScoreboard(Arena arena) {
+    public void removeScoreboard(Arena arena) {
         if (scoreboards.containsKey(arena)) {
             ArenaScoreboard scoreboard = scoreboards.get(arena);
             scoreboard.reset();

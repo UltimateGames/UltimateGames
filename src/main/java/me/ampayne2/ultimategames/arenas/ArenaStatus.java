@@ -20,6 +20,9 @@ package me.ampayne2.ultimategames.arenas;
 
 import org.bukkit.ChatColor;
 
+/**
+ * An enum of the possible statuses of an arena.
+ */
 public enum ArenaStatus {
     OPEN(ChatColor.GREEN, "Open"),
     STARTING(ChatColor.DARK_GRAY, "Starting"),

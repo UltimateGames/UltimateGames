@@ -31,11 +31,19 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.zip.ZipFile;
 
+/**
+ * Manages all of the ultimate games games.
+ */
 public class GameManager {
     private final UltimateGames ultimateGames;
     private Set<Game> games = new HashSet<Game>();
     private static final int BUFFER_SIZE = 1024;
 
+    /**
+     * Creates a new GameManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     @SuppressWarnings("unchecked")
     public GameManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
@@ -71,71 +79,79 @@ public class GameManager {
                     zip.close();
                 }
 
-                //Does the config file exist?
-                if (configFile != null) {
-                    YamlConfiguration gamePlugin = YamlConfiguration.loadConfiguration(configFile);
+                YamlConfiguration gamePlugin = YamlConfiguration.loadConfiguration(configFile);
 
-                    //Is the configuration a valid one?
-                    if (!gamePlugin.contains("main-class") || !gamePlugin.contains("description") || !gamePlugin.contains("version") || !gamePlugin.contains("author") || !gamePlugin.contains("playerType")) {
-                        ultimateGames.getMessageManager().log(Level.SEVERE, "Game " + file.getAbsolutePath() + " contains an invalid gameplugin.yml file!");
+                //Is the configuration a valid one?
+                if (!gamePlugin.contains("main-class") || !gamePlugin.contains("description") || !gamePlugin.contains("version") || !gamePlugin.contains("author") || !gamePlugin.contains("playerType")) {
+                    ultimateGames.getMessenger().log(Level.SEVERE, "Game " + file.getAbsolutePath() + " contains an invalid gameplugin.yml file!");
+                    jarFile.close();
+                    continue;
+                }
+
+                name = file.getName().replace(".jar", "");
+                description = gamePlugin.getString("description");
+                version = gamePlugin.getString("version");
+                author = gamePlugin.getString("author");
+                playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
+                instructionPages = (ArrayList<String>) gamePlugin.getList("Instructions");
+
+                //We try to load the main class..
+                ultimateGames.getPluginClassLoader().addURL(file.toURI().toURL());
+                Class<?> aclass = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
+
+                Object object = aclass.newInstance();
+
+                //Is the class a valid game plugin?
+                if (object instanceof GamePlugin) {
+                    ultimateGames.getMessenger().log(Level.INFO, "Loading " + name);
+                    GamePlugin plugin = (GamePlugin) object;
+
+                    Game game = new Game(plugin, name, description, version, author, playerType, instructionPages);
+
+                    // Does the game already exist?
+                    if (gameExists(game)) {
+                        ultimateGames.getMessenger().log(Level.SEVERE, "The game " + name + " already exists!");
                         jarFile.close();
                         continue;
                     }
 
-                    name = file.getName().replace(".jar", "");
-                    description = gamePlugin.getString("description");
-                    version = gamePlugin.getString("version");
-                    author = gamePlugin.getString("author");
-                    playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
-                    instructionPages = (ArrayList<String>) gamePlugin.getList("Instructions");
-
-                    //We try to load the main class..
-                    ultimateGames.getPluginClassLoader().addURL(file.toURI().toURL());
-                    Class<?> aclass = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
-
-                    Object object = aclass.newInstance();
-
-                    //Is the class a valid game plugin?
-                    if (object instanceof GamePlugin) {
-                        ultimateGames.getMessageManager().log(Level.INFO, "Loading " + name);
-                        GamePlugin plugin = (GamePlugin) object;
-
-                        Game game = new Game(plugin, name, description, version, author, playerType, instructionPages);
-
-                        // Does the game already exist?
-                        if (gameExists(game)) {
-                            ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + name + " already exists!");
-                            jarFile.close();
-                            continue;
-                        }
-
-                        //We load the game
-                        if (plugin.loadGame(ultimateGames, game)) {
-                            addGame(game);
-                            ultimateGames.getServer().getPluginManager().registerEvents(plugin, ultimateGames);
-                        }
-                    } else {
-                        ultimateGames.getMessageManager().log(Level.SEVERE, "The game " + name + " has an invalid main class!");
+                    //We load the game
+                    if (plugin.loadGame(ultimateGames, game)) {
+                        addGame(game);
+                        ultimateGames.getServer().getPluginManager().registerEvents(plugin, ultimateGames);
                     }
+                } else {
+                    ultimateGames.getMessenger().log(Level.SEVERE, "The game " + name + " has an invalid main class!");
                 }
             } catch (Exception e) {
-                ultimateGames.getMessageManager().log(Level.WARNING, "An error occurred whilst loading the game " + file.getName() + ".");
-                ultimateGames.getMessageManager().debug(e);
+                ultimateGames.getMessenger().log(Level.WARNING, "An error occurred whilst loading the game " + file.getName() + ".");
+                ultimateGames.getMessenger().debug(e);
                 if (jarFile != null) {
                     try {
                         jarFile.close();
                     } catch (IOException e1) {
-                        ultimateGames.getMessageManager().debug(e1);
+                        ultimateGames.getMessenger().debug(e1);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Gets the games loaded.
+     *
+     * @return The games loaded.
+     */
     public Set<Game> getGames() {
         return games;
     }
 
+    /**
+     * Checks if a game is loaded.
+     *
+     * @param gameName The name of the game.
+     * @return True if the game is loaded, else false.
+     */
     public boolean gameExists(String gameName) {
         for (Game game : games) {
             if (game.getName().equalsIgnoreCase(gameName)) {
@@ -145,15 +161,22 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * Checks if a game is loaded.
+     *
+     * @param game The game.
+     * @return True if the game is loaded, else false.
+     */
     public boolean gameExists(Game game) {
-        for (Game aGame : games) {
-            if (aGame.equals(game)) {
-                return true;
-            }
-        }
-        return false;
+        return games.contains(game);
     }
 
+    /**
+     * Gets the game of a certain name.
+     *
+     * @param gameName The name of the game.
+     * @return The game of the certain name.
+     */
     public Game getGame(String gameName) {
         for (Game game : games) {
             if (gameName.equalsIgnoreCase(game.getName())) {
@@ -163,23 +186,35 @@ public class GameManager {
         return null;
     }
 
+    /**
+     * Adds a game to the manager.
+     *
+     * @param game The game to add.
+     * @return True if the game wasn't already loaded, else false.
+     */
     public boolean addGame(Game game) {
         if (gameExists(game)) {
             return false;
         } else {
             games.add(game);
             ultimateGames.getConfigManager().addGameConfig(game);
-            ultimateGames.getMessageManager().loadGameMessages(game);
+            ultimateGames.getMessenger().loadGameMessages(game);
             ultimateGames.getMetricsManager().addGame(game);
-            ultimateGames.getMessageManager().log(Level.INFO, "Added game " + game.getName());
+            ultimateGames.getMessenger().log(Level.INFO, "Added game " + game.getName());
             return true;
         }
     }
 
+    /**
+     * Disables all games.
+     */
     public void disableAll() {
         //TODO: The logic
     }
 
+    /**
+     * The filter for game jar files.
+     */
     private class GameFileFilter implements FileFilter {
         @Override
         public boolean accept(File pathname) {

@@ -19,24 +19,23 @@
 package me.ampayne2.ultimategames.events.players;
 
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.events.arenas.ArenaEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 /**
- * Called before a spectator joins an arena, can be cancelled.
+ * An event called before a spectator joins.
  */
-public class SpectatorPreJoinEvent extends ArenaEvent implements Cancellable {
-    private final Player player;
+public class SpectatorPreJoinEvent extends PlayerEvent implements Cancellable {
     private boolean cancelled;
 
+    /**
+     * Creates a new SpectatorPreJoinEvent.
+     *
+     * @param player The spectator about to join.
+     * @param arena  The arena the spectator is about to join.
+     */
     public SpectatorPreJoinEvent(Player player, Arena arena) {
-        super(arena);
-        this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
+        super(player, arena);
     }
 
     @Override

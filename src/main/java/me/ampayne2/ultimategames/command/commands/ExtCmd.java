@@ -19,31 +19,42 @@
 package me.ampayne2.ultimategames.command.commands;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class ExtCmd implements UGCommand {
+/**
+ * A command that allows you to bypass the arena command blocker.
+ */
+public class ExtCmd extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the ExtCmd command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public ExtCmd(UltimateGames ultimateGames) {
+        super(ultimateGames, "cmd", "Allows you to use a non-ug command inside an arena.", "/ug cmd [command]", new Permission("ultimategames.extcmd", PermissionDefault.OP), true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         Player player = (Player) sender;
         String playerName = player.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-            StringBuilder command = new StringBuilder(args[0]);
+            StringBuilder extCommand = new StringBuilder(args[0]);
             if (args.length != 1) {
                 for (int i = 1; i < args.length; i++) {
-                    command.append(" ");
-                    command.append(args[i]);
+                    extCommand.append(" ");
+                    extCommand.append(args[i]);
                 }
             }
             ultimateGames.getCommandController().addBlockBypasser(playerName);
-            player.performCommand(command.toString());
+            player.performCommand(extCommand.toString());
             ultimateGames.getCommandController().removeBlockBypasser(playerName);
         }
     }

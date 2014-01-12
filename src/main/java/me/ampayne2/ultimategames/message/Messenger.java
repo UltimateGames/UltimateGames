@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.message;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.config.ConfigType;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,29 +32,39 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Message {
+/**
+ * Manages ultimate games message sending, logging, and debugging.
+ */
+public class Messenger {
     private final UltimateGames ultimateGames;
     private final boolean debug;
+    private final Logger log;
     private final String messagePrefix;
     private final String gamePrefix;
-    private final Logger log;
     private Map<String, String> messages = new HashMap<String, String>();
     private Map<String, Map<String, String>> gameMessages = new HashMap<String, Map<String, String>>();
-    private Map<Class<?>, MessageRecipient> recipients = new HashMap<Class<?>, MessageRecipient>();
+    private Map<Class<?>, RecipientHandler> recipientHandlers = new HashMap<Class<?>, RecipientHandler>();
 
-    public Message(UltimateGames ultimateGames) {
+    /**
+     * Creates a new message manager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
+    public Messenger(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        debug = ultimateGames.getConfig().getBoolean("debug");
-        String prefix = messages.get("prefix");
-        messagePrefix = ChatColor.translateAlternateColorCodes('&', prefix == null ? "&8[&bUltimateGames&8] " : prefix);
-        String gPrefix = messages.get("gameprefix");
-        gamePrefix = ChatColor.translateAlternateColorCodes('&', gPrefix == null ? "&8[&b%s&8] " : gPrefix);
+        debug = ultimateGames.getConfig().getBoolean("debug", false);
         log = ultimateGames.getLogger();
         loadMessages();
+        messagePrefix = messages.containsKey("prefix") ? messages.get("prefix") : ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "UltimateGames" + ChatColor.DARK_GRAY + "]";
+        gamePrefix = messages.containsKey("gameprefix") ? messages.get("gameprefix") : ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "%s" + ChatColor.DARK_GRAY + "]";
     }
 
+    /**
+     * Loads the ultimate games messages.
+     */
     public void loadMessages() {
-        FileConfiguration messageConfig = ultimateGames.getConfigManager().getMessageConfig().getConfig();
+        messages.clear();
+        FileConfiguration messageConfig = ultimateGames.getConfigManager().getConfig(ConfigType.MESSAGE);
         for (String key : messageConfig.getConfigurationSection("Messages").getKeys(true)) {
             messages.put(key, ChatColor.translateAlternateColorCodes('&', messageConfig.getString("Messages." + key)));
         }
@@ -62,10 +73,10 @@ public class Message {
     /**
      * Loads a game's messages.
      *
-     * @param game The game.
+     * @param game The game whose messages to load.
      */
     public void loadGameMessages(Game game) {
-        FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
+        FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game);
         if (gameConfig.isConfigurationSection("Messages")) {
             gameMessages.remove(game.getName());
             Map<String, String> messages = new HashMap<String, String>();
@@ -76,8 +87,15 @@ public class Message {
         }
     }
 
-    public Message registerRecipient(Class recipientClass, MessageRecipient recipient) {
-        recipients.put(recipientClass, recipient);
+    /**
+     * Registers a recipient with a RecipientHandler.
+     *
+     * @param recipientClass   The recipient's class.
+     * @param recipientHandler The RecipientHandler.
+     * @return The Messenger instance.
+     */
+    public Messenger registerRecipient(Class recipientClass, RecipientHandler recipientHandler) {
+        recipientHandlers.put(recipientClass, recipientHandler);
         return this;
     }
 
@@ -100,6 +118,7 @@ public class Message {
         return String.format(gamePrefix, game.getName());
     }
 
+
     /**
      * Gets a message with translated color codes.
      *
@@ -107,11 +126,7 @@ public class Message {
      * @return The message.
      */
     public String getMessage(String path) {
-        String message = messages.get(path);
-        if (message == null) {
-            message = ChatColor.DARK_RED + "No configured message for " + path;
-        }
-        return message;
+        return messages.containsKey(path) ? messages.get(path) : ChatColor.DARK_RED + "No configured message for " + path;
     }
 
     /**
@@ -122,25 +137,25 @@ public class Message {
      * @return The message.
      */
     public String getGameMessage(Game game, String path) {
-        Map<String, String> messages = gameMessages.get(game.getName());
-        String message = messages == null ? null : messages.get(path);
-        if (message == null) {
-            message = ChatColor.DARK_RED + "No configured message for " + path;
+        if (gameMessages.containsKey(game.getName())) {
+            Map<String, String> messages = gameMessages.get(game.getName());
+            if (messages.containsKey(path)) {
+                return messages.get(path);
+            }
         }
-        return message;
+        return ChatColor.DARK_RED + "No configured message for " + path;
     }
 
     /**
      * Sends a message to a recipient.
      *
-     * @param recipient The recipient of the message; Either CommandSender, Team, Arena, or Server.
+     * @param recipient The recipient of the message.
      * @param path      The path to the message.
      * @param replace   Strings to replace any occurences of %s in the message with.
      * @return True if the message was sent, else false.
      */
     public boolean sendMessage(Object recipient, String path, String... replace) {
-        String message = getMessage(path);
-        return sendRawMessage(recipient, getPrefix() + (replace == null ? message : String.format(message, (Object[]) replace)));
+        return sendRawMessage(recipient, messagePrefix + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
     }
 
     /**
@@ -153,8 +168,7 @@ public class Message {
      * @return True if the message was sent, else false.
      */
     public boolean sendGameMessage(Object recipient, Game game, String path, String... replace) {
-        String message = getGameMessage(game, path);
-        return sendRawMessage(recipient, getGamePrefix(game) + (replace == null ? message : String.format(message, (Object[]) replace)));
+        return sendRawMessage(recipient, getGamePrefix(game) + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
     }
 
     /**
@@ -166,9 +180,9 @@ public class Message {
      */
     public boolean sendRawMessage(Object recipient, String message) {
         if (recipient != null && message != null) {
-            for (Class<?> recipientClass : recipients.keySet()) {
+            for (Class<?> recipientClass : recipientHandlers.keySet()) {
                 if (recipientClass.isAssignableFrom(recipient.getClass())) {
-                    recipients.get(recipientClass).sendMessage(recipient, message);
+                    recipientHandlers.get(recipientClass).sendMessage(recipient, message);
                     return true;
                 }
             }

@@ -45,9 +45,17 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Handles all arena events.
+ */
 public class ArenaListener implements Listener {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates a new ArenaListener.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public ArenaListener(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
@@ -267,7 +275,7 @@ public class ArenaListener implements Listener {
                         Team playerTeam = teamManager.getPlayerTeam(playerName);
                         Team damagerTeam = teamManager.getPlayerTeam(damagerName);
                         if (playerTeam != null && playerTeam.equals(damagerTeam) && !playerTeam.hasFriendlyFire()) {
-                            ultimateGames.getMessageManager().sendMessage(damager, "teams.friendlyfire");
+                            ultimateGames.getMessenger().sendMessage(damager, "teams.friendlyfire");
                             event.setCancelled(true);
                         } else {
                             arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
@@ -406,7 +414,7 @@ public class ArenaListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerItemConsome(PlayerItemConsumeEvent event) {
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         String playerName = event.getPlayer().getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
             Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);

@@ -18,115 +18,108 @@
  */
 package me.ampayne2.ultimategames.config;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
+import me.ampayne2.ultimategames.UltimateGames;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
+
+/**
+ * Used to access a YamlConfiguration file.
+ */
 public class ConfigAccessor {
-    private final String fileName;
-    private final JavaPlugin plugin;
+    private final UltimateGames ultimateGames;
+    private final ConfigType configType;
     private final File configFile;
     private FileConfiguration fileConfiguration;
 
-    public ConfigAccessor(JavaPlugin plugin, String fileName, File parent) {
-        this.plugin = plugin;
-        this.fileName = fileName;
+    /**
+     * Creates a new ConfigAccessor.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     * @param configType    The ConfigType of the configuration file.
+     * @param parent        The parent file.
+     */
+    public ConfigAccessor(UltimateGames ultimateGames, ConfigType configType, File parent) {
+        this.ultimateGames = ultimateGames;
+        this.configType = configType;
+        this.configFile = new File(parent, configType.getFileName());
+    }
+
+    /**
+     * Creates a new ConfigAccessor.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     * @param fileName      The file name of the configuration file.
+     * @param parent        The parent file.
+     */
+    public ConfigAccessor(UltimateGames ultimateGames, String fileName, File parent) {
+        this.ultimateGames = ultimateGames;
+        this.configType = null;
         this.configFile = new File(parent, fileName);
     }
 
-    public void reloadConfig() {
+    /**
+     * Reloads the configuration file from disk.
+     */
+    public ConfigAccessor reloadConfig() {
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
 
-        // Look for defaults in the jar
-        InputStream defConfigStream = plugin.getResource(fileName);
+        InputStream defConfigStream = ultimateGames.getResource(configType.getFileName());
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfiguration.setDefaults(defConfig);
         }
+        return this;
     }
 
+    /**
+     * Gets the config.
+     *
+     * @return The FileConfiguration.
+     */
     public FileConfiguration getConfig() {
         if (fileConfiguration == null) {
-            this.reloadConfig();
+            reloadConfig();
         }
         return fileConfiguration;
     }
 
-    public void saveConfig() {
-        if (fileConfiguration != null && configFile != null) {
+    /**
+     * Saves the config to disk.
+     */
+    public ConfigAccessor saveConfig() {
+        if (fileConfiguration != null) {
             try {
                 getConfig().save(configFile);
-            } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Could not save config to " + configFile, ex);
+            } catch (IOException e) {
+                ultimateGames.getMessenger().log(Level.SEVERE, "Could not save config to " + configFile);
+                ultimateGames.getMessenger().debug(e);
             }
         }
+        return this;
     }
 
-    public void saveDefaultConfig() {
+    /**
+     * Generates the default config if it hasn't already been generated.
+     */
+    public ConfigAccessor saveDefaultConfig() {
         if (!configFile.exists()) {
-            this.plugin.saveResource(fileName, false);
+            ultimateGames.saveResource(configType.getFileName(), false);
         }
+        return this;
     }
 
-    public static String saveInventory(Inventory inventory) {
-        YamlConfiguration config = new YamlConfiguration();
-
-        // Save every element in the list
-        saveInventory(inventory, config);
-        return config.saveToString();
-    }
-
-    public static void saveInventory(Inventory inventory, ConfigurationSection destination) {
-        // Save every element in the list
-        for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack item = inventory.getItem(i);
-
-            // Don't store NULL entries
-            if (item != null) {
-                destination.set(Integer.toString(i), item);
-            }
-        }
-    }
-
-    public static ItemStack[] loadInventory(String data) throws InvalidConfigurationException {
-        YamlConfiguration config = new YamlConfiguration();
-
-        // Load the string
-        config.loadFromString(data);
-        return loadInventory(config);
-    }
-
-    public static ItemStack[] loadInventory(ConfigurationSection source) throws InvalidConfigurationException {
-        List<ItemStack> stacks = new ArrayList<ItemStack>();
-
-        try {
-            // Try to parse this inventory
-            for (String key : source.getKeys(false)) {
-                int number = Integer.parseInt(key);
-
-                // Size should always be bigger
-                while (stacks.size() <= number) {
-                    stacks.add(null);
-                }
-
-                stacks.set(number, (ItemStack) source.get(key));
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidConfigurationException("Expected a number.", e);
-        }
-
-        // Return result
-        return stacks.toArray(new ItemStack[0]);
+    /**
+     * Gets the ConfigType.
+     *
+     * @return The ConfigAccessor's ConfigType.
+     */
+    public ConfigType getConfigType() {
+        return configType;
     }
 }

@@ -21,32 +21,54 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.ArenaStatus;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class Spectate implements UGCommand {
+/**
+ * A command that adds the sender to an arena as a spectator.
+ */
+public class Spectate extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the Spectate command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public Spectate(UltimateGames ultimateGames) {
+        super(ultimateGames, "spectate", "Spectates an arena", "/ug arena spectate <arena> <game>", new Permission("ultimategames.arena.spectate", PermissionDefault.TRUE), 2, true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
-        if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-            Player player = (Player) sender;
-            String playerName = player.getName();
-            if (!ultimateGames.getPlayerManager().isPlayerInArena(playerName) && !ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
-                ArenaStatus arenaStatus = arena.getStatus();
-                if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING) {
-                    // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
-                    ultimateGames.getPlayerManager().addSpectatorToArena(player, arena);
-                }
-            }
+        if (!ultimateGames.getGameManager().gameExists(gameName)) {
+            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            return;
+        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
+            return;
+        }
+        Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
+        Player player = (Player) sender;
+        String playerName = player.getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.alreadyinarena");
+            return;
+        } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.alreadyspectatingarena");
+            return;
+        }
+        ArenaStatus arenaStatus = arena.getStatus();
+        if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING || arenaStatus == ArenaStatus.RUNNING) {
+            ultimateGames.getPlayerManager().addSpectatorToArena(player, arena);
+        } else {
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.notloaded");
         }
     }
 }

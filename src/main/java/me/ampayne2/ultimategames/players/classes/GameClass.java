@@ -28,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A basic game class that handles resetting inventories and more.
+ * A basic game class that handles resetting inventories and more.<br>
+ * Must be registered with the {@link me.ampayne2.ultimategames.players.classes.GameClassManager}.
  */
 public abstract class GameClass {
     private final UltimateGames ultimateGames;
@@ -43,7 +44,7 @@ public abstract class GameClass {
     /**
      * Creates a new GameClass.
      *
-     * @param ultimateGames           A reference to the UltimateGames instance.
+     * @param ultimateGames           The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      * @param game                    The game of the GameClass.
      * @param name                    The name of the GameClass.
      * @param canSwitchToWithoutDeath If a player can join the GameClass without having to die first.
@@ -141,11 +142,11 @@ public abstract class GameClass {
             players.add(playerName);
             if (resetInventory) {
                 if (sendMessage) {
-                    ultimateGames.getMessageManager().sendMessage(player, "classes.join", name);
+                    ultimateGames.getMessenger().sendMessage(player, "classes.join", name);
                 }
                 resetInventory(player);
             } else if (sendMessage) {
-                ultimateGames.getMessageManager().sendMessage(player, "classes.nextdeath", name);
+                ultimateGames.getMessenger().sendMessage(player, "classes.nextdeath", name);
             }
             return true;
         } else {

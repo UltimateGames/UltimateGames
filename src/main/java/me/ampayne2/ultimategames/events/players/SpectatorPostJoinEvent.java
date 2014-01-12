@@ -19,21 +19,20 @@
 package me.ampayne2.ultimategames.events.players;
 
 import me.ampayne2.ultimategames.arenas.Arena;
-import me.ampayne2.ultimategames.events.arenas.ArenaEvent;
 import org.bukkit.entity.Player;
 
 /**
- * Called after a spectator joins an arena.
+ * An event called after a spectator joins.
  */
-public class SpectatorPostJoinEvent extends ArenaEvent {
-    private final Player player;
+public class SpectatorPostJoinEvent extends PlayerEvent {
 
+    /**
+     * Creates a new SpectatorPostJoinEvent.
+     *
+     * @param player The spectator who joined.
+     * @param arena  The arena the spectator joined.
+     */
     public SpectatorPostJoinEvent(Player player, Arena arena) {
-        super(arena);
-        this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
+        super(player, arena);
     }
 }

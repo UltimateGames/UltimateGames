@@ -29,6 +29,11 @@ public abstract class ArenaEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final Arena arena;
 
+    /**
+     * Creates an ArenaEvent.
+     *
+     * @param arena The arena associated with the event.
+     */
     public ArenaEvent(Arena arena) {
         this.arena = arena;
     }

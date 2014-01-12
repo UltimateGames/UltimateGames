@@ -23,6 +23,9 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * The base class for a countdown.
+ */
 public abstract class Countdown extends BukkitRunnable {
     protected final UltimateGames ultimateGames;
     protected final Arena arena;
@@ -33,7 +36,7 @@ public abstract class Countdown extends BukkitRunnable {
     /**
      * Creates a new Countdown.
      *
-     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      * @param arena         The arena of the countdown.
      * @param initialTicks  Initial ticks of the countdown.
      * @param period        Amount of ticks to wait between each run.
@@ -45,6 +48,11 @@ public abstract class Countdown extends BukkitRunnable {
         this.period = period;
     }
 
+    /**
+     * Starts the countdown.
+     *
+     * @return True if the countdown was started.
+     */
     public boolean start() {
         if (taskId == null) {
             taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames, this, 0, period);
@@ -54,6 +62,9 @@ public abstract class Countdown extends BukkitRunnable {
         }
     }
 
+    /**
+     * Stops the countdown.
+     */
     public void stop() {
         if (taskId != null) {
             Bukkit.getScheduler().cancelTask(taskId);
@@ -61,6 +72,11 @@ public abstract class Countdown extends BukkitRunnable {
         }
     }
 
+    /**
+     * Gets the ticks left on the countdown.
+     *
+     * @return The ticks left.
+     */
     public int getTicksLeft() {
         return ticksLeft;
     }

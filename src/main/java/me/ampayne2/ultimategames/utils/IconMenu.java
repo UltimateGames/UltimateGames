@@ -18,8 +18,6 @@
  */
 package me.ampayne2.ultimategames.utils;
 
-import java.util.Arrays;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,8 +31,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-public class IconMenu implements Listener {
+import java.util.Arrays;
 
+public class IconMenu implements Listener {
     private String name;
     private int size;
     private OptionClickEventHandler handler;
@@ -84,17 +83,17 @@ public class IconMenu implements Listener {
         }
     }
 
-    @EventHandler(priority=EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory().getTitle().equals(name)) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
             if (slot >= 0 && slot < size && optionNames[slot] != null) {
                 Plugin plugin = this.plugin;
-                OptionClickEvent e = new OptionClickEvent((Player)event.getWhoClicked(), slot, optionNames[slot]);
+                OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
                 handler.onOptionClick(e);
                 if (e.willClose()) {
-                    final Player p = (Player)event.getWhoClicked();
+                    final Player p = (Player) event.getWhoClicked();
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         public void run() {
                             p.closeInventory();
@@ -163,5 +162,4 @@ public class IconMenu implements Listener {
         item.setItemMeta(im);
         return item;
     }
-
 }

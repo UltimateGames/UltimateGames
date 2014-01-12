@@ -21,7 +21,6 @@ package me.ampayne2.ultimategames.arenas.countdowns;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 /**
  * A type of countdown used to end the game.
@@ -35,7 +34,7 @@ public class EndingCountdown extends Countdown {
     /**
      * Creates a new Ending Countdown.
      *
-     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      * @param arena         The arena of the countdown.
      * @param expDisplay    If the countdown should display exp.
      */
@@ -44,10 +43,20 @@ public class EndingCountdown extends Countdown {
         this.expDisplay = expDisplay;
     }
 
+    /**
+     * Gets the seconds left on the ending countdown.
+     *
+     * @return The seconds left.
+     */
     public int getSecondsLeft() {
         return ticksLeft / TPS;
     }
 
+    /**
+     * Checks if the ending countdown is displayed with exp.
+     *
+     * @return True if the ending countdown has an exp display, else false.
+     */
     public boolean hasExpDisplay() {
         return expDisplay;
     }
@@ -64,7 +73,7 @@ public class EndingCountdown extends Countdown {
             }
         }
         if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
-            ultimateGames.getMessageManager().sendMessage(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
+            ultimateGames.getMessenger().sendMessage(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
         } else if (secondsLeft == END_COUNTDOWN_TIME) {
             ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             ultimateGames.getArenaManager().endArena(arena);

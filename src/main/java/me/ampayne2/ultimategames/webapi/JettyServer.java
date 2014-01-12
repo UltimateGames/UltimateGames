@@ -27,7 +27,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class JettyServer {
-
     private Server server;
     private static final int CORE_POOL_SIZE = 2;
     private static final int MAX_CONNECTIONS = 30;

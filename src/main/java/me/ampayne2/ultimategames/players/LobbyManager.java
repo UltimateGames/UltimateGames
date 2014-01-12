@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.players;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.config.ConfigType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,9 +32,14 @@ public class LobbyManager {
     private final UltimateGames ultimateGames;
     private Location lobby;
 
+    /**
+     * Creates a new LobbyManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public LobbyManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
-        FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getLobbyConfig().getConfig();
+        FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY);
         if (lobbyConfig.contains("world") && lobbyConfig.contains("x") && lobbyConfig.contains("y") && lobbyConfig.contains("z") && lobbyConfig.contains("pitch") && lobbyConfig.contains("yaw")) {
             String world = lobbyConfig.getString("world");
             Double x = lobbyConfig.getDouble("x");
@@ -48,19 +54,29 @@ public class LobbyManager {
         }
     }
 
+    /**
+     * Gets the lobby.
+     *
+     * @return The lobby.
+     */
     public Location getLobby() {
         return lobby;
     }
 
+    /**
+     * Sets the lobby.
+     *
+     * @param location The lobby.
+     */
     public void setLobby(Location location) {
         lobby = location;
-        FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getLobbyConfig().getConfig();
+        FileConfiguration lobbyConfig = ultimateGames.getConfigManager().getConfig(ConfigType.LOBBY);
         lobbyConfig.set("world", location.getWorld().getName());
         lobbyConfig.set("x", location.getX());
         lobbyConfig.set("y", location.getY());
         lobbyConfig.set("z", location.getZ());
         lobbyConfig.set("pitch", location.getPitch());
         lobbyConfig.set("yaw", location.getYaw());
-        ultimateGames.getConfigManager().getLobbyConfig().saveConfig();
+        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.LOBBY).saveConfig();
     }
 }

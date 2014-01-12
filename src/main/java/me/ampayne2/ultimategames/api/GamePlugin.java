@@ -35,7 +35,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 
 /**
- * The API used for creating an Ultimate Game.
+ * The API used for creating an Ultimate Game.<br>
  * Extend this class, implement all the abstract methods, and override any non-abstract methods you may need.
  */
 public abstract class GamePlugin implements Listener {
@@ -336,9 +336,21 @@ public abstract class GamePlugin implements Listener {
     public void onBlockFade(Arena arena, BlockFadeEvent event) {
     }
 
+    /**
+     * Handles inventories opening.
+     *
+     * @param arena The arena the inventory is being opened in.
+     * @param event The InventoryOpenEvent.
+     */
     public void onInventoryOpen(Arena arena, InventoryOpenEvent event) {
     }
 
+    /**
+     * Handles item consumption.
+     *
+     * @param arena The arena the item is being consumed in.
+     * @param event The PlayerItemConsumeEvent.
+     */
     public void onPlayerItemConsume(Arena arena, PlayerItemConsumeEvent event) {
     }
 }

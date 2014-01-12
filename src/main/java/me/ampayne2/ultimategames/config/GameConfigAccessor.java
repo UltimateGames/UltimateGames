@@ -18,16 +18,29 @@
  */
 package me.ampayne2.ultimategames.config;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import me.ampayne2.ultimategames.UltimateGames;
 
 import java.io.File;
 
+/**
+ * A ConfigAccessor used to access a game config.
+ */
 public class GameConfigAccessor extends ConfigAccessor {
-    public GameConfigAccessor(JavaPlugin plugin, String gameName) {
-        super(plugin, gameName + ".yml", new File(plugin.getDataFolder() + "/Games"));
+    private static final String EXTENSION = ".yml";
+    private static final String GAME_FOLDER = "/Games";
+
+    /**
+     * Creates a new GameConfigAccessor.
+     *
+     * @param ultimateGames The UltimateGames instance.
+     * @param gameName      The name of the game.
+     */
+    public GameConfigAccessor(UltimateGames ultimateGames, String gameName) {
+        super(ultimateGames, gameName + EXTENSION, new File(ultimateGames.getDataFolder() + GAME_FOLDER));
     }
 
     @Override
-    public void saveDefaultConfig() {
+    public ConfigAccessor saveDefaultConfig() {
+        return this;
     }
 }

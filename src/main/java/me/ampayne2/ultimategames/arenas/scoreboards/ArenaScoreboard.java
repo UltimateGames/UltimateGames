@@ -28,6 +28,10 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.Collection;
 
+/**
+ * A wrapper for the bukkit scoreboard.<br>
+ * Create using the {@link me.ampayne2.ultimategames.arenas.scoreboards.ScoreboardManager}.
+ */
 public class ArenaScoreboard {
     private final Scoreboard scoreboard;
     private final String name;
@@ -89,7 +93,7 @@ public class ArenaScoreboard {
      */
     public void removePlayers(Collection<Player> players) {
         for (Player player : players) {
-            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+            removePlayer(player);
         }
     }
 

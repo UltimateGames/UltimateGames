@@ -31,7 +31,7 @@ public class UGChestManager {
     /**
      * Creates a new Chest Manager.
      *
-     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      */
     public UGChestManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;

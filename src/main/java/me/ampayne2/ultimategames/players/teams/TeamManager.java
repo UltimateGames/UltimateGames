@@ -33,6 +33,11 @@ public class TeamManager {
     private Map<Arena, List<Team>> teams = new HashMap<Arena, List<Team>>();
     private static final Random RANDOM = new Random();
 
+    /**
+     * Creates a new TeamManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public TeamManager(UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
     }
@@ -188,10 +193,10 @@ public class TeamManager {
             Team oldTeam = getPlayerTeam(playerName);
             if (oldTeam != null) {
                 oldTeam.removePlayer(playerName);
-                ultimateGames.getMessageManager().sendMessage(player, "teams.leave", oldTeam.getColor() + oldTeam.getName());
+                ultimateGames.getMessenger().sendMessage(player, "teams.leave", oldTeam.getColor() + oldTeam.getName());
             }
             team.addPlayer(player);
-            ultimateGames.getMessageManager().sendMessage(player, "teams.join", team.getColor() + team.getName());
+            ultimateGames.getMessenger().sendMessage(player, "teams.join", team.getColor() + team.getName());
             return true;
         } else {
             return false;
@@ -214,6 +219,7 @@ public class TeamManager {
      * Evenly sorts players in an arena into the arena's teams.<br>
      * Kicks players from the arena to stop uneven teams.<br>
      * Players who haven't joined a team yet are kicked before players who have.
+     * TODO: Make the player's unlocked classes/tiers influence the sorting.
      *
      * @param arena The arena to sort the players of.
      */
@@ -241,7 +247,7 @@ public class TeamManager {
         while (players.size() % teamAmount != 0) {
             Player playerToKick = Bukkit.getPlayerExact(playersNotInTeams.size() > 0 ? playersNotInTeams.get(playersNotInTeams.size() - 1) : playersInTeams.get(playersInTeams.size() - 1));
             ultimateGames.getPlayerManager().removePlayerFromArena(playerToKick, false);
-            ultimateGames.getMessageManager().sendMessage(playerToKick, "arenas.kick");
+            ultimateGames.getMessenger().sendMessage(playerToKick, "arenas.kick");
             playersInTeams.remove(playerToKick.getName());
             playersNotInTeams.remove(playerToKick.getName());
             players = arena.getPlayers();
@@ -253,7 +259,7 @@ public class TeamManager {
             while ((players.size() / teamAmount) < teamPlayers.size()) {
                 String playerName = teamPlayers.get(teamPlayers.size() - 1);
                 team.removePlayer(playerName);
-                ultimateGames.getMessageManager().sendMessage(Bukkit.getPlayerExact(playerName), "teams.kick", team.getColor() + team.getName());
+                ultimateGames.getMessenger().sendMessage(Bukkit.getPlayerExact(playerName), "teams.kick", team.getColor() + team.getName());
                 playersNotInTeams.add(playerName);
                 teamPlayers = team.getPlayers();
             }
@@ -264,7 +270,7 @@ public class TeamManager {
             while ((players.size() / teamAmount) > team.getPlayers().size()) {
                 Player player = Bukkit.getPlayerExact(playersNotInTeams.get(RANDOM.nextInt(playersNotInTeams.size())));
                 team.addPlayer(player);
-                ultimateGames.getMessageManager().sendMessage(player, "teams.join", team.getColor() + team.getName());
+                ultimateGames.getMessenger().sendMessage(player, "teams.join", team.getColor() + team.getName());
                 playersNotInTeams.remove(player.getName());
             }
         }

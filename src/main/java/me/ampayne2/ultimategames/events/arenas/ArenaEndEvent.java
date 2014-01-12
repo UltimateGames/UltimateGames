@@ -22,11 +22,16 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.EndType;
 
 /**
- * Called after an arena ends.
+ * An event called after an arena ends.
  */
 public class ArenaEndEvent extends ArenaEvent {
     private final EndType endType;
 
+    /**
+     * Creates a new ArenaEndEvent.
+     *
+     * @param arena The arena about to end.
+     */
     public ArenaEndEvent(Arena arena, EndType endType) {
         super(arena);
         this.endType = endType;

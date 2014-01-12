@@ -19,6 +19,8 @@
 package me.ampayne2.ultimategames.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
+import me.ampayne2.ultimategames.config.ConfigAccessor;
+import me.ampayne2.ultimategames.config.ConfigType;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.PlayerType;
 import me.ampayne2.ultimategames.signs.SignType;
@@ -39,6 +41,7 @@ import java.util.List;
 
 /**
  * Represents a UltimateGames Arena.
+ * TODO: Make a fancy system to store properties of the arena without a wall of code.
  */
 public class Arena implements Listener {
     private final UltimateGames ultimateGames;
@@ -68,8 +71,8 @@ public class Arena implements Listener {
         this.ultimateGames = ultimateGames;
         this.arenaName = arenaName;
         this.game = game;
-        FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game).getConfig();
-        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
+        FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game);
+        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getConfig(ConfigType.ARENA);
         String arenaPath = "Arenas." + game.getName() + "." + arenaName;
         // Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
         storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
@@ -109,8 +112,8 @@ public class Arena implements Listener {
             arenaConfig.set(arenaPath + ".Allow-Mob-Spawning", allowMobSpawning);
             arenaConfig.set(arenaPath + ".Arena-Region", region.toList());
         }
-        ultimateGames.getConfigManager().getGameConfig(game).saveConfig();
-        ultimateGames.getConfigManager().getArenaConfig().saveConfig();
+        ultimateGames.getConfigManager().getGameConfigAccessor(game).saveConfig();
+        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
         timesPlayed = 0;
 
         ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
@@ -389,16 +392,16 @@ public class Arena implements Listener {
      */
     public void setStatus(ArenaStatus status) {
         arenaStatus = status;
-        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getArenaConfig().getConfig();
-        arenaConfig.set("Arenas." + game.getName() + PATH_SEPARATOR + arenaName + ".Status", status.toString());
-        ultimateGames.getConfigManager().getArenaConfig().saveConfig();
+        ConfigAccessor arenaConfig = ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA);
+        arenaConfig.getConfig().set("Arenas." + game.getName() + PATH_SEPARATOR + arenaName + ".Status", status.toString());
+        arenaConfig.saveConfig();
         if (ultimateGames.getUGSignManager() != null) {
             ultimateGames.getUGSignManager().updateUGSignsOfArena(this, SignType.LOBBY);
         }
         if (status == ArenaStatus.RUNNING) {
             timesPlayed += 1;
         }
-        ultimateGames.getMessageManager().debug("Set status of arena " + arenaName + " of game " + game.getName() + " to " + status.toString());
+        ultimateGames.getMessenger().debug("Set status of arena " + arenaName + " of game " + game.getName() + " to " + status.toString());
     }
 
     /**
@@ -444,7 +447,7 @@ public class Arena implements Listener {
                     toMove = toMove.getVehicle();
                 }
                 toMove.setVelocity(vector);
-                ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
+                ultimateGames.getMessenger().sendMessage(player, "protections.leave");
             }
             game.getGamePlugin().onPlayerMove(this, event);
         }
@@ -459,7 +462,7 @@ public class Arena implements Listener {
         String playerName = player.getName();
         if ((players.contains(playerName) || spectators.contains(playerName)) && !locationIsInArena(event.getTo())) {
             event.setCancelled(true);
-            ultimateGames.getMessageManager().sendMessage(player, "protections.leave");
+            ultimateGames.getMessenger().sendMessage(player, "protections.leave");
         }
     }
 

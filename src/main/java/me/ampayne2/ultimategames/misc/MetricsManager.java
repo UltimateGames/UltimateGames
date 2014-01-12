@@ -27,6 +27,9 @@ import org.mcstats.Metrics.Graph;
 
 import java.io.IOException;
 
+/**
+ * Manages the ultimate games metrics and custom graphs.
+ */
 public class MetricsManager {
     private final UltimateGames ultimateGames;
     private Metrics metrics;
@@ -36,6 +39,11 @@ public class MetricsManager {
     private Graph totalPlayersInArenasGraph;
     private Graph playersInArenasGraph;
 
+    /**
+     * Creates a new MetricManager.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public MetricsManager(final UltimateGames ultimateGames) {
         this.ultimateGames = ultimateGames;
         try {
@@ -48,7 +56,7 @@ public class MetricsManager {
 
             metrics.start();
         } catch (IOException e) {
-            ultimateGames.getMessageManager().debug(e);
+            ultimateGames.getMessenger().debug(e);
         }
     }
 

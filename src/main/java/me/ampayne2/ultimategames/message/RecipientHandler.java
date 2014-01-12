@@ -16,19 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.command.interfaces;
-
-import org.bukkit.command.CommandSender;
+package me.ampayne2.ultimategames.message;
 
 /**
- * The base layout for a command.
+ * Handles sending a message to a recipient.
  */
-public interface UGCommand extends Command {
+public abstract class RecipientHandler {
+
     /**
-     * The command executor
+     * Sends a message to the recipient.
      *
-     * @param sender The sender of the command
-     * @param args   The arguments sent with the command
+     * @param recipient The recipient.
+     * @param message   The message.
      */
-    void execute(CommandSender sender, String[] args);
+    public abstract void sendMessage(Object recipient, String message);
 }

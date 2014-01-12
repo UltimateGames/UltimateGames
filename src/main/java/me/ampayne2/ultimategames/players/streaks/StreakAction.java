@@ -24,20 +24,25 @@ import me.ampayne2.ultimategames.players.ArenaPlayer;
  * Performs an action when a streak reaches the required count.
  */
 public abstract class StreakAction {
-    private final int requiredKills;
+    private final int requiredCount;
     private boolean triggered = false;
 
-    public StreakAction(int requiredKills) {
-        this.requiredKills = requiredKills;
+    /**
+     * Creates a new StreakAction.
+     *
+     * @param requiredCount The required count to trigger the Streak Action.
+     */
+    public StreakAction(int requiredCount) {
+        this.requiredCount = requiredCount;
     }
 
     /**
-     * Gets the kills required for this StreakAction to be performed.
+     * Gets the count required for this StreakAction to be performed.
      *
-     * @return The number of kills.
+     * @return The count.
      */
-    public int getRequiredKills() {
-        return requiredKills;
+    public int getRequiredCount() {
+        return requiredCount;
     }
 
     /**

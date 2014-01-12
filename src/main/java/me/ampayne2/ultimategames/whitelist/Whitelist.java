@@ -22,6 +22,7 @@ package me.ampayne2.ultimategames.whitelist;
  * Interface for any whitelist.
  */
 public interface Whitelist {
+
     /**
      * Reloads the Whitelist.
      */

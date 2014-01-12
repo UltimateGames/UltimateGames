@@ -21,7 +21,8 @@ package me.ampayne2.ultimategames.command.commands.arenas;
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.ArenaStatus;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
+import me.ampayne2.ultimategames.config.ConfigType;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -30,13 +31,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Create implements UGCommand, Listener {
+/**
+ * A command that creates an arena.
+ */
+public class Create extends UGCommand implements Listener {
     private final UltimateGames ultimateGames;
     private List<String> playersSelecting = new ArrayList<String>();
     private Map<String, Location> corner1 = new HashMap<String, Location>();
@@ -44,19 +50,26 @@ public class Create implements UGCommand, Listener {
     private Map<String, Game> game = new HashMap<String, Game>();
     private Map<String, String> arena = new HashMap<String, String>();
 
+    /**
+     * Creates the Create command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public Create(UltimateGames ultimateGames) {
+        super(ultimateGames, "create", "Creates an arena.", "/ug arena create <arena> <game>", new Permission("ultimategames.arena.create", PermissionDefault.OP), 2, true);
         this.ultimateGames = ultimateGames;
+        ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
             return;
         } else if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.alreadyexists");
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.alreadyexists");
             return;
         }
         String playerName = sender.getName();
@@ -64,12 +77,12 @@ public class Create implements UGCommand, Listener {
             arena.remove(playerName);
             game.remove(playerName);
             playersSelecting.remove(playerName);
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.deselect");
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.deselect");
         } else {
             arena.put(playerName, arenaName);
             game.put(playerName, ultimateGames.getGameManager().getGame(gameName));
             playersSelecting.add(playerName);
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.select", arenaName, gameName);
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.select", arenaName, gameName);
         }
     }
 
@@ -99,8 +112,8 @@ public class Create implements UGCommand, Listener {
         String arenaName = arena.get(playerName);
         String gameName = game.get(playerName).getName();
         Arena newArena = new Arena(ultimateGames, game.get(playerName), arenaName, corner1.get(playerName), corner2.get(playerName));
-        newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getArenaConfig().getConfig().getString("Arenas." + gameName + "." + arenaName + ".Status")));
+        newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getConfig(ConfigType.ARENA).getString("Arenas." + gameName + "." + arenaName + ".Status")));
         ultimateGames.getArenaManager().addArena(newArena);
-        ultimateGames.getMessageManager().sendMessage(player, "arenas.create", arenaName, gameName);
+        ultimateGames.getMessenger().sendMessage(player, "arenas.create", arenaName, gameName);
     }
 }

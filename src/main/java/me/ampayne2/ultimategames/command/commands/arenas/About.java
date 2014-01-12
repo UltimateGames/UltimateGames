@@ -19,41 +19,37 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.UGCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 /**
- * A command that opens an arena.
+ * A command that lists some information about ultimate games.
  */
-public class Open extends UGCommand {
+public class About extends UGCommand {
     private final UltimateGames ultimateGames;
+    private final static String HEADER = ChatColor.DARK_GRAY + "<-------<| " + ChatColor.AQUA + "About Ultimate Games " + ChatColor.DARK_GRAY + "|>------->";
+    private final static String AUTHOR = ChatColor.AQUA + "Authors: ampayne2 and greatman321";
+    private final static String VERSION = ChatColor.AQUA + "Version: ";
+    private final static String COMMANDS = ChatColor.AQUA + "Commands: /ug help [page]";
 
     /**
-     * Creates the Open command.
+     * Creates the About command.
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      */
-    public Open(UltimateGames ultimateGames) {
-        super(ultimateGames, "open", "Opens an arena", "/ug arena open <arena> <game>", new Permission("ultimategames.arena.open", PermissionDefault.OP), 2, false);
+    public About(UltimateGames ultimateGames) {
+        super(ultimateGames, "", "Lists some information about drop party.", "/ug", new Permission("ultimategames.about", PermissionDefault.TRUE), false);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
     public void execute(String command, CommandSender sender, String[] args) {
-        String arenaName = args[0];
-        String gameName = args[1];
-        if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
-            return;
-        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
-            return;
-        }
-        Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
-        ultimateGames.getArenaManager().openArena(arena);
-        ultimateGames.getMessenger().sendMessage(sender, "arenas.setstatus", arenaName, gameName, arena.getStatus().name());
+        sender.sendMessage(HEADER);
+        sender.sendMessage(AUTHOR);
+        sender.sendMessage(VERSION + ultimateGames.getDescription().getVersion());
+        sender.sendMessage(COMMANDS);
     }
 }

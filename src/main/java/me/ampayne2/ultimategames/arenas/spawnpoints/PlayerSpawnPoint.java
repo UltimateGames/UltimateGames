@@ -37,7 +37,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
     /**
      * Creates a new PlayerSpawnPoint
      *
-     * @param ultimateGames A reference to the ultimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      * @param arena         The arena of the spawnpoint.
      * @param location      The location of the spawnpoint.
      * @param locked        If the spawnpoint is locked.
@@ -113,7 +113,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
                 location.setPitch(event.getFrom().getPitch());
                 location.setYaw(event.getFrom().getYaw());
                 player.teleport(location);
-                ultimateGames.getMessageManager().sendMessage(player, "spawnpoints.leave");
+                ultimateGames.getMessenger().sendMessage(player, "spawnpoints.leave");
             }
         }
     }

@@ -38,6 +38,9 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
+/**
+ * Various ultimate games utilities to make your life easier.
+ */
 public final class UGUtils {
     private static final long AUTO_RESPAWN_DELAY = 1L;
     private static final double TARGETER_ACCURACY = 1.0;
@@ -45,7 +48,6 @@ public final class UGUtils {
     private static final Random RANDOM = new Random();
 
     private UGUtils() {
-
     }
 
     /**
@@ -68,6 +70,18 @@ public final class UGUtils {
             default:
                 return "th";
         }
+    }
+
+    /**
+     * Clamps a value between a minimum and maximum value.
+     *
+     * @param value The value.
+     * @param min   The minimum value.
+     * @param max   The maximum value.
+     * @return The clamped value.
+     */
+    public static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     /**
@@ -507,6 +521,7 @@ public final class UGUtils {
             for (PotionEffect effect : player.getActivePotionEffects()) {
                 if (effect.getType() == type) {
                     player.addPotionEffect(new PotionEffect(type, effect.getDuration(), effect.getAmplifier() + amount));
+                    return;
                 }
             }
         }
@@ -538,6 +553,7 @@ public final class UGUtils {
                     } else {
                         player.removePotionEffect(type);
                     }
+                    return;
                 }
             }
         }

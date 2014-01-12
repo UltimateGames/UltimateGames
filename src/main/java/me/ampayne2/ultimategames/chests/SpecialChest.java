@@ -45,7 +45,7 @@ public class SpecialChest extends UGChest implements Listener {
     /**
      * Creates a new SpecialChest.
      *
-     * @param ultimateGames A reference to the UltimateGames instance.
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
      * @param chest         The chest.
      * @param arena         The arena.
      * @param label         The label.

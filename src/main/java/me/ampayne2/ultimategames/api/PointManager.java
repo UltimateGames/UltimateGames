@@ -21,7 +21,7 @@ package me.ampayne2.ultimategames.api;
 import me.ampayne2.ultimategames.games.Game;
 
 /**
- * The Point Manager. Need a hook to do something.
+ * The Point Manager. Needs a hook to do something.
  */
 public interface PointManager {
 

@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Manages special game items.
+ * Manages game items.
  */
 public class GameItemManager {
     private final Map<Game, Set<GameItem>> gameItems = new HashMap<Game, Set<GameItem>>();

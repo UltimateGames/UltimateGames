@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.signs;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.config.ConfigType;
 import me.ampayne2.ultimategames.games.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -208,7 +209,7 @@ public class UGSignManager {
         for (UGSign ugSign : getUGSignsOfArena(arena, signType)) {
             ugSign.update();
         }
-        ultimateGames.getMessageManager().debug("Updated signs of arena " + arena.getName() + " of game " + arena.getGame().getName() + " of type " + signType.name());
+        ultimateGames.getMessenger().debug("Updated signs of arena " + arena.getName() + " of game " + arena.getGame().getName() + " of type " + signType.name());
     }
 
     /**
@@ -220,7 +221,7 @@ public class UGSignManager {
         for (UGSign ugSign : getUGSignsOfArena(arena)) {
             ugSign.update();
         }
-        ultimateGames.getMessageManager().debug("Updated signs of arena " + arena.getName() + " of game " + arena.getGame().getName());
+        ultimateGames.getMessenger().debug("Updated signs of arena " + arena.getName() + " of game " + arena.getGame().getName());
     }
 
     /**
@@ -261,7 +262,7 @@ public class UGSignManager {
      * @return The UG Sign created.
      */
     public UGSign createUGSign(String label, Sign sign, Arena arena, SignType signType) {
-        FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
+        FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getConfig(ConfigType.SIGN);
         String signPath = signType.toString() + "." + arena.getGame().getName() + "." + arena.getName();
         List<String> signInfo = new ArrayList<String>();
         signInfo.add(0, sign.getWorld().getName());
@@ -281,7 +282,7 @@ public class UGSignManager {
             ugSignConfig.createSection(signPath);
         }
         ugSignConfig.set(signPath, ugSigns);
-        ultimateGames.getConfigManager().getUGSignConfig().saveConfig();
+        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.SIGN).saveConfig();
         UGSign ugSign = null;
         switch (signType) {
             case LOBBY:
@@ -312,7 +313,7 @@ public class UGSignManager {
     public void removeUGSign(Sign sign) {
         UGSign ugSign = getUGSign(sign);
         if (ugSign != null) {
-            FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
+            FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getConfig(ConfigType.SIGN);
             String world = sign.getWorld().getName();
             Integer x = sign.getX();
             Integer y = sign.getY();
@@ -335,7 +336,7 @@ public class UGSignManager {
                 if (ugSignConfig.getConfigurationSection(gamePath).getKeys(true).isEmpty()) {
                     ugSignConfig.set(gamePath, null);
                 }
-                ultimateGames.getConfigManager().getUGSignConfig().saveConfig();
+                ultimateGames.getConfigManager().getConfigAccessor(ConfigType.SIGN).saveConfig();
             }
             ugSigns.get(signType).remove(ugSign);
         }
@@ -346,7 +347,7 @@ public class UGSignManager {
      */
     public void loadUGSigns() {
         ugSigns.clear();
-        FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getUGSignConfig().getConfig();
+        FileConfiguration ugSignConfig = ultimateGames.getConfigManager().getConfig(ConfigType.SIGN);
         for (SignType signType : EnumSet.allOf(SignType.class)) {
             ugSigns.put(signType, new ArrayList<UGSign>());
             String signTypeName = signType.toString();

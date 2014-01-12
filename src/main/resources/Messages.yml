@@ -2,38 +2,17 @@ Messages:
   prefix: "&8[&bUltimateGames&8] "
   gameprefix: "&8[&b%s&8] "
 
+  permissions:
+    nopermission: "&4You do not have permission to use this command."
+
   ultimategames:
     cantleave: "&4Not in an arena or queue."
     setlobby: "Set the lobby at your location."
     lobby: "Teleported to the main lobby."
 
-  commands:
-    notaplayer: "&4Must be a player to use this command."
-    invalidsubcommand: "&4%s is not a subcommand of %s."
-    validsubcommands: "Valid subcommands are: %s"
-  
-  commandusages:
-    addspawn: "&4Usage: /ug arena addspawn [arena] [game] [locked (true/false)]"
-    setspectatorspawn: "&4Usage: /ug arena setspectatorspawn [arena] [game]"
-    begin: "&4Usage: /ug arena begin [arena] [game]"
-    create: "&4Usage: /ug arena create [arena] [game]"
-    edit: "&4Usage: /ug arena edit"
-    end: "&4Usage: /ug arena end [arena] [game]"
-    join: "&4Usage: /ug arena join [arena] [game]"
-    open: "&4Usage: /ug arena open [arena] [game]"
-    stop: "&4Usage: /ug arena stop [arena] [game]"
-    spectate: "&4Usage: /ug arena spectate [arena] [game]"
-    leave: "&4Usage: /ug leave"
-    extcmd: "&4Usage: /ug cmd [command to execute]"
-    setlobby: "&4Usage: /ug setlobby"
-    reload: "&4Usage: /ug reload"
-    
-  permissions:
-    nopermission: "&4You do not have permission to use the %s command."
-  
   games:
     doesntexist: "&4Game doesn't exist."
-  
+
   arenas:
     select: "Punch two corners of a region to create the Arena '%s' of Game '%s'."
     deselect: "No longer selecting a region."
@@ -59,14 +38,17 @@ Messages:
     failedtocreate: "&4Failed to create Arena '%s' of Game '%s'. %s"
     failedtojoin: "&4Failed to join Arena '%s' of Game '%s'. %s"
     notinarena: "&4Not in an Arena."
-    
+    alreadyinarena: "&4Already in an Arena."
+    alreadyspectatingarena: "&4Already spectating an Arena."
+    notloaded: "&4Arena not loaded."
+
   teams:
     join: "&4Joined Team %s."
     kick: "&4Kicked from Team %s."
     leave: "&4Left Team %s."
     friendlyfire: "&4Friendly Fire is off for your Team."
     doesntexist: "&4Team doesn't exist."
-    
+
   classes:
     join: "&4Joined Class %s."
     nextdeath: "&4Joined Class %s! Your inventory will be reset next death."
@@ -77,19 +59,28 @@ Messages:
     leave: "Left queue for Arena '%s' of Game '%s'."
     arenacleared: "Queue for Arena '%s' of Game '%s' has been cleared."
     queuecleared: "All queues cleared."
-    
+
   spawnpoints:
     setspectatorspawnpoint: "Set Spectator SpawnPoint for Arena '%s' of Game '%s'"
     create: "Created SpawnPoint for Arena '%s' of Game '%s'"
     leave: "&4You are not allowed to leave the spawnpoint."
-  
+
   countdowns:
     timeleftstart: "The game starts in %s seconds!"
     timeleftend: "The game ends in %s seconds!"
     aborted: "Countdown aborted."
-    
+
   protections:
     place: "&4You are not allowed to place blocks in the arena."
     break: "&4You are not allowed to break blocks in the arena."
     leave: "&4You are not allowed to go outside the arena."
-    
+
+  error:
+    command:
+      notaplayer: "&4You must be a player to use this command."
+      invalidsubcommand: "&4%s is not a sub command of %s."
+      usage: "&4Usage: %s"
+    numberformat: "&4Value must be a positive integer."
+    numbertoohigh: "&4Value must be no greater than &b%s&4."
+    numbertoolow: "&4Value must be no lower than &b%s&4."
+    booleanformat: "&4Value must be true or false."

@@ -19,34 +19,45 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.command.interfaces.UGCommand;
+import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
-public class AddSpawn implements UGCommand {
+/**
+ * A command that adds a spawn to an arena.
+ */
+public class AddSpawn extends UGCommand {
     private final UltimateGames ultimateGames;
 
+    /**
+     * Creates the AddSpawn command.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.UltimateGames} instance.
+     */
     public AddSpawn(UltimateGames ultimateGames) {
+        super(ultimateGames, "addspawn", "Adds a spawn to an arena.", "/ug arena addspawn <arena> <game> <locked (true/false)>", new Permission("ultimategames.arena.addspawn", PermissionDefault.OP), 3, true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(String command, CommandSender sender, String[] args) {
         if (!(args[2].equals("true") || args[2].equals("false"))) {
-            ultimateGames.getMessageManager().sendMessage(sender, "commandusages.arena.addspawn");
+            ultimateGames.getMessenger().sendMessage(sender, "error.booleanformat");
             return;
         }
         String arenaName = args[0];
         String gameName = args[1];
         Boolean locked = Boolean.valueOf(args[2]);
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessageManager().sendMessage(sender, "games.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
             return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessageManager().sendMessage(sender, "arenas.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
             return;
         }
         ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), ((Player) sender).getLocation(), locked);
-        ultimateGames.getMessageManager().sendMessage(sender, "spawnpoints.create", arenaName, gameName);
+        ultimateGames.getMessenger().sendMessage(sender, "spawnpoints.create", arenaName, gameName);
     }
 }

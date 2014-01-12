@@ -24,11 +24,20 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A simple class that keeps track of a streak.
+ */
 public class Streak {
     private final ArenaPlayer player;
     private final Set<StreakAction> actions;
     private int count = 0;
 
+    /**
+     * Creates a new Streak.
+     *
+     * @param player  The player of the streak.
+     * @param actions The actions to as the streak increases.
+     */
     public Streak(ArenaPlayer player, StreakAction... actions) {
         this.player = player;
         this.actions = new HashSet<StreakAction>(Arrays.asList(actions));
@@ -94,7 +103,7 @@ public class Streak {
      */
     private void triggerActions() {
         for (StreakAction action : actions) {
-            if (count >= action.getRequiredKills() && !action.hasBeenTriggered()) {
+            if (count >= action.getRequiredCount() && !action.hasBeenTriggered()) {
                 action.perform(player);
                 action.setTriggered(true);
             }

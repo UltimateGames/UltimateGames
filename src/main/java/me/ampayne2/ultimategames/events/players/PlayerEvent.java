@@ -16,8 +16,35 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UltimateGames.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.ampayne2.ultimategames.command.interfaces;
+package me.ampayne2.ultimategames.events.players;
 
-public interface Command {
+import me.ampayne2.ultimategames.arenas.Arena;
+import me.ampayne2.ultimategames.events.arenas.ArenaEvent;
+import org.bukkit.entity.Player;
 
+/**
+ * Base class for any player event.
+ */
+public class PlayerEvent extends ArenaEvent {
+    private final Player player;
+
+    /**
+     * Creates a new PlayerEvent.
+     *
+     * @param player The player associated with the event.
+     * @param arena  The arena associated with the event.
+     */
+    public PlayerEvent(Player player, Arena arena) {
+        super(arena);
+        this.player = player;
+    }
+
+    /**
+     * Gets the player associated with the event.
+     *
+     * @return The player associated with the event.
+     */
+    public Player getPlayer() {
+        return player;
+    }
 }

@@ -21,9 +21,15 @@ package me.ampayne2.ultimategames.events.arenas;
 import me.ampayne2.ultimategames.arenas.Arena;
 
 /**
- * Called after an arena resets.
+ * An event called after an arena resets.
  */
 public class ArenaResetEvent extends ArenaEvent {
+
+    /**
+     * Creates a new ArenaResetEvent.
+     *
+     * @param arena The arena that just reset.
+     */
     public ArenaResetEvent(Arena arena) {
         super(arena);
     }

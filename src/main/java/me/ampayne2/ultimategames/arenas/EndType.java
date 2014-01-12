@@ -18,6 +18,9 @@
  */
 package me.ampayne2.ultimategames.arenas;
 
+/**
+ * An enum of the possible end types of an arena.
+ */
 public enum EndType {
     FORCED,
     UNFORCED
