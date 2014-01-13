@@ -19,7 +19,6 @@
 package me.ampayne2.ultimategames.command.commands.arenas;
 
 import me.ampayne2.ultimategames.UltimateGames;
-import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;

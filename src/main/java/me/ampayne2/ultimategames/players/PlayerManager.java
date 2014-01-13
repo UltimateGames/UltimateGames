@@ -254,14 +254,14 @@ public class PlayerManager implements Listener {
     public void removePlayerFromArena(Player player, Boolean sendMessage) {
         String playerName = player.getName();
         if (players.containsKey(playerName)) {
+            // Removes the player from any teams the player is in
+            ultimateGames.getTeamManager().removePlayerFromTeam(playerName);
+
             // Removes the player from the arena
             Arena arena = players.get(playerName).getArena();
             arena.removePlayer(playerName);
             arena.getGame().getGamePlugin().removePlayer(player, arena);
             players.remove(playerName);
-
-            // Removes the player from any teams the player is in
-            ultimateGames.getTeamManager().removePlayerFromTeam(playerName);
 
             // Removes the player from any classes the player is in
             GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(arena.getGame(), playerName);
@@ -282,14 +282,17 @@ public class PlayerManager implements Listener {
                 scoreBoard.removePlayer(player);
             }
 
-            ultimateGames.getTeamManager().removePlayerFromTeam(playerName);
-
             // Extinguish the spectator if on fire
             player.setFireTicks(0);
 
             // Removes all of the player's potion effects
             for (PotionEffect potionEffect : player.getActivePotionEffects()) {
                 player.removePotionEffect(potionEffect.getType());
+            }
+
+            // Shows all spectators to the player
+            for (String spectator : arena.getSpectators()) {
+                player.showPlayer(Bukkit.getPlayerExact(spectator));
             }
 
             // Teleports a player to the lobby
@@ -311,11 +314,6 @@ public class PlayerManager implements Listener {
             // Sends a message that the player left the arena
             if (sendMessage) {
                 ultimateGames.getMessenger().sendMessage(arena, "arenas.leave", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
-            }
-
-            // Shows all spectators to the player
-            for (String spectator : arena.getSpectators()) {
-                player.showPlayer(Bukkit.getPlayerExact(spectator));
             }
 
             // Removes the player from limbo
@@ -360,20 +358,20 @@ public class PlayerManager implements Listener {
                 player.removePotionEffect(potionEffect.getType());
             }
 
-            // Teleports the spectator to the lobby
-            Location location = ultimateGames.getLobbyManager().getLobby();
-            if (location != null) {
-                player.teleport(location);
-            }
+            // Takes away flight from the spectator
+            player.setAllowFlight(false);
+            player.setFlying(false);
 
             // Shows the spectator to all arena players
             for (String normalPlayer : arena.getPlayers()) {
                 Bukkit.getPlayerExact(normalPlayer).showPlayer(player);
             }
 
-            // Takes away flight from the spectator
-            player.setAllowFlight(false);
-            player.setFlying(false);
+            // Teleports the spectator to the lobby
+            Location location = ultimateGames.getLobbyManager().getLobby();
+            if (location != null) {
+                player.teleport(location);
+            }
 
             // Removes the spectator from limbo
             removePlayerFromLimbo(player);

@@ -284,6 +284,22 @@ public class ArenaListener implements Listener {
                         event.setCancelled(true);
                     }
                 }
+            } else if (playerManager.isPlayerSpectatingArena(playerName)) {
+                Entity damagerEntity = event.getDamager();
+                if (damagerEntity instanceof Projectile) {
+                    Projectile projectile = (Projectile) damagerEntity;
+
+                    player.teleport(player.getLocation().add(0, 5, 0));
+                    player.setFlying(true);
+
+                    Projectile newProjectile = projectile.getWorld().spawn(projectile.getLocation(), projectile.getClass());
+                    newProjectile.setShooter(projectile.getShooter());
+                    newProjectile.setVelocity(projectile.getVelocity());
+                    newProjectile.setBounce(false);
+
+                    event.setCancelled(true);
+                    projectile.remove();
+                }
             }
         } else {
             Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getEntity().getLocation());

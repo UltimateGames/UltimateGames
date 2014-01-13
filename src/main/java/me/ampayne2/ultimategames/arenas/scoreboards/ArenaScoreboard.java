@@ -185,7 +185,7 @@ public class ArenaScoreboard {
      * @return The team's score.
      */
     public int getScore(me.ampayne2.ultimategames.players.teams.Team team) {
-        return getScore(team.getColor() + team.getName());
+        return getScore(team.getColor() + "Team " + team.getName());
     }
 
     /**
@@ -195,7 +195,7 @@ public class ArenaScoreboard {
      * @param score The new score.
      */
     public void setScore(me.ampayne2.ultimategames.players.teams.Team team, int score) {
-        setScore(team.getColor() + team.getName(), score);
+        setScore(team.getColor() + "Team " + team.getName(), score);
     }
 
     /**
@@ -204,6 +204,6 @@ public class ArenaScoreboard {
      * @param team The team.
      */
     public void resetScore(me.ampayne2.ultimategames.players.teams.Team team) {
-        resetScore(team.getColor() + team.getName());
+        resetScore(team.getColor() + "Team " + team.getName());
     }
 }
