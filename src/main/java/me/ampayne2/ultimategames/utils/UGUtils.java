@@ -405,6 +405,35 @@ public final class UGUtils {
     }
 
     /**
+     * Gets the nearest player to a player from a collection of players.
+     *
+     * @param targeter The player.
+     * @param players  The players to get the nearest player from.
+     * @return The nearest player, null if no players to choose from.
+     */
+    public static Player getNearestPlayer(Player targeter, Collection<Player> players) {
+        Player nearestPlayer = null;
+        double distance = Double.POSITIVE_INFINITY;
+
+        for (Player player : players) {
+            if (!player.getName().equals(targeter.getName())) {
+                if (nearestPlayer == null) {
+                    nearestPlayer = player;
+                    distance = targeter.getLocation().distance(nearestPlayer.getLocation());
+                } else {
+                    double distanceTo = targeter.getLocation().distance(player.getLocation());
+                    if (distanceTo < distance) {
+                        nearestPlayer = player;
+                        distance = distanceTo;
+                    }
+                }
+            }
+        }
+
+        return nearestPlayer;
+    }
+
+    /**
      * Colors leather armor.
      *
      * @param itemStack The piece of armor.
