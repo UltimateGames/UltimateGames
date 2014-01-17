@@ -146,8 +146,8 @@ public class UltimateGames extends JavaPlugin {
                 getLogger().info("Failed to enable live stats API link");
                 messenger.debug(e);
             }
+            jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
         }
-        jettyServer.getHandler().addHandler("/general", new GeneralInformationHandler(this));
         ugSignManager = new UGSignManager(this);
         ugChestManager = new UGChestManager(this);
         countdownManager = new CountdownManager(this);

@@ -69,7 +69,7 @@ public class ConfigAccessor {
     public ConfigAccessor reloadConfig() {
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
 
-        InputStream defConfigStream = ultimateGames.getResource(configType.getFileName());
+        InputStream defConfigStream = ultimateGames.getResource(configFile.getName());
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfiguration.setDefaults(defConfig);

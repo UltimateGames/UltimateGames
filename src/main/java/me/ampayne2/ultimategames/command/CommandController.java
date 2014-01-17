@@ -65,6 +65,7 @@ public class CommandController implements TabExecutor, Listener {
                 .addChildCommand(new SetLobby(ultimateGames))
                 .addChildCommand(new ExtCmd(ultimateGames))
                 .addChildCommand(new Command(ultimateGames, "arena", new Permission("ultimategames.arena.all", PermissionDefault.OP), false)
+                        .addChildCommand(new Create(ultimateGames))
                         .addChildCommand(new Join(ultimateGames))
                         .addChildCommand(new Spectate(ultimateGames))
                         .addChildCommand(new Edit(ultimateGames))
