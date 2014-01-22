@@ -53,7 +53,7 @@ public class LobbySign extends UGSign {
         if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
             // TODO: Save and clear player data (inventory, armor, levels, gamemode, effects)
             ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
-        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
+        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
             QueueManager queue = ultimateGames.getQueueManager();
             if (queue.isPlayerInQueue(player.getName(), arena)) {
                 queue.removePlayerFromQueues(player);

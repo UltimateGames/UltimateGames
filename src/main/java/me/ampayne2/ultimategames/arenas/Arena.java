@@ -52,12 +52,6 @@ public class Arena implements Listener {
     private List<String> spectators = new ArrayList<String>();
     private int minPlayers;
     private int maxPlayers;
-    private boolean storeInventory;
-    private boolean storeArmor;
-    private boolean storeExp;
-    private boolean storeEffects;
-    private boolean storeGamemode;
-    private boolean resetAfterMatch;
     private boolean allowExplosionDamage;
     private boolean allowExplosionBlockBreaking;
     private boolean allowMobSpawning;
@@ -75,12 +69,6 @@ public class Arena implements Listener {
         FileConfiguration arenaConfig = ultimateGames.getConfigManager().getConfig(ConfigType.ARENA);
         String arenaPath = "Arenas." + game.getName() + "." + arenaName;
         // Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
-        storeInventory = arenaConfig.getBoolean(arenaPath + ".Players.Store-Inventory", gamesConfig.getBoolean("DefaultSettings.Store-Inventory", true));
-        storeArmor = arenaConfig.getBoolean(arenaPath + ".Players.Store-Armor", gamesConfig.getBoolean("DefaultSettings.Store-Armor", true));
-        storeExp = arenaConfig.getBoolean(arenaPath + ".Players.Store-Exp", gamesConfig.getBoolean("DefaultSettings.Store-Exp", true));
-        storeEffects = arenaConfig.getBoolean(arenaPath + ".Players.Store-Effects", gamesConfig.getBoolean("DefaultSettings.Store-Effects", true));
-        storeGamemode = arenaConfig.getBoolean(arenaPath + ".Players.Store-Gamemode", gamesConfig.getBoolean("DefaultSettings.Store-Gamemode", true));
-        resetAfterMatch = arenaConfig.getBoolean(arenaPath + ".Reset-After-Match", gamesConfig.getBoolean("DefaultSettings.Reset-After-Match", true));
         allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", false));
         allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false));
         allowMobSpawning = arenaConfig.getBoolean(arenaPath + ".Allow-Mob-Spawning", gamesConfig.getBoolean("DefaultSettings.Allow-Mob-Spawning", false));
@@ -101,12 +89,6 @@ public class Arena implements Listener {
             arenaConfig.set(arenaPath + ".Status", "ARENA_STOPPED");
             arenaConfig.set(arenaPath + ".Max-Players", maxPlayers);
             arenaConfig.set(arenaPath + ".Min-Players", minPlayers);
-            arenaConfig.set(arenaPath + ".Players.Store-Inventory", storeInventory);
-            arenaConfig.set(arenaPath + ".Players.Store-Armor", storeArmor);
-            arenaConfig.set(arenaPath + ".Players.Store-Exp", storeExp);
-            arenaConfig.set(arenaPath + ".Players.Store-Effects", storeEffects);
-            arenaConfig.set(arenaPath + ".Players.Store-Gamemode", storeGamemode);
-            arenaConfig.set(arenaPath + ".Reset-After-Match", resetAfterMatch);
             arenaConfig.set(arenaPath + ".Allow-Explosion-Damage", allowExplosionDamage);
             arenaConfig.set(arenaPath + ".Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
             arenaConfig.set(arenaPath + ".Allow-Mob-Spawning", allowMobSpawning);
@@ -284,60 +266,6 @@ public class Arena implements Listener {
      */
     public ArenaStatus getStatus() {
         return arenaStatus;
-    }
-
-    /**
-     * Gets the storeInventory setting.
-     *
-     * @return True if the game stores your inventory else false.
-     */
-    public boolean storeInventory() {
-        return storeInventory;
-    }
-
-    /**
-     * Gets the storeArmor setting.
-     *
-     * @return True if the game stores your armor else false.
-     */
-    public boolean storeArmor() {
-        return storeArmor;
-    }
-
-    /**
-     * Gets the storeExp setting.
-     *
-     * @return True if the game stores your exp else false.
-     */
-    public boolean storeExp() {
-        return storeExp;
-    }
-
-    /**
-     * Gets the storeEffects setting.
-     *
-     * @return True if the game stores your effects else false.
-     */
-    public boolean storeEffects() {
-        return storeEffects;
-    }
-
-    /**
-     * Gets the storeGamemode setting.
-     *
-     * @return True if the game stores your gamemode else false.
-     */
-    public boolean storeGamemode() {
-        return storeGamemode;
-    }
-
-    /**
-     * Gets the resetAfterMatch setting.
-     *
-     * @return True if the game resets after each match else false.
-     */
-    public boolean resetAfterMatch() {
-        return resetAfterMatch;
     }
 
     /**

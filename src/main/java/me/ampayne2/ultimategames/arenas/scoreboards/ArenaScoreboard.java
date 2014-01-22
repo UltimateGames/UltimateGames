@@ -21,10 +21,7 @@ package me.ampayne2.ultimategames.arenas.scoreboards;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 import java.util.Collection;
 
@@ -35,6 +32,7 @@ import java.util.Collection;
 public class ArenaScoreboard {
     private final Scoreboard scoreboard;
     private final String name;
+    private static final String GHOST_TEAM_NAME = "ultimateghosts";
 
     /**
      * Creates an ArenaScoreboard.
@@ -126,6 +124,23 @@ public class ArenaScoreboard {
     }
 
     /**
+     * Adds a player to the ghost team. Players must still receive an invisibility effect to be seen as a ghost.<br>
+     * Only players in the ghost team will see each other as ghosts.<br>
+     * RESETS PLAYER COLOR.
+     *
+     * @param player The player to add to the ghost team.
+     */
+    public void makePlayerGhost(Player player) {
+        resetPlayerColor(player.getName());
+        Team team = scoreboard.getTeam(GHOST_TEAM_NAME);
+        if (team == null ) {
+            team = scoreboard.registerNewTeam(GHOST_TEAM_NAME);
+            team.setCanSeeFriendlyInvisibles(true);
+        }
+        team.addPlayer(player);
+    }
+
+    /**
      * Resets an ArenaScoreboard.
      */
     public void reset() {
@@ -161,12 +176,17 @@ public class ArenaScoreboard {
     }
 
     /**
-     * Sets the score of a scoreboard element.
+     * Sets the score of a scoreboard element.<br>
+     * If setting the score to 0 and the score is already 0, the score is briefly changed to 1 so the 0 will appear.
      *
      * @param name Name of the element.
      */
-    public void setScore(String name, Integer score) {
-        scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).setScore(score);
+    public void setScore(String name, int score) {
+        Score scoreboardScore = scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name));
+        if (score == 0 && scoreboardScore.getScore() == 0) {
+            scoreboardScore.setScore(1);
+        }
+        scoreboardScore.setScore(score);
     }
 
     /**

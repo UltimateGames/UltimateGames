@@ -214,7 +214,6 @@ public class ArenaManager {
                     case RUNNING:
                         endArena(arena);
                     case ENDING:
-                    case RESET_FAILED:
                     case ARENA_STOPPED:
                         if (arena.getGame().getGamePlugin().openArena(arena)) {
                             arena.setStatus(ArenaStatus.OPEN);
@@ -242,7 +241,6 @@ public class ArenaManager {
                 switch (arena.getStatus()) {
                     case RUNNING:
                         endArena(arena);
-                    case RESET_FAILED:
                     case ARENA_STOPPED:
                         openArena(arena);
                     case OPEN:
@@ -270,7 +268,6 @@ public class ArenaManager {
                 switch (arena.getStatus()) {
                     case RUNNING:
                         endArena(arena);
-                    case RESET_FAILED:
                     case ARENA_STOPPED:
                         openArena(arena);
                     case OPEN:
@@ -330,17 +327,8 @@ public class ArenaManager {
 
                     ultimateGames.getMessenger().debug("Ended arena " + arena.getName() + " of game " + arena.getGame().getName());
                     Bukkit.getPluginManager().callEvent(event);
-                    if (arena.resetAfterMatch()) {
-                        arena.setStatus(ArenaStatus.RESETTING);
-                        // TODO: Reset arena world
-                        if (!arena.getGame().getGamePlugin().resetArena(arena)) {
-                            arena.setStatus(ArenaStatus.RESET_FAILED);
-                        }
-                        Bukkit.getPluginManager().callEvent(new ArenaResetEvent(arena));
-                    } else {
-                        arena.setStatus(ArenaStatus.ARENA_STOPPED);
-                        openArena(arena);
-                    }
+                    arena.setStatus(ArenaStatus.ARENA_STOPPED);
+                    openArena(arena);
                 default:
             }
         }
@@ -358,7 +346,6 @@ public class ArenaManager {
                 case RUNNING:
                     endArena(arena);
                 case OPEN:
-                case RESET_FAILED:
                     arena.setStatus(ArenaStatus.ARENA_STOPPED);
                     arena.getGame().getGamePlugin().stopArena(arena);
                     ultimateGames.getMessenger().debug("Stopped arena " + arena.getName() + " of game " + arena.getGame().getName());

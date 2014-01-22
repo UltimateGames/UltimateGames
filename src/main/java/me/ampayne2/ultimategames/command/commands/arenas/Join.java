@@ -68,7 +68,7 @@ public class Join extends UGCommand {
         ArenaStatus arenaStatus = arena.getStatus();
         if (arenaStatus == ArenaStatus.OPEN || arenaStatus == ArenaStatus.STARTING) {
             ultimateGames.getPlayerManager().addPlayerToArena(player, arena, true);
-        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arenaStatus == ArenaStatus.RESETTING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
+        } else if (arenaStatus == ArenaStatus.RUNNING || arenaStatus == ArenaStatus.ENDING || arena.getPlayers().size() >= arena.getMaxPlayers()) {
             QueueManager queue = ultimateGames.getQueueManager();
             if (!queue.isPlayerInQueue(playerName, arena)) {
                 queue.addPlayerToQueue(player, arena);

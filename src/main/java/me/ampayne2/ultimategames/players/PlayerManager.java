@@ -34,6 +34,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,6 +129,13 @@ public class PlayerManager implements Listener {
                 player.removePotionEffect(potionEffect.getType());
             }
 
+            // Makes the spectator appear as a ghost to other spectators.
+            ArenaScoreboard scoreboard = ultimateGames.getScoreboardManager().getScoreboard(arena);
+            if (scoreboard != null) {
+                scoreboard.makePlayerGhost(player);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
+            }
+
             // Give the player flight
             player.setAllowFlight(true);
             player.setFlying(true);
@@ -211,10 +219,11 @@ public class PlayerManager implements Listener {
             if (arena.addSpectator(playerName) && arena.getGame().getGamePlugin().addSpectator(player, arena)) {
                 spectators.put(playerName, new ArenaSpectator(playerName, arena));
 
-                // Add the spectator to all of the arena's scoreboards
+                // Add the spectator to the arena's scoreboard as a ghost.
                 ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
                 if (scoreBoard != null) {
                     scoreBoard.addPlayer(player);
+                    scoreBoard.makePlayerGhost(player);
                 }
 
                 // Remove player from all queues
@@ -229,6 +238,9 @@ public class PlayerManager implements Listener {
                 for (PotionEffect potionEffect : player.getActivePotionEffects()) {
                     player.removePotionEffect(potionEffect.getType());
                 }
+
+                // Gives the spectator invisibility to appear as a ghost to other spectators.
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
 
                 // Extinguish the spectator if on fire
                 player.setFireTicks(0);
