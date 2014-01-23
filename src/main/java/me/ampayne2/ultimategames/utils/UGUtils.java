@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
@@ -490,6 +491,21 @@ public final class UGUtils {
             itemStack.setItemMeta(meta);
         }
         return itemStack;
+    }
+
+    /**
+     * Gets the head of a player.
+     *
+     * @param playerName The player's name.
+     * @return The player skull.
+     */
+    @SuppressWarnings("deprecation")
+    public static ItemStack getPlayerHead(String playerName) {
+        ItemStack skull = new ItemStack(397, 1, (short) 3);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        meta.setOwner(playerName);
+        skull.setItemMeta(meta);
+        return skull;
     }
 
     /**
