@@ -405,6 +405,49 @@ public final class UGUtils {
     }
 
     /**
+     * Teleports an entity with a vehicle or passenger correctly.
+     *
+     * @param entity   The entity to teleport.
+     * @param location The location to teleport the entity to.
+     */
+    public static void teleportEntity(Entity entity, Location location) {
+        Location entityLocation = entity.getLocation();
+
+        Entity vehicle = entity.getVehicle();
+        if (vehicle != null) {
+            // Eject the entity from the vehicle and teleport the vehicle to the correct location.
+            vehicle.eject();
+            Location vehicleLocation = vehicle.getLocation();
+            Location teleportLocation = location.clone().subtract(0, entityLocation.getY() - vehicleLocation.getY(), 0);
+            teleportLocation.setPitch(vehicleLocation.getPitch());
+            teleportLocation.setYaw(vehicleLocation.getYaw());
+            teleportEntity(vehicle, teleportLocation);
+        }
+
+        Entity passenger = entity.getPassenger();
+        if (passenger != null) {
+            // Eject the passenger from the entity and teleport the passenger to the correct location.
+            entity.eject();
+            Location passengerLocation = passenger.getLocation();
+            Location teleportLocation = location.clone().add(0, passengerLocation.getY() - entityLocation.getY(), 0);
+            teleportLocation.setPitch(passengerLocation.getPitch());
+            teleportLocation.setYaw(passengerLocation.getYaw());
+            teleportEntity(vehicle, teleportLocation);
+        }
+
+        // Teleport the entity to the correct location.
+        entity.teleport(location);
+
+        // Connect the vehicle, entity, and passenger back together if existing.
+        if (vehicle != null) {
+            vehicle.setPassenger(entity);
+        }
+        if (passenger != null) {
+            entity.setPassenger(passenger);
+        }
+    }
+
+    /**
      * Gets the nearest player to a player from a collection of players.
      *
      * @param targeter The player.

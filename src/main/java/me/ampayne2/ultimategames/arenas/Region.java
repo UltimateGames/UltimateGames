@@ -165,10 +165,10 @@ public class Region {
      */
     public static Region fromCorners(Location corner1, Location corner2) {
         World world = corner1.getWorld();
-        Double minX = corner1.getX() < corner2.getX() ? corner1.getX() : corner2.getX();
-        Double maxX = corner1.getX() > corner2.getX() ? corner1.getX() : corner2.getX();
-        Double minZ = corner1.getZ() < corner2.getZ() ? corner1.getZ() : corner2.getZ();
-        Double maxZ = corner1.getZ() > corner2.getZ() ? corner1.getZ() : corner2.getZ();
+        Double minX = (corner1.getX() < corner2.getX() ? corner1.getX() : corner2.getX()) + 1;
+        Double maxX = (corner1.getX() > corner2.getX() ? corner1.getX() : corner2.getX()) - 1;
+        Double minZ = (corner1.getZ() < corner2.getZ() ? corner1.getZ() : corner2.getZ()) + 1;
+        Double maxZ = (corner1.getZ() > corner2.getZ() ? corner1.getZ() : corner2.getZ()) - 1;
         return new Region(world, minX, maxX, minZ, maxZ);
     }
 }

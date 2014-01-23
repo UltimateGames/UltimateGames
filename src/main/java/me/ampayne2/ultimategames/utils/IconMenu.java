@@ -19,6 +19,8 @@
 package me.ampayne2.ultimategames.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,6 +43,7 @@ public class IconMenu implements Listener {
 
     private String[] optionNames;
     private ItemStack[] optionIcons;
+    private static final ItemStack EMPTY_SLOT;
 
     public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin) {
         this.name = name;
@@ -61,9 +64,7 @@ public class IconMenu implements Listener {
     public void open(Player player) {
         Inventory inventory = Bukkit.createInventory(player, size, name);
         for (int i = 0; i < optionIcons.length; i++) {
-            if (optionIcons[i] != null) {
-                inventory.setItem(i, optionIcons[i]);
-            }
+            inventory.setItem(i, optionIcons[i] == null ? EMPTY_SLOT : optionIcons[i]);
         }
         player.openInventory(inventory);
     }
@@ -105,6 +106,13 @@ public class IconMenu implements Listener {
                 }
             }
         }
+    }
+
+    static {
+        EMPTY_SLOT = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GRAY.getData());
+        ItemMeta meta = EMPTY_SLOT.getItemMeta();
+        meta.setDisplayName(" ");
+        EMPTY_SLOT.setItemMeta(meta);
     }
 
     public interface OptionClickEventHandler {

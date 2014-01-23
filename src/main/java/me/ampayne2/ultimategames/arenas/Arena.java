@@ -24,6 +24,7 @@ import me.ampayne2.ultimategames.config.ConfigType;
 import me.ampayne2.ultimategames.games.Game;
 import me.ampayne2.ultimategames.games.PlayerType;
 import me.ampayne2.ultimategames.signs.SignType;
+import me.ampayne2.ultimategames.utils.UGUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,10 +35,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents a UltimateGames Arena.
@@ -57,6 +56,7 @@ public class Arena implements Listener {
     private boolean allowMobSpawning;
     private Region region;
     private int timesPlayed;
+    private Map<String, Location> lastLocations = new HashMap<String, Location>();
     private static final int DEFAULT_MIN_PLAYERS = 4;
     private static final int DEFAULT_MAX_PLAYERS = 8;
     private static final String PATH_SEPARATOR = ".";
@@ -350,34 +350,18 @@ public class Arena implements Listener {
         Location from = event.getFrom();
         Location to = event.getTo();
         Player player = event.getPlayer();
-        if (!(from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) && players.contains(player.getName())) {
-            boolean left = false;
-            int x = 0;
-            int z = 0;
-            if (to.getX() < region.getMinX()) {
-                x = (int) (region.getMinX() - to.getX());
-                left = true;
-            } else if (to.getX() > region.getMaxX()) {
-                x = (int) (region.getMaxX() - to.getX());
-                left = true;
-            }
-            if (to.getZ() < region.getMinZ()) {
-                z = (int) (region.getMinZ() - to.getZ());
-                left = true;
-            } else if (to.getZ() > region.getMaxZ()) {
-                z = (int) (region.getMaxZ() - to.getZ());
-                left = true;
-            }
-            if (left) {
-                Vector vector = new Vector(x, 0, z);
-                Entity toMove = player;
-                while (toMove.getVehicle() != null) {
-                    toMove = toMove.getVehicle();
-                }
-                toMove.setVelocity(vector);
+        String playerName = player.getName();
+        if (!(from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) && players.contains(playerName)) {
+            if ((to.getX() < region.getMinX() || to.getX() > region.getMaxX() || to.getZ() < region.getMinZ() || to.getZ() > region.getMaxZ()) && lastLocations.containsKey(playerName)) {
+                Location lastLocation = lastLocations.get(playerName);
+                lastLocation.setPitch(to.getPitch());
+                lastLocation.setYaw(to.getYaw());
+                UGUtils.teleportEntity(player, lastLocation);
                 ultimateGames.getMessenger().sendMessage(player, "protections.leave");
+            } else {
+                lastLocations.put(playerName, to);
+                game.getGamePlugin().onPlayerMove(this, event);
             }
-            game.getGamePlugin().onPlayerMove(this, event);
         }
     }
 
