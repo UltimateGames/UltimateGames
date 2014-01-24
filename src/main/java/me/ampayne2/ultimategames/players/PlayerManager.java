@@ -23,11 +23,13 @@ import me.ampayne2.ultimategames.arenas.Arena;
 import me.ampayne2.ultimategames.arenas.scoreboards.ArenaScoreboard;
 import me.ampayne2.ultimategames.arenas.spawnpoints.PlayerSpawnPoint;
 import me.ampayne2.ultimategames.config.ConfigType;
+import me.ampayne2.ultimategames.effects.GameSound;
 import me.ampayne2.ultimategames.events.players.*;
 import me.ampayne2.ultimategames.players.classes.GameClass;
 import me.ampayne2.ultimategames.signs.SignType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,6 +51,7 @@ public class PlayerManager implements Listener {
     private Map<String, ArenaPlayer> players = new HashMap<String, ArenaPlayer>();
     private Map<String, ArenaSpectator> spectators = new HashMap<String, ArenaSpectator>();
     private static final String LIMBO = "limbo";
+    private static final GameSound JOIN_SOUND = new GameSound(Sound.ENDERMAN_TELEPORT, 10, 1);
 
     /**
      * Creates a new PlayerManager.
@@ -172,6 +175,8 @@ public class PlayerManager implements Listener {
                 if (sendMessage) {
                     ultimateGames.getMessenger().sendMessage(arena, "arenas.join", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
                 }
+
+                JOIN_SOUND.play(player.getLocation());
 
                 // Add the player to all of the arena's scoreboards
                 ArenaScoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);

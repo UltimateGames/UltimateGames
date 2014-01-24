@@ -20,7 +20,9 @@ package me.ampayne2.ultimategames.players.classes;
 
 import me.ampayne2.ultimategames.UltimateGames;
 import me.ampayne2.ultimategames.arenas.ArenaStatus;
+import me.ampayne2.ultimategames.effects.GameSound;
 import me.ampayne2.ultimategames.games.Game;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,6 +42,7 @@ public abstract class GameClass {
     private boolean isUnlockable = false;
     private String unlockableString = null;
     private List<String> players = new ArrayList<String>();
+    private static final GameSound JOIN_SOUND = new GameSound(Sound.HORSE_ARMOR, 1, 1.5F);
 
     /**
      * Creates a new GameClass.
@@ -129,10 +132,10 @@ public abstract class GameClass {
      *
      * @param player         The player to add to the GameClass.
      * @param resetInventory If the player's inventory should be reset immediately.
-     * @param sendMessage    If a message should be sent to the player.
+     * @param notify    If a message and sound should be sent to the player.
      * @return True if the player is added to the GameClass, else false.
      */
-    public boolean addPlayer(Player player, boolean resetInventory, boolean sendMessage) {
+    public boolean addPlayer(Player player, boolean resetInventory, boolean notify) {
         String playerName = player.getName();
         if (!players.contains(playerName)) {
             GameClass gameClass = ultimateGames.getGameClassManager().getPlayerClass(game, playerName);
@@ -141,12 +144,11 @@ public abstract class GameClass {
             }
             players.add(playerName);
             if (resetInventory) {
-                if (sendMessage) {
-                    ultimateGames.getMessenger().sendMessage(player, "classes.join", name);
-                }
                 resetInventory(player);
-            } else if (sendMessage) {
-                ultimateGames.getMessenger().sendMessage(player, "classes.nextdeath", name);
+            }
+            if (notify) {
+                ultimateGames.getMessenger().sendMessage(player, resetInventory ? "classes.join" : "classes.nextdeath", name);
+                JOIN_SOUND.play(player, player.getLocation());
             }
             return true;
         } else {

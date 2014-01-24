@@ -57,6 +57,9 @@ public class ScoreboardManager {
      * @return The ArenaScoreboard created.
      */
     public ArenaScoreboard createScoreboard(Arena arena, String name) {
+        if (scoreboards.containsKey(arena)) {
+            scoreboards.get(arena).reset();
+        }
         ArenaScoreboard scoreboard = new ArenaScoreboard(name);
         scoreboards.put(arena, scoreboard);
         return scoreboard;
@@ -69,8 +72,7 @@ public class ScoreboardManager {
      */
     public void removeScoreboard(Arena arena) {
         if (scoreboards.containsKey(arena)) {
-            ArenaScoreboard scoreboard = scoreboards.get(arena);
-            scoreboard.reset();
+            scoreboards.get(arena).reset();
             scoreboards.remove(arena);
         }
     }

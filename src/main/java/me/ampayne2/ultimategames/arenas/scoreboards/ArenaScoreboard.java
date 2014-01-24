@@ -42,6 +42,7 @@ public class ArenaScoreboard {
     public ArenaScoreboard(String name) {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         scoreboard.registerNewObjective(name, "dummy").setDisplaySlot(DisplaySlot.SIDEBAR);
+        scoreboard.registerNewTeam(GHOST_TEAM_NAME).setCanSeeFriendlyInvisibles(true);
         this.name = name;
     }
 
@@ -102,11 +103,12 @@ public class ArenaScoreboard {
      * @param chatColor The color.
      */
     public void setPlayerColor(Player player, ChatColor chatColor) {
-        Team team = scoreboard.getPlayerTeam(player);
+        String playerName = player.getName();
+        Team team = scoreboard.getTeam(playerName);
         if (team != null) {
             team.unregister();
         }
-        team = scoreboard.registerNewTeam(player.getName());
+        team = scoreboard.registerNewTeam(playerName);
         team.setPrefix(chatColor + "");
         team.addPlayer(player);
     }
@@ -132,12 +134,7 @@ public class ArenaScoreboard {
      */
     public void makePlayerGhost(Player player) {
         resetPlayerColor(player.getName());
-        Team team = scoreboard.getTeam(GHOST_TEAM_NAME);
-        if (team == null ) {
-            team = scoreboard.registerNewTeam(GHOST_TEAM_NAME);
-            team.setCanSeeFriendlyInvisibles(true);
-        }
-        team.addPlayer(player);
+        scoreboard.getTeam(GHOST_TEAM_NAME).addPlayer(player);
     }
 
     /**
@@ -150,6 +147,7 @@ public class ArenaScoreboard {
         scoreboard.getObjective(name).unregister();
         Objective objective = scoreboard.registerNewObjective(name, "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        scoreboard.registerNewTeam(GHOST_TEAM_NAME).setCanSeeFriendlyInvisibles(true);
     }
 
     /**
