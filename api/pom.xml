@@ -4,7 +4,7 @@
 
     <!-- Project information -->
     <name>UltimateGames API</name>
-    <artifactId>UltimateGames-API</artifactId>
+    <artifactId>ultimategames-api</artifactId>
     <packaging>jar</packaging>
     <inceptionYear>2013</inceptionYear>
     <description>UltimateGames plugin API.</description>

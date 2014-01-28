@@ -13,7 +13,7 @@
     <!-- Project modules -->
     <modules>
         <module>api</module>
-        <module>engine</module>
+        <module>core</module>
     </modules>
 
     <!-- Build properties -->
