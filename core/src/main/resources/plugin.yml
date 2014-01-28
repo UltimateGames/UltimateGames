@@ -2,7 +2,7 @@ name: UltimateGames
 version: ${build.number}
 description: The Ultimate Game Plugin
 author: ampayne2
-main: me.ampayne2.ultimategames.UltimateGames
+main: me.ampayne2.ultimategames.core.UG
 load: POSTWORLD
 softdepend: [PlayerHeads, Multiverse-Core]
 commands:
