@@ -75,7 +75,7 @@ public class StartingCountdown extends Countdown {
                 ultimateGames.getMessenger().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
             }
         } else {
-            ultimateGames.getCountdownManager().stopStartingCountdown(arena);
+            ((UCountdownManager) ultimateGames.getCountdownManager()).stopStartingCountdown(arena, false);
             ultimateGames.getArenaManager().beginArena(arena);
             for (String playerName : arena.getPlayers()) {
                 Player player = Bukkit.getPlayerExact(playerName);

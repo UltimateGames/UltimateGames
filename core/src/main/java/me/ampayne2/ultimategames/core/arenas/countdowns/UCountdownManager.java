@@ -19,9 +19,11 @@
 package me.ampayne2.ultimategames.core.arenas.countdowns;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.arenas.countdowns.CountdownManager;
 import me.ampayne2.ultimategames.api.arenas.countdowns.EndingCountdown;
 import me.ampayne2.ultimategames.core.UG;
+import me.ampayne2.ultimategames.core.arenas.UArena;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,13 +77,20 @@ public class UCountdownManager implements CountdownManager {
         }
     }
 
-    @Override
-    public void stopStartingCountdown(Arena arena) {
+    public void stopStartingCountdown(Arena arena, boolean cancelled) {
         if (starting.containsKey(arena)) {
             starting.get(arena).stop();
             starting.remove(arena);
+            if (cancelled) {
+                ((UArena) arena).setStatus(ArenaStatus.OPEN);
+            }
             ultimateGames.getMessenger().debug("Stopped starting countdown for arena " + arena.getName() + " of game " + arena.getGame().getName());
         }
+    }
+
+    @Override
+    public void stopStartingCountdown(Arena arena) {
+        stopStartingCountdown(arena, true);
     }
 
     @Override
