@@ -150,7 +150,7 @@ public class UTeam implements Team {
         Scoreboard scoreBoard = ultimateGames.getScoreboardManager().getScoreboard(arena);
         if (scoreBoard != null) {
             for (String playerName : players) {
-                scoreBoard.removePlayer(Bukkit.getPlayerExact(playerName));
+                scoreBoard.resetPlayerColor(Bukkit.getPlayerExact(playerName));
             }
         }
         players.clear();

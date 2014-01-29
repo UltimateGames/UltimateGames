@@ -82,8 +82,8 @@ public interface Scoreboard {
     void setPlayerColor(Player player, ChatColor chatColor);
 
     /**
-     * Resets a player's name's color.<br>
-     * Does nothing if the player was added to the scoreboard from a {@link me.ampayne2.ultimategames.api.players.teams.Team}
+     * Resets a player's name's color by removing the player from a scoreboard team.<br>
+     * Will break things related to UG teams such as seeing friendly invisibles.
      *
      * @param player The player.
      */

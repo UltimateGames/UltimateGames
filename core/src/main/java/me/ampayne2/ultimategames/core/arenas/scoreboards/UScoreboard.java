@@ -99,9 +99,9 @@ public class UScoreboard implements Scoreboard {
             org.bukkit.scoreboard.Team team = scoreboard.getPlayerTeam(player);
             if (team == null) {
                 team = scoreboard.registerNewTeam(playerName);
-                team.setPrefix(chatColor + "");
             }
             if (team.getName().equals(playerName)) {
+                team.setPrefix(chatColor + "");
                 team.addPlayer(player);
             }
         }
@@ -111,7 +111,7 @@ public class UScoreboard implements Scoreboard {
     public void resetPlayerColor(Player player) {
         if (hasPlayer(player)) {
             org.bukkit.scoreboard.Team team = scoreboard.getPlayerTeam(player);
-            if (team != null && team.getName().equals(player.getName())) {
+            if (team != null) {
                 team.removePlayer(player);
             }
         }
