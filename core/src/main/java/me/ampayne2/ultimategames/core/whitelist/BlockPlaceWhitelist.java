@@ -19,16 +19,20 @@
 package me.ampayne2.ultimategames.core.whitelist;
 
 import me.ampayne2.ultimategames.api.games.Game;
-import me.ampayne2.ultimategames.api.whitelist.BlockPlaceWhitelist;
+import me.ampayne2.ultimategames.api.whitelist.Whitelist;
 import me.ampayne2.ultimategames.core.UG;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 
-public class UBlockPlaceWhitelist implements BlockPlaceWhitelist {
+/**
+ * A whitelist of blocks that can be placed in a game.
+ */
+public class BlockPlaceWhitelist implements Whitelist<Material> {
     private final UG ultimateGames;
-    private final Map<Game, Set<Material>> blocks = new HashMap<>();
+    private final Map<Game, Set<Material>> materials = new HashMap<>();
     private final Map<Game, Boolean> useAsBlacklist = new HashMap<>();
 
     /**
@@ -36,29 +40,38 @@ public class UBlockPlaceWhitelist implements BlockPlaceWhitelist {
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.core.UG} instance.
      */
-    public UBlockPlaceWhitelist(UG ultimateGames) {
+    public BlockPlaceWhitelist(UG ultimateGames) {
         this.ultimateGames = ultimateGames;
+        reload();
+    }
+
+    @Override
+    public boolean isWhitelisted(Game game, Material material) {
+        Validate.notNull(game, "Game cannot be null");
+        Validate.notNull(material, "Material cannot be null");
+
+        return materials.containsKey(game) && (useAsBlacklist.get(game) ^ materials.get(game).contains(material));
+    }
+
+    @Override
+    public boolean isBlacklisted(Game game, Material material) {
+        return !isWhitelisted(game, material);
     }
 
     @Override
     public void reload() {
-        blocks.clear();
+        materials.clear();
         for (Game game : ultimateGames.getGameManager().getGames()) {
             FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game);
             if (gameConfig.contains("BlockPlaceWhitelist")) {
                 List<String> materialNames = gameConfig.getStringList("BlockPlaceWhitelist");
-                Set<Material> materials = new HashSet<>();
+                Set<Material> configMaterials = new HashSet<>();
                 for (String materialName : materialNames) {
-                    materials.add(Material.valueOf(materialName));
+                    configMaterials.add(Material.valueOf(materialName));
                 }
-                blocks.put(game, materials);
+                materials.put(game, configMaterials);
                 useAsBlacklist.put(game, gameConfig.getBoolean("DefaultSettings.Use-Whitelist-As-Blacklist", false));
             }
         }
-    }
-
-    @Override
-    public boolean canPlaceMaterial(Game game, Material material) {
-        return blocks.containsKey(game) && (useAsBlacklist.get(game) ^ blocks.get(game).contains(material));
     }
 }

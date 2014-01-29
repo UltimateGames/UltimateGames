@@ -18,22 +18,24 @@
  */
 package me.ampayne2.ultimategames.api.whitelist;
 
+import org.bukkit.Material;
+
 /**
  * Manages UltimateGames whitelists.
  */
 public interface WhitelistManager {
 
     /**
-     * Gets the Block Place Whitelist.
+     * Gets the block place whitelist.
      *
-     * @return The Block Place Whitelist.
+     * @return The block place whitelist.
      */
-    BlockPlaceWhitelist getBlockPlaceWhitelist();
+    Whitelist<Material> getBlockPlaceWhitelist();
 
     /**
-     * Gets the Block Break Whitelist.
+     * Gets the block break whitelist.
      *
-     * @return The Block Break Whitelist.
+     * @return The block break whitelist.
      */
-    BlockBreakWhitelist getBlockBreakWhitelist();
+    Whitelist<Material> getBlockBreakWhitelist();
 }

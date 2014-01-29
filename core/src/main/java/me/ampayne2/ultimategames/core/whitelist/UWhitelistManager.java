@@ -18,14 +18,14 @@
  */
 package me.ampayne2.ultimategames.core.whitelist;
 
-import me.ampayne2.ultimategames.api.whitelist.BlockBreakWhitelist;
-import me.ampayne2.ultimategames.api.whitelist.BlockPlaceWhitelist;
+import me.ampayne2.ultimategames.api.whitelist.Whitelist;
 import me.ampayne2.ultimategames.api.whitelist.WhitelistManager;
 import me.ampayne2.ultimategames.core.UG;
+import org.bukkit.Material;
 
 public class UWhitelistManager implements WhitelistManager {
-    private final BlockPlaceWhitelist blockPlaceWhitelist;
-    private final BlockBreakWhitelist blockBreakWhitelist;
+    private final Whitelist<Material> blockPlaceWhitelist;
+    private final Whitelist<Material> blockBreakWhitelist;
 
     /**
      * Creates a new WhitelistManager.
@@ -33,19 +33,17 @@ public class UWhitelistManager implements WhitelistManager {
      * @param ultimateGames The {@link me.ampayne2.ultimategames.core.UG} instance.
      */
     public UWhitelistManager(UG ultimateGames) {
-        blockPlaceWhitelist = new UBlockPlaceWhitelist(ultimateGames);
-        blockPlaceWhitelist.reload();
-        blockBreakWhitelist = new UBlockBreakWhitelist(ultimateGames);
-        blockBreakWhitelist.reload();
+        blockPlaceWhitelist = new BlockPlaceWhitelist(ultimateGames);
+        blockBreakWhitelist = new BlockBreakWhitelist(ultimateGames);
     }
 
     @Override
-    public BlockPlaceWhitelist getBlockPlaceWhitelist() {
+    public Whitelist<Material> getBlockPlaceWhitelist() {
         return blockPlaceWhitelist;
     }
 
     @Override
-    public BlockBreakWhitelist getBlockBreakWhitelist() {
+    public Whitelist<Material> getBlockBreakWhitelist() {
         return blockBreakWhitelist;
     }
 }

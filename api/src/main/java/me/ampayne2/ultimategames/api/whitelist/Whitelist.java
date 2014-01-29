@@ -18,10 +18,30 @@
  */
 package me.ampayne2.ultimategames.api.whitelist;
 
+import me.ampayne2.ultimategames.api.games.Game;
+
 /**
  * Interface for any whitelist.
  */
-public interface Whitelist {
+public interface Whitelist<T> {
+
+    /**
+     * Checks if a certain object is whitelisted.
+     *
+     * @param game   The game.
+     * @param object The object.
+     * @return True if the object is whitelisted, else false.
+     */
+    boolean isWhitelisted(Game game, T object);
+
+    /**
+     * Checks if a certain object is blacklisted.
+     *
+     * @param game   The game.
+     * @param object The object.
+     * @return True if the object is blacklisted, else false.
+     */
+    boolean isBlacklisted(Game game, T object);
 
     /**
      * Reloads the Whitelist.
