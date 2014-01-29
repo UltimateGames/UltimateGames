@@ -5,7 +5,7 @@ A Minigame Engine for the Bukkit Minecraft server API.
 
 Website: [http://dev.bukkit.org/bukkit-plugins/ultimategames/](http://dev.bukkit.org/bukkit-plugins/ultimategames/)
 
-Minigame Repositories: [https://bitbucket.org/ultimategames](https://bitbucket.org/ultimategames)
+Minigame Repositories: [http://git.tbdnetwork.net/groups/ultimategames](http://git.tbdnetwork.net/groups/ultimategames)
 
 Features
 --------
@@ -26,7 +26,7 @@ If you're using [Maven](http://maven.apache.org/download.html) to manage project
 
     <dependency>
       <groupId>me.ampayne2</groupId>
-      <artifactId>UltimateGames</artifactId>
+      <artifactId>ultimategames-api</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
@@ -40,7 +40,7 @@ If you do not already have repo.greatmancode.com in your repository list, you wi
 		
 If your goal is to create a minigame, you will need to create a class extending GamePlugin and a gameplugin.yml file.
 
-To learn how to use various parts of UG, look at the example games on the [bitbucket repositories](https://bitbucket.org/ultimategames).
+To learn how to use various parts of UG, look at the example games on the [minigame repositories](http://git.tbdnetwork.net/groups/ultimategames).
 
 Compiling the source
 --------------------
