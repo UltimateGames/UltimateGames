@@ -83,9 +83,10 @@ public class UScoreboard implements Scoreboard {
         if (hasPlayer(player)) {
             org.bukkit.scoreboard.Team team = scoreboard.getPlayerTeam(player);
             if (team != null) {
-                team.removePlayer(player);
                 if (team.getName().equals(player.getName())) {
                     team.unregister();
+                } else {
+                    team.removePlayer(player);
                 }
             }
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -96,13 +97,13 @@ public class UScoreboard implements Scoreboard {
     public void setPlayerColor(Player player, ChatColor chatColor) {
         if (hasPlayer(player)) {
             String playerName = player.getName();
-            org.bukkit.scoreboard.Team team = scoreboard.getPlayerTeam(player);
+            org.bukkit.scoreboard.Team team = scoreboard.getTeam(playerName);
             if (team == null) {
                 team = scoreboard.registerNewTeam(playerName);
+                team.addPlayer(player);
             }
             if (team.getName().equals(playerName)) {
                 team.setPrefix(chatColor + "");
-                team.addPlayer(player);
             }
         }
     }
@@ -110,9 +111,9 @@ public class UScoreboard implements Scoreboard {
     @Override
     public void resetPlayerColor(Player player) {
         if (hasPlayer(player)) {
-            org.bukkit.scoreboard.Team team = scoreboard.getPlayerTeam(player);
+            org.bukkit.scoreboard.Team team = scoreboard.getTeam(player.getName());
             if (team != null) {
-                team.removePlayer(player);
+                team.unregister();
             }
         }
     }
