@@ -604,14 +604,17 @@ public final class UGUtils {
      * @param type   The type of potion effect.
      * @param amount The amount to increase the amplifier by.
      */
-    public void increasePotionEffect(Player player, PotionEffectType type, int amount) {
+    public static void increasePotionEffect(Player player, PotionEffectType type, int amount) {
         if (player.hasPotionEffect(type)) {
             for (PotionEffect effect : player.getActivePotionEffects()) {
                 if (effect.getType() == type) {
-                    player.addPotionEffect(new PotionEffect(type, effect.getDuration(), effect.getAmplifier() + amount));
+                    player.removePotionEffect(type);
+                    player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, effect.getAmplifier() + amount));
                     return;
                 }
             }
+        } else {
+            player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amount));
         }
     }
 
@@ -621,7 +624,7 @@ public final class UGUtils {
      * @param player The player.
      * @param type   The type of potion effect.
      */
-    public void increasePotionEffect(Player player, PotionEffectType type) {
+    public static void increasePotionEffect(Player player, PotionEffectType type) {
         increasePotionEffect(player, type, 1);
     }
 
@@ -632,12 +635,13 @@ public final class UGUtils {
      * @param type   The type of potion effect.
      * @param amount The amount to decrease the amplifier by.
      */
-    public void decreasePotionEffect(Player player, PotionEffectType type, int amount) {
+    public static void decreasePotionEffect(Player player, PotionEffectType type, int amount) {
         if (player.hasPotionEffect(type)) {
             for (PotionEffect effect : player.getActivePotionEffects()) {
                 if (effect.getType() == type) {
                     if (effect.getAmplifier() > 1) {
-                        player.addPotionEffect(new PotionEffect(type, effect.getDuration(), effect.getAmplifier() - amount));
+                        player.removePotionEffect(type);
+                        player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, effect.getAmplifier() - amount));
                     } else {
                         player.removePotionEffect(type);
                     }
@@ -653,7 +657,7 @@ public final class UGUtils {
      * @param player The player.
      * @param type   The type of potion effect.
      */
-    public void decreasePotionEffect(Player player, PotionEffectType type) {
+    public static void decreasePotionEffect(Player player, PotionEffectType type) {
         decreasePotionEffect(player, type, 1);
     }
 
@@ -663,7 +667,7 @@ public final class UGUtils {
      * @param player The player.
      * @param type   The type of potion effect.
      */
-    public void removePotionEffect(Player player, PotionEffectType type) {
+    public static void removePotionEffect(Player player, PotionEffectType type) {
         if (player.hasPotionEffect(type)) {
             player.removePotionEffect(type);
         }
