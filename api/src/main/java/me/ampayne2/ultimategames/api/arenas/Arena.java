@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.api.arenas;
 
 import me.ampayne2.ultimategames.api.games.Game;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
@@ -135,4 +136,11 @@ public interface Arena {
      * @return If the location is inside the arena or not.
      */
     boolean locationIsInArena(Location location);
+
+    /**
+     * Gets the ConfigurationSection of the arena.
+     *
+     * @return The arena's ConfigurationSection.
+     */
+    ConfigurationSection getSection();
 }

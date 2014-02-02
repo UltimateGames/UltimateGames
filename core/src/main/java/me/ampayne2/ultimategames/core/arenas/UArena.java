@@ -20,7 +20,6 @@ package me.ampayne2.ultimategames.core.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
-import me.ampayne2.ultimategames.api.config.ConfigAccessor;
 import me.ampayne2.ultimategames.api.config.ConfigType;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.games.PlayerType;
@@ -29,6 +28,7 @@ import me.ampayne2.ultimategames.api.utils.UGUtils;
 import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,7 +49,7 @@ public class UArena implements Listener, Arena {
     private final UG ultimateGames;
     private final Game game;
     private String arenaName;
-    private ArenaStatus arenaStatus = ArenaStatus.OPEN;
+    private ArenaStatus arenaStatus;
     private List<String> players = new ArrayList<>();
     private List<String> spectators = new ArrayList<>();
     private int minPlayers;
@@ -58,48 +58,66 @@ public class UArena implements Listener, Arena {
     private boolean allowExplosionBlockBreaking;
     private boolean allowMobSpawning;
     private URegion region;
-    private int timesPlayed;
+    private int timesPlayed = 0;
     private Map<String, Location> lastLocations = new HashMap<>();
     private static final int DEFAULT_MIN_PLAYERS = 4;
     private static final int DEFAULT_MAX_PLAYERS = 8;
-    private static final String PATH_SEPARATOR = ".";
 
+    /**
+     * Creates an arena from default settings.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.core.UG} instance.
+     * @param game          The game of the arena.
+     * @param arenaName     The name of the arena.
+     * @param corner1       A corner of the arena.
+     * @param corner2       The opposite corner of the arena.
+     */
     public UArena(UG ultimateGames, Game game, String arenaName, Location corner1, Location corner2) {
         this.ultimateGames = ultimateGames;
         this.arenaName = arenaName;
         this.game = game;
-        FileConfiguration gamesConfig = ultimateGames.getConfigManager().getGameConfig(game);
-        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getConfig(ConfigType.ARENA);
-        String arenaPath = "Arenas." + game.getName() + "." + arenaName;
-        // Get all arena information. Tries to get from arena config, if doesn't exist there then gets from default game settings, if doesn't exist there then is set specifically to true/false
-        allowExplosionDamage = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Damage", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", false));
-        allowExplosionBlockBreaking = arenaConfig.getBoolean(arenaPath + ".Allow-Explosion-Block-Breaking", gamesConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false));
-        allowMobSpawning = arenaConfig.getBoolean(arenaPath + ".Allow-Mob-Spawning", gamesConfig.getBoolean("DefaultSettings.Allow-Mob-Spawning", false));
-        minPlayers = arenaConfig.getInt(arenaPath + ".Min-Players", gamesConfig.getInt("DefaultSettings.MinPlayers", DEFAULT_MIN_PLAYERS));
-        arenaStatus = ArenaStatus.valueOf(arenaConfig.getString(arenaPath + ".Status", "ARENA_STOPPED"));
+
+        FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game);
+        allowExplosionDamage = gameConfig.getBoolean("DefaultSettings.Allow-Explosion-Damage", false);
+        allowExplosionBlockBreaking = gameConfig.getBoolean("DefaultSettings.Allow-Explosion-Block-Breaking", false);
+        allowMobSpawning = gameConfig.getBoolean("DefaultSettings.Allow-Mob-Spawning", false);
+        minPlayers = gameConfig.getInt("DefaultSettings.MinPlayers", DEFAULT_MIN_PLAYERS);
+        arenaStatus = ArenaStatus.ARENA_STOPPED;
+
         if (game.getPlayerType() == PlayerType.SINGLE_PLAYER) {
             maxPlayers = 1;
         } else if (game.getPlayerType() == PlayerType.TWO_PLAYER) {
             maxPlayers = 2;
         } else if (game.getPlayerType() == PlayerType.CONFIGUREABLE) {
-            maxPlayers = arenaConfig.getInt(arenaPath + ".Max-Players", gamesConfig.getInt("DefaultSettings.MaxPlayers", DEFAULT_MAX_PLAYERS));
+            maxPlayers = gameConfig.getInt("DefaultSettings.MaxPlayers", DEFAULT_MAX_PLAYERS);
         }
 
         region = URegion.fromCorners(corner1, corner2);
 
-        // create the arena in the config if it doesn't exist
-        if (arenaConfig.getConfigurationSection(arenaPath) == null) {
-            arenaConfig.set(arenaPath + ".Status", "ARENA_STOPPED");
-            arenaConfig.set(arenaPath + ".Max-Players", maxPlayers);
-            arenaConfig.set(arenaPath + ".Min-Players", minPlayers);
-            arenaConfig.set(arenaPath + ".Allow-Explosion-Damage", allowExplosionDamage);
-            arenaConfig.set(arenaPath + ".Allow-Explosion-Block-Breaking", allowExplosionBlockBreaking);
-            arenaConfig.set(arenaPath + ".Allow-Mob-Spawning", allowMobSpawning);
-            arenaConfig.set(arenaPath + ".Arena-Region", region.toList());
-        }
-        ultimateGames.getConfigManager().getGameConfigAccessor(game).saveConfig();
-        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
-        timesPlayed = 0;
+        ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
+    }
+
+    /**
+     * Loads an arena from a ConfigurationSection.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.core.UG} instance.
+     * @param game          The game of the arena.
+     * @param section       The ConfigurationSection.
+     */
+    public UArena(UG ultimateGames, Game game, ConfigurationSection section) {
+        this.ultimateGames = ultimateGames;
+        this.arenaName = section.getName();
+        this.game = game;
+
+        arenaStatus = ArenaStatus.valueOf(section.getString("Status", "ARENA_STOPPED"));
+        maxPlayers = section.getInt("Max-Players", DEFAULT_MAX_PLAYERS);
+        minPlayers = section.getInt("Min-Players", DEFAULT_MIN_PLAYERS);
+        region = URegion.fromList(section.getStringList("Region"));
+
+        ConfigurationSection allow = section.getConfigurationSection("Allow");
+        allowExplosionDamage = allow.getBoolean("Explosion-Damage", false);
+        allowExplosionBlockBreaking = allow.getBoolean("Explosion-Block-Breaking", false);
+        allowMobSpawning = allow.getBoolean("Mob-Spawning", false);
 
         ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
     }
@@ -114,6 +132,7 @@ public class UArena implements Listener, Arena {
         for (String playerName : spectators) {
             ultimateGames.getPlayerManager().removeSpectatorFromArena(Bukkit.getPlayerExact(playerName));
         }
+        setStatus(ArenaStatus.ARENA_STOPPED);
     }
 
     @Override
@@ -249,17 +268,18 @@ public class UArena implements Listener, Arena {
      * @param status The status.
      */
     public void setStatus(ArenaStatus status) {
-        arenaStatus = status;
-        ConfigAccessor arenaConfig = ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA);
-        arenaConfig.getConfig().set("Arenas." + game.getName() + PATH_SEPARATOR + arenaName + ".Status", status.toString());
-        arenaConfig.saveConfig();
-        if (ultimateGames.getSignManager() != null) {
-            ultimateGames.getSignManager().updateSignsOfArena(this, SignType.LOBBY);
+        if (!status.equals(arenaStatus)) {
+            arenaStatus = status;
+            getSection().set("Status", status.toString());
+            ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
+            if (ultimateGames.getSignManager() != null) {
+                ultimateGames.getSignManager().updateSignsOfArena(this, SignType.LOBBY);
+            }
+            if (status == ArenaStatus.RUNNING) {
+                timesPlayed += 1;
+            }
+            ultimateGames.getMessenger().debug("Set status of arena " + arenaName + " of game " + game.getName() + " to " + status.toString());
         }
-        if (status == ArenaStatus.RUNNING) {
-            timesPlayed += 1;
-        }
-        ultimateGames.getMessenger().debug("Set status of arena " + arenaName + " of game " + game.getName() + " to " + status.toString());
     }
 
     /**
@@ -296,6 +316,31 @@ public class UArena implements Listener, Arena {
             event.setCancelled(true);
             ultimateGames.getMessenger().sendMessage(player, "protections.leave");
         }
+    }
+
+    @Override
+    public ConfigurationSection getSection() {
+        FileConfiguration arenaConfig = ultimateGames.getConfigManager().getConfig(ConfigType.ARENA);
+        String arenaPath = "Arenas." + game.getName() + "." + arenaName;
+        return arenaConfig.contains(arenaPath) ? arenaConfig.getConfigurationSection(arenaPath) : arenaConfig.createSection(arenaPath);
+    }
+
+    /**
+     * Saves the arena to its ConfigurationSection.
+     */
+    public void save() {
+        ConfigurationSection section = getSection();
+        section.set("Status", arenaStatus.toString());
+        section.set("Max-Players", maxPlayers);
+        section.set("Min-Players", minPlayers);
+        section.set("Region", region.toList());
+
+        ConfigurationSection allow = section.contains("Allow") ? section.getConfigurationSection("Allow") : section.createSection("Allow");
+        allow.set("Explosion-Damage", allowExplosionDamage);
+        allow.set("Explosion-Block-Breaking", allowExplosionBlockBreaking);
+        allow.set("Mob-Spawning", allowMobSpawning);
+
+        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
     }
 
     @Override

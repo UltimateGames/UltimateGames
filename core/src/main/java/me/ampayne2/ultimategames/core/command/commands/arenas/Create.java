@@ -18,8 +18,6 @@
  */
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
-import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
-import me.ampayne2.ultimategames.api.config.ConfigType;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.UArena;
@@ -111,9 +109,7 @@ public class Create extends UGCommand implements Listener {
         String playerName = player.getName();
         String arenaName = arena.get(playerName);
         String gameName = game.get(playerName).getName();
-        UArena newArena = new UArena(ultimateGames, game.get(playerName), arenaName, corner1.get(playerName), corner2.get(playerName));
-        newArena.setStatus(ArenaStatus.valueOf(ultimateGames.getConfigManager().getConfig(ConfigType.ARENA).getString("Arenas." + gameName + "." + arenaName + ".Status")));
-        ultimateGames.getArenaManager().addArena(newArena);
+        ultimateGames.getArenaManager().addArena(new UArena(ultimateGames, game.get(playerName), arenaName, corner1.get(playerName), corner2.get(playerName)));
         ultimateGames.getMessenger().sendMessage(player, "arenas.create", arenaName, gameName);
     }
 }

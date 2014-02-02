@@ -63,8 +63,7 @@ public class UArenaManager implements ArenaManager {
                     for (String arenaKey : arenaConfig.getConfigurationSection(gamePath).getKeys(false)) {
                         if (!arenaExists(arenaKey, gameKey)) {
                             String arenaPath = gamePath + "." + arenaKey;
-                            URegion region = URegion.fromList(arenaConfig.getStringList(arenaPath + ".Arena-Region"));
-                            Arena arena = new UArena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaKey, region.getMinimumLocation(), region.getMaximumLocation());
+                            UArena arena = new UArena(ultimateGames, ultimateGames.getGameManager().getGame(gameKey), arenaConfig.getConfigurationSection(arenaPath));
                             addArena(arena);
                             if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
                                 @SuppressWarnings("unchecked") List<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
@@ -75,7 +74,7 @@ public class UArenaManager implements ArenaManager {
                                         Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
                                         Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
                                         Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
-                                        Location location = new Location(region.getWorld(), x, y, z);
+                                        Location location = new Location(arena.getRegion().getWorld(), x, y, z);
                                         location.setPitch(pitch);
                                         location.setYaw(yaw);
                                         PlayerSpawnPoint newSpawnPoint = new PlayerSpawnPoint(ultimateGames, getArena(arenaKey, gameKey), location, Boolean.valueOf(spawnPoint.get(LOCKED_INDEX)));
@@ -91,7 +90,7 @@ public class UArenaManager implements ArenaManager {
                                     Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
                                     Float pitch = Float.valueOf(spawnPoint.get(PITCH_INDEX));
                                     Float yaw = Float.valueOf(spawnPoint.get(YAW_INDEX));
-                                    Location location = new Location(region.getWorld(), x, y, z);
+                                    Location location = new Location(arena.getRegion().getWorld(), x, y, z);
                                     location.setPitch(pitch);
                                     location.setYaw(yaw);
                                     ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(getArena(arenaKey, gameKey), location);
@@ -160,7 +159,8 @@ public class UArenaManager implements ArenaManager {
      *
      * @param arena The arena.
      */
-    public void addArena(Arena arena) {
+    public void addArena(UArena arena) {
+        arena.save();
         if (arena.getGame().getGamePlugin().loadArena(arena)) {
             if (arenas.containsKey(arena.getGame())) {
                 arenas.get(arena.getGame()).add(arena);
