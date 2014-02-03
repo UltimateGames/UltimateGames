@@ -22,8 +22,11 @@ import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.games.GameManager;
 import me.ampayne2.ultimategames.api.games.GamePlugin;
 import me.ampayne2.ultimategames.api.games.PlayerType;
+import me.ampayne2.ultimategames.api.message.Messenger;
 import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.PluginClassLoader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -58,6 +61,9 @@ public class UGameManager implements GameManager {
         PlayerType playerType;
         String name, description, author, version;
         List<String> instructionPages;
+        Messenger messenger = ultimateGames.getMessenger();
+        PluginClassLoader pluginClassLoader = ultimateGames.getPluginClassLoader();
+        PluginManager pluginManager = ultimateGames.getServer().getPluginManager();
         for (File file : gameFolder.listFiles(new GameFileFilter())) {
             try {
                 jarFile = new JarFile(file);
@@ -86,7 +92,7 @@ public class UGameManager implements GameManager {
 
                 //Is the configuration a valid one?
                 if (!gamePlugin.contains("main-class") || !gamePlugin.contains("description") || !gamePlugin.contains("version") || !gamePlugin.contains("author") || !gamePlugin.contains("playerType")) {
-                    ultimateGames.getMessenger().log(Level.SEVERE, "Game " + file.getAbsolutePath() + " contains an invalid gameplugin.yml file!");
+                    messenger.log(Level.SEVERE, "Game " + file.getAbsolutePath() + " contains an invalid gameplugin.yml file!");
                     jarFile.close();
                     continue;
                 }
@@ -96,44 +102,57 @@ public class UGameManager implements GameManager {
                 version = gamePlugin.getString("version");
                 author = gamePlugin.getString("author");
                 playerType = PlayerType.valueOf(gamePlugin.getString("playerType").toUpperCase());
-                instructionPages = (ArrayList<String>) gamePlugin.getList("Instructions");
+                instructionPages = gamePlugin.getStringList("Instructions");
+                List<String> depend = gamePlugin.contains("depend") ? gamePlugin.getStringList("depend") : new ArrayList<String>();
 
                 //We try to load the main class..
-                ultimateGames.getPluginClassLoader().addURL(file.toURI().toURL());
-                Class<?> aclass = ultimateGames.getPluginClassLoader().loadClass(gamePlugin.getString("main-class"));
+                pluginClassLoader.addURL(file.toURI().toURL());
+                Class<?> aclass = pluginClassLoader.loadClass(gamePlugin.getString("main-class"));
 
                 Object object = aclass.newInstance();
 
                 //Is the class a valid game plugin?
                 if (object instanceof GamePlugin) {
-                    ultimateGames.getMessenger().log(Level.INFO, "Loading " + name);
+                    messenger.log(Level.INFO, "Loading game " + name);
                     GamePlugin plugin = (GamePlugin) object;
 
-                    Game game = new UGame(plugin, name, description, version, author, playerType, instructionPages);
+                    Game game = new UGame(plugin, name, description, version, author, depend, playerType, instructionPages);
 
                     // Does the game already exist?
                     if (gameExists(game)) {
-                        ultimateGames.getMessenger().log(Level.SEVERE, "The game " + name + " already exists!");
+                        messenger.log(Level.SEVERE, "The game " + name + " already exists!");
                         jarFile.close();
                         continue;
                     }
 
+                    // Check if dependencies are loaded
+                    List<String> dependenciesNotLoaded = new ArrayList<>();
+                    for (String dependency : game.getDepend()) {
+                        if (!pluginManager.isPluginEnabled(dependency)) {
+                            dependenciesNotLoaded.add(dependency);
+                        }
+                    }
+
                     //We load the game
-                    if (plugin.loadGame(ultimateGames, game)) {
+                    if (!dependenciesNotLoaded.isEmpty()) {
+                        for (String dependency : dependenciesNotLoaded) {
+                            messenger.log(Level.SEVERE, name + " is missing the dependency " + dependency);
+                        }
+                    } else if (plugin.loadGame(ultimateGames, game)) {
                         addGame(game);
-                        ultimateGames.getServer().getPluginManager().registerEvents(plugin, ultimateGames);
+                        pluginManager.registerEvents(plugin, ultimateGames);
                     }
                 } else {
-                    ultimateGames.getMessenger().log(Level.SEVERE, "The game " + name + " has an invalid main class!");
+                    messenger.log(Level.SEVERE, name + " has an invalid main class!");
                 }
             } catch (Exception e) {
-                ultimateGames.getMessenger().log(Level.WARNING, "An error occurred whilst loading the game " + file.getName() + ".");
-                ultimateGames.getMessenger().debug(e);
+                messenger.log(Level.WARNING, "An error occurred whilst loading the game " + file.getName() + ".");
+                messenger.debug(e);
                 if (jarFile != null) {
                     try {
                         jarFile.close();
                     } catch (IOException e1) {
-                        ultimateGames.getMessenger().debug(e1);
+                        messenger.debug(e1);
                     }
                 }
             }

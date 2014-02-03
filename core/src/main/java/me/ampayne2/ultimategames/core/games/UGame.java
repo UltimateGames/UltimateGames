@@ -27,16 +27,18 @@ import java.util.List;
 public class UGame implements Game {
     private final GamePlugin gamePlugin;
     private final String name, description, version, author;
+    private final List<String> depend;
     private final PlayerType playerType;
     private final List<String> instructionPages;
     private boolean enabled = true;
 
-    public UGame(GamePlugin gamePlugin, String name, String description, String version, String author, PlayerType playerType, List<String> instructionPages) {
+    public UGame(GamePlugin gamePlugin, String name, String description, String version, String author, List<String> depend, PlayerType playerType, List<String> instructionPages) {
         this.gamePlugin = gamePlugin;
         this.name = name;
         this.description = description;
         this.version = version;
         this.author = author;
+        this.depend = depend;
         this.playerType = playerType;
         this.instructionPages = instructionPages;
     }
@@ -74,6 +76,11 @@ public class UGame implements Game {
     @Override
     public String getAuthor() {
         return author;
+    }
+
+    @Override
+    public List<String> getDepend() {
+        return depend;
     }
 
     @Override

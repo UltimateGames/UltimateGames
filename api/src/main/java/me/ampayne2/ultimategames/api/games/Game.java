@@ -37,6 +37,10 @@ public interface Game {
      */
     void disable();
 
+    /**
+     * Gets the GamePlugin of the game.
+     * @return The game's GamePlugin.
+     */
     GamePlugin getGamePlugin();
 
     /**
@@ -66,6 +70,14 @@ public interface Game {
      * @return The author.
      */
     String getAuthor();
+
+    /**
+     * Gets the game's plugin dependencies.<br>
+     * Works the same as bukkit's plugin dependency system.
+     *
+     * @return The game's plugin dependencies.
+     */
+    List<String> getDepend();
 
     /**
      * Gets the PlayerType of the game.
