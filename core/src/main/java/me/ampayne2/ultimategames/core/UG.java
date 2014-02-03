@@ -39,6 +39,7 @@ import me.ampayne2.ultimategames.core.command.CommandController;
 import me.ampayne2.ultimategames.core.config.UConfigManager;
 import me.ampayne2.ultimategames.core.games.UGameManager;
 import me.ampayne2.ultimategames.core.games.ULobbyManager;
+import me.ampayne2.ultimategames.core.games.blocks.UGameBlockManager;
 import me.ampayne2.ultimategames.core.games.items.UGameItemManager;
 import me.ampayne2.ultimategames.core.message.UMessenger;
 import me.ampayne2.ultimategames.core.misc.MetricsManager;
@@ -71,6 +72,7 @@ public class UG extends JavaPlugin implements UltimateGames {
     private UConfigManager configManager;
     private UGameClassManager gameClassManager;
     private UGameItemManager gameItemManager;
+    private UGameBlockManager gameBlockManager;
     private UGameManager gameManager;
     private UTeamManager teamManager;
     private UArenaManager arenaManager;
@@ -136,6 +138,7 @@ public class UG extends JavaPlugin implements UltimateGames {
         metricsManager = new MetricsManager(this);
         gameClassManager = new UGameClassManager(this);
         gameItemManager = new UGameItemManager();
+        gameBlockManager = new UGameBlockManager();
         gameManager = new UGameManager(this);
         queueManager = new UQueueManager(this);
         spawnpointManager = new USpawnpointManager(this);
@@ -237,6 +240,11 @@ public class UG extends JavaPlugin implements UltimateGames {
     @Override
     public UGameItemManager getGameItemManager() {
         return gameItemManager;
+    }
+
+    @Override
+    public UGameBlockManager getGameBlockManager() {
+        return gameBlockManager;
     }
 
     @Override

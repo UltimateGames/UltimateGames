@@ -62,7 +62,9 @@ public abstract class GameItem {
     /**
      * Handles clicking the GameItem.
      *
+     * @param arena The arena the GameItem was clicked in.
      * @param event The PlayerInteractEvent.
+     * @return True if the click was successful, else false.
      */
     public abstract boolean click(Arena arena, PlayerInteractEvent event);
 
@@ -77,7 +79,7 @@ public abstract class GameItem {
 
         GameItem gameItem = (GameItem) o;
 
-        return item.getType().equals(gameItem.item.getType()) && item.getItemMeta().getDisplayName().equals(gameItem.getItem().getItemMeta().getDisplayName()) && singleUse == gameItem.singleUse;
+        return item.getType().equals(gameItem.item.getType()) && item.getItemMeta().getDisplayName().equals(gameItem.item.getItemMeta().getDisplayName()) && singleUse == gameItem.singleUse;
     }
 
     @Override

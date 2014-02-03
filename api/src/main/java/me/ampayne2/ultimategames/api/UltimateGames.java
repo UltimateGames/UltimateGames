@@ -26,6 +26,7 @@ import me.ampayne2.ultimategames.api.arenas.spawnpoints.SpawnpointManager;
 import me.ampayne2.ultimategames.api.config.ConfigManager;
 import me.ampayne2.ultimategames.api.games.GameManager;
 import me.ampayne2.ultimategames.api.games.LobbyManager;
+import me.ampayne2.ultimategames.api.games.blocks.GameBlockManager;
 import me.ampayne2.ultimategames.api.games.items.GameItemManager;
 import me.ampayne2.ultimategames.api.message.Messenger;
 import me.ampayne2.ultimategames.api.players.PlayerManager;
@@ -104,6 +105,13 @@ public interface UltimateGames {
      * @return The GameItemManager.
      */
     GameItemManager getGameItemManager();
+
+    /**
+     * Gets the GameBlockManager.
+     *
+     * @return The GameBlockManager.
+     */
+    GameBlockManager getGameBlockManager();
 
     /**
      * Gets the TeamManager.

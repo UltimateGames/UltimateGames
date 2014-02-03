@@ -28,19 +28,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Manages game items.
- */
 public class UGameItemManager implements GameItemManager {
     private final Map<Game, Set<GameItem>> gameItems = new HashMap<>();
 
-    /**
-     * Checks if an ItemStack is registered.
-     *
-     * @param game The game.
-     * @param item The ItemStack.
-     * @return True if the ItemStack is registered, else false.
-     */
     @Override
     public boolean isRegistered(Game game, ItemStack item) {
         if (gameItems.containsKey(game)) {
@@ -53,25 +43,11 @@ public class UGameItemManager implements GameItemManager {
         return false;
     }
 
-    /**
-     * Checks if a GameItem is registered.
-     *
-     * @param game The game.
-     * @param item The GameItem.
-     * @return True if the GameItem is registered, else false.
-     */
     @Override
     public boolean isRegistered(Game game, GameItem item) {
         return gameItems.containsKey(game) && gameItems.get(game).contains(item);
     }
 
-    /**
-     * Gets a GameItem of a game.
-     *
-     * @param game The game.
-     * @param item The ItemStack of the GameItem.
-     * @return The GameItem, null if none of the ItemStack exists.
-     */
     @Override
     public GameItem getGameItem(Game game, ItemStack item) {
         if (gameItems.containsKey(game)) {
@@ -84,24 +60,11 @@ public class UGameItemManager implements GameItemManager {
         return null;
     }
 
-    /**
-     * Gets the GameItems of a game.
-     *
-     * @param game The game.
-     * @return The GameItems of a game.
-     */
     @Override
     public Set<GameItem> getGameItems(Game game) {
         return gameItems.containsKey(game) ? gameItems.get(game) : new HashSet<GameItem>();
     }
 
-    /**
-     * Registers a GameItem.
-     *
-     * @param game     The Game.
-     * @param gameItem The GameItem.
-     * @return True if the GameItem was registered successfully, else false.
-     */
     @Override
     public UGameItemManager registerGameItem(Game game, GameItem gameItem) {
         if (gameItems.containsKey(game)) {
@@ -120,12 +83,6 @@ public class UGameItemManager implements GameItemManager {
         return this;
     }
 
-    /**
-     * Unregisters a GameItem.
-     *
-     * @param game The Game.
-     * @param item The GameItem.
-     */
     @Override
     public UGameItemManager unregisterGameItem(Game game, GameItem item) {
         if (gameItems.containsKey(game)) {
@@ -134,11 +91,6 @@ public class UGameItemManager implements GameItemManager {
         return this;
     }
 
-    /**
-     * Unregisters all of a game's GameItems.
-     *
-     * @param game The Game.
-     */
     @Override
     public UGameItemManager unregisterGameItems(Game game) {
         gameItems.remove(game);

@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.core.arenas;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.games.Game;
+import me.ampayne2.ultimategames.api.games.blocks.GameBlockManager;
 import me.ampayne2.ultimategames.api.games.items.GameItem;
 import me.ampayne2.ultimategames.api.players.PlayerManager;
 import me.ampayne2.ultimategames.api.players.teams.Team;
@@ -70,11 +71,18 @@ public class ArenaListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Arena arena = ultimateGames.getArenaManager().getLocationArena(event.getBlock().getLocation());
         if (arena != null) {
-            String playerName = event.getPlayer().getName();
+            Game game = arena.getGame();
+            Player player = event.getPlayer();
+            String playerName = player.getName();
             if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
                 if (!ultimateGames.getPlayerManager().getArenaPlayer(playerName).isEditing()) {
-                    if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockPlaceWhitelist().isWhitelisted(arena.getGame(), event.getBlock().getType())) {
-                        arena.getGame().getGamePlugin().onBlockPlace(arena, event);
+                    Material material = event.getBlock().getType();
+                    if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockPlaceWhitelist().isWhitelisted(arena.getGame(), material)) {
+                        if (!ultimateGames.getGameBlockManager().isRegistered(game, material)) {
+                            arena.getGame().getGamePlugin().onBlockPlace(arena, event);
+                        } else if (!ultimateGames.getGameBlockManager().getGameBlock(game, material).place(arena, event)) {
+                            event.setCancelled(true);
+                        }
                     } else {
                         event.setCancelled(true);
                     }
@@ -87,7 +95,8 @@ public class ArenaListener implements Listener {
 
     /**
      * Blocks block breaking inside an arena for players not in that arena,<br>
-     * or if the block's material is not whitelisted for breaking.
+     * or if the block's material is not whitelisted for breaking,<br>
+     * or if the block is a GameBlock that cannot be broken.
      * <p/>
      * Stops blocks with ug signs attached from breaking.
      */
@@ -100,7 +109,8 @@ public class ArenaListener implements Listener {
                 if (!ultimateGames.getPlayerManager().getArenaPlayer(playerName).isEditing()) {
                     if (arena.getStatus() == ArenaStatus.RUNNING && ultimateGames.getWhitelistManager().getBlockBreakWhitelist().isWhitelisted(arena.getGame(), event.getBlock().getType())) {
                         Block block = event.getBlock();
-                        if ((block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) && ultimateGames.getSignManager().isSign((Sign) block.getState())) {
+                        Material material = block.getType();
+                        if ((material == Material.SIGN_POST || material == Material.WALL_SIGN) && ultimateGames.getSignManager().isSign((Sign) block.getState())) {
                             event.setCancelled(true);
                             return;
                         }
@@ -110,7 +120,12 @@ public class ArenaListener implements Listener {
                                 return;
                             }
                         }
-                        arena.getGame().getGamePlugin().onBlockBreak(arena, event);
+                        Game game = arena.getGame();
+                        if (!ultimateGames.getGameBlockManager().isRegistered(game, material)) {
+                            arena.getGame().getGamePlugin().onBlockBreak(arena, event);
+                        } else if (!ultimateGames.getGameBlockManager().getGameBlock(game, material).canBeBroken()) {
+                            event.setCancelled(true);
+                        }
                     } else {
                         event.setCancelled(true);
                     }
@@ -134,10 +149,13 @@ public class ArenaListener implements Listener {
             Arena arena = ultimateGames.getArenaManager().getLocationArena(entity.getLocation());
             if (arena != null) {
                 if (arena.getStatus() == ArenaStatus.RUNNING) {
+                    Game game = arena.getGame();
+                    GameBlockManager gameBlockManager = ultimateGames.getGameBlockManager();
                     if (arena.allowExplosionBlockBreaking()) {
                         Whitelist<Material> blockBreakWhitelist = ultimateGames.getWhitelistManager().getBlockBreakWhitelist();
                         for (Block block : new ArrayList<>(event.blockList())) {
-                            if (blockBreakWhitelist.isBlacklisted(arena.getGame(), block.getType())) {
+                            Material material = block.getType();
+                            if (blockBreakWhitelist.isBlacklisted(arena.getGame(), material) || (gameBlockManager.isRegistered(game, material) && !gameBlockManager.getGameBlock(game, material).canBeBroken())) {
                                 event.blockList().remove(block);
                             }
                         }
