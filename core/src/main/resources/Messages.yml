@@ -65,6 +65,9 @@ Messages:
     create: "Created SpawnPoint for Arena '%s' of Game '%s'"
     leave: "&4You are not allowed to leave the spawnpoint."
 
+  zones:
+    create: "Created Zone for Arena '%s' of Game '%s'"
+
   countdowns:
     timeleftstart: "The game starts in %s seconds!"
     timeleftend: "The game ends in %s seconds!"
@@ -84,3 +87,4 @@ Messages:
     numbertoohigh: "&4Value must be no greater than &b%s&4."
     numbertoolow: "&4Value must be no lower than &b%s&4."
     booleanformat: "&4Value must be true or false."
+    radiustypeformat: "&4Value must be cube or circle."

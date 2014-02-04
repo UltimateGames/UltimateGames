@@ -72,6 +72,7 @@ public class CommandController implements TabExecutor, Listener {
                         .addChildCommand(new End(ultimateGames))
                         .addChildCommand(new Stop(ultimateGames))
                         .addChildCommand(new AddSpawn(ultimateGames))
+                        .addChildCommand(new AddZone(ultimateGames))
                         .addChildCommand(new SetSpectatorSpawn(ultimateGames)));
 
         ultimateGames.getCommand(mainCommand.getName()).setExecutor(this);

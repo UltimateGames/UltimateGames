@@ -18,7 +18,9 @@
  */
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
+import me.ampayne2.ultimategames.api.arenas.zones.RadiusType;
 import me.ampayne2.ultimategames.core.UG;
+import me.ampayne2.ultimategames.core.arenas.zones.UZone;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,30 +28,36 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 /**
- * A command that adds a spawn to an arena.
+ * A command that adds a Zone to an arena.
  */
-public class AddSpawn extends UGCommand {
+public class AddZone extends UGCommand {
     private final UG ultimateGames;
 
     /**
-     * Creates the AddSpawn command.
+     * Creates the AddZone command.
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.core.UG} instance.
      */
-    public AddSpawn(UG ultimateGames) {
-        super(ultimateGames, "addspawn", "Adds a spawn to an arena.", "/ug arena addspawn <arena> <game> <locked (true/false)>", new Permission("ultimategames.arena.addspawn", PermissionDefault.OP), 3, true);
+    public AddZone(UG ultimateGames) {
+        super(ultimateGames, "addzone", "Adds a zone to an arena.", "/ug arena addzone <arena> <game> <name> <radius> <cube/circle>", new Permission("ultimategames.arena.addzone", PermissionDefault.OP), 5, true);
         this.ultimateGames = ultimateGames;
     }
 
     @Override
     public void execute(String command, CommandSender sender, String[] args) {
-        if (!(args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false"))) {
-            ultimateGames.getMessenger().sendMessage(sender, "error.booleanformat");
+        if (!(args[4].equalsIgnoreCase("cube") || args[4].equalsIgnoreCase("circle"))) {
+            ultimateGames.getMessenger().sendMessage(sender, "error.radiustypeformat");
             return;
         }
         String arenaName = args[0];
         String gameName = args[1];
-        Boolean locked = Boolean.valueOf(args[2].toLowerCase());
+        int radius = 0;
+        try {
+            radius = Integer.valueOf(args[3]);
+        } catch (NumberFormatException e) {
+            ultimateGames.getMessenger().sendMessage(sender, "error.numberformat");
+        }
+        RadiusType radiusType = RadiusType.valueOf(args[4].toUpperCase());
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
             ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
             return;
@@ -57,7 +65,7 @@ public class AddSpawn extends UGCommand {
             ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
             return;
         }
-        ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), ((Player) sender).getLocation(), locked);
-        ultimateGames.getMessenger().sendMessage(sender, "spawnpoints.create", arenaName, gameName);
+        ultimateGames.getZoneManager().addZone(new UZone(ultimateGames, ultimateGames.getArenaManager().getArena(arenaName, gameName), args[2], ((Player) sender).getLocation(), radius, radiusType));
+        ultimateGames.getMessenger().sendMessage(sender, "zones.create", arenaName, gameName);
     }
 }

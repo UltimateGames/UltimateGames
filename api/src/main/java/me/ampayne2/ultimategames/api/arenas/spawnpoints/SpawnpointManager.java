@@ -34,7 +34,7 @@ public interface SpawnpointManager {
      * @param index The index.
      * @return If the arena has a spawnpoint at the index or not.
      */
-    boolean hasSpawnPointAtIndex(Arena arena, Integer index);
+    boolean hasSpawnPointAtIndex(Arena arena, int index);
 
     /**
      * Get a specific spawnpoint of an arena.
@@ -43,7 +43,7 @@ public interface SpawnpointManager {
      * @param index The spawnpoint index.
      * @return The spawnpoint.
      */
-    PlayerSpawnPoint getSpawnPoint(Arena arena, Integer index);
+    PlayerSpawnPoint getSpawnPoint(Arena arena, int index);
 
     /**
      * Gets an arena's spectator spawnpoint.
@@ -69,7 +69,7 @@ public interface SpawnpointManager {
      * @param minIndex The minimum index.
      * @return The spawnpoint.
      */
-    PlayerSpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex);
+    PlayerSpawnPoint getRandomSpawnPoint(Arena arena, int minIndex);
 
     /**
      * Get a random spawnpoint of an arena within the minIndex and maxIndex.
@@ -80,7 +80,7 @@ public interface SpawnpointManager {
      * @param maxIndex The maximum index.
      * @return The spawnpoint.
      */
-    PlayerSpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex, Integer maxIndex);
+    PlayerSpawnPoint getRandomSpawnPoint(Arena arena, int minIndex, int maxIndex);
 
     /**
      * Get a certain amount of spawnpoints distributed evenly among the available spawnpoints.
@@ -92,7 +92,7 @@ public interface SpawnpointManager {
      * @param amount The amount of spawnpoints to get.
      * @return The spawnpoints.
      */
-    List<PlayerSpawnPoint> getDistributedSpawnPoints(Arena arena, Integer amount);
+    List<PlayerSpawnPoint> getDistributedSpawnPoints(Arena arena, int amount);
 
     /**
      * Gets all the spawnpoints of an arena.

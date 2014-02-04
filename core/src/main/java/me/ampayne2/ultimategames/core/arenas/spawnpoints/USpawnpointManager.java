@@ -44,7 +44,7 @@ public class USpawnpointManager implements SpawnpointManager {
     }
 
     @Override
-    public boolean hasSpawnPointAtIndex(Arena arena, Integer index) {
+    public boolean hasSpawnPointAtIndex(Arena arena, int index) {
         return playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= index;
     }
 
@@ -117,7 +117,7 @@ public class USpawnpointManager implements SpawnpointManager {
     }
 
     @Override
-    public PlayerSpawnPoint getSpawnPoint(Arena arena, Integer index) {
+    public PlayerSpawnPoint getSpawnPoint(Arena arena, int index) {
         if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= index) {
             return playerSpawnPoints.get(arena).get(index);
         }
@@ -144,7 +144,7 @@ public class USpawnpointManager implements SpawnpointManager {
     }
 
     @Override
-    public PlayerSpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex) {
+    public PlayerSpawnPoint getRandomSpawnPoint(Arena arena, int minIndex) {
         if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() > minIndex) {
             Random generator = new Random();
             Integer index = generator.nextInt(playerSpawnPoints.get(arena).size() - minIndex) + minIndex;
@@ -154,7 +154,7 @@ public class USpawnpointManager implements SpawnpointManager {
     }
 
     @Override
-    public PlayerSpawnPoint getRandomSpawnPoint(Arena arena, Integer minIndex, Integer maxIndex) {
+    public PlayerSpawnPoint getRandomSpawnPoint(Arena arena, int minIndex, int maxIndex) {
         if (playerSpawnPoints.containsKey(arena) && minIndex < maxIndex && playerSpawnPoints.get(arena).size() > maxIndex) {
             Random generator = new Random();
             Integer index = generator.nextInt(maxIndex - minIndex + 1) + minIndex;
@@ -164,7 +164,7 @@ public class USpawnpointManager implements SpawnpointManager {
     }
 
     @Override
-    public List<PlayerSpawnPoint> getDistributedSpawnPoints(Arena arena, Integer amount) {
+    public List<PlayerSpawnPoint> getDistributedSpawnPoints(Arena arena, int amount) {
         if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= amount) {
             List<PlayerSpawnPoint> distributedSpawnPoints = new ArrayList<>();
             Integer size = playerSpawnPoints.get(arena).size();
@@ -193,7 +193,7 @@ public class USpawnpointManager implements SpawnpointManager {
      * @param arena The arena.
      * @param index The index.
      */
-    public void removeSpawnPoint(Arena arena, Integer index) {
+    public void removeSpawnPoint(Arena arena, int index) {
         if (playerSpawnPoints.containsKey(arena) && playerSpawnPoints.get(arena).size() >= index) {
             playerSpawnPoints.get(arena).remove(playerSpawnPoints.get(arena).get(index));
             // TODO: Remove spawnpoint from arena config.
@@ -206,7 +206,7 @@ public class USpawnpointManager implements SpawnpointManager {
      * @param arena   The arena.
      * @param indexes The indexes.
      */
-    public void removeSpawnPoints(Arena arena, Integer... indexes) {
+    public void removeSpawnPoints(Arena arena, int... indexes) {
         if (playerSpawnPoints.containsKey(arena)) {
             ArrayList<PlayerSpawnPoint> remove = new ArrayList<>();
             for (Integer index : indexes) {

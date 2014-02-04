@@ -28,6 +28,7 @@ import me.ampayne2.ultimategames.api.events.arenas.*;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.players.teams.Team;
 import me.ampayne2.ultimategames.core.UG;
+import me.ampayne2.ultimategames.core.arenas.zones.UZone;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -94,6 +95,13 @@ public class UArenaManager implements ArenaManager {
                                     location.setPitch(pitch);
                                     location.setYaw(yaw);
                                     ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(getArena(arenaKey, gameKey), location);
+                                }
+                            }
+                            String zonesPath = arenaPath + ".Zones";
+                            if (arenaConfig.contains(zonesPath)) {
+                                for (String zoneKey : arenaConfig.getConfigurationSection(zonesPath).getKeys(false)) {
+                                    String zonePath = zonesPath + "." + zoneKey;
+                                    ultimateGames.getZoneManager().addZone(new UZone(ultimateGames, arena, arenaConfig.getConfigurationSection(zonePath)));
                                 }
                             }
                         }

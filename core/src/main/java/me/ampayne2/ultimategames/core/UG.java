@@ -34,6 +34,7 @@ import me.ampayne2.ultimategames.core.arenas.UQueueManager;
 import me.ampayne2.ultimategames.core.arenas.countdowns.UCountdownManager;
 import me.ampayne2.ultimategames.core.arenas.scoreboards.UScoreboardManager;
 import me.ampayne2.ultimategames.core.arenas.spawnpoints.USpawnpointManager;
+import me.ampayne2.ultimategames.core.arenas.zones.UZoneManager;
 import me.ampayne2.ultimategames.core.chests.UChestManager;
 import me.ampayne2.ultimategames.core.command.CommandController;
 import me.ampayne2.ultimategames.core.config.UConfigManager;
@@ -81,6 +82,7 @@ public class UG extends JavaPlugin implements UltimateGames {
     private UQueueManager queueManager;
     private UMessenger messenger;
     private USpawnpointManager spawnpointManager;
+    private UZoneManager zoneManager;
     private UPlayerManager playerManager;
     private UCountdownManager countdownManager;
     private ULobbyManager lobbyManager;
@@ -142,6 +144,7 @@ public class UG extends JavaPlugin implements UltimateGames {
         gameManager = new UGameManager(this);
         queueManager = new UQueueManager(this);
         spawnpointManager = new USpawnpointManager(this);
+        zoneManager = new UZoneManager(this);
         scoreboardManager = new UScoreboardManager();
         teamManager = new UTeamManager(this);
         arenaManager = new UArenaManager(this);
@@ -263,6 +266,11 @@ public class UG extends JavaPlugin implements UltimateGames {
     }
 
     @Override
+    public UZoneManager getZoneManager() {
+        return zoneManager;
+    }
+
+    @Override
     public UCountdownManager getCountdownManager() {
         return countdownManager;
     }
@@ -289,7 +297,6 @@ public class UG extends JavaPlugin implements UltimateGames {
     public CommandController getCommandController() {
         return commandController;
     }
-
 
     @Override
     public void addAPIHandler(String path, WebHandler handler) {

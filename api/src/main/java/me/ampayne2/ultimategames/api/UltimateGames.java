@@ -23,6 +23,7 @@ import me.ampayne2.ultimategames.api.arenas.QueueManager;
 import me.ampayne2.ultimategames.api.arenas.countdowns.CountdownManager;
 import me.ampayne2.ultimategames.api.arenas.scoreboards.ScoreboardManager;
 import me.ampayne2.ultimategames.api.arenas.spawnpoints.SpawnpointManager;
+import me.ampayne2.ultimategames.api.arenas.zones.ZoneManager;
 import me.ampayne2.ultimategames.api.config.ConfigManager;
 import me.ampayne2.ultimategames.api.games.GameManager;
 import me.ampayne2.ultimategames.api.games.LobbyManager;
@@ -133,6 +134,13 @@ public interface UltimateGames {
      * @return The SpawnpointManager.
      */
     SpawnpointManager getSpawnpointManager();
+
+    /**
+     * Gets the ZoneManager.
+     *
+     * @return The ZoneManager.
+     */
+    ZoneManager getZoneManager();
 
     /**
      * Gets the CountdownManager.
