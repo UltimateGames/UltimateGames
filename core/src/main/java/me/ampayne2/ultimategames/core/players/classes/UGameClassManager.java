@@ -25,16 +25,18 @@ import me.ampayne2.ultimategames.api.players.classes.GameClassManager;
 import me.ampayne2.ultimategames.api.players.classes.TieredClass;
 import me.ampayne2.ultimategames.api.utils.IconMenu;
 import me.ampayne2.ultimategames.core.UG;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UGameClassManager implements GameClassManager {
+public class UGameClassManager implements GameClassManager, Listener {
     private final UG ultimateGames;
     private final Map<Game, List<GameClass>> gameClasses = new HashMap<>();
     private final Map<String, Map<Game, IconMenu>> classSelectors = new HashMap<>();
@@ -46,6 +48,8 @@ public class UGameClassManager implements GameClassManager {
      */
     public UGameClassManager(UG ultimateGames) {
         this.ultimateGames = ultimateGames;
+
+        Bukkit.getServer().getPluginManager().registerEvents(this, ultimateGames.getPlugin());
     }
 
     @Override

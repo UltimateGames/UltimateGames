@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.api.players.teams;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.utils.IconMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -124,4 +125,12 @@ public interface TeamManager {
      * @param arena The arena to sort the players of.
      */
     void sortPlayersIntoTeams(Arena arena);
+
+    /**
+     * Gets the team selector of an arena.
+     *
+     * @param arena The arena.
+     * @return The arena's team selector.
+     */
+    IconMenu getTeamSelector(Arena arena);
 }

@@ -25,6 +25,7 @@ import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,8 @@ public class UTeam implements Team {
     private final Arena arena;
     private boolean friendlyFire;
     private boolean canSeeFriendlyInvisibles;
+    @SuppressWarnings("deprecation")
+    private ItemStack icon = new ItemStack(397, 1, (short) 3);
     private List<String> players = new ArrayList<>();
     private static final int MAX_NAME_LENGTH = 14;
 
@@ -154,5 +157,17 @@ public class UTeam implements Team {
             }
         }
         players.clear();
+    }
+
+    @Override
+    public ItemStack getTeamIcon() {
+        return icon;
+    }
+
+    @Override
+    public void setTeamIcon(ItemStack icon) {
+        ItemStack newIcon = icon.clone();
+        newIcon.setAmount(1);
+        this.icon = newIcon;
     }
 }

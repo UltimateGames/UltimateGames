@@ -20,18 +20,23 @@ package me.ampayne2.ultimategames.core.players.teams;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.events.arenas.ArenaOpenEvent;
 import me.ampayne2.ultimategames.api.players.teams.Team;
 import me.ampayne2.ultimategames.api.players.teams.TeamManager;
+import me.ampayne2.ultimategames.api.utils.IconMenu;
 import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import java.util.*;
 
-public class UTeamManager implements TeamManager {
+public class UTeamManager implements TeamManager, Listener {
     private final UG ultimateGames;
     private Map<Arena, List<Team>> teams = new HashMap<>();
+    private Map<Arena, IconMenu> teamSelectors = new HashMap<>();
     private static final Random RANDOM = new Random();
 
     /**
@@ -41,6 +46,8 @@ public class UTeamManager implements TeamManager {
      */
     public UTeamManager(UG ultimateGames) {
         this.ultimateGames = ultimateGames;
+
+        Bukkit.getServer().getPluginManager().registerEvents(this, ultimateGames.getPlugin());
     }
 
     @Override
@@ -218,5 +225,40 @@ public class UTeamManager implements TeamManager {
                 playersNotInTeams.remove(player.getName());
             }
         }
+    }
+
+    @Override
+    public IconMenu getTeamSelector(final Arena arena) {
+        if (teamSelectors.containsKey(arena)) {
+            return teamSelectors.get(arena);
+        }
+
+        final List<Team> teams = getTeamsOfArena(arena);
+        IconMenu menu = new IconMenu(arena.getGame().getName() + " Teams", ((int) Math.ceil(teams.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
+            @Override
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+                TeamManager teamManager = ultimateGames.getTeamManager();
+                Team team = teamManager.getTeam(arena, event.getName());
+                if (team.hasSpace()) {
+                    teamManager.setPlayerTeam(event.getPlayer(), team);
+                } else {
+                    ultimateGames.getMessenger().sendMessage(event.getPlayer(), "teams.full", team.getName());
+                }
+            }
+        }, ultimateGames);
+        for (int i = 0; i < teams.size(); i++) {
+            Team team = teams.get(i);
+            menu.setOption(i, team.getTeamIcon(), team.getName());
+        }
+        return menu;
+    }
+
+    @EventHandler
+    public void onArenaOpen(ArenaOpenEvent event) {
+        Arena arena = event.getArena();
+        if (teamSelectors.containsKey(arena)) {
+            teamSelectors.get(arena).destroy();
+        }
+        teamSelectors.put(arena, getTeamSelector(arena));
     }
 }

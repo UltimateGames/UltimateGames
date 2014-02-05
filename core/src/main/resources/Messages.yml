@@ -45,6 +45,7 @@ Messages:
   teams:
     join: "&4Joined Team %s."
     kick: "&4Kicked from Team %s."
+    full: "&4Team %s is full!"
     leave: "&4Left Team %s."
     friendlyfire: "&4Friendly Fire is off for your Team."
     doesntexist: "&4Team doesn't exist."

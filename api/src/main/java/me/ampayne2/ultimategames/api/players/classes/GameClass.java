@@ -22,6 +22,7 @@ import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.effects.GameSound;
 import me.ampayne2.ultimategames.api.games.Game;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +39,7 @@ public abstract class GameClass {
     private final Game game;
     private final String name;
     private final boolean canSwitchToWithoutDeath;
-    private ItemStack icon;
+    private ItemStack icon = new ItemStack(Material.IRON_CHESTPLATE);
     private boolean isUnlockable = false;
     private String unlockableString = null;
     private List<String> players = new ArrayList<>();

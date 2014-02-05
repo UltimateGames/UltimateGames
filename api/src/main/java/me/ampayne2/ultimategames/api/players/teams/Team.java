@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.api.players.teams;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -111,4 +112,18 @@ public interface Team {
      * Removes all players from the team.
      */
     void removePlayers();
+
+    /**
+     * Get the icon of this team.
+     *
+     * @return The {@link org.bukkit.inventory.ItemStack} that represents this team.
+     */
+    ItemStack getTeamIcon();
+
+    /**
+     * Set the icon of this team for the team selector menu.
+     *
+     * @param icon The {@link org.bukkit.inventory.ItemStack} that represents this team.
+     */
+    void setTeamIcon(ItemStack icon);
 }
