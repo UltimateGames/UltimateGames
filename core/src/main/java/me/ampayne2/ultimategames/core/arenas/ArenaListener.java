@@ -337,7 +337,7 @@ public class ArenaListener implements Listener {
      * If the player is in an arena, the game's onPlayerInteract method is called.<br>
      * If the player is spectating an arena, the event is cancelled.
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         String playerName = player.getName();
