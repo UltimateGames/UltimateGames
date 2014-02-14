@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -44,12 +45,29 @@ import java.util.*;
  */
 public final class UGUtils {
     private static final long AUTO_RESPAWN_DELAY = 1L;
-    private static final double TARGETER_ACCURACY = 1.0;
+    private static final double HORIZONTAL_TARGETER_ACCURACY = 1.5;
+    private static final double VERTICAL_TARGETER_ACCURACY = 0.5;
     private static final BlockFace[] FACES = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
     private static final Random RANDOM = new Random();
 
     private UGUtils() {
     }
+
+    // Math utilities
+
+    /**
+     * Clamps a value between a minimum and maximum value.
+     *
+     * @param value The value.
+     * @param min   The minimum value.
+     * @param max   The maximum value.
+     * @return The clamped value.
+     */
+    public static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    // String utilities
 
     /**
      * Gets the ordinal suffix of an integer.
@@ -74,16 +92,27 @@ public final class UGUtils {
     }
 
     /**
-     * Clamps a value between a minimum and maximum value.
+     * Gets the name of a ChatColor.
      *
-     * @param value The value.
-     * @param min   The minimum value.
-     * @param max   The maximum value.
-     * @return The clamped value.
+     * @param chatColor The ChatColor.
+     * @return The ChatColor's name.
      */
-    public static int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(max, value));
+    public static String getChatColorName(ChatColor chatColor) {
+        String[] nameParts = chatColor.name().split("_");
+        String[] capitalizedNameParts = new String[nameParts.length];
+        for (int i = 0; i < nameParts.length; i++) {
+            String namePart = nameParts[i];
+            capitalizedNameParts[i] = Character.toUpperCase(namePart.charAt(0)) + namePart.substring(1).toLowerCase();
+        }
+        StringBuilder nameBuilder = new StringBuilder(capitalizedNameParts[0]);
+        for (int i = 1; i < capitalizedNameParts.length; i++) {
+            nameBuilder.append(" ");
+            nameBuilder.append(capitalizedNameParts[i]);
+        }
+        return nameBuilder.toString();
     }
+
+    // Randomization utilities
 
     /**
      * Gets a random enum value from an enum.
@@ -154,6 +183,8 @@ public final class UGUtils {
         return FireworkEffect.builder().flicker(RANDOM.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(RANDOM.nextBoolean()).build();
     }
 
+    // Firework utilities
+
     /**
      * Spawns a firework.
      *
@@ -207,84 +238,7 @@ public final class UGUtils {
         spawnFirework(location, randomFireworkEffect(), RANDOM.nextInt(2) + 1, detonate);
     }
 
-    /**
-     * Gets the name of a ChatColor.
-     *
-     * @param chatColor The ChatColor.
-     * @return The ChatColor's name.
-     */
-    public static String getChatColorName(ChatColor chatColor) {
-        String[] nameParts = chatColor.name().split("_");
-        String[] capitalizedNameParts = new String[nameParts.length];
-        for (int i = 0; i < nameParts.length; i++) {
-            String namePart = nameParts[i];
-            capitalizedNameParts[i] = Character.toUpperCase(namePart.charAt(0)) + namePart.substring(1).toLowerCase();
-        }
-        StringBuilder nameBuilder = new StringBuilder(capitalizedNameParts[0]);
-        for (int i = 1; i < capitalizedNameParts.length; i++) {
-            nameBuilder.append(" ");
-            nameBuilder.append(capitalizedNameParts[i]);
-        }
-        return nameBuilder.toString();
-    }
-
-    /**
-     * Creates an instruction book for a game.
-     *
-     * @param game The game.
-     * @return The book.
-     */
-    public static ItemStack createInstructionBook(Game game) {
-        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
-        BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setTitle(game.getName() + " Instructions");
-        meta.setAuthor(game.getAuthor());
-        for (String page : game.getInstructionPages()) {
-            meta.addPage(ChatColor.translateAlternateColorCodes('&', page));
-        }
-        book.setItemMeta(meta);
-        return book;
-    }
-
-    /**
-     * Creates particles floating around a player pointing at other players. Uses the default particle effect settings.
-     *
-     * @param playerName    The player.
-     * @param playersToScan Players to 'point' to.
-     */
-    public static void radarScan(String playerName, Collection<String> playersToScan) {
-        radarScan(playerName, playersToScan, ParticleEffect.WITCH_MAGIC, 0, 1);
-    }
-
-    /**
-     * Creates particles floating around a player pointing at other players.
-     *
-     * @param playerName     The main player's name.
-     * @param playersToScan  The players on the main player's radar.
-     * @param particleEffect The ParticleEffect to play.
-     * @param speed          The speed of the particle effect.
-     * @param amount         The amount of particles.
-     */
-    public static void radarScan(String playerName, Collection<String> playersToScan, ParticleEffect particleEffect, int speed, int amount) {
-        if (playersToScan != null && playerName != null) {
-            Player player = Bukkit.getPlayerExact(playerName);
-            Double playerX = player.getLocation().getX();
-            Double playerY = player.getEyeLocation().getY();
-            Double playerZ = player.getLocation().getZ();
-            for (String nextPlayerToScan : playersToScan) {
-                Player playerToScan = Bukkit.getPlayerExact(nextPlayerToScan);
-                Double playerToScanX = playerToScan.getLocation().getX();
-                Double playerToScanZ = playerToScan.getLocation().getZ();
-                Double x = playerToScanX - playerX;
-                Double z = playerToScanZ - playerZ;
-                Double divisor = Math.sqrt((x * x) + (z * z)) / 2;
-                Double relativeX = x / divisor;
-                Double relativeZ = z / divisor;
-                Location particleLocation = new Location(player.getWorld(), playerX + relativeX, playerY + 1, playerZ + relativeZ);
-                particleEffect.display(particleLocation, 0, 0, 0, speed, amount, player);
-            }
-        }
-    }
+    // Player and Entity utilities
 
     /**
      * Closes a player's respawn screen 1 tick after called.<br>
@@ -316,6 +270,49 @@ public final class UGUtils {
                 }
             }
         }, AUTO_RESPAWN_DELAY);
+    }
+
+    /**
+     * Teleports an entity with a vehicle or passenger correctly.
+     *
+     * @param entity   The entity to teleport.
+     * @param location The location to teleport the entity to.
+     */
+    public static void teleportEntity(Entity entity, Location location) {
+        Location entityLocation = entity.getLocation();
+
+        Entity vehicle = entity.getVehicle();
+        if (vehicle != null) {
+            // Eject the entity from the vehicle and teleport the vehicle to the correct location.
+            vehicle.eject();
+            Location vehicleLocation = vehicle.getLocation();
+            Location teleportLocation = location.clone().subtract(0, entityLocation.getY() - vehicleLocation.getY(), 0);
+            teleportLocation.setPitch(vehicleLocation.getPitch());
+            teleportLocation.setYaw(vehicleLocation.getYaw());
+            teleportEntity(vehicle, teleportLocation);
+        }
+
+        Entity passenger = entity.getPassenger();
+        if (passenger != null) {
+            // Eject the passenger from the entity and teleport the passenger to the correct location.
+            entity.eject();
+            Location passengerLocation = passenger.getLocation();
+            Location teleportLocation = location.clone().add(0, passengerLocation.getY() - entityLocation.getY(), 0);
+            teleportLocation.setPitch(passengerLocation.getPitch());
+            teleportLocation.setYaw(passengerLocation.getYaw());
+            teleportEntity(vehicle, teleportLocation);
+        }
+
+        // Teleport the entity to the correct location.
+        entity.teleport(location);
+
+        // Connect the vehicle, entity, and passenger back together if existing.
+        if (vehicle != null) {
+            vehicle.setPassenger(entity);
+        }
+        if (passenger != null) {
+            entity.setPassenger(passenger);
+        }
     }
 
     /**
@@ -372,11 +369,18 @@ public final class UGUtils {
      * @param entity    The entity.
      * @return True if the location is within a certain range of the entity.
      */
-    public static Boolean isLocationInEntity(double locationX, double locationY, double locationZ, Entity entity) {
+    public static boolean isLocationInEntity(double locationX, double locationY, double locationZ, Entity entity) {
         Location entityLocation = entity.getLocation();
         double entityYLower = entityLocation.getY();
         double entityYHigher = entityYLower + getEntityHeight(entity);
-        return Math.abs(locationX - entityLocation.getX()) <= TARGETER_ACCURACY && (locationY >= entityYLower && locationY <= entityYHigher) && Math.abs(locationZ - entityLocation.getZ()) <= TARGETER_ACCURACY;
+        if (Math.abs(locationX - entityLocation.getX()) > HORIZONTAL_TARGETER_ACCURACY) {
+            return false;
+        } else if (locationY >= (entityYLower - VERTICAL_TARGETER_ACCURACY) && locationY <= (entityYHigher + VERTICAL_TARGETER_ACCURACY)) {
+            return false;
+        } else if (Math.abs(locationZ - entityLocation.getZ()) > HORIZONTAL_TARGETER_ACCURACY) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -406,49 +410,6 @@ public final class UGUtils {
     }
 
     /**
-     * Teleports an entity with a vehicle or passenger correctly.
-     *
-     * @param entity   The entity to teleport.
-     * @param location The location to teleport the entity to.
-     */
-    public static void teleportEntity(Entity entity, Location location) {
-        Location entityLocation = entity.getLocation();
-
-        Entity vehicle = entity.getVehicle();
-        if (vehicle != null) {
-            // Eject the entity from the vehicle and teleport the vehicle to the correct location.
-            vehicle.eject();
-            Location vehicleLocation = vehicle.getLocation();
-            Location teleportLocation = location.clone().subtract(0, entityLocation.getY() - vehicleLocation.getY(), 0);
-            teleportLocation.setPitch(vehicleLocation.getPitch());
-            teleportLocation.setYaw(vehicleLocation.getYaw());
-            teleportEntity(vehicle, teleportLocation);
-        }
-
-        Entity passenger = entity.getPassenger();
-        if (passenger != null) {
-            // Eject the passenger from the entity and teleport the passenger to the correct location.
-            entity.eject();
-            Location passengerLocation = passenger.getLocation();
-            Location teleportLocation = location.clone().add(0, passengerLocation.getY() - entityLocation.getY(), 0);
-            teleportLocation.setPitch(passengerLocation.getPitch());
-            teleportLocation.setYaw(passengerLocation.getYaw());
-            teleportEntity(vehicle, teleportLocation);
-        }
-
-        // Teleport the entity to the correct location.
-        entity.teleport(location);
-
-        // Connect the vehicle, entity, and passenger back together if existing.
-        if (vehicle != null) {
-            vehicle.setPassenger(entity);
-        }
-        if (passenger != null) {
-            entity.setPassenger(passenger);
-        }
-    }
-
-    /**
      * Gets the nearest player to a player from a collection of players.
      *
      * @param targeter The player.
@@ -475,6 +436,25 @@ public final class UGUtils {
         }
 
         return nearestPlayer;
+    }
+
+    // Inventory and ItemStack utilities
+
+    /**
+     * Gets the total amount of a certain material in an inventory.
+     *
+     * @param inventory The Inventory.
+     * @param material  The Material.
+     * @return The total amount of items.
+     */
+    public static int getTotalItems(Inventory inventory, Material material) {
+        int amount = 0;
+        for (ItemStack itemStack : inventory.getContents()) {
+            if (itemStack != null && itemStack.getType().equals(material)) {
+                amount += itemStack.getAmount();
+            }
+        }
+        return amount;
     }
 
     /**
@@ -507,6 +487,8 @@ public final class UGUtils {
         skull.setItemMeta(meta);
         return skull;
     }
+
+    // Block and Material utilities
 
     /**
      * Checks if a material has physics.
@@ -597,79 +579,187 @@ public final class UGUtils {
         return attachedSigns;
     }
 
+    // Potion Effect utilities
+
     /**
-     * Increases the amplifier of a player's potion effect.
+     * Gets an active PotionEffect on a LivingEntity.
      *
-     * @param player The player.
+     * @param entity The entity.
+     * @param type   The type of potion effect.
+     * @return The PotionEffect, null if player doesn't have the potion effect.
+     */
+    public static PotionEffect getActivePotionEffect(LivingEntity entity, PotionEffectType type) {
+        if (entity.hasPotionEffect(type)) {
+            for (PotionEffect effect : entity.getActivePotionEffects()) {
+                if (effect.getType().equals(type)) {
+                    return effect;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Sets the duration of a PotionEffect on a LivingEntity.
+     *
+     * @param entity   The entity.
+     * @param type     The type of potion effect.
+     * @param duration The new duration.
+     */
+    public static void setPotionEffectDuration(LivingEntity entity, PotionEffectType type, int duration) {
+        if (entity.hasPotionEffect(type)) {
+            PotionEffect effect = getActivePotionEffect(entity, type);
+            int amplifier = effect.getAmplifier();
+            entity.removePotionEffect(type);
+            entity.addPotionEffect(new PotionEffect(type, duration, amplifier));
+        }
+    }
+
+    /**
+     * Sets the amplifier of a PotionEffect on a LivingEntity.
+     *
+     * @param entity    The entity.
+     * @param type      The type of potion effect.
+     * @param amplifier The new amplifier.
+     */
+    public static void setPotionEffectAmplifier(LivingEntity entity, PotionEffectType type, int amplifier) {
+        if (entity.hasPotionEffect(type)) {
+            PotionEffect effect = getActivePotionEffect(entity, type);
+            int duration = effect.getDuration();
+            entity.removePotionEffect(type);
+            entity.addPotionEffect(new PotionEffect(type, duration, amplifier));
+        }
+    }
+
+    /**
+     * Increases the amplifier of a LivingEntity's PotionEffect by the given amount.
+     *
+     * @param entity The entity.
      * @param type   The type of potion effect.
      * @param amount The amount to increase the amplifier by.
      */
-    public static void increasePotionEffect(Player player, PotionEffectType type, int amount) {
-        if (player.hasPotionEffect(type)) {
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-                if (effect.getType() == type) {
-                    player.removePotionEffect(type);
-                    player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, effect.getAmplifier() + amount));
-                    return;
-                }
-            }
+    public static void increasePotionEffect(LivingEntity entity, PotionEffectType type, int amount) {
+        if (entity.hasPotionEffect(type)) {
+            PotionEffect effect = getActivePotionEffect(entity, type);
+            int duration = effect.getDuration();
+            int amplifier = effect.getAmplifier();
+            entity.removePotionEffect(type);
+            entity.addPotionEffect(new PotionEffect(type, duration, amplifier + amount));
         } else {
-            player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amount));
+            entity.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amount - 1));
         }
     }
 
     /**
-     * Increases the amplifier of a player's potion effect by 1.
+     * Increases the amplifier of a LivingEntity's PotionEffect by 1.
      *
-     * @param player The player.
+     * @param entity The entity.
      * @param type   The type of potion effect.
      */
-    public static void increasePotionEffect(Player player, PotionEffectType type) {
-        increasePotionEffect(player, type, 1);
+    public static void increasePotionEffect(LivingEntity entity, PotionEffectType type) {
+        increasePotionEffect(entity, type, 1);
     }
 
     /**
-     * Decreases the amplifier of a player's potion effect. If amplifier is decreased to less than or equal to 0, the effect is removed.
+     * Decreases the amplifier of a LivingEntity's PotionEffect by the given amount.<br>
+     * If the amplifier is decreased to less than or equal to 0, the PotionEffect is removed.
      *
-     * @param player The player.
+     * @param entity The entity.
      * @param type   The type of potion effect.
      * @param amount The amount to decrease the amplifier by.
      */
-    public static void decreasePotionEffect(Player player, PotionEffectType type, int amount) {
-        if (player.hasPotionEffect(type)) {
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-                if (effect.getType() == type) {
-                    if (effect.getAmplifier() > 1) {
-                        player.removePotionEffect(type);
-                        player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, effect.getAmplifier() - amount));
-                    } else {
-                        player.removePotionEffect(type);
-                    }
-                    return;
-                }
+    public static void decreasePotionEffect(LivingEntity entity, PotionEffectType type, int amount) {
+        if (entity.hasPotionEffect(type)) {
+            PotionEffect effect = getActivePotionEffect(entity, type);
+            int duration = effect.getDuration();
+            int amplifier = effect.getAmplifier();
+            entity.removePotionEffect(type);
+            if (amplifier - amount >= 0) {
+                entity.addPotionEffect(new PotionEffect(type, duration, amplifier - amount));
             }
         }
     }
 
     /**
-     * Decreases the amplifier of a player's potion effect by 1. If amplifier is decreased to less than or equal to 0, the effect is removed.
+     * Decreases the amplifier of a LivingEntity's potion effect by 1.<br>
+     * If the amplifier is decreased to less than or equal to 0, the PotionEffect is removed.
      *
-     * @param player The player.
+     * @param entity The entity.
      * @param type   The type of potion effect.
      */
-    public static void decreasePotionEffect(Player player, PotionEffectType type) {
-        decreasePotionEffect(player, type, 1);
+    public static void decreasePotionEffect(LivingEntity entity, PotionEffectType type) {
+        decreasePotionEffect(entity, type, 1);
     }
 
     /**
-     * Removes a potion effect from a player.
+     * Removes a potion effect from a LivingEntity.
      *
-     * @param player The player.
+     * @param entity The entity.
      * @param type   The type of potion effect.
      */
-    public static void removePotionEffect(Player player, PotionEffectType type) {
-        if (player.hasPotionEffect(type)) {
-            player.removePotionEffect(type);
+    public static void removePotionEffect(LivingEntity entity, PotionEffectType type) {
+        if (entity.hasPotionEffect(type)) {
+            entity.removePotionEffect(type);
+        }
+    }
+
+    // Miscellaneous utilities
+
+    /**
+     * Creates an instruction book for a game.
+     *
+     * @param game The game.
+     * @return The book.
+     */
+    public static ItemStack createInstructionBook(Game game) {
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+        BookMeta meta = (BookMeta) book.getItemMeta();
+        meta.setTitle(game.getName() + " Instructions");
+        meta.setAuthor(game.getAuthor());
+        for (String page : game.getInstructionPages()) {
+            meta.addPage(ChatColor.translateAlternateColorCodes('&', page));
+        }
+        book.setItemMeta(meta);
+        return book;
+    }
+
+    /**
+     * Creates particles floating around a player pointing at other players. Uses the default particle effect settings.
+     *
+     * @param playerName    The player.
+     * @param playersToScan Players to 'point' to.
+     */
+    public static void radarScan(String playerName, Collection<String> playersToScan) {
+        radarScan(playerName, playersToScan, ParticleEffect.WITCH_MAGIC, 0, 1);
+    }
+
+    /**
+     * Creates particles floating around a player pointing at other players.
+     *
+     * @param playerName     The main player's name.
+     * @param playersToScan  The players on the main player's radar.
+     * @param particleEffect The ParticleEffect to play.
+     * @param speed          The speed of the particle effect.
+     * @param amount         The amount of particles.
+     */
+    public static void radarScan(String playerName, Collection<String> playersToScan, ParticleEffect particleEffect, int speed, int amount) {
+        if (playersToScan != null && playerName != null) {
+            Player player = Bukkit.getPlayerExact(playerName);
+            Double playerX = player.getLocation().getX();
+            Double playerY = player.getEyeLocation().getY();
+            Double playerZ = player.getLocation().getZ();
+            for (String nextPlayerToScan : playersToScan) {
+                Player playerToScan = Bukkit.getPlayerExact(nextPlayerToScan);
+                Double playerToScanX = playerToScan.getLocation().getX();
+                Double playerToScanZ = playerToScan.getLocation().getZ();
+                Double x = playerToScanX - playerX;
+                Double z = playerToScanZ - playerZ;
+                Double divisor = Math.sqrt((x * x) + (z * z)) / 2;
+                Double relativeX = x / divisor;
+                Double relativeZ = z / divisor;
+                Location particleLocation = new Location(player.getWorld(), playerX + relativeX, playerY + 1, playerZ + relativeZ);
+                particleEffect.display(particleLocation, 0, 0, 0, speed, amount, player);
+            }
         }
     }
 }
