@@ -147,7 +147,7 @@ public class UGameClassManager implements GameClassManager, Listener {
             if (gameClass instanceof TieredClass) {
                 name = name + " " + ((TieredClass) gameClass).getTier(player);
             }
-            menu.setOption(i, gameClass.getClassIcon(), name, gameClass.hasAccess(player) ? ChatColor.GREEN + "Unlocked" : ChatColor.DARK_RED + "Locked");
+            menu.setOption(i, gameClass.getClassIcon(), ChatColor.BOLD.toString() + ChatColor.AQUA + name, gameClass.hasAccess(player) ? ChatColor.GREEN + "Unlocked" : ChatColor.DARK_RED + "Locked");
         }
         return menu;
     }

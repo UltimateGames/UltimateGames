@@ -248,7 +248,7 @@ public class UTeamManager implements TeamManager, Listener {
         }, ultimateGames);
         for (int i = 0; i < teams.size(); i++) {
             Team team = teams.get(i);
-            menu.setOption(i, team.getTeamIcon(), team.getName());
+            menu.setOption(i, team.getTeamIcon(), ChatColor.BOLD.toString() + ChatColor.AQUA + team.getName());
         }
         return menu;
     }

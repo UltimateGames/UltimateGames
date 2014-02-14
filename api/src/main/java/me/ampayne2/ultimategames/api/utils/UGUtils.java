@@ -714,7 +714,7 @@ public final class UGUtils {
     public static ItemStack createInstructionBook(Game game) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setTitle(game.getName() + " Instructions");
+        meta.setTitle(ChatColor.BOLD.toString() + ChatColor.AQUA + game.getName() + " Instructions");
         meta.setAuthor(game.getAuthor());
         for (String page : game.getInstructionPages()) {
             meta.addPage(ChatColor.translateAlternateColorCodes('&', page));

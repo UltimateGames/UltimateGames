@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.api.players.classes;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.games.items.GameItem;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +53,7 @@ public class ClassSelector extends GameItem {
     static {
         CLASS_SELECTOR = new ItemStack(Material.NETHER_STAR);
         ItemMeta meta = CLASS_SELECTOR.getItemMeta();
-        meta.setDisplayName("Class selector");
+        meta.setDisplayName(ChatColor.BOLD.toString() + ChatColor.AQUA + "Class Selector");
         CLASS_SELECTOR.setItemMeta(meta);
     }
 }
