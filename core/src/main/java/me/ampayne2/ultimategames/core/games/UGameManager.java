@@ -26,7 +26,6 @@ import me.ampayne2.ultimategames.api.message.Messenger;
 import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.PluginClassLoader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class UGameManager implements GameManager {
         String name, description, author, version;
         List<String> instructionPages;
         Messenger messenger = ultimateGames.getMessenger();
-        PluginClassLoader pluginClassLoader = ultimateGames.getPluginClassLoader();
+        GameClassLoader pluginClassLoader = new GameClassLoader(ultimateGames.getClass().getClassLoader());
         PluginManager pluginManager = ultimateGames.getServer().getPluginManager();
         for (File file : gameFolder.listFiles(new GameFileFilter())) {
             try {

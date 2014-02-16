@@ -45,6 +45,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.ArrayList;
 
@@ -285,7 +286,7 @@ public class ArenaListener implements Listener {
                     damager = (Player) damagerEntity;
                 } else if (damagerEntity instanceof Projectile) {
                     Projectile projectile = (Projectile) damagerEntity;
-                    LivingEntity shooter = projectile.getShooter();
+                    ProjectileSource shooter = projectile.getShooter();
                     if (shooter instanceof Player) {
                         damager = (Player) shooter;
                     }

@@ -59,7 +59,6 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.PluginClassLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -313,9 +312,5 @@ public class UG extends JavaPlugin implements UltimateGames {
     @Override
     public void setPointManager(PointManager pointManager) {
         this.pointManager = pointManager;
-    }
-
-    public PluginClassLoader getPluginClassLoader() {
-        return (PluginClassLoader) getClassLoader();
     }
 }
