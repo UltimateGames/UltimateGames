@@ -53,6 +53,15 @@ public class EndingCountdown extends Countdown {
     }
 
     /**
+     * Sets the seconds left on the ending countdown.
+     *
+     * @param secondsLeft The seconds left.
+     */
+    public void setSecondsLeft(int secondsLeft) {
+        setTicksLeft(secondsLeft * TPS);
+    }
+
+    /**
      * Checks if the ending countdown is displayed with exp.
      *
      * @return True if the ending countdown has an exp display, else false.
