@@ -283,6 +283,15 @@ public abstract class GamePlugin implements Listener {
     }
 
     /**
+     * Handles player interactions with entities.
+     *
+     * @param arena The arena the player is in.
+     * @param event The PlayerInteractEntityEvent.
+     */
+    public void onPlayerInteractEntity(Arena arena, PlayerInteractEntityEvent event) {
+    }
+
+    /**
      * Handles player food level changes.
      *
      * @param arena The arena the player is in.

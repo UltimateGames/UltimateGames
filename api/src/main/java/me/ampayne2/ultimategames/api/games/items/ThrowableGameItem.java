@@ -22,6 +22,7 @@ import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,6 +46,19 @@ public abstract class ThrowableGameItem extends GameItem {
 
     @Override
     public boolean click(Arena arena, PlayerInteractEvent event) {
+        if (arena.getStatus() == ArenaStatus.RUNNING) {
+            Player player = event.getPlayer();
+            Item dropped = player.getWorld().dropItem(player.getEyeLocation(), item.clone());
+            dropped.setVelocity(player.getEyeLocation().getDirection());
+            onItemThrow(arena, dropped);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean click(Arena arena, PlayerInteractEntityEvent event) {
         if (arena.getStatus() == ArenaStatus.RUNNING) {
             Player player = event.getPlayer();
             Item dropped = player.getWorld().dropItem(player.getEyeLocation(), item.clone());

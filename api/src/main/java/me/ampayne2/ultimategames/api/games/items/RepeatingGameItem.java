@@ -22,6 +22,7 @@ import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import org.bukkit.Bukkit;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -52,6 +53,23 @@ public class RepeatingGameItem extends GameItem {
 
     @Override
     public boolean click(Arena arena, PlayerInteractEvent event) {
+        final String playerName = event.getPlayer().getName();
+        if (!repeating.contains(playerName)) {
+            repeating.add(playerName);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ultimateGames.getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    if (repeating.contains(playerName)) {
+                        repeating.remove(playerName);
+                    }
+                }
+            }, repeatingPeriod);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean click(Arena arena, PlayerInteractEntityEvent event) {
         final String playerName = event.getPlayer().getName();
         if (!repeating.contains(playerName)) {
             repeating.add(playerName);

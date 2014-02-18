@@ -362,6 +362,30 @@ public class ArenaListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        String playerName = player.getName();
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Arena arena = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+            Game game = arena.getGame();
+            ItemStack item = player.getItemInHand();
+            if (item != null && ultimateGames.getGameItemManager().isRegistered(game, item)) {
+                GameItem gameItem = ultimateGames.getGameItemManager().getGameItem(game, item);
+                if (gameItem.click(arena, event) && gameItem.hasSingleUse()) {
+                    ItemStack itemStack = player.getItemInHand();
+                    itemStack.setAmount(itemStack.getAmount() - 1);
+                    player.setItemInHand(itemStack.getAmount() == 0 ? null : itemStack);
+                    event.setCancelled(true);
+                }
+            } else {
+                game.getGamePlugin().onPlayerInteractEntity(arena, event);
+            }
+        } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+            event.setCancelled(true);
+        }
+    }
+
     /**
      * Handles player food level changes.<br>
      * If the player is in an arena, the game's onPlayerFoodLevelChange method is called.<br>

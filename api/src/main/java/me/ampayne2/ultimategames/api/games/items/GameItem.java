@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.api.games.items;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -66,7 +67,19 @@ public abstract class GameItem {
      * @param event The PlayerInteractEvent.
      * @return True if the click was successful, else false.
      */
-    public abstract boolean click(Arena arena, PlayerInteractEvent event);
+    public boolean click(Arena arena, PlayerInteractEvent event) {
+        return true;
+    }
+
+    /**
+     * Handles clicking the GameItem.
+     * @param arena The arena the GameItem was clicked in.
+     * @param event The PlayerInteractEntityEvent.
+     * @return True if the click was successful, else false.
+     */
+    public boolean click(Arena arena, PlayerInteractEntityEvent event) {
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {
