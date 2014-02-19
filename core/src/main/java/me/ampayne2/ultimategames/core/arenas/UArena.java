@@ -114,10 +114,25 @@ public class UArena implements Listener, Arena {
         minPlayers = section.getInt("Min-Players", DEFAULT_MIN_PLAYERS);
         region = URegion.fromList(section.getStringList("Region"));
 
-        ConfigurationSection allow = section.getConfigurationSection("Allow");
-        allowExplosionDamage = allow.getBoolean("Explosion-Damage", false);
-        allowExplosionBlockBreaking = allow.getBoolean("Explosion-Block-Breaking", false);
-        allowMobSpawning = allow.getBoolean("Mob-Spawning", false);
+        if (section.contains("Allow")) {
+            ConfigurationSection allow = section.getConfigurationSection("Allow");
+            allowExplosionDamage = allow.getBoolean("Explosion-Damage", false);
+            allowExplosionBlockBreaking = allow.getBoolean("Explosion-Block-Breaking", false);
+            allowMobSpawning = allow.getBoolean("Mob-Spawning", false);
+        } else {
+            allowExplosionDamage = section.getBoolean("Allow-Explosion-Damage", false);
+            allowExplosionBlockBreaking = section.getBoolean("Allow-Explosion-Block-Breaking", false);
+            allowMobSpawning = section.getBoolean("Allow-Mob-Spawning", false);
+            section.set("Allow-Explosion-Damage", null);
+            section.set("Allow-Explosion-Block-Breaking", null);
+            section.set("Allow-Mob-Spawning", null);
+            ConfigurationSection allow = section.createSection("Allow");
+            allow.set("Explosion-Damage", allowExplosionDamage);
+            allow.set("Explosion-Block-Breaking", allowExplosionBlockBreaking);
+            allow.set("Mob-Spawning", allowMobSpawning);
+
+            ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
+        }
 
         ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
     }
