@@ -339,7 +339,7 @@ public class ArenaListener implements Listener {
      * If the player is spectating an arena, the event is cancelled.
      */
     @SuppressWarnings("deprecation")
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         String playerName = player.getName();
@@ -370,7 +370,7 @@ public class ArenaListener implements Listener {
      * If the player is spectating an arena, the event is cancelled.
      */
     @SuppressWarnings("deprecation")
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         String playerName = player.getName();
