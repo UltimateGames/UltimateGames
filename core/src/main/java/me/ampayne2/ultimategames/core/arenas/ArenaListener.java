@@ -338,6 +338,7 @@ public class ArenaListener implements Listener {
      * If the player is in an arena, the game's onPlayerInteract method is called.<br>
      * If the player is spectating an arena, the event is cancelled.
      */
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -348,12 +349,13 @@ public class ArenaListener implements Listener {
             ItemStack item = player.getItemInHand();
             if (item != null && ultimateGames.getGameItemManager().isRegistered(game, item)) {
                 GameItem gameItem = ultimateGames.getGameItemManager().getGameItem(game, item);
+                event.setCancelled(true);
                 if (gameItem.click(arena, event) && gameItem.hasSingleUse()) {
                     ItemStack itemStack = player.getItemInHand();
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.setItemInHand(itemStack.getAmount() == 0 ? null : itemStack);
-                    event.setCancelled(true);
                 }
+                player.updateInventory();
             } else {
                 game.getGamePlugin().onPlayerInteract(arena, event);
             }
@@ -362,6 +364,12 @@ public class ArenaListener implements Listener {
         }
     }
 
+    /**
+     * Handles player interactions with entities in arenas.<br>
+     * If the player is in an arena, the game's onPlayerInteractEntity method is called.<br>
+     * If the player is spectating an arena, the event is cancelled.
+     */
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
@@ -372,12 +380,13 @@ public class ArenaListener implements Listener {
             ItemStack item = player.getItemInHand();
             if (item != null && ultimateGames.getGameItemManager().isRegistered(game, item)) {
                 GameItem gameItem = ultimateGames.getGameItemManager().getGameItem(game, item);
+                event.setCancelled(true);
                 if (gameItem.click(arena, event) && gameItem.hasSingleUse()) {
                     ItemStack itemStack = player.getItemInHand();
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.setItemInHand(itemStack.getAmount() == 0 ? null : itemStack);
-                    event.setCancelled(true);
                 }
+                player.updateInventory();
             } else {
                 game.getGamePlugin().onPlayerInteractEntity(arena, event);
             }

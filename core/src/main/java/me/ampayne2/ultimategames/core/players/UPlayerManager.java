@@ -33,6 +33,7 @@ import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.UArena;
 import me.ampayne2.ultimategames.core.arenas.scoreboards.UScoreboard;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -175,6 +176,9 @@ public class UPlayerManager implements Listener, PlayerManager {
                 // Extinguish the player if on fire
                 player.setFireTicks(0);
 
+                // Set the player to survival mode
+                player.setGameMode(GameMode.SURVIVAL);
+
                 // Add the player to limbo in case of server crash or disconnect
                 addPlayerToLimbo(player);
 
@@ -237,6 +241,7 @@ public class UPlayerManager implements Listener, PlayerManager {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void removePlayerFromArena(Player player, Boolean sendMessage) {
         String playerName = player.getName();
@@ -276,6 +281,11 @@ public class UPlayerManager implements Listener, PlayerManager {
             for (PotionEffect potionEffect : player.getActivePotionEffects()) {
                 player.removePotionEffect(potionEffect.getType());
             }
+
+            // Reset the player's inventory
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
+            player.updateInventory();
 
             // Shows all spectators to the player
             for (String spectator : arena.getSpectators()) {
