@@ -39,10 +39,20 @@ public enum ArenaStatus {
         this.displayName = displayName;
     }
 
+    /**
+     * Gets the display color of the ArenaStatus.
+     *
+     * @return The {@link org.bukkit.ChatColor}.
+     */
     public ChatColor getColor() {
         return color;
     }
 
+    /**
+     * Gets the display name of the ArenaStatus.
+     *
+     * @return The display name.
+     */
     public String getDisplayName() {
         return displayName;
     }

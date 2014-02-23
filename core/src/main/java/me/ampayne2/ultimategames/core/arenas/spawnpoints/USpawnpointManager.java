@@ -175,7 +175,7 @@ public class USpawnpointManager implements SpawnpointManager {
             }
             return distributedSpawnPoints;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -183,7 +183,7 @@ public class USpawnpointManager implements SpawnpointManager {
         if (playerSpawnPoints.containsKey(arena)) {
             return playerSpawnPoints.get(arena);
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -208,7 +208,7 @@ public class USpawnpointManager implements SpawnpointManager {
      */
     public void removeSpawnPoints(Arena arena, int... indexes) {
         if (playerSpawnPoints.containsKey(arena)) {
-            ArrayList<PlayerSpawnPoint> remove = new ArrayList<>();
+            List<PlayerSpawnPoint> remove = new ArrayList<>();
             for (Integer index : indexes) {
                 if (playerSpawnPoints.get(arena).size() >= index) {
                     remove.add(playerSpawnPoints.get(arena).get(index));

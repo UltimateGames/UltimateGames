@@ -56,9 +56,18 @@ public class EndingCountdown extends Countdown {
      * Sets the seconds left on the ending countdown.
      *
      * @param secondsLeft The seconds left.
+     * @return The EndingCountdown.
      */
-    public void setSecondsLeft(int secondsLeft) {
+    public EndingCountdown setSecondsLeft(int secondsLeft) {
         setTicksLeft(secondsLeft * TPS);
+        return this;
+    }
+
+    @Override
+    public Countdown setTicksLeft(int ticksLeft) {
+        super.setTicksLeft(ticksLeft);
+        updateExpDisplay(getSecondsLeft());
+        return this;
     }
 
     /**
@@ -73,6 +82,17 @@ public class EndingCountdown extends Countdown {
     @Override
     public void run() {
         int secondsLeft = getSecondsLeft();
+        updateExpDisplay(secondsLeft);
+        if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
+            ultimateGames.getMessenger().sendMessage(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
+        } else if (secondsLeft == END_COUNTDOWN_TIME) {
+            ultimateGames.getCountdownManager().stopEndingCountdown(arena);
+            ultimateGames.getArenaManager().endArena(arena);
+        }
+        ticksLeft -= TPS;
+    }
+
+    public void updateExpDisplay(int secondsLeft) {
         if (expDisplay) {
             for (String playerName : arena.getPlayers()) {
                 Bukkit.getPlayerExact(playerName).setLevel(secondsLeft);
@@ -81,12 +101,5 @@ public class EndingCountdown extends Countdown {
                 Bukkit.getPlayerExact(playerName).setLevel(secondsLeft);
             }
         }
-        if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
-            ultimateGames.getMessenger().sendMessage(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
-        } else if (secondsLeft == END_COUNTDOWN_TIME) {
-            ultimateGames.getCountdownManager().stopEndingCountdown(arena);
-            ultimateGames.getArenaManager().endArena(arena);
-        }
-        ticksLeft -= TPS;
     }
 }

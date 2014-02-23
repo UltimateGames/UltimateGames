@@ -85,8 +85,10 @@ public abstract class Countdown extends BukkitRunnable {
      * Sets the ticks left on the countdown.
      *
      * @param ticksLeft The ticks left.
+     * @return The Countdown.
      */
-    public void setTicksLeft(int ticksLeft) {
+    public Countdown setTicksLeft(int ticksLeft) {
         this.ticksLeft = ticksLeft;
+        return this;
     }
 }

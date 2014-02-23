@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 public class GameSound implements Effect {
     private final Sound sound;
     private final float volume;
-    private final float pitch;
+    private float pitch;
 
     /**
      * Creates a new GameSound.
@@ -70,13 +70,26 @@ public class GameSound implements Effect {
         return pitch;
     }
 
-    @Override
-    public void play(Location location) {
-        location.getWorld().playSound(location, sound, volume, pitch);
+    /**
+     * Sets the GameSound's pitch.
+     *
+     * @param pitch The pitch.
+     * @return The GameSound.
+     */
+    public GameSound setPitch(float pitch) {
+        this.pitch = pitch;
+        return this;
     }
 
     @Override
-    public void play(Player player, Location location) {
+    public Effect play(Location location) {
+        location.getWorld().playSound(location, sound, volume, pitch);
+        return this;
+    }
+
+    @Override
+    public Effect play(Player player, Location location) {
         player.playSound(location, sound, volume, pitch);
+        return this;
     }
 }

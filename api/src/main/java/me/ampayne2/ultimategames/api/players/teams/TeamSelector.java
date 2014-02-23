@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.api.players.teams;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.games.items.GameItem;
+import me.ampayne2.ultimategames.api.utils.EnchantGlow;
 import org.bukkit.ChatColor;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +53,8 @@ public class TeamSelector extends GameItem {
     static {
         TEAM_SELECTOR = new ItemStack(397, 1, (short) 3);
         ItemMeta meta = TEAM_SELECTOR.getItemMeta();
-        meta.setDisplayName(ChatColor.BOLD.toString() + ChatColor.AQUA + "Team Selector");
+        meta.setDisplayName(ChatColor.AQUA.toString() + ChatColor.BOLD + "Team Selector");
         TEAM_SELECTOR.setItemMeta(meta);
+        EnchantGlow.addGlow(TEAM_SELECTOR);
     }
 }

@@ -32,18 +32,18 @@ import org.bukkit.event.player.PlayerMoveEvent;
  */
 public class PlayerSpawnPoint extends SpawnPoint implements Listener {
     private final UltimateGames ultimateGames;
-    private Boolean locked;
+    private boolean locked;
     private String playerName;
 
     /**
      * Creates a new PlayerSpawnPoint
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.api.UltimateGames} instance.
-     * @param arena         The arena of the spawnpoint.
+     * @param arena         The {@link me.ampayne2.ultimategames.api.arenas.Arena} of the spawnpoint.
      * @param location      The location of the spawnpoint.
      * @param locked        If the spawnpoint is locked.
      */
-    public PlayerSpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, Boolean locked) {
+    public PlayerSpawnPoint(UltimateGames ultimateGames, Arena arena, Location location, boolean locked) {
         super(arena, location);
         this.ultimateGames = ultimateGames;
         this.locked = locked;
@@ -55,18 +55,18 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
      *
      * @return True if the spawnpoint is locked, else false.
      */
-    public Boolean locked() {
+    public boolean locked() {
         return locked;
     }
 
     /**
      * Sets the locked state of a spawnpoint.
      *
-     * @param enabled The state to set. If a player is locked in a spawnpoint when set to false, the player will be released.
+     * @param locked The state to set. If a player is locked in a spawnpoint when set to false, the player will be released.
      */
-    public void lock(Boolean enabled) {
-        this.locked = enabled;
-        if (!enabled) {
+    public void lock(boolean locked) {
+        this.locked = locked;
+        if (!locked) {
             playerName = null;
         }
     }

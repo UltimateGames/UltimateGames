@@ -18,26 +18,85 @@
  */
 package me.ampayne2.ultimategames.api.effects;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Holds multiple effects to simplify playing them all at once.
+ * Holds multiple The {@link me.ampayne2.ultimategames.api.effects.Effect}s to simplify playing them all at once.
  */
-public abstract class GameEffect implements Effect {
-    protected final Set<Effect> effects = new HashSet<>();
+public class GameEffect implements Effect {
+    private final Set<Effect> effects = new HashSet<>();
 
+    /**
+     * Creates a new GameEffect.
+     *
+     * @param effects The The {@link me.ampayne2.ultimategames.api.effects.Effect}s of the GameEffect.
+     */
     public GameEffect(Effect... effects) {
         this.effects.addAll(Arrays.asList(effects));
     }
 
     /**
-     * Gets the GameEffect's effects.
+     * Adds an effect to the GameEffect.
      *
-     * @return The effects of the GameEffect.
+     * @param effect The {@link me.ampayne2.ultimategames.api.effects.Effect}.
+     * @return The GameEffect.
+     */
+    public GameEffect addEffect(Effect effect) {
+        effects.add(effect);
+        return this;
+    }
+
+    /**
+     * Removes an effect from the GameEffect.
+     *
+     * @param effect The {@link me.ampayne2.ultimategames.api.effects.Effect}.
+     * @return The GameEffect.
+     */
+    public GameEffect removeEffect(Effect effect) {
+        effects.remove(effect);
+        return this;
+    }
+
+    /**
+     * Gets the GameEffect's The {@link me.ampayne2.ultimategames.api.effects.Effect}s.
+     *
+     * @return The The {@link me.ampayne2.ultimategames.api.effects.Effect}s of the GameEffect.
      */
     public Set<Effect> getEffects() {
         return effects;
+    }
+
+    /**
+     * Plays all of the {@link me.ampayne2.ultimategames.api.effects.Effect}s at a location.
+     *
+     * @param location The location.
+     * @return The GameEffect.
+     */
+    @Override
+    public Effect play(Location location) {
+        for (Effect effect : effects) {
+            effect.play(location);
+        }
+        return this;
+    }
+
+    /**
+     * Plays all of the {@link me.ampayne2.ultimategames.api.effects.Effect}s to a player at a location.
+     *
+     * @param player   The player.
+     * @param location The location.
+     * @return The GameEffect.
+     */
+    @Override
+    public Effect play(Player player, Location location) {
+        for (Effect effect : effects) {
+            effect.play(player, location);
+        }
+        return this;
     }
 }

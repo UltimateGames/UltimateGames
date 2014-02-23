@@ -104,7 +104,7 @@ public interface Scoreboard {
     /**
      * Gets the score of a scoreboard element.
      *
-     * @param name Name of the element.
+     * @param name The name of the element.
      * @return The score.
      */
     int getScore(String name);
@@ -113,37 +113,53 @@ public interface Scoreboard {
      * Sets the score of a scoreboard element.<br>
      * If setting the score to 0 and the score is already 0, the score is briefly changed to 1 so the 0 will appear.
      *
-     * @param name Name of the element.
+     * @param name The name of the element.
      */
     void setScore(String name, int score);
 
     /**
+     * Adds to the score of a scoreboard element.
+     *
+     * @param name   The name of the element.
+     * @param amount The amount to add.
+     */
+    void addScore(String name, int amount);
+
+    /**
      * Resets the score of a scoreboard element.
      *
-     * @param name Name of the element.
+     * @param name The name of the element.
      */
     void resetScore(String name);
 
     /**
-     * Gets the score of a team.
+     * Gets the score of a {@link me.ampayne2.ultimategames.api.players.teams.Team}.
      *
-     * @param team The team.
-     * @return The team's score.
+     * @param team The {@link me.ampayne2.ultimategames.api.players.teams.Team}.
+     * @return The {@link me.ampayne2.ultimategames.api.players.teams.Team}'s score.
      */
     int getScore(Team team);
 
     /**
-     * Sets the score of a team.
+     * Sets the score of a {@link me.ampayne2.ultimategames.api.players.teams.Team}.
      *
-     * @param team  The scoreboard.
+     * @param team  The {@link me.ampayne2.ultimategames.api.players.teams.Team}.
      * @param score The new score.
      */
     void setScore(Team team, int score);
 
     /**
-     * Resets the score of a team.
+     * Adds to the score of a {@link me.ampayne2.ultimategames.api.players.teams.Team}.
      *
-     * @param team The team.
+     * @param team   The {@link me.ampayne2.ultimategames.api.players.teams.Team}.
+     * @param amount The amount to add.
+     */
+    void addScore(Team team, int amount);
+
+    /**
+     * Resets the score of a {@link me.ampayne2.ultimategames.api.players.teams.Team}.
+     *
+     * @param team The {@link me.ampayne2.ultimategames.api.players.teams.Team}.
      */
     void resetScore(Team team);
 }

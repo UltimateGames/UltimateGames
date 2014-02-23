@@ -18,6 +18,8 @@
  */
 package me.ampayne2.ultimategames.api.config;
 
+import me.ampayne2.ultimategames.api.UltimateGames;
+
 /**
  * An enum of ultimate games configs.
  */
@@ -41,5 +43,15 @@ public enum ConfigType {
      */
     public String getFileName() {
         return fileName;
+    }
+
+    /**
+     * Gets the {@link me.ampayne2.ultimategames.api.config.ConfigAccessor} of the ConfigType.
+     *
+     * @param ultimateGames The {@link me.ampayne2.ultimategames.api.UltimateGames} instance.
+     * @return The {@link me.ampayne2.ultimategames.api.config.ConfigAccessor}
+     */
+    public ConfigAccessor getConfigAccessor(UltimateGames ultimateGames) {
+        return ultimateGames.getConfigManager().getConfigAccessor(this);
     }
 }

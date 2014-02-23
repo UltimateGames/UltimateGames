@@ -32,7 +32,7 @@ public interface Sign {
      *
      * @return sign The UGSign's updated lines.
      */
-    abstract List<String> getUpdatedLines();
+    List<String> getUpdatedLines();
 
     /**
      * Gets the UGSign's Sign.

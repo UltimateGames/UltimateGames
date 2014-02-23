@@ -35,7 +35,9 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 
-@SuppressWarnings("deprecation")
+/**
+ * A utility that allows creating inventories with icons that do stuff.
+ */
 public class IconMenu implements Listener {
     private String name;
     private int size;
@@ -46,6 +48,14 @@ public class IconMenu implements Listener {
     private ItemStack[] optionIcons;
     private static final ItemStack EMPTY_SLOT;
 
+    /**
+     * Creates a new IconMenu.
+     *
+     * @param name    The name of the inventory.
+     * @param size    The size of the inventory.
+     * @param handler The OptionClickEventHandler.
+     * @param plugin  The Plugin instance.
+     */
     public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin) {
         this.name = name;
         this.size = size;
@@ -56,12 +66,26 @@ public class IconMenu implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    /**
+     * Sets the ItemStack of a slot.
+     *
+     * @param position The slot position.
+     * @param icon     The ItemStack.
+     * @param name     The name to give the ItemStack.
+     * @param info     The lore to give the ItemStack.
+     * @return The IconMenu.
+     */
     public IconMenu setOption(int position, ItemStack icon, String name, String... info) {
         optionNames[position] = name;
         optionIcons[position] = setItemNameAndLore(icon, name, info);
         return this;
     }
 
+    /**
+     * Opens the IconMenu for a player.
+     *
+     * @param player The player.
+     */
     public void open(Player player) {
         Inventory inventory = Bukkit.createInventory(player, size, name);
         for (int i = 0; i < optionIcons.length; i++) {
@@ -70,6 +94,9 @@ public class IconMenu implements Listener {
         player.openInventory(inventory);
     }
 
+    /**
+     * Destroys the IconMenu.
+     */
     public void destroy() {
         HandlerList.unregisterAll(this);
         handler = null;
@@ -78,6 +105,9 @@ public class IconMenu implements Listener {
         optionIcons = null;
     }
 
+    /**
+     * Prevents the IconMenu from being blocked from opening.
+     */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     void onInventoryOpen(InventoryOpenEvent event) {
         if (event.getInventory().getName().equals(name)) {
@@ -85,13 +115,15 @@ public class IconMenu implements Listener {
         }
     }
 
+    /**
+     * Handles InventoryClickEvents for the IconMenu.
+     */
     @EventHandler(priority = EventPriority.MONITOR)
     void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory().getTitle().equals(name)) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
             if (slot >= 0 && slot < size && optionNames[slot] != null) {
-                Plugin plugin = this.plugin;
                 OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
                 handler.onOptionClick(e);
                 if (e.willClose()) {
@@ -116,10 +148,22 @@ public class IconMenu implements Listener {
         EMPTY_SLOT.setItemMeta(meta);
     }
 
+    /**
+     * Handles OptionClickEvents.
+     */
     public interface OptionClickEventHandler {
-        public void onOptionClick(OptionClickEvent event);
+
+        /**
+         * Called when an Icon in the IconMenu is clicked.
+         *
+         * @param event The OptionClickEvent.
+         */
+        void onOptionClick(OptionClickEvent event);
     }
 
+    /**
+     * An event fired when an Icon in the IconMenu is clicked.
+     */
     public class OptionClickEvent {
         private Player player;
         private int position;
@@ -135,35 +179,78 @@ public class IconMenu implements Listener {
             this.destroy = false;
         }
 
+        /**
+         * Gets the player who clicked.
+         *
+         * @return The player.
+         */
         public Player getPlayer() {
             return player;
         }
 
+        /**
+         * Gets the position of the Icon clicked.
+         *
+         * @return The position.
+         */
         public int getPosition() {
             return position;
         }
 
+        /**
+         * Gets the name of the Icon clicked.
+         *
+         * @return The name.
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Checks if the inventory will close.
+         *
+         * @return True if the inventory will close, else false.
+         */
         public boolean willClose() {
             return close;
         }
 
+        /**
+         * Checks if the inventory will be destroyed.
+         *
+         * @return True if the inventory will be destroyed, else false.
+         */
         public boolean willDestroy() {
             return destroy;
         }
 
+        /**
+         * Sets if the inventory will close.
+         *
+         * @param close If the inventory will close.
+         */
         public void setWillClose(boolean close) {
             this.close = close;
         }
 
+        /**
+         * Sets if the inventory will be destroyed.
+         *
+         * @param destroy If the inventory will be destroyed.
+         */
         public void setWillDestroy(boolean destroy) {
             this.destroy = destroy;
         }
     }
 
+    /**
+     * Sets the name and lore of an ItemStack.
+     *
+     * @param item The ItemStack.
+     * @param name The name.
+     * @param lore The lore.
+     * @return The ItemStack.
+     */
     private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
         ItemMeta im = item.getItemMeta();
         im.setDisplayName(name);

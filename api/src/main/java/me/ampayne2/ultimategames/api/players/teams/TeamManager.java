@@ -120,7 +120,6 @@ public interface TeamManager {
      * Evenly sorts players in an arena into the arena's teams.<br>
      * Kicks players from the arena to stop uneven teams.<br>
      * Players who haven't joined a team yet are kicked before players who have.
-     * TODO: Make the player's unlocked classes/tiers influence the sorting.
      *
      * @param arena The arena to sort the players of.
      */

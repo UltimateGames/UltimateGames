@@ -108,10 +108,13 @@ public enum ParticleEffect {
     }
 
     public static ParticleEffect fromName(String name) {
-        if (name != null)
-            for (Entry<String, ParticleEffect> e : NAME_MAP.entrySet())
-                if (e.getKey().equalsIgnoreCase(name))
+        if (name != null) {
+            for (Entry<String, ParticleEffect> e : NAME_MAP.entrySet()) {
+                if (e.getKey().equalsIgnoreCase(name)) {
                     return e.getValue();
+                }
+            }
+        }
         return null;
     }
 
@@ -122,15 +125,18 @@ public enum ParticleEffect {
     private static List<Player> getPlayersInRange(Location loc, double range) {
         List<Player> players = new ArrayList<>();
         double sqr = range * range;
-        for (Player p : loc.getWorld().getPlayers())
-            if (p.getLocation().distanceSquared(loc) <= sqr)
+        for (Player p : loc.getWorld().getPlayers()) {
+            if (p.getLocation().distanceSquared(loc) <= sqr) {
                 players.add(p);
+            }
+        }
         return players;
     }
 
     private static Object createPacket(String name, Location loc, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        if (amount <= 0)
+        if (amount <= 0) {
             throw new IllegalArgumentException("Amount of particles has to be greater than 0");
+        }
         try {
             Object p = PARTICLE_PACKET_CONSTRUCTOR.newInstance();
             ReflectionUtil.setValues(p, new ReflectionUtil.FieldEntry("a", name), new ReflectionUtil.FieldEntry("b", (float) loc.getX()), new ReflectionUtil.FieldEntry("c", (float) loc.getY()), new ReflectionUtil.FieldEntry("d", (float) loc.getZ()), new ReflectionUtil.FieldEntry("e", offsetX), new ReflectionUtil.FieldEntry("f", offsetY), new ReflectionUtil.FieldEntry("g", offsetZ), new ReflectionUtil.FieldEntry("h", speed), new ReflectionUtil.FieldEntry("i", amount));
@@ -158,7 +164,7 @@ public enum ParticleEffect {
     }
 
     private static void sendPacket(Player p, Object packet) {
-        if (packet != null)
+        if (packet != null) {
             try {
                 Object entityPlayer = ReflectionUtil.invokeMethod("getHandle", p.getClass(), p);
                 Object playerConnection = ReflectionUtil.getValue("playerConnection", entityPlayer);
@@ -166,11 +172,13 @@ public enum ParticleEffect {
             } catch (Exception e) {
                 Bukkit.getLogger().warning("[ParticleEffect] Failed to send a particle packet to " + p.getName() + "!");
             }
+        }
     }
 
     private static void sendPacket(Collection<Player> players, Object packet) {
-        for (Player p : players)
+        for (Player p : players) {
             sendPacket(p, packet);
+        }
     }
 
     /**
@@ -191,8 +199,9 @@ public enum ParticleEffect {
      * Displays a particle effect which is visible for all players whitin a certain range in the the world of @param loc
      */
     public void display(Location loc, double range, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        if (range > MAX_RANGE)
+        if (range > MAX_RANGE) {
             throw new IllegalArgumentException("Range has to be lower/equal the maximum of 20");
+        }
         sendPacket(getPlayersInRange(loc, range), createPacket(loc, offsetX, offsetY, offsetZ, speed, amount));
     }
 
@@ -214,8 +223,9 @@ public enum ParticleEffect {
      * Displays an icon crack (item break) effect which is visible for all players whitin a certain range in the the world of @param loc
      */
     public static void displayIconCrack(Location loc, double range, int id, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        if (range > MAX_RANGE)
+        if (range > MAX_RANGE) {
             throw new IllegalArgumentException("Range has to be lower/equal the maximum of 20");
+        }
         sendPacket(getPlayersInRange(loc, range), createIconCrackPacket(id, loc, offsetX, offsetY, offsetZ, speed, amount));
     }
 
@@ -237,8 +247,9 @@ public enum ParticleEffect {
      * Displays a block crack (block break) effect which is visible for all players whitin a certain range in the the world of @param loc
      */
     public static void displayBlockCrack(Location loc, double range, int id, byte data, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        if (range > MAX_RANGE)
+        if (range > MAX_RANGE) {
             throw new IllegalArgumentException("Range has to be lower/equal the maximum of 20");
+        }
         sendPacket(getPlayersInRange(loc, range), createBlockCrackPacket(id, data, loc, offsetX, offsetY, offsetZ, speed, amount));
     }
 
@@ -260,8 +271,9 @@ public enum ParticleEffect {
      * Displays a block dust effect which is visible for all players whitin a certain range in the the world of @param loc
      */
     public static void displayBlockDust(Location loc, double range, int id, byte data, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        if (range > MAX_RANGE)
+        if (range > MAX_RANGE) {
             throw new IllegalArgumentException("Range has to be lower/equal the maximum of 20");
+        }
         sendPacket(getPlayersInRange(loc, range), createBlockDustPacket(id, data, loc, offsetX, offsetY, offsetZ, speed, amount));
     }
 }

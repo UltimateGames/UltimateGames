@@ -42,9 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * TODO: Make a fancy system to store properties of the arena without a wall of code.
- */
 public class UArena implements Listener, Arena {
     private final UG ultimateGames;
     private final Game game;
@@ -58,7 +55,6 @@ public class UArena implements Listener, Arena {
     private boolean allowExplosionBlockBreaking;
     private boolean allowMobSpawning;
     private URegion region;
-    private int timesPlayed = 0;
     private Map<String, Location> lastLocations = new HashMap<>();
     private static final int DEFAULT_MIN_PLAYERS = 4;
     private static final int DEFAULT_MAX_PLAYERS = 8;
@@ -268,11 +264,6 @@ public class UArena implements Listener, Arena {
     }
 
     @Override
-    public int getTimesPlayed() {
-        return timesPlayed;
-    }
-
-    @Override
     public boolean locationIsInArena(Location location) {
         return location.getWorld().equals(region.getWorld()) && location.getX() >= region.getMinX() && location.getX() <= region.getMaxX() && location.getZ() >= region.getMinZ() && location.getZ() <= region.getMaxZ();
     }
@@ -289,9 +280,6 @@ public class UArena implements Listener, Arena {
             ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
             if (ultimateGames.getSignManager() != null) {
                 ultimateGames.getSignManager().updateSignsOfArena(this, SignType.LOBBY);
-            }
-            if (status == ArenaStatus.RUNNING) {
-                timesPlayed += 1;
             }
             ultimateGames.getMessenger().debug("Set status of arena " + arenaName + " of game " + game.getName() + " to " + status.toString());
         }

@@ -37,6 +37,11 @@ public class ArenaEndEvent extends ArenaEvent {
         this.endType = endType;
     }
 
+    /**
+     * Gets the {@link me.ampayne2.ultimategames.api.arenas.EndType} of the ArenaEndEvent.
+     *
+     * @return The {@link me.ampayne2.ultimategames.api.arenas.EndType}.
+     */
     public EndType getEndType() {
         return endType;
     }

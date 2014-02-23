@@ -53,7 +53,7 @@ public class ClassSelector extends GameItem {
     static {
         CLASS_SELECTOR = new ItemStack(Material.NETHER_STAR);
         ItemMeta meta = CLASS_SELECTOR.getItemMeta();
-        meta.setDisplayName(ChatColor.BOLD.toString() + ChatColor.AQUA + "Class Selector");
+        meta.setDisplayName(ChatColor.AQUA.toString() + ChatColor.BOLD + "Class Selector");
         CLASS_SELECTOR.setItemMeta(meta);
     }
 }

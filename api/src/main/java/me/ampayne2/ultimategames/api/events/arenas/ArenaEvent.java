@@ -26,8 +26,8 @@ import org.bukkit.event.HandlerList;
  * Base for any arena event.
  */
 public abstract class ArenaEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
     private final Arena arena;
+    private static final HandlerList HANDLERS = new HandlerList();
 
     /**
      * Creates an ArenaEvent.
@@ -47,11 +47,21 @@ public abstract class ArenaEvent extends Event {
         return arena;
     }
 
+    /**
+     * Gets the ArenaEvent's Handlers.
+     *
+     * @return The Handlers.
+     */
     public HandlerList getHandlers() {
-        return handlers;
+        return HANDLERS;
     }
 
+    /**
+     * Gets the ArenaEvent's HandlerList.
+     *
+     * @return The HandlerList.
+     */
     public static HandlerList getHandlerList() {
-        return handlers;
+        return HANDLERS;
     }
 }

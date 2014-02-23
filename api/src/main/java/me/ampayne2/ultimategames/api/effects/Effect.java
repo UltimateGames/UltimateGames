@@ -27,17 +27,19 @@ import org.bukkit.entity.Player;
 public interface Effect {
 
     /**
-     * Plays the effect.
+     * Plays the effect at a location.
      *
-     * @param location The effect's location.
+     * @param location The location.
+     * @return The Effect.
      */
-    void play(Location location);
+    Effect play(Location location);
 
     /**
-     * Plays the effect to a player.
+     * Plays the effect to a player at a location.
      *
      * @param player   The player.
-     * @param location The effect's location.
+     * @param location The location.
+     * @return The Effect.
      */
-    void play(Player player, Location location);
+    Effect play(Player player, Location location);
 }

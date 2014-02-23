@@ -69,7 +69,7 @@ public class UArenaManager implements ArenaManager {
                             if (arenaConfig.contains(arenaPath + ".SpawnPoints")) {
                                 @SuppressWarnings("unchecked") List<ArrayList<String>> spawnPoints = (ArrayList<ArrayList<String>>) arenaConfig.getList(arenaPath + ".SpawnPoints");
                                 if (!spawnPoints.isEmpty()) {
-                                    for (ArrayList<String> spawnPoint : spawnPoints) {
+                                    for (List<String> spawnPoint : spawnPoints) {
                                         Double x = Double.valueOf(spawnPoint.get(X_INDEX));
                                         Double y = Double.valueOf(spawnPoint.get(Y_INDEX));
                                         Double z = Double.valueOf(spawnPoint.get(Z_INDEX));
@@ -158,7 +158,7 @@ public class UArenaManager implements ArenaManager {
         if (ultimateGames.getGameManager().gameExists(gameName) && arenas.containsKey(ultimateGames.getGameManager().getGame(gameName))) {
             return arenas.get(ultimateGames.getGameManager().getGame(gameName));
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 

@@ -166,6 +166,15 @@ public class UScoreboard implements Scoreboard {
     }
 
     @Override
+    public void addScore(String name, int amount) {
+        Score scoreboardScore = scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name));
+        if (scoreboardScore.getScore() + amount == 0) {
+            scoreboardScore.setScore(1);
+        }
+        scoreboardScore.setScore(scoreboardScore.getScore() + amount);
+    }
+
+    @Override
     public void resetScore(String name) {
         scoreboard.resetScores(Bukkit.getOfflinePlayer(name));
     }
@@ -178,6 +187,11 @@ public class UScoreboard implements Scoreboard {
     @Override
     public void setScore(Team team, int score) {
         setScore(team.getColor() + "Team " + team.getName(), score);
+    }
+
+    @Override
+    public void addScore(Team team, int amount) {
+        addScore(team.getColor() + "Team " + team.getName(), amount);
     }
 
     @Override

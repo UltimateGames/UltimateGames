@@ -217,6 +217,7 @@ public class UTeamManager implements TeamManager, Listener {
         }
 
         // Add the players not in teams yet to the teams that need players.
+        // TODO: Make the player's unlocked classes/tiers influence the sorting.
         for (Team team : arenaTeams) {
             while ((players.size() / teamAmount) > team.getPlayers().size()) {
                 Player player = Bukkit.getPlayerExact(playersNotInTeams.get(RANDOM.nextInt(playersNotInTeams.size())));

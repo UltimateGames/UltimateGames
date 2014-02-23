@@ -123,13 +123,6 @@ public interface Arena {
     Region getRegion();
 
     /**
-     * Gets the amount of times played.
-     *
-     * @return The amount of times played.
-     */
-    int getTimesPlayed();
-
-    /**
      * Checks to see if a location is inside the arena.
      *
      * @param location The location.

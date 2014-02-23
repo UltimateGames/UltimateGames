@@ -41,9 +41,9 @@ public abstract class SpawnPoint {
     }
 
     /**
-     * Gets the spawnpoint's arena.
+     * Gets the spawnpoint's {@link me.ampayne2.ultimategames.api.arenas.Arena}.
      *
-     * @return The spawnpoint's arena.
+     * @return The spawnpoint's {@link me.ampayne2.ultimategames.api.arenas.Arena}.
      */
     public Arena getArena() {
         return arena;
