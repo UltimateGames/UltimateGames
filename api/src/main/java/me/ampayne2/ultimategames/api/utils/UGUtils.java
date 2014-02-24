@@ -375,7 +375,7 @@ public final class UGUtils {
         double entityYHigher = entityYLower + getEntityHeight(entity);
         if (Math.abs(locationX - entityLocation.getX()) > HORIZONTAL_TARGETER_ACCURACY) {
             return false;
-        } else if (locationY >= (entityYLower - VERTICAL_TARGETER_ACCURACY) && locationY <= (entityYHigher + VERTICAL_TARGETER_ACCURACY)) {
+        } else if (locationY < (entityYLower - VERTICAL_TARGETER_ACCURACY) && locationY > (entityYHigher + VERTICAL_TARGETER_ACCURACY)) {
             return false;
         } else if (Math.abs(locationZ - entityLocation.getZ()) > HORIZONTAL_TARGETER_ACCURACY) {
             return false;

@@ -108,7 +108,15 @@ public class UArena implements Listener, Arena {
         arenaStatus = ArenaStatus.valueOf(section.getString("Status", "ARENA_STOPPED"));
         maxPlayers = section.getInt("Max-Players", DEFAULT_MAX_PLAYERS);
         minPlayers = section.getInt("Min-Players", DEFAULT_MIN_PLAYERS);
-        region = URegion.fromList(section.getStringList("Region"));
+        if (section.contains("Arena-Region")) {
+            region = URegion.fromList(section.getStringList("Arena-Region"));
+            section.set("Arena-Region", null);
+            section.set("Region", region.toList());
+
+            ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
+        } else {
+            region = URegion.fromList(section.getStringList("Region"));
+        }
 
         if (section.contains("Allow")) {
             ConfigurationSection allow = section.getConfigurationSection("Allow");
