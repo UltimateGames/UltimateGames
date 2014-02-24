@@ -70,10 +70,9 @@ public class UScoreboard implements Scoreboard {
         org.bukkit.scoreboard.Team scoreboardTeam = scoreboard.getTeam(team.getName());
         if (scoreboardTeam == null) {
             scoreboardTeam = scoreboard.registerNewTeam(team.getName());
-            scoreboardTeam.setPrefix(team.getColor() + "");
-            if (team.canSeeFriendlyInvisibles()) {
-                scoreboardTeam.setCanSeeFriendlyInvisibles(true);
-            }
+            scoreboardTeam.setPrefix(team.getColor().toString());
+            scoreboardTeam.setCanSeeFriendlyInvisibles(team.canSeeFriendlyInvisibles());
+            scoreboardTeam.setAllowFriendlyFire(team.hasFriendlyFire());
         }
         scoreboardTeam.addPlayer(player);
     }
