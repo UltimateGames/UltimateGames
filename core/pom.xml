@@ -21,6 +21,13 @@
         <project.root>..</project.root>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>md5-repo</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
     <!-- Project dependencies -->
     <dependencies>
         <dependency>
@@ -67,6 +74,11 @@
             <version>3.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>de.diddiz</groupId>
+            <artifactId>logblock</artifactId>
+            <version>dev-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -97,6 +109,7 @@
                                 <excludes>
                                     <exclude>org.bukkit:bukkit</exclude>
                                     <exclude>com.google.guava</exclude>
+                                    <exclude>de.diddiz:logblock</exclude>
                                 </excludes>
                             </artifactSet>
                             <filters>

@@ -34,6 +34,7 @@ import me.ampayne2.ultimategames.api.players.PlayerManager;
 import me.ampayne2.ultimategames.api.players.classes.GameClassManager;
 import me.ampayne2.ultimategames.api.players.points.PointManager;
 import me.ampayne2.ultimategames.api.players.teams.TeamManager;
+import me.ampayne2.ultimategames.api.rollback.RollbackManager;
 import me.ampayne2.ultimategames.api.signs.SignManager;
 import me.ampayne2.ultimategames.api.webapi.WebHandler;
 import me.ampayne2.ultimategames.api.whitelist.WhitelistManager;
@@ -181,6 +182,12 @@ public interface UltimateGames {
      * Sets the PointManager.
      */
     void setPointManager(PointManager pointManager);
+
+    /**
+     * Return the RollbackManager. If none is loaded, it will return null
+     * @return The RollbackManager or null
+     */
+    RollbackManager getRollbackManager();
 
     /**
      * Adds a live stats API handler.

@@ -24,6 +24,7 @@ import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.message.RecipientHandler;
 import me.ampayne2.ultimategames.api.players.points.PointManager;
 import me.ampayne2.ultimategames.api.players.teams.Team;
+import me.ampayne2.ultimategames.api.rollback.RollbackManager;
 import me.ampayne2.ultimategames.api.signs.Sign;
 import me.ampayne2.ultimategames.api.signs.SignType;
 import me.ampayne2.ultimategames.api.webapi.GeneralInformationHandler;
@@ -49,6 +50,7 @@ import me.ampayne2.ultimategames.core.players.UPlayerManager;
 import me.ampayne2.ultimategames.core.players.classes.UGameClassManager;
 import me.ampayne2.ultimategames.core.players.points.NullPointManager;
 import me.ampayne2.ultimategames.core.players.teams.UTeamManager;
+import me.ampayne2.ultimategames.core.rollback.LogBlockRollback;
 import me.ampayne2.ultimategames.core.signs.RedstoneOutputSign;
 import me.ampayne2.ultimategames.core.signs.SignListener;
 import me.ampayne2.ultimategames.core.signs.USignManager;
@@ -58,6 +60,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -90,6 +93,7 @@ public class UG extends JavaPlugin implements UltimateGames {
     private MetricsManager metricsManager;
     private PointManager pointManager;
     private CommandController commandController;
+    private RollbackManager rollbackManager;
     private JettyServer jettyServer;
 
     public void onEnable() {
@@ -172,6 +176,12 @@ public class UG extends JavaPlugin implements UltimateGames {
         }
         getServer().getPluginManager().registerEvents(playerManager, this);
         commandController = new CommandController(this);
+
+        //We detect if we have a logging plugin installed
+        Plugin plugin = getServer().getPluginManager().getPlugin("LogBlock");
+        if (plugin != null) {
+            rollbackManager = new LogBlockRollback(plugin);
+        }
     }
 
     public void onDisable() {
@@ -312,5 +322,10 @@ public class UG extends JavaPlugin implements UltimateGames {
     @Override
     public void setPointManager(PointManager pointManager) {
         this.pointManager = pointManager;
+    }
+
+    @Override
+    public RollbackManager getRollbackManager() {
+        return rollbackManager;
     }
 }

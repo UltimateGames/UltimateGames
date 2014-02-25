@@ -293,8 +293,14 @@ public class UArenaManager implements ArenaManager {
 
                     ultimateGames.getMessenger().debug("Ended arena " + arena.getName() + " of game " + arena.getGame().getName());
                     Bukkit.getPluginManager().callEvent(event);
-                    ((UArena) arena).setStatus(ArenaStatus.ARENA_STOPPED);
-                    openArena(arena);
+
+                    //We rollback the arena
+                    if (ultimateGames.getRollbackManager() != null) {
+                        ultimateGames.getRollbackManager().rollbackArena(arena);
+                    } else {
+                        ((UArena) arena).setStatus(ArenaStatus.ARENA_STOPPED);
+                        openArena(arena);
+                    }
                 default:
             }
         }
