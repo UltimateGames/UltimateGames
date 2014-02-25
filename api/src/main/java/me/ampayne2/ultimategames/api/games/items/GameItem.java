@@ -68,7 +68,7 @@ public abstract class GameItem {
      * @return True if the click was successful, else false.
      */
     public boolean click(Arena arena, PlayerInteractEvent event) {
-        return true;
+        return false;
     }
 
     /**
@@ -78,7 +78,7 @@ public abstract class GameItem {
      * @return True if the click was successful, else false.
      */
     public boolean click(Arena arena, PlayerInteractEntityEvent event) {
-        return true;
+        return false;
     }
 
     @Override
