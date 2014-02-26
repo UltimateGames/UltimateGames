@@ -48,7 +48,7 @@ import me.ampayne2.ultimategames.core.misc.MetricsManager;
 import me.ampayne2.ultimategames.core.misc.PlayerHeadListener;
 import me.ampayne2.ultimategames.core.players.UPlayerManager;
 import me.ampayne2.ultimategames.core.players.classes.UGameClassManager;
-import me.ampayne2.ultimategames.core.players.points.NullPointManager;
+import me.ampayne2.ultimategames.core.players.points.PermissionsPointManager;
 import me.ampayne2.ultimategames.core.players.teams.UTeamManager;
 import me.ampayne2.ultimategames.core.rollback.LogBlockRollback;
 import me.ampayne2.ultimategames.core.signs.RedstoneOutputSign;
@@ -168,7 +168,7 @@ public class UG extends JavaPlugin implements UltimateGames {
         countdownManager = new UCountdownManager(this);
         lobbyManager = new ULobbyManager(this);
         whitelistManager = new UWhitelistManager(this);
-        pointManager = new NullPointManager();
+        pointManager = new PermissionsPointManager();
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         getServer().getPluginManager().registerEvents(new ArenaListener(this), this);
         if (getServer().getPluginManager().isPluginEnabled("PlayerHeads")) {

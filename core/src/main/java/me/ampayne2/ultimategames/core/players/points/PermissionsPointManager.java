@@ -20,11 +20,14 @@ package me.ampayne2.ultimategames.core.players.points;
 
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.players.points.PointManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 /**
- * The ultimate games point manager unless replaced.
+ * The default Ultimate Games point manager.<br>
+ * Uses permissions to check if a player has a perk and does not store points added.
  */
-public class NullPointManager implements PointManager {
+public class PermissionsPointManager implements PointManager {
 
     @Override
     public void addPoint(Game game, String playerName, String valueName, int amount) {
@@ -32,11 +35,12 @@ public class NullPointManager implements PointManager {
 
     @Override
     public boolean hasPerk(Game game, String playerName, String valueName) {
-        return false;
+        Player player = Bukkit.getPlayerExact(playerName);
+        return player != null && player.hasPermission("UltimateGames." + game.getName() + "." + valueName);
     }
 
     @Override
     public boolean hasPerk(Game game, String playerName, String valueName, boolean defaultValue) {
-        return defaultValue;
+        return hasPerk(game, playerName, valueName) || defaultValue;
     }
 }
