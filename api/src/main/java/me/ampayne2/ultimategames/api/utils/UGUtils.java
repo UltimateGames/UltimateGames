@@ -67,6 +67,18 @@ public final class UGUtils {
         return Math.max(min, Math.min(max, value));
     }
 
+    /**
+     * Clamps a value between a minimum and maximum value.
+     *
+     * @param value The value.
+     * @param min   The minimum value.
+     * @param max   The maximum value.
+     * @return The clamped value.
+     */
+    public static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
     // String utilities
 
     /**

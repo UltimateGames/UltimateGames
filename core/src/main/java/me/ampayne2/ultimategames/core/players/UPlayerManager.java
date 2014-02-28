@@ -29,6 +29,7 @@ import me.ampayne2.ultimategames.api.players.ArenaSpectator;
 import me.ampayne2.ultimategames.api.players.PlayerManager;
 import me.ampayne2.ultimategames.api.players.classes.GameClass;
 import me.ampayne2.ultimategames.api.signs.SignType;
+import me.ampayne2.ultimategames.api.utils.BossBar;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.UArena;
 import me.ampayne2.ultimategames.core.arenas.scoreboards.UScoreboard;
@@ -459,5 +460,8 @@ public class UPlayerManager implements Listener, PlayerManager {
             }
         }
         ultimateGames.getQueueManager().removePlayerFromQueues(player);
+        if (BossBar.hasStatusBar(player)) {
+            BossBar.removeStatusBar(player);
+        }
     }
 }

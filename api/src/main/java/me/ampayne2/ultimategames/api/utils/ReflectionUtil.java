@@ -19,6 +19,9 @@
 package me.ampayne2.ultimategames.api.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -181,5 +184,21 @@ public abstract class ReflectionUtil {
         for (FieldEntry f : entrys) {
             setValue(obj, f);
         }
+    }
+
+    public static Object getHandle(Entity entity) throws IllegalAccessException, InvocationTargetException {
+        return getMethod("getHandle", entity.getClass()).invoke(entity);
+    }
+
+    public static Object getHandle(World world) throws IllegalAccessException, InvocationTargetException {
+        return getMethod("getHandle", world.getClass()).invoke(world);
+    }
+
+    public static void sendPacket(Player player, Object packet) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+        Object nmsPlayer = getHandle(player);
+        Field connectionField = nmsPlayer.getClass().getField("playerConnection");
+        Object connection = connectionField.get(nmsPlayer);
+        Method sendPacket = getMethod("sendPacket", connection.getClass());
+        sendPacket.invoke(connection, packet);
     }
 }
