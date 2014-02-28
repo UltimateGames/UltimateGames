@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
@@ -43,6 +44,7 @@ public class IconMenu implements Listener {
     private int size;
     private OptionClickEventHandler handler;
     private Plugin plugin;
+    private Player player;
 
     private String[] optionNames;
     private ItemStack[] optionIcons;
@@ -82,6 +84,24 @@ public class IconMenu implements Listener {
     }
 
     /**
+     * Sets the IconMenu specific to a player.
+     *
+     * @param player The player.
+     */
+    public void setSpecificTo(Player player) {
+        this.player = player;
+    }
+
+    /**
+     * Checks if the IconMenu is specific to a player.
+     *
+     * @return True if the IconMenu is specific to a player, else false.
+     */
+    public boolean isSpecific() {
+        return player != null;
+    }
+
+    /**
      * Opens the IconMenu for a player.
      *
      * @param player The player.
@@ -118,14 +138,19 @@ public class IconMenu implements Listener {
     /**
      * Handles InventoryClickEvents for the IconMenu.
      */
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     void onInventoryClick(InventoryClickEvent event) {
-        if (event.getInventory().getTitle().equals(name)) {
+        if (event.getInventory().getTitle().equals(name) && (player == null || event.getWhoClicked() == player)) {
             event.setCancelled(true);
+            if (event.getClick() != ClickType.LEFT) {
+                return;
+            }
             int slot = event.getRawSlot();
             if (slot >= 0 && slot < size && optionNames[slot] != null) {
                 OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
                 handler.onOptionClick(e);
+                ((Player) event.getWhoClicked()).updateInventory();
                 if (e.willClose()) {
                     final Player p = (Player) event.getWhoClicked();
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {

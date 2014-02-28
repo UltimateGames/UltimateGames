@@ -130,7 +130,7 @@ public class UGameClassManager implements GameClassManager, Listener {
         }
 
         final List<GameClass> gameClasses = getGameClasses(game);
-        IconMenu menu = new IconMenu(playerName + "'s " + " Classes", ((int) Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
+        IconMenu menu = new IconMenu(game.getName() + " Classes", ((int) Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
                 GameClass gameClass = gameClasses.get(event.getPosition());
@@ -141,6 +141,7 @@ public class UGameClassManager implements GameClassManager, Listener {
                 }
             }
         }, ultimateGames);
+        menu.setSpecificTo(player);
         for (int i = 0; i < gameClasses.size(); i++) {
             GameClass gameClass = gameClasses.get(i);
             String name = gameClass.getName();
