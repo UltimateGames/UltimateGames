@@ -180,21 +180,21 @@ public class UScoreboard implements Scoreboard {
 
     @Override
     public int getScore(Team team) {
-        return getScore(team.getColor() + "Team " + team.getName());
+        return getScore(team.getColoredName());
     }
 
     @Override
     public void setScore(Team team, int score) {
-        setScore(team.getColor() + "Team " + team.getName(), score);
+        setScore(team.getColoredName(), score);
     }
 
     @Override
     public void addScore(Team team, int amount) {
-        addScore(team.getColor() + "Team " + team.getName(), amount);
+        addScore(team.getColoredName(), amount);
     }
 
     @Override
     public void resetScore(Team team) {
-        resetScore(team.getColor() + "Team " + team.getName());
+        resetScore(team.getColoredName());
     }
 }

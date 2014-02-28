@@ -52,6 +52,13 @@ public interface Team {
     ChatColor getColor();
 
     /**
+     * Gets the team's colored name.
+     *
+     * @return The team's colored name.
+     */
+    String getColoredName();
+
+    /**
      * Checks if the members of the team can attack each other.
      *
      * @return True if the team has friendly fire enabled, else false.

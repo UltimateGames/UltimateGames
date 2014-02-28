@@ -82,6 +82,11 @@ public class UTeam implements Team {
     }
 
     @Override
+    public String getColoredName() {
+        return color + name;
+    }
+
+    @Override
     public boolean hasFriendlyFire() {
         return friendlyFire;
     }

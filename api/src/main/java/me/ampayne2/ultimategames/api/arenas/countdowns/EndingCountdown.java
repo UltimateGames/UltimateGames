@@ -92,6 +92,11 @@ public class EndingCountdown extends Countdown {
         ticksLeft -= TPS;
     }
 
+    /**
+     * Updates the exp display of the countdown for players in the arena.
+     *
+     * @param secondsLeft The seconds left on the countdown.
+     */
     public void updateExpDisplay(int secondsLeft) {
         if (expDisplay) {
             for (String playerName : arena.getPlayers()) {

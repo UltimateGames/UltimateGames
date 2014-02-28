@@ -28,10 +28,10 @@ import java.lang.reflect.Field;
 /**
  * A utility to add enchantment glow effects to {@link org.bukkit.inventory.ItemStack}s.
  */
-public class EnchantGlow extends EnchantmentWrapper {
+public final class EnchantGlow extends EnchantmentWrapper {
     private static final Enchantment glow;
 
-    public EnchantGlow(int id) {
+    private EnchantGlow(int id) {
         super(id);
     }
 

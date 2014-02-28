@@ -34,6 +34,11 @@ public enum SignType {
         this.hasLabel = hasLabel;
     }
 
+    /**
+     * Checks if the SignType has a label.
+     *
+     * @return True if the SignType has a label, else false.
+     */
     public boolean hasLabel() {
         return hasLabel;
     }
