@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.api.utils;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Materials of armor.
@@ -29,6 +30,15 @@ public enum ArmorMaterial {
     IRON,
     GOLD,
     DIAMOND;
+
+    /**
+     * @param type The ArmorType of the armor.
+     *
+     * @return The armor itemstack.
+     */
+    public ItemStack getArmor(ArmorType type) {
+        return new ItemStack(Material.valueOf(name() + "_" + type.name()));
+    }
 
     /**
      * Gets the ArmorMaterial of a piece of armor.

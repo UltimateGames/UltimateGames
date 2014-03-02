@@ -32,9 +32,23 @@ import org.bukkit.inventory.ItemStack;
  */
 public abstract class ThrowableGameItem extends GameItem {
     private final ItemStack item;
+    private final int velocity;
 
     /**
      * Creates a new ThrowableGameItem.
+     *
+     * @param item The ItemStack of the ThrowableGameItem.
+     * @param velocity The velocity of the ThrowableGameItem.
+     */
+    public ThrowableGameItem(ItemStack item, int velocity) {
+        super(item, true);
+        this.item = item.clone();
+        this.item.setAmount(1);
+        this.velocity = velocity;
+    }
+
+    /**
+     * Creates a new ThrowableGameItem with the default velocity of 1.
      *
      * @param item The ItemStack of the ThrowableGameItem.
      */
@@ -42,6 +56,7 @@ public abstract class ThrowableGameItem extends GameItem {
         super(item, true);
         this.item = item.clone();
         this.item.setAmount(1);
+        this.velocity = 1;
     }
 
     @Override
@@ -49,7 +64,7 @@ public abstract class ThrowableGameItem extends GameItem {
         if (arena.getStatus() == ArenaStatus.RUNNING) {
             Player player = event.getPlayer();
             Item dropped = player.getWorld().dropItem(player.getEyeLocation(), item.clone());
-            dropped.setVelocity(player.getEyeLocation().getDirection());
+            dropped.setVelocity(player.getEyeLocation().getDirection().clone().multiply(velocity));
             onItemThrow(arena, dropped);
             return true;
         } else {
@@ -62,7 +77,7 @@ public abstract class ThrowableGameItem extends GameItem {
         if (arena.getStatus() == ArenaStatus.RUNNING) {
             Player player = event.getPlayer();
             Item dropped = player.getWorld().dropItem(player.getEyeLocation(), item.clone());
-            dropped.setVelocity(player.getEyeLocation().getDirection());
+            dropped.setVelocity(player.getEyeLocation().getDirection().clone().multiply(velocity));
             onItemThrow(arena, dropped);
             return true;
         } else {
