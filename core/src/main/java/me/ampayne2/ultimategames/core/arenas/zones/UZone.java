@@ -35,6 +35,7 @@ public class UZone implements Zone {
     private final String name;
     private final Location center;
     private int radius;
+    private int radiusSquared;
     private RadiusType radiusType;
 
     /**
@@ -52,6 +53,7 @@ public class UZone implements Zone {
         this.name = name;
         this.center = center;
         this.radius = radius;
+        this.radiusSquared = radius * radius;
         this.radiusType = radiusType;
     }
 
@@ -68,6 +70,7 @@ public class UZone implements Zone {
         this.name = configurationSection.getName();
 
         this.radius = configurationSection.getInt("Radius");
+        this.radiusSquared = radius * radius;
         this.radiusType = RadiusType.valueOf(configurationSection.getString("RadiusType"));
 
         List<String> location = configurationSection.getStringList("Center");
@@ -103,6 +106,7 @@ public class UZone implements Zone {
     public void setRadius(int radius) {
         if (radius != this.radius) {
             this.radius = radius;
+            this.radiusSquared = radius * radius;
 
             getSection().set("Radius", radius);
             ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
@@ -126,11 +130,18 @@ public class UZone implements Zone {
 
     @Override
     public boolean isLocationInZone(Location location) {
+        double x = center.getX() - location.getX();
+        double y = center.getY() - location.getY();
+        double z = center.getZ() - location.getZ();
         switch (radiusType) {
+            case RECTANGLE:
+                return Math.abs(x) <= radius && Math.abs(z) <= radius;
+            case CYLINDER:
+                return (x * x) + (z * z) <= radiusSquared;
             case CUBE:
-                return Math.abs(center.getX() - location.getX()) <= radius && Math.abs(center.getZ() - location.getZ()) <= radius;
-            case CIRCLE:
-                return (Math.pow(center.getX() - location.getX(), 2) + Math.pow(center.getZ() - location.getZ(), 2)) <= Math.pow(radius, 2);
+                return Math.abs(x) <= radius && Math.abs(y) <= radius && Math.abs(z) <= radius;
+            case SPHERE:
+                return (x * x) + (y * y) + (z * z) <= radiusSquared;
             default:
                 return false;
         }

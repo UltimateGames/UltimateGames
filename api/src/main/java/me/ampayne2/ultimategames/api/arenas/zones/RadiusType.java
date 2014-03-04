@@ -22,6 +22,8 @@ package me.ampayne2.ultimategames.api.arenas.zones;
  * Radius types of a Zone.
  */
 public enum RadiusType {
+    RECTANGLE,
+    CYLINDER,
     CUBE,
-    CIRCLE
+    SPHERE
 }
