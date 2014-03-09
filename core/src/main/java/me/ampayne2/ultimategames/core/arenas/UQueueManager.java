@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.core.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.QueueManager;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.utils.UGUtils;
 import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.Bukkit;
@@ -127,7 +128,7 @@ public class UQueueManager implements QueueManager {
         Integer queuePosition = queue.get(arena).size();
         String position = queuePosition.toString() + UGUtils.getOrdinalSuffix(queuePosition);
         Integer gamePosition = (int) Math.ceil((double) queue.get(arena).size() / arena.getMaxPlayers());
-        ultimateGames.getMessenger().sendMessage(player, "queues.join", arena.getName(), arena.getGame().getName(), position, gamePosition == 1 ? "next game" : gamePosition + " games from now");
+        ultimateGames.getMessenger().sendMessage(player, UGMessage.QUEUE_JOIN, arena.getName(), arena.getGame().getName(), position, gamePosition == 1 ? "next game" : gamePosition + " games from now");
     }
 
     /**
@@ -137,7 +138,7 @@ public class UQueueManager implements QueueManager {
      * @param arena  The arena.
      */
     public void sendLeaveMessage(Player player, Arena arena) {
-        ultimateGames.getMessenger().sendMessage(player, "queues.leave", arena.getName(), arena.getGame().getName());
+        ultimateGames.getMessenger().sendMessage(player, UGMessage.QUEUE_LEAVE, arena.getName(), arena.getGame().getName());
     }
 
     @Override

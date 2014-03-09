@@ -18,6 +18,7 @@
  */
 package me.ampayne2.ultimategames.core.command;
 
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -213,13 +214,13 @@ public class Command {
                     if (sender instanceof Player || !entry.isPlayerOnly()) {
                         entry.execute(command, sender, args);
                     } else {
-                        ultimateGames.getMessenger().sendMessage(sender, "error.command.notaplayer");
+                        ultimateGames.getMessenger().sendMessage(sender, UGMessage.COMMAND_NOTAPLAYER);
                     }
                 } else {
-                    ultimateGames.getMessenger().sendMessage(sender, "permissions.nopermission", command);
+                    ultimateGames.getMessenger().sendMessage(sender, UGMessage.NO_PERMISSION, command);
                 }
             } else {
-                ultimateGames.getMessenger().sendMessage(sender, "error.command.usage", ((UGCommand) entry).getCommandUsage());
+                ultimateGames.getMessenger().sendMessage(sender, UGMessage.COMMAND_USAGE, ((UGCommand) entry).getCommandUsage());
             }
         } else {
             String subCommand = args.length == 0 ? "" : args[0];
@@ -233,7 +234,7 @@ public class Command {
                 }
                 entry.execute(subCommand, sender, newArgs);
             } else {
-                ultimateGames.getMessenger().sendMessage(sender, "error.command.invalidsubcommand", "\"" + subCommand + "\"", "\"" + command + "\"");
+                ultimateGames.getMessenger().sendMessage(sender, UGMessage.COMMAND_INVALIDSUBCOMMAND, "\"" + subCommand + "\"", "\"" + command + "\"");
             }
         }
     }

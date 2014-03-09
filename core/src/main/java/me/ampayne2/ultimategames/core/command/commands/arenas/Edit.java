@@ -18,6 +18,7 @@
  */
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.players.ArenaPlayer;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
@@ -52,7 +53,7 @@ public class Edit extends UGCommand {
                 player.setEditing(true);
             }
         } else {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.notinarena");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ARENA_NOTIN);
         }
     }
 }

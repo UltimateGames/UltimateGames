@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.core.command.commands.arenas;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.arenas.QueueManager;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -49,20 +50,20 @@ public class Join extends UGCommand {
         String arenaName = args[0];
         String gameName = args[1];
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
             return;
         }
         Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
         Player player = (Player) sender;
         String playerName = player.getName();
         if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.alreadyinarena");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ARENA_ALREADYIN);
             return;
         } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.alreadyspectatingarena");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ARENA_ALREADYSPECTATING);
             return;
         }
         ArenaStatus arenaStatus = arena.getStatus();
@@ -74,7 +75,7 @@ public class Join extends UGCommand {
                 queue.addPlayerToQueue(player, arena);
             }
         } else {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.notloaded");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ARENA_NOTLOADED);
         }
     }
 }

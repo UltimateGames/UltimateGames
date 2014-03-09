@@ -38,13 +38,6 @@ public interface Messenger {
     Messenger registerRecipient(Class recipientClass, RecipientHandler recipientHandler);
 
     /**
-     * Gets the message prefix.
-     *
-     * @return The message prefix.
-     */
-    String getPrefix();
-
-    /**
      * Gets a game's message prefix.
      *
      * @param game The game.
@@ -52,44 +45,35 @@ public interface Messenger {
      */
     String getGamePrefix(Game game);
 
-
     /**
-     * Gets a message with translated color codes.
+     * Sends a message from the player to the arena the player is in.
      *
-     * @param path Path to the message in the message config, without "Messages."
-     * @return The message.
+     * @param sender  The name of the player.
+     * @param message The message.
+     * @return True if the player is in an arena and the message was sent, else false.
      */
-    String getMessage(String path);
-
-    /**
-     * Gets a game message with translated color codes.
-     *
-     * @param game The game.
-     * @param path Path to the message in the game's config, without "Messages."
-     * @return The message.
-     */
-    String getGameMessage(Game game, String path);
+    boolean sendPlayerChatMessage(String sender, String message);
 
     /**
      * Sends a message to a recipient.
      *
      * @param recipient The recipient of the message.
-     * @param path      The path to the message.
+     * @param message   The message.
      * @param replace   Strings to replace any occurences of %s in the message with.
      * @return True if the message was sent, else false.
      */
-    boolean sendMessage(Object recipient, String path, String... replace);
+    boolean sendMessage(Object recipient, Message message, String... replace);
 
     /**
      * Sends a game message to a recipient.
      *
      * @param recipient The recipient of the message; Either CommandSender, Team, Arena, or Server.
      * @param game      The game.
-     * @param path      The path to the message.
+     * @param message   The message.
      * @param replace   Strings to replace any occurences of %s in the message with.
      * @return True if the message was sent, else false.
      */
-    boolean sendGameMessage(Object recipient, Game game, String path, String... replace);
+    boolean sendGameMessage(Object recipient, Game game, Message message, String... replace);
 
     /**
      * Sends a raw message to a recipient.

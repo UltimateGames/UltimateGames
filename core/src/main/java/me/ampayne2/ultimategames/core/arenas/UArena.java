@@ -23,6 +23,7 @@ import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.config.ConfigType;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.games.PlayerType;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.signs.SignType;
 import me.ampayne2.ultimategames.api.utils.UGUtils;
 import me.ampayne2.ultimategames.core.UG;
@@ -308,7 +309,7 @@ public class UArena implements Listener, Arena {
                 lastLocation.setPitch(to.getPitch());
                 lastLocation.setYaw(to.getYaw());
                 UGUtils.teleportEntity(player, lastLocation);
-                ultimateGames.getMessenger().sendMessage(player, "protections.leave");
+                ultimateGames.getMessenger().sendMessage(player, UGMessage.ARENA_LEAVE_REGION);
             } else {
                 lastLocations.put(playerName, to);
                 game.getGamePlugin().onPlayerMove(this, event);
@@ -325,7 +326,7 @@ public class UArena implements Listener, Arena {
         String playerName = player.getName();
         if ((players.contains(playerName) || spectators.contains(playerName)) && !locationIsInArena(event.getTo())) {
             event.setCancelled(true);
-            ultimateGames.getMessenger().sendMessage(player, "protections.leave");
+            ultimateGames.getMessenger().sendMessage(player, UGMessage.ARENA_LEAVE_REGION);
         }
     }
 

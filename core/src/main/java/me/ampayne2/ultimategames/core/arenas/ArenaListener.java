@@ -23,6 +23,7 @@ import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.games.blocks.GameBlockManager;
 import me.ampayne2.ultimategames.api.games.items.GameItem;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.players.PlayerManager;
 import me.ampayne2.ultimategames.api.players.teams.Team;
 import me.ampayne2.ultimategames.api.players.teams.TeamManager;
@@ -299,7 +300,7 @@ public class ArenaListener implements Listener {
                         Team playerTeam = teamManager.getPlayerTeam(playerName);
                         Team damagerTeam = teamManager.getPlayerTeam(damagerName);
                         if (playerTeam != null && playerTeam.equals(damagerTeam) && !playerTeam.hasFriendlyFire()) {
-                            ultimateGames.getMessenger().sendMessage(damager, "teams.friendlyfire");
+                            ultimateGames.getMessenger().sendMessage(damager, UGMessage.TEAM_FRIENDLYFIRE);
                             event.setCancelled(true);
                         } else {
                             arena.getGame().getGamePlugin().onEntityDamageByEntity(arena, event);
@@ -497,6 +498,16 @@ public class ArenaListener implements Listener {
                 event.setCancelled(true);
             }
         } else if (ultimateGames.getPlayerManager().isPlayerSpectatingArena(playerName)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        String playerName = event.getPlayer().getName();
+        String message = event.getMessage();
+        if (ultimateGames.getMessenger().sendPlayerChatMessage(playerName, message)) {
+            ultimateGames.getMessenger().getLogger().info("<" + playerName + "> " + message);
             event.setCancelled(true);
         }
     }

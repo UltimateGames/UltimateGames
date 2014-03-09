@@ -200,7 +200,9 @@ public class UGameManager implements GameManager {
         } else {
             games.add(game);
             ultimateGames.getConfigManager().addGameConfig(game);
-            ultimateGames.getMessenger().loadGameMessages(game);
+            if (game.getMessages() != null) {
+                ultimateGames.getMessenger().loadGameMessages(game, game.getMessages());
+            }
             ultimateGames.getMetricsManager().addGame(game);
             ultimateGames.getMessenger().log(Level.INFO, "Added game " + game.getName());
             return true;

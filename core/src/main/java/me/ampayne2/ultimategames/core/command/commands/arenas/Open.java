@@ -19,6 +19,8 @@
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.message.Messenger;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -45,15 +47,16 @@ public class Open extends UGCommand {
     public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
+        Messenger messenger = ultimateGames.getMessenger();
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            messenger.sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
+            messenger.sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
             return;
         }
         Arena arena = ultimateGames.getArenaManager().getArena(arenaName, gameName);
         ultimateGames.getArenaManager().openArena(arena);
-        ultimateGames.getMessenger().sendMessage(sender, "arenas.setstatus", arenaName, gameName, arena.getStatus().name());
+        messenger.sendMessage(sender, UGMessage.ARENA_SETSTATUS, arenaName, gameName, arena.getStatus().name());
     }
 }

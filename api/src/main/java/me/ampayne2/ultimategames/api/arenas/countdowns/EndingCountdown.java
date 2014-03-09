@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.api.arenas.countdowns;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import org.bukkit.Bukkit;
 
 /**
@@ -84,7 +85,7 @@ public class EndingCountdown extends Countdown {
         int secondsLeft = getSecondsLeft();
         updateExpDisplay(secondsLeft);
         if (secondsLeft > END_COUNTDOWN_TIME && secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
-            ultimateGames.getMessenger().sendMessage(arena, "countdowns.timeleftend", Integer.toString(secondsLeft));
+            ultimateGames.getMessenger().sendMessage(arena, UGMessage.COUNTDOWN_TIMELEFT_END, Integer.toString(secondsLeft));
         } else if (secondsLeft == END_COUNTDOWN_TIME) {
             ultimateGames.getCountdownManager().stopEndingCountdown(arena);
             ultimateGames.getArenaManager().endArena(arena);

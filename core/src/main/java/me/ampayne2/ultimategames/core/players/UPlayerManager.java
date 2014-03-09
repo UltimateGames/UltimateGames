@@ -24,6 +24,7 @@ import me.ampayne2.ultimategames.api.arenas.spawnpoints.PlayerSpawnPoint;
 import me.ampayne2.ultimategames.api.config.ConfigType;
 import me.ampayne2.ultimategames.api.effects.GameSound;
 import me.ampayne2.ultimategames.api.events.players.*;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.players.ArenaPlayer;
 import me.ampayne2.ultimategames.api.players.ArenaSpectator;
 import me.ampayne2.ultimategames.api.players.PlayerManager;
@@ -155,7 +156,7 @@ public class UPlayerManager implements Listener, PlayerManager {
 
                 // Send a message that the player joined to the arena
                 if (sendMessage) {
-                    ultimateGames.getMessenger().sendMessage(arena, "arenas.join", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
+                    ultimateGames.getMessenger().sendMessage(arena, UGMessage.ARENA_JOIN, playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
                 }
 
                 JOIN_SOUND.play(player.getLocation());
@@ -311,7 +312,7 @@ public class UPlayerManager implements Listener, PlayerManager {
 
             // Sends a message that the player left the arena
             if (sendMessage) {
-                ultimateGames.getMessenger().sendMessage(arena, "arenas.leave", playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
+                ultimateGames.getMessenger().sendMessage(arena, UGMessage.ARENA_LEAVE, playerName, arena.getPlayers().size() + " / " + arena.getMaxPlayers());
             }
 
             // Removes the player from limbo

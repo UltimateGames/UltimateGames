@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.core.players.teams;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.events.arenas.ArenaOpenEvent;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.players.teams.Team;
 import me.ampayne2.ultimategames.api.players.teams.TeamManager;
 import me.ampayne2.ultimategames.api.utils.IconMenu;
@@ -154,10 +155,10 @@ public class UTeamManager implements TeamManager, Listener {
             Team oldTeam = getPlayerTeam(playerName);
             if (oldTeam != null) {
                 oldTeam.removePlayer(player);
-                ultimateGames.getMessenger().sendMessage(player, "teams.leave", oldTeam.getColor() + oldTeam.getName());
+                ultimateGames.getMessenger().sendMessage(player, UGMessage.TEAM_LEAVE, oldTeam.getColor() + oldTeam.getName());
             }
             ((UTeam) team).addPlayer(player);
-            ultimateGames.getMessenger().sendMessage(player, "teams.join", team.getColor() + team.getName());
+            ultimateGames.getMessenger().sendMessage(player, UGMessage.TEAM_JOIN, team.getColor() + team.getName());
             return true;
         } else {
             return false;
@@ -197,7 +198,7 @@ public class UTeamManager implements TeamManager, Listener {
         while (players.size() % teamAmount != 0) {
             Player playerToKick = Bukkit.getPlayerExact(playersNotInTeams.size() > 0 ? playersNotInTeams.get(playersNotInTeams.size() - 1) : playersInTeams.get(playersInTeams.size() - 1));
             ultimateGames.getPlayerManager().removePlayerFromArena(playerToKick, false);
-            ultimateGames.getMessenger().sendMessage(playerToKick, "arenas.kick");
+            ultimateGames.getMessenger().sendMessage(playerToKick, UGMessage.ARENA_KICK);
             playersInTeams.remove(playerToKick.getName());
             playersNotInTeams.remove(playerToKick.getName());
             players = arena.getPlayers();
@@ -210,7 +211,7 @@ public class UTeamManager implements TeamManager, Listener {
                 String playerName = teamPlayers.get(teamPlayers.size() - 1);
                 Player player = Bukkit.getPlayerExact(playerName);
                 team.removePlayer(player);
-                ultimateGames.getMessenger().sendMessage(player, "teams.kick", team.getColor() + team.getName());
+                ultimateGames.getMessenger().sendMessage(player, UGMessage.TEAM_KICK, team.getColor() + team.getName());
                 playersNotInTeams.add(playerName);
                 teamPlayers = team.getPlayers();
             }
@@ -222,7 +223,7 @@ public class UTeamManager implements TeamManager, Listener {
             while ((players.size() / teamAmount) > team.getPlayers().size()) {
                 Player player = Bukkit.getPlayerExact(playersNotInTeams.get(RANDOM.nextInt(playersNotInTeams.size())));
                 ((UTeam) team).addPlayer(player);
-                ultimateGames.getMessenger().sendMessage(player, "teams.join", team.getColor() + team.getName());
+                ultimateGames.getMessenger().sendMessage(player, UGMessage.TEAM_JOIN, team.getColor() + team.getName());
                 playersNotInTeams.remove(player.getName());
             }
         }
@@ -243,7 +244,7 @@ public class UTeamManager implements TeamManager, Listener {
                 if (team.hasSpace()) {
                     teamManager.setPlayerTeam(event.getPlayer(), team);
                 } else {
-                    ultimateGames.getMessenger().sendMessage(event.getPlayer(), "teams.full", team.getName());
+                    ultimateGames.getMessenger().sendMessage(event.getPlayer(), UGMessage.TEAM_FULL, team.getName());
                 }
             }
         }, ultimateGames);

@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.core.command.commands.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.ArenaManager;
 import me.ampayne2.ultimategames.api.message.Messenger;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -47,16 +48,16 @@ public class SetSpectatorSpawn extends UGCommand {
     public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
-        Messenger messageManager = ultimateGames.getMessenger();
+        Messenger messenger = ultimateGames.getMessenger();
         ArenaManager arenaManager = ultimateGames.getArenaManager();
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            messageManager.sendMessage(sender, "games.doesntexist");
+            messenger.sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
-        } else if (!arenaManager.arenaExists(arenaName, gameName)) {
-            messageManager.sendMessage(sender, "arenas.doesntexist");
+        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            messenger.sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
             return;
         }
         ultimateGames.getSpawnpointManager().setSpectatorSpawnPoint(arenaManager.getArena(arenaName, gameName), ((Player) sender).getLocation());
-        messageManager.sendMessage(sender, "spawnpoints.setspectatorspawnpoint", arenaName, gameName);
+        messenger.sendMessage(sender, UGMessage.SPAWNPOINT_SETSPECTATOR, arenaName, gameName);
     }
 }

@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.api.players;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -87,6 +88,6 @@ public class ArenaPlayer {
      */
     public void setEditing(boolean editing) {
         this.editing = editing;
-        ultimateGames.getMessenger().sendMessage(getPlayer(), editing ? "arenas.editon" : "arenas.editoff");
+        ultimateGames.getMessenger().sendMessage(getPlayer(), editing ? UGMessage.ARENA_EDITON : UGMessage.ARENA_EDITOFF);
     }
 }

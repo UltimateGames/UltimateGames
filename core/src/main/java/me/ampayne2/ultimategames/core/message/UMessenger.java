@@ -20,8 +20,11 @@ package me.ampayne2.ultimategames.core.message;
 
 import me.ampayne2.ultimategames.api.config.ConfigType;
 import me.ampayne2.ultimategames.api.games.Game;
+import me.ampayne2.ultimategames.api.message.Message;
 import me.ampayne2.ultimategames.api.message.Messenger;
 import me.ampayne2.ultimategames.api.message.RecipientHandler;
+import me.ampayne2.ultimategames.api.message.UGMessage;
+import me.ampayne2.ultimategames.api.players.teams.Team;
 import me.ampayne2.ultimategames.core.UG;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,9 +41,6 @@ public class UMessenger implements Messenger {
     private final UG ultimateGames;
     private final boolean debug;
     private final Logger log;
-    private final String messagePrefix;
-    private final String gamePrefix;
-    private Map<String, String> messages = new HashMap<>();
     private Map<String, Map<String, String>> gameMessages = new HashMap<>();
     private Map<Class<?>, RecipientHandler> recipientHandlers = new HashMap<>();
 
@@ -54,18 +54,20 @@ public class UMessenger implements Messenger {
         debug = ultimateGames.getConfig().getBoolean("debug", false);
         log = ultimateGames.getLogger();
         loadMessages();
-        messagePrefix = messages.containsKey("prefix") ? messages.get("prefix") : ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "UltimateGames" + ChatColor.DARK_GRAY + "]";
-        gamePrefix = messages.containsKey("gameprefix") ? messages.get("gameprefix") : ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "%s" + ChatColor.DARK_GRAY + "]";
     }
 
     /**
      * Loads the ultimate games messages.
      */
     public void loadMessages() {
-        messages.clear();
         FileConfiguration messageConfig = ultimateGames.getConfigManager().getConfig(ConfigType.MESSAGE);
-        for (String key : messageConfig.getConfigurationSection("Messages").getKeys(true)) {
-            messages.put(key, ChatColor.translateAlternateColorCodes('&', messageConfig.getString("Messages." + key)));
+        for (Message message : UGMessage.class.getEnumConstants()) {
+            messageConfig.addDefault(message.getPath(), message.getDefault());
+        }
+        messageConfig.options().copyDefaults(true);
+        ultimateGames.getConfigManager().getConfigAccessor(ConfigType.MESSAGE).saveConfig();
+        for (Message message : UGMessage.class.getEnumConstants()) {
+            message.setMessage(ChatColor.translateAlternateColorCodes('&', messageConfig.getString(message.getPath())));
         }
     }
 
@@ -74,15 +76,15 @@ public class UMessenger implements Messenger {
      *
      * @param game The game whose messages to load.
      */
-    public void loadGameMessages(Game game) {
+    public void loadGameMessages(Game game, Enum<? extends Message> messages) {
         FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game);
-        if (gameConfig.isConfigurationSection("Messages")) {
-            gameMessages.remove(game.getName());
-            Map<String, String> messages = new HashMap<>();
-            for (String key : gameConfig.getConfigurationSection("Messages").getKeys(true)) {
-                messages.put(key, ChatColor.translateAlternateColorCodes('&', gameConfig.getString("Messages." + key)));
-            }
-            gameMessages.put(game.getName(), messages);
+        for (Message message : messages.getDeclaringClass().getEnumConstants()) {
+            gameConfig.addDefault("Messages." + message.getPath(), message.getDefault());
+        }
+        gameConfig.options().copyDefaults(true);
+        ultimateGames.getConfigManager().getGameConfigAccessor(game).saveConfig();
+        for (Message message : messages.getDeclaringClass().getEnumConstants()) {
+            message.setMessage(ChatColor.translateAlternateColorCodes('&', gameConfig.getString("Messages." + message.getPath())));
         }
     }
 
@@ -93,39 +95,37 @@ public class UMessenger implements Messenger {
     }
 
     @Override
-    public String getPrefix() {
-        return messagePrefix;
-    }
-
-    @Override
     public String getGamePrefix(Game game) {
-        return String.format(gamePrefix, game.getName());
+        return String.format(UGMessage.GAME_PREFIX.getMessage(), game.getName());
     }
 
     @Override
-    public String getMessage(String path) {
-        return messages.containsKey(path) ? messages.get(path) : ChatColor.DARK_RED + "No configured message for " + path;
-    }
-
-    @Override
-    public String getGameMessage(Game game, String path) {
-        if (gameMessages.containsKey(game.getName())) {
-            Map<String, String> messages = gameMessages.get(game.getName());
-            if (messages.containsKey(path)) {
-                return messages.get(path);
+    public boolean sendPlayerChatMessage(String playerName, String message) {
+        if (ultimateGames.getPlayerManager().isPlayerInArena(playerName)) {
+            Object recipient;
+            ChatColor nameColor;
+            if (ultimateGames.getTeamManager().isPlayerInTeam(playerName)) {
+                Team team = ultimateGames.getTeamManager().getPlayerTeam(playerName);
+                recipient = team;
+                nameColor = team.getColor();
+            } else {
+                recipient = ultimateGames.getPlayerManager().getPlayerArena(playerName);
+                nameColor = ChatColor.WHITE;
             }
+            return sendMessage(recipient, UGMessage.CHAT, nameColor + playerName, message);
+        } else {
+            return false;
         }
-        return ChatColor.DARK_RED + "No configured message for " + path;
     }
 
     @Override
-    public boolean sendMessage(Object recipient, String path, String... replace) {
-        return sendRawMessage(recipient, messagePrefix + (replace == null ? getMessage(path) : String.format(getMessage(path), (Object[]) replace)));
+    public boolean sendMessage(Object recipient, Message message, String... replace) {
+        return sendRawMessage(recipient, UGMessage.PREFIX + (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)));
     }
 
     @Override
-    public boolean sendGameMessage(Object recipient, Game game, String path, String... replace) {
-        return sendRawMessage(recipient, getGamePrefix(game) + (replace == null ? getGameMessage(game, path) : String.format(getGameMessage(game, path), (Object[]) replace)));
+    public boolean sendGameMessage(Object recipient, Game game, Message message, String... replace) {
+        return sendRawMessage(recipient, getGamePrefix(game) + (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)));
     }
 
     @Override

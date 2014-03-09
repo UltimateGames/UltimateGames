@@ -18,6 +18,8 @@
  */
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
+import me.ampayne2.ultimategames.api.message.Messenger;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -44,14 +46,15 @@ public class Stop extends UGCommand {
     public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
+        Messenger messenger = ultimateGames.getMessenger();
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            messenger.sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
+            messenger.sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
             return;
         }
         ultimateGames.getArenaManager().stopArena(ultimateGames.getArenaManager().getArena(arenaName, gameName));
-        ultimateGames.getMessenger().sendMessage(sender, "arenas.forcestop", arenaName, gameName);
+        messenger.sendMessage(sender, UGMessage.ARENA_FORCESTOP, arenaName, gameName);
     }
 }

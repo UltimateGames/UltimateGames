@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.core.command;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.message.PageList;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.commands.*;
 import me.ampayne2.ultimategames.core.command.commands.arenas.*;
@@ -99,7 +100,7 @@ public class CommandController implements TabExecutor, Listener {
                     mainCommand.execute(subCommand, sender, newArgs);
                 }
             } else {
-                ultimateGames.getMessenger().sendMessage(sender, "error.command.invalidsubcommand", "\"" + subCommand + "\"", "\"ultimategames\"");
+                ultimateGames.getMessenger().sendMessage(sender, UGMessage.COMMAND_INVALIDSUBCOMMAND, "\"" + subCommand + "\"", "\"ultimategames\"");
             }
             return true;
         } else {

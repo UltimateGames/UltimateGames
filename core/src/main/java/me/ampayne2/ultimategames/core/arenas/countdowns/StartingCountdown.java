@@ -22,6 +22,7 @@ import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.arenas.countdowns.Countdown;
 import me.ampayne2.ultimategames.api.effects.GameSound;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.UArena;
 import org.bukkit.Bukkit;
@@ -72,7 +73,7 @@ public class StartingCountdown extends Countdown {
                 }
             }
             if (secondsLeft == initialSeconds || secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
-                ultimateGames.getMessenger().sendMessage(arena, "countdowns.timeleftstart", Integer.toString(secondsLeft));
+                ultimateGames.getMessenger().sendMessage(arena, UGMessage.COUNTDOWN_TIMELEFT_START, Integer.toString(secondsLeft));
             }
         } else {
             ((UCountdownManager) ultimateGames.getCountdownManager()).stopStartingCountdown(arena, false);

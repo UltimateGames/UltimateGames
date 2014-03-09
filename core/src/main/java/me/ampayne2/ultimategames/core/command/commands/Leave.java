@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.core.command.commands;
 
 import me.ampayne2.ultimategames.api.arenas.QueueManager;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -54,7 +55,7 @@ public class Leave extends UGCommand {
         } else if (queue.isPlayerInQueue(playerName)) {
             queue.removePlayerFromQueues(player);
         } else {
-            ultimateGames.getMessenger().sendMessage(sender, "ultimategames.cantleave");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.CANT_LEAVE);
         }
     }
 }

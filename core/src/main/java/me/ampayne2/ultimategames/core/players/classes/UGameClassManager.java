@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.core.players.classes;
 
 import me.ampayne2.ultimategames.api.events.players.PlayerPostJoinEvent;
 import me.ampayne2.ultimategames.api.games.Game;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.players.classes.GameClass;
 import me.ampayne2.ultimategames.api.players.classes.GameClassManager;
 import me.ampayne2.ultimategames.api.players.classes.TieredClass;
@@ -137,7 +138,7 @@ public class UGameClassManager implements GameClassManager, Listener {
                 if (gameClass.hasAccess(event.getPlayer())) {
                     gameClass.addPlayer(event.getPlayer());
                 } else {
-                    ultimateGames.getMessenger().sendMessage(event.getPlayer(), "classes.noaccess", gameClass.getName());
+                    ultimateGames.getMessenger().sendMessage(event.getPlayer(), UGMessage.CLASS_NOACCESS, gameClass.getName());
                 }
             }
         }, ultimateGames);

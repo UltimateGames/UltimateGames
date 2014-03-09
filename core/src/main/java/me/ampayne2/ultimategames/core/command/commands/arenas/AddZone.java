@@ -19,6 +19,7 @@
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.zones.RadiusType;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.zones.UZone;
 import me.ampayne2.ultimategames.core.command.UGCommand;
@@ -45,8 +46,8 @@ public class AddZone extends UGCommand {
 
     @Override
     public void execute(String command, CommandSender sender, String[] args) {
-        if (!(args[4].equalsIgnoreCase("cube") || args[4].equalsIgnoreCase("circle"))) {
-            ultimateGames.getMessenger().sendMessage(sender, "error.radiustypeformat");
+        if (!(args[4].equalsIgnoreCase("rectangle") || args[4].equalsIgnoreCase("circle") || args[4].equalsIgnoreCase("cube") || args[4].equalsIgnoreCase("sphere"))) {
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ERROR_RADIUSTYPEFORMAT);
             return;
         }
         String arenaName = args[0];
@@ -55,17 +56,17 @@ public class AddZone extends UGCommand {
         try {
             radius = Integer.valueOf(args[3]);
         } catch (NumberFormatException e) {
-            ultimateGames.getMessenger().sendMessage(sender, "error.numberformat");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ERROR_NUMBERFORMAT);
         }
         RadiusType radiusType = RadiusType.valueOf(args[4].toUpperCase());
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
             return;
         }
         ultimateGames.getZoneManager().addZone(new UZone(ultimateGames, ultimateGames.getArenaManager().getArena(arenaName, gameName), args[2], ((Player) sender).getLocation(), radius, radiusType));
-        ultimateGames.getMessenger().sendMessage(sender, "zones.create", arenaName, gameName);
+        ultimateGames.getMessenger().sendMessage(sender, UGMessage.ZONE_CREATE, arenaName, gameName);
     }
 }

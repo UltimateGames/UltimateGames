@@ -22,6 +22,7 @@ import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.effects.GameSound;
 import me.ampayne2.ultimategames.api.games.Game;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -148,7 +149,7 @@ public abstract class GameClass {
                 resetInventory(player);
             }
             if (notify) {
-                ultimateGames.getMessenger().sendMessage(player, resetInventory ? "classes.join" : "classes.nextdeath", name);
+                ultimateGames.getMessenger().sendMessage(player, resetInventory ? UGMessage.CLASS_JOIN : UGMessage.CLASS_NEXTDEATH, name);
                 JOIN_SOUND.play(player, player.getLocation());
             }
             return true;

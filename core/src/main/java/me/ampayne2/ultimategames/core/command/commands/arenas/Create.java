@@ -19,6 +19,8 @@
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
 import me.ampayne2.ultimategames.api.games.Game;
+import me.ampayne2.ultimategames.api.message.Messenger;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.UArena;
 import me.ampayne2.ultimategames.core.command.UGCommand;
@@ -63,11 +65,12 @@ public class Create extends UGCommand implements Listener {
     public void execute(String command, CommandSender sender, String[] args) {
         String arenaName = args[0];
         String gameName = args[1];
+        Messenger messenger = ultimateGames.getMessenger();
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            messenger.sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
-        } else if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.alreadyexists");
+        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            messenger.sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
             return;
         }
         String playerName = sender.getName();
@@ -75,12 +78,12 @@ public class Create extends UGCommand implements Listener {
             arena.remove(playerName);
             game.remove(playerName);
             playersSelecting.remove(playerName);
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.deselect");
+            messenger.sendMessage(sender, UGMessage.ARENA_DESELECT);
         } else {
             arena.put(playerName, arenaName);
             game.put(playerName, ultimateGames.getGameManager().getGame(gameName));
             playersSelecting.add(playerName);
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.select", arenaName, gameName);
+            messenger.sendMessage(sender, UGMessage.ARENA_SELECT, arenaName, gameName);
         }
     }
 
@@ -110,6 +113,6 @@ public class Create extends UGCommand implements Listener {
         String arenaName = arena.get(playerName);
         String gameName = game.get(playerName).getName();
         ultimateGames.getArenaManager().addArena(new UArena(ultimateGames, game.get(playerName), arenaName, corner1.get(playerName), corner2.get(playerName)));
-        ultimateGames.getMessenger().sendMessage(player, "arenas.create", arenaName, gameName);
+        ultimateGames.getMessenger().sendMessage(player, UGMessage.ARENA_CREATE, arenaName, gameName);
     }
 }

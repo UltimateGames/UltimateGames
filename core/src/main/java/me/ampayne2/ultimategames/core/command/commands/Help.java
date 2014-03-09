@@ -18,6 +18,7 @@
  */
 package me.ampayne2.ultimategames.core.command.commands;
 
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -47,7 +48,7 @@ public class Help extends UGCommand {
             try {
                 pageNumber = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                ultimateGames.getMessenger().sendMessage(sender, "error.numberformat");
+                ultimateGames.getMessenger().sendMessage(sender, UGMessage.ERROR_NUMBERFORMAT);
                 return;
             }
         }

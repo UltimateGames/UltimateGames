@@ -18,6 +18,7 @@
  */
 package me.ampayne2.ultimategames.core.command.commands.arenas;
 
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -44,20 +45,20 @@ public class AddSpawn extends UGCommand {
     @Override
     public void execute(String command, CommandSender sender, String[] args) {
         if (!(args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false"))) {
-            ultimateGames.getMessenger().sendMessage(sender, "error.booleanformat");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ERROR_BOOLEANFORMAT);
             return;
         }
         String arenaName = args[0];
         String gameName = args[1];
-        Boolean locked = Boolean.valueOf(args[2].toLowerCase());
+        boolean locked = Boolean.valueOf(args[2].toLowerCase());
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "games.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
         } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            ultimateGames.getMessenger().sendMessage(sender, "arenas.doesntexist");
+            ultimateGames.getMessenger().sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
             return;
         }
         ultimateGames.getSpawnpointManager().createSpawnPoint(ultimateGames.getArenaManager().getArena(arenaName, gameName), ((Player) sender).getLocation(), locked);
-        ultimateGames.getMessenger().sendMessage(sender, "spawnpoints.create", arenaName, gameName);
+        ultimateGames.getMessenger().sendMessage(sender, UGMessage.SPAWNPOINT_SET, arenaName, gameName);
     }
 }

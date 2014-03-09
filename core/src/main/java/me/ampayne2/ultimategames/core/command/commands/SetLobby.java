@@ -18,6 +18,7 @@
  */
 package me.ampayne2.ultimategames.core.command.commands;
 
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.command.UGCommand;
 import org.bukkit.command.CommandSender;
@@ -45,6 +46,6 @@ public class SetLobby extends UGCommand {
     public void execute(String command, CommandSender sender, String[] args) {
         Player player = (Player) sender;
         ultimateGames.getLobbyManager().setLobby(player.getLocation());
-        ultimateGames.getMessenger().sendMessage(sender, "ultimategames.setlobby");
+        ultimateGames.getMessenger().sendMessage(sender, UGMessage.LOBBY_SET);
     }
 }

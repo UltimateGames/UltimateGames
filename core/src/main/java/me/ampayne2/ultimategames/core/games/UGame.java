@@ -21,6 +21,7 @@ package me.ampayne2.ultimategames.core.games;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.games.GamePlugin;
 import me.ampayne2.ultimategames.api.games.PlayerType;
+import me.ampayne2.ultimategames.api.message.Message;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class UGame implements Game {
     private final List<String> depend;
     private final PlayerType playerType;
     private final List<String> instructionPages;
+    private Enum<? extends Message> messages = null;
     private boolean enabled = true;
 
     public UGame(GamePlugin gamePlugin, String name, String description, String version, String author, List<String> depend, PlayerType playerType, List<String> instructionPages) {
@@ -91,6 +93,16 @@ public class UGame implements Game {
     @Override
     public List<String> getInstructionPages() {
         return instructionPages;
+    }
+
+    @Override
+    public Enum<? extends Message> getMessages() {
+        return messages;
+    }
+
+    @Override
+    public void setMessages(Enum<? extends Message> messages) {
+        this.messages = messages;
     }
 
     @Override

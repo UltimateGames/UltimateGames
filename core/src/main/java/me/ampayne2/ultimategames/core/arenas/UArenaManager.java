@@ -26,6 +26,7 @@ import me.ampayne2.ultimategames.api.arenas.spawnpoints.PlayerSpawnPoint;
 import me.ampayne2.ultimategames.api.config.ConfigType;
 import me.ampayne2.ultimategames.api.events.arenas.*;
 import me.ampayne2.ultimategames.api.games.Game;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.players.teams.Team;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.zones.UZone;
@@ -245,7 +246,7 @@ public class UArenaManager implements ArenaManager {
                     case STARTING:
                         if (arena.getGame().getGamePlugin().beginArena(arena)) {
                             ((UArena) arena).setStatus(ArenaStatus.RUNNING);
-                            ultimateGames.getMessenger().sendMessage(arena, "arenas.begin");
+                            ultimateGames.getMessenger().sendMessage(arena, UGMessage.ARENA_BEGIN);
                             ultimateGames.getMessenger().debug("Began arena " + arena.getName() + " of game " + arena.getGame().getName());
                         }
                     default:
@@ -281,7 +282,7 @@ public class UArenaManager implements ArenaManager {
                         team.removePlayers();
                     }
 
-                    ultimateGames.getMessenger().sendMessage(arena, "arenas.end");
+                    ultimateGames.getMessenger().sendMessage(arena, UGMessage.ARENA_END);
 
                     // Teleport everybody out of the arena
                     for (String playerName : arena.getSpectators()) {

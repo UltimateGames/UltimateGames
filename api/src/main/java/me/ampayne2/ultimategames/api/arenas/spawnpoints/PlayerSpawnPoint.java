@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.api.arenas.spawnpoints;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.message.UGMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -114,7 +115,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
                 location.setPitch(event.getFrom().getPitch());
                 location.setYaw(event.getFrom().getYaw());
                 player.teleport(location);
-                ultimateGames.getMessenger().sendMessage(player, "spawnpoints.leave");
+                ultimateGames.getMessenger().sendMessage(player, UGMessage.SPAWNPOINT_LEAVE);
             }
         }
     }

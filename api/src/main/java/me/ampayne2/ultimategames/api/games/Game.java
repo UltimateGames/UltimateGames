@@ -18,6 +18,8 @@
  */
 package me.ampayne2.ultimategames.api.games;
 
+import me.ampayne2.ultimategames.api.message.Message;
+
 import java.util.List;
 
 /**
@@ -92,4 +94,8 @@ public interface Game {
      * @return The instruction pages.
      */
     List<String> getInstructionPages();
+
+    Enum<? extends Message> getMessages();
+
+    void setMessages(Enum<? extends Message> messages);
 }
