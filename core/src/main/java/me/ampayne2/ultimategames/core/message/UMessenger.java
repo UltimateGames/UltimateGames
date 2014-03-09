@@ -112,7 +112,7 @@ public class UMessenger implements Messenger {
                 recipient = ultimateGames.getPlayerManager().getPlayerArena(playerName);
                 nameColor = ChatColor.WHITE;
             }
-            return sendMessage(recipient, UGMessage.CHAT, nameColor + playerName, message);
+            return sendRawMessage(recipient, String.format(UGMessage.CHAT.getMessage(), nameColor + playerName, message));
         } else {
             return false;
         }
