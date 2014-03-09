@@ -69,8 +69,8 @@ public class Create extends UGCommand implements Listener {
         if (!ultimateGames.getGameManager().gameExists(gameName)) {
             messenger.sendMessage(sender, UGMessage.GAME_DOESNTEXIST);
             return;
-        } else if (!ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
-            messenger.sendMessage(sender, UGMessage.ARENA_DOESNTEXIST);
+        } else if (ultimateGames.getArenaManager().arenaExists(arenaName, gameName)) {
+            messenger.sendMessage(sender, UGMessage.ARENA_ALREADYEXISTS);
             return;
         }
         String playerName = sender.getName();
