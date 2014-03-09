@@ -160,6 +160,15 @@ public abstract class ReflectionUtil {
         return null;
     }
 
+    public static Method getMethod(String name, Class<?> clazz) {
+        for (Method m : clazz.getMethods()) {
+            if (m.getName().equals(name)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
     public static Object invokeMethod(String name, Class<?> clazz, Object obj, Object... args) throws IllegalAccessException, InvocationTargetException {
         return getMethod(name, clazz, toPrimitiveTypeArray(args)).invoke(obj, args);
     }
