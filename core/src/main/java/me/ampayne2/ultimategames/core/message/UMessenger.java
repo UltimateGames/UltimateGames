@@ -76,14 +76,14 @@ public class UMessenger implements Messenger {
      *
      * @param game The game whose messages to load.
      */
-    public void loadGameMessages(Game game, Enum<? extends Message> messages) {
+    public void loadGameMessages(Game game, Class<?> messages) {
         FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game);
-        for (Message message : messages.getDeclaringClass().getEnumConstants()) {
+        for (Message message : (Message[]) messages.getEnumConstants()) {
             gameConfig.addDefault("Messages." + message.getPath(), message.getDefault());
         }
         gameConfig.options().copyDefaults(true);
         ultimateGames.getConfigManager().getGameConfigAccessor(game).saveConfig();
-        for (Message message : messages.getDeclaringClass().getEnumConstants()) {
+        for (Message message : (Message[]) messages.getEnumConstants()) {
             message.setMessage(ChatColor.translateAlternateColorCodes('&', gameConfig.getString("Messages." + message.getPath())));
         }
     }

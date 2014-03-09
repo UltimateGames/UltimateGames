@@ -31,7 +31,7 @@ public class UGame implements Game {
     private final List<String> depend;
     private final PlayerType playerType;
     private final List<String> instructionPages;
-    private Enum<? extends Message> messages = null;
+    private Class<?> messages = null;
     private boolean enabled = true;
 
     public UGame(GamePlugin gamePlugin, String name, String description, String version, String author, List<String> depend, PlayerType playerType, List<String> instructionPages) {
@@ -96,13 +96,15 @@ public class UGame implements Game {
     }
 
     @Override
-    public Enum<? extends Message> getMessages() {
+    public Class<?> getMessages() {
         return messages;
     }
 
     @Override
-    public void setMessages(Enum<? extends Message> messages) {
-        this.messages = messages;
+    public void setMessages(Class<?> messages) {
+        if (Enum.class.isAssignableFrom(messages) && Message.class.isAssignableFrom(messages)) {
+            this.messages = messages;
+        }
     }
 
     @Override
