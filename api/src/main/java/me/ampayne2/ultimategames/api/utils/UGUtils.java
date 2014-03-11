@@ -27,10 +27,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -451,6 +448,32 @@ public final class UGUtils {
     }
 
     // Inventory and ItemStack utilities
+
+    /**
+     * Sets the display name of an ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @param name      The name.
+     * @return The ItemStack.
+     */
+    public static ItemStack nameItem(ItemStack itemStack, String name) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(name);
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+
+    /**
+     * Sets the amount of an ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @param amount    The amount.
+     * @return The ItemStack.
+     */
+    public static ItemStack setAmount(ItemStack itemStack, int amount) {
+        itemStack.setAmount(amount);
+        return itemStack;
+    }
 
     /**
      * Gets the total amount of a certain material in an inventory.
