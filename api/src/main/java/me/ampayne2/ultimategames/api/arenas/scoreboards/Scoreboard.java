@@ -162,4 +162,46 @@ public interface Scoreboard {
      * @param team The {@link me.ampayne2.ultimategames.api.players.teams.Team}.
      */
     void resetScore(Team team);
+
+    /**
+     * Creates the objective for scores under player names.
+     *
+     * @param displayName The display name of the objective.
+     */
+    void createPlayerScoreObjective(String displayName);
+
+    /**
+     * Gets the score of a player underneath their name.<br>
+     * The player score objective must be created first.
+     *
+     * @param player The player.
+     * @return The player's score.
+     */
+    int getScore(Player player);
+
+    /**
+     * Sets the score of a player underneath their name.<br>
+     * The player score objective must be created first.
+     *
+     * @param player The player.
+     * @param score  The new score.
+     */
+    void setScore(Player player, int score);
+
+    /**
+     * Adds to the score of a player underneath their name.<br>
+     * The player score objective must be created first.
+     *
+     * @param player The player.
+     * @param amount The amount to add.
+     */
+    void addScore(Player player, int amount);
+
+    /**
+     * Resets the score of a player underneath their name.<br>
+     * The player score objective must be created first.
+     *
+     * @param player The player.
+     */
+    void resetScore(Player player);
 }

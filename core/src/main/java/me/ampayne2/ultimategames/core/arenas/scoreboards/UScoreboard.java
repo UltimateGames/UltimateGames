@@ -31,6 +31,7 @@ public class UScoreboard implements Scoreboard {
     private final String name;
     private final org.bukkit.scoreboard.Scoreboard scoreboard;
     private static final String GHOST_TEAM_NAME = "ghosts";
+    private static final String PLAYER_OBJ_NAME = "playerscore";
 
     /**
      * Creates an ArenaScoreboard.
@@ -135,7 +136,9 @@ public class UScoreboard implements Scoreboard {
         for (org.bukkit.scoreboard.Team team : scoreboard.getTeams()) {
             team.unregister();
         }
-        scoreboard.getObjective(name).unregister();
+        for (Objective objective : scoreboard.getObjectives()) {
+            objective.unregister();
+        }
         Objective objective = scoreboard.registerNewObjective(name, "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         scoreboard.registerNewTeam(GHOST_TEAM_NAME).setCanSeeFriendlyInvisibles(true);
@@ -147,6 +150,7 @@ public class UScoreboard implements Scoreboard {
             scoreboard.getObjective(name).setDisplaySlot(DisplaySlot.SIDEBAR);
         } else {
             scoreboard.clearSlot(DisplaySlot.SIDEBAR);
+            scoreboard.clearSlot(DisplaySlot.BELOW_NAME);
         }
     }
 
@@ -196,5 +200,52 @@ public class UScoreboard implements Scoreboard {
     @Override
     public void resetScore(Team team) {
         resetScore(team.getColoredName());
+    }
+
+    @Override
+    public void createPlayerScoreObjective(String displayName) {
+        if (scoreboard.getObjective(PLAYER_OBJ_NAME) == null) {
+            Objective objective = scoreboard.registerNewObjective(PLAYER_OBJ_NAME, "dummy");
+            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            objective.setDisplayName(displayName);
+        }
+    }
+
+    @Override
+    public int getScore(Player player) {
+        if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
+            return scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(Bukkit.getOfflinePlayer(player.getName())).getScore();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public void setScore(Player player, int score) {
+        if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
+            Score scoreboardScore = scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(Bukkit.getOfflinePlayer(player.getName()));
+            if (score == 0 && scoreboardScore.getScore() == 0) {
+                scoreboardScore.setScore(1);
+            }
+            scoreboardScore.setScore(score);
+        }
+    }
+
+    @Override
+    public void addScore(Player player, int amount) {
+        if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
+            Score scoreboardScore = scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(Bukkit.getOfflinePlayer(player.getName()));
+            if (scoreboardScore.getScore() + amount == 0) {
+                scoreboardScore.setScore(1);
+            }
+            scoreboardScore.setScore(scoreboardScore.getScore() + amount);
+        }
+    }
+
+    @Override
+    public void resetScore(Player player) {
+        if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
+            scoreboard.resetScores(Bukkit.getOfflinePlayer(player.getName()));
+        }
     }
 }
