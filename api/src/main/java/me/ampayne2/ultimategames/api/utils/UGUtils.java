@@ -476,6 +476,20 @@ public final class UGUtils {
     }
 
     /**
+     * Sets the lore of an ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @param lore      The lore.
+     * @return The ItemStack.
+     */
+    public static ItemStack setLore(ItemStack itemStack, String... lore) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setLore(Arrays.asList(lore));
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+
+    /**
      * Gets the total amount of a certain material in an inventory.
      *
      * @param inventory The Inventory.
