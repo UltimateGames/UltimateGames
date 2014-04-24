@@ -269,6 +269,16 @@ public class IconMenu implements Listener {
     }
 
     /**
+     * Gets the minimum inventory size required to hold a certain amount of items.
+     *
+     * @param amount The amount of items.
+     * @return The minimum inventory size required.
+     */
+    public static int getRequiredSize(int amount) {
+        return ((int) Math.ceil(amount / 9.0)) * 9;
+    }
+
+    /**
      * Sets the name and lore of an ItemStack.
      *
      * @param item The ItemStack.
