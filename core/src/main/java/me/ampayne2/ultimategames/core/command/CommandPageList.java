@@ -34,6 +34,7 @@ public class CommandPageList extends PageList {
      * Creates the PageList of ultimate games commands.
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.core.UG} instance.
+     * @param command       The Command.
      */
     public CommandPageList(UG ultimateGames, Command command) {
         super(ultimateGames, "Commands", 8);

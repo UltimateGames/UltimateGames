@@ -296,6 +296,7 @@ public class UArena implements Listener, Arena {
 
     /**
      * Handles player movement to keep players or spectators from leaving the arena.
+     * @param event the PlayerMove event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
@@ -319,6 +320,7 @@ public class UArena implements Listener, Arena {
 
     /**
      * Stops players and spectators from teleporting out of an arena.
+     * @param event The PlayerTeleport event
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {

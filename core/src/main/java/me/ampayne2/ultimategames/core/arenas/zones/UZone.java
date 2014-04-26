@@ -43,6 +43,7 @@ public class UZone implements Zone {
      *
      * @param ultimateGames The {@link me.ampayne2.ultimategames.api.UltimateGames} instance.
      * @param arena         The arena of the zone.
+     * @param name          The name of the zone.
      * @param center        The center location of the zone.
      * @param radius        The radius of the zone.
      * @param radiusType    The RadiusType of the zone.

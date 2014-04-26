@@ -75,6 +75,7 @@ public class UMessenger implements Messenger {
      * Loads a game's messages.
      *
      * @param game The game whose messages to load.
+     * @param messages The message.
      */
     public void loadGameMessages(Game game, Class<?> messages) {
         FileConfiguration gameConfig = ultimateGames.getConfigManager().getGameConfig(game);

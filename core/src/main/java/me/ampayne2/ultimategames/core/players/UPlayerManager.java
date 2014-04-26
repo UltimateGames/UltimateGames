@@ -427,6 +427,7 @@ public class UPlayerManager implements Listener, PlayerManager {
 
     /**
      * Teleports a player in limbo to the lobby if they login and are in limbo.
+     * @param event the join event
      */
     @SuppressWarnings("unchecked")
     @EventHandler
@@ -448,6 +449,7 @@ public class UPlayerManager implements Listener, PlayerManager {
 
     /**
      * Removes a player or spectator from an arena if the player disconnects.
+     * @param event the quit event.
      */
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {

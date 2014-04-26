@@ -101,6 +101,7 @@ public class UConfigAccessor implements ConfigAccessor {
 
     /**
      * Generates the default config if it hasn't already been generated.
+     * @return This {@link me.ampayne2.ultimategames.core.config.UConfigAccessor}
      */
     public ConfigAccessor saveDefaultConfig() {
         if (!configFile.exists()) {

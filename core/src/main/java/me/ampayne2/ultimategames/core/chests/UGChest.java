@@ -34,8 +34,10 @@ public abstract class UGChest {
     /**
      * Creates a new chest
      *
-     * @param chest Chest to be turned into UGChest.
-     * @param arena Arena of the chest.
+     * @param chest     Chest to be turned into UGChest.
+     * @param arena     Arena of the chest.
+     * @param chestType The type of chest.
+     * @param label     The label of the chest.
      */
     public UGChest(Chest chest, Arena arena, ChestType chestType, String label) {
         this.chest = chest;

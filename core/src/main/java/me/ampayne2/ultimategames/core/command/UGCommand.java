@@ -34,6 +34,8 @@ public abstract class UGCommand extends Command {
      *
      * @param ultimateGames The UltimateGames instance.
      * @param name          The name of the command.
+     * @param description   The description of the command.
+     * @param commandUsage  The usage of the command.
      * @param permission    The permission of the command.
      * @param minArgsLength The minimum required args length of the command.
      * @param maxArgsLength The maximum required args length of the command.
@@ -50,6 +52,8 @@ public abstract class UGCommand extends Command {
      *
      * @param ultimateGames   The UltimateGames instance.
      * @param name            The name of the command.
+     * @param description     The description of the command.
+     * @param commandUsage    The usage of the command.
      * @param permission      The permission of the command.
      * @param exactArgsLength The exact required args length of the command.
      * @param playerOnly      If the command can only be run by a player.
@@ -65,6 +69,8 @@ public abstract class UGCommand extends Command {
      *
      * @param ultimateGames The UltimateGames instance.
      * @param name          The name of the command.
+     * @param description   The description of the command.
+     * @param commandUsage  The usage of the command.
      * @param permission    The permission of the command.
      * @param playerOnly    If the command can only be run by a player.
      */

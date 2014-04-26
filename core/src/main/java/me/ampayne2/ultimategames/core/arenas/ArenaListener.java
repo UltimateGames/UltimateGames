@@ -68,6 +68,7 @@ public class ArenaListener implements Listener {
     /**
      * Blocks block placing inside an arena for players not in that arena,<br>
      * or if the block's material is not whitelisted for placing.
+     * @param event The {@link org.bukkit.event.block.BlockPlaceEvent} event
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
@@ -99,8 +100,9 @@ public class ArenaListener implements Listener {
      * Blocks block breaking inside an arena for players not in that arena,<br>
      * or if the block's material is not whitelisted for breaking,<br>
      * or if the block is a GameBlock that cannot be broken.
-     * <p/>
+     * <p></p>
      * Stops blocks with ug signs attached from breaking.
+     * @param event The {@link org.bukkit.event.block.BlockBreakEvent} event
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -143,6 +145,7 @@ public class ArenaListener implements Listener {
      * If the arena allows explosion block breaking, each block is handled separately<br>
      * as if a player attempted to destroy it. If the arena doesn't allow explosion block breaking,<br>
      * no blocks are broken.
+     * @param event The {@link org.bukkit.event.entity.EntityExplodeEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTntExplode(EntityExplodeEvent event) {
@@ -178,6 +181,7 @@ public class ArenaListener implements Listener {
     /**
      * Handles explosion damage caused by TnT, Creepers, or Fireballs in arenas.<br>
      * If the arena doesn't allow explosion damage, the event is cancelled.
+     * @param event The {@link org.bukkit.event.entity.EntityDamageByEntityEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTntDamage(EntityDamageByEntityEvent event) {
@@ -192,6 +196,7 @@ public class ArenaListener implements Listener {
 
     /**
      * Cancels block physics events in arenas not currently running.
+     * @param event The {@link org.bukkit.event.block.BlockPhysicsEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPhysics(BlockPhysicsEvent event) {
@@ -206,6 +211,7 @@ public class ArenaListener implements Listener {
 
     /**
      * Cancels block fade events in arenas not currently running.
+     * @param event The {@link org.bukkit.event.block.BlockFadeEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockFade(BlockFadeEvent event) {
@@ -219,6 +225,7 @@ public class ArenaListener implements Listener {
 
     /**
      * Handles player death events, removes the death message.
+     * @param event The {@link org.bukkit.event.entity.PlayerDeathEvent} event.
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -232,6 +239,7 @@ public class ArenaListener implements Listener {
 
     /**
      * Handles player respawn events.
+     * @param event The {@link org.bukkit.event.player.PlayerRespawnEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -245,6 +253,7 @@ public class ArenaListener implements Listener {
     /**
      * Stops spectators from taking damage,<br>
      * Calls a game's onEntityDamage method.
+     * @param event The {@link org.bukkit.event.entity.EntityDamageEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
@@ -270,6 +279,7 @@ public class ArenaListener implements Listener {
      * players in an arena from damaging players not in that arena,<br>
      * and players on the same team from damaging each other if the team has friendly fire off.<br>
      * Calls the game's onEntityDamageByEntity event if the damage is allowed.
+     * @param event The {@link org.bukkit.event.entity.EntityDamageByEntityEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -338,6 +348,7 @@ public class ArenaListener implements Listener {
      * Handles player interactions in arenas.<br>
      * If the player is in an arena, the game's onPlayerInteract method is called.<br>
      * If the player is spectating an arena, the event is cancelled.
+     * @param event {@link org.bukkit.event.player.PlayerInteractEvent} event
      */
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -369,6 +380,7 @@ public class ArenaListener implements Listener {
      * Handles player interactions with entities in arenas.<br>
      * If the player is in an arena, the game's onPlayerInteractEntity method is called.<br>
      * If the player is spectating an arena, the event is cancelled.
+     * @param event The {@link org.bukkit.event.player.PlayerInteractEntityEvent} event.
      */
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -400,6 +412,7 @@ public class ArenaListener implements Listener {
      * Handles player food level changes.<br>
      * If the player is in an arena, the game's onPlayerFoodLevelChange method is called.<br>
      * If the player is spectating an arena, the event is cancelled.
+     * @param event The {@link org.bukkit.event.entity.FoodLevelChangeEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
@@ -422,6 +435,7 @@ public class ArenaListener implements Listener {
      * Handles item picking up.<br>
      * If the player is in an arena, the game's onItemPickup method is called.<br>
      * If the player is spectating an arena, the event is cancelled.
+     * @param event The {@link org.bukkit.event.player.PlayerPickupItemEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onItemPickup(PlayerPickupItemEvent event) {
@@ -442,6 +456,7 @@ public class ArenaListener implements Listener {
      * Handles item dropping.<br>
      * If the player is in an arena, the game's onItemDrop method is called.<br>
      * If the player is spectating an arena, the event is cancelled.
+     * @param event the {@link org.bukkit.event.player.PlayerDropItemEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent event) {
@@ -461,6 +476,7 @@ public class ArenaListener implements Listener {
     /**
      * Handles mob spawning.<br>
      * Checks if an arena allows mob spawning before letting a mob spawn inside it.
+     * @param event The {@link org.bukkit.event.entity.CreatureSpawnEvent} event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {

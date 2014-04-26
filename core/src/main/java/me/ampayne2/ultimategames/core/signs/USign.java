@@ -36,6 +36,7 @@ public abstract class USign implements Sign {
      *
      * @param sign  Sign to be turned into UGSign.
      * @param arena Arena of the sign.
+     * @param signType The Sign type
      */
     public USign(org.bukkit.block.Sign sign, Arena arena, SignType signType) {
         this.sign = sign;
@@ -45,6 +46,7 @@ public abstract class USign implements Sign {
 
     /**
      * Called when the UGSign is triggered.
+     * @param event the event.
      */
     public abstract void onSignTrigger(Event event);
 

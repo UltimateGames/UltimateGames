@@ -44,8 +44,9 @@ public class StartingCountdown extends Countdown {
     /**
      * Creates a new Starting Countdown.
      *
-     * @param ultimateGames The {@link me.ampayne2.ultimategames.core.UG} instance.
-     * @param arena         The arena of the countdown.
+     * @param ultimateGames     The {@link me.ampayne2.ultimategames.core.UG} instance.
+     * @param arena             The arena of the countdown.
+     * @param initialSeconds    The initial seconds.
      */
     public StartingCountdown(UG ultimateGames, Arena arena, int initialSeconds) {
         super(ultimateGames, arena, initialSeconds * TPS, TPS);

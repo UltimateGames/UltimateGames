@@ -45,6 +45,7 @@ public class PlayerHeadListener implements Listener {
      * Cancels the event if the entity is a player in an arena,<br>
      * or if the entity is not a player and its location is inside an arena.<br>
      * http://dev.bukkit.org/bukkit-plugins/player-heads/
+     * @param event The EntityDropHead event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onHeadDrop(LivingEntityDropHeadEvent event) {

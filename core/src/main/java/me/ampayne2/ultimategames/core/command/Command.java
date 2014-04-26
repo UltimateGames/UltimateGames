@@ -203,8 +203,9 @@ public class Command {
     /**
      * The command executor
      *
-     * @param sender The sender of the command
-     * @param args   The arguments sent with the command
+     * @param command   The Command
+     * @param sender    The sender of the command
+     * @param args      The arguments sent with the command
      */
     public void execute(String command, CommandSender sender, String[] args) {
         Command entry = children.get(command.toLowerCase());
