@@ -79,9 +79,10 @@ public class PageList {
      * @param recipient  The recipient.
      */
     public void sendPage(int pageNumber, Object recipient) {
-        pageNumber = UGUtils.clamp(pageNumber, 1, getPageAmount());
+        int pageAmount = getPageAmount();
+        pageNumber = UGUtils.clamp(pageNumber, 1, pageAmount);
         Messenger messenger = ultimateGames.getMessenger();
-        messenger.sendRawMessage(recipient, ChatColor.DARK_GRAY + "<-------<| " + ChatColor.AQUA + name + ": Page " + pageNumber + " " + ChatColor.DARK_GRAY + "|>------->");
+        messenger.sendRawMessage(recipient, ChatColor.DARK_GRAY + "<-------<| " + ChatColor.AQUA + name + ": Page " + pageNumber + "/" + pageAmount + " " + ChatColor.DARK_GRAY + "|>------->");
         int startIndex = messagesPerPage * (pageNumber - 1);
         for (String string : strings.subList(startIndex, Math.min(startIndex + messagesPerPage, strings.size()))) {
             messenger.sendRawMessage(recipient, string);

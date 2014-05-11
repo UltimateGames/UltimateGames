@@ -24,6 +24,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -487,6 +488,19 @@ public final class UGUtils {
         meta.setLore(Arrays.asList(lore));
         itemStack.setItemMeta(meta);
         return itemStack;
+    }
+
+    /**
+     * Adds an Enchantment to multiple ItemStacks at once.
+     *
+     * @param enchantment The Enchantment.
+     * @param level       The level of the Enchantment.
+     * @param items       The ItemStacks to enchant.
+     */
+    public static void enchantItems(Enchantment enchantment, int level, ItemStack... items) {
+        for (ItemStack item : items) {
+            item.addUnsafeEnchantment(enchantment, level);
+        }
     }
 
     /**

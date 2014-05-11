@@ -18,6 +18,7 @@
  */
 package me.ampayne2.ultimategames.core.players.classes;
 
+import me.ampayne2.ultimategames.api.events.players.PlayerLeaveEvent;
 import me.ampayne2.ultimategames.api.events.players.PlayerPostJoinEvent;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.message.UGMessage;
@@ -40,7 +41,7 @@ import java.util.Map;
 public class UGameClassManager implements GameClassManager, Listener {
     private final UG ultimateGames;
     private final Map<Game, List<GameClass>> gameClasses = new HashMap<>();
-    private final Map<String, Map<Game, IconMenu>> classSelectors = new HashMap<>();
+    // private final Map<String, IconMenu> classSelectorMenus = new HashMap<>(); Menu Cache
 
     /**
      * Creates a new GameClassManager.
@@ -124,14 +125,16 @@ public class UGameClassManager implements GameClassManager, Listener {
     }
 
     @Override
-    public IconMenu getClassSelector(Game game, final Player player) {
+    public IconMenu getClassSelector(Game game, Player player) {
+        /* Menu Cache
         String playerName = player.getName();
-        if (classSelectors.containsKey(playerName) && classSelectors.get(playerName).containsKey(game)) {
-            return classSelectors.get(playerName).get(game);
+        if (classSelectorMenus.containsKey(playerName)) {
+            return classSelectorMenus.get(playerName);
         }
+        */
 
         final List<GameClass> gameClasses = getGameClasses(game);
-        IconMenu menu = new IconMenu(game.getName() + " Classes", ((int) Math.ceil(gameClasses.size() / 9.0)) * 9, new IconMenu.OptionClickEventHandler() {
+        IconMenu menu = new IconMenu(game.getName() + " Classes", IconMenu.getRequiredSize(gameClasses.size()), new IconMenu.OptionClickEventHandler() {
             @Override
             public void onOptionClick(IconMenu.OptionClickEvent event) {
                 GameClass gameClass = gameClasses.get(event.getPosition());
@@ -154,21 +157,21 @@ public class UGameClassManager implements GameClassManager, Listener {
         return menu;
     }
 
+    /* Menu Cache
     @EventHandler
     public void onPlayerJoin(PlayerPostJoinEvent event) {
-        Game game = event.getArena().getGame();
-        if (getGameClasses(game).size() > 0) {
-            String playerName = event.getPlayer().getName();
-            if (classSelectors.containsKey(playerName)) {
-                if (classSelectors.get(playerName).containsKey(game)) {
-                    classSelectors.get(playerName).get(game).destroy();
-                }
-                classSelectors.get(playerName).put(game, getClassSelector(game, event.getPlayer()));
-            } else {
-                Map<Game, IconMenu> playerGameClassSelectors = new HashMap<>();
-                playerGameClassSelectors.put(game, getClassSelector(game, event.getPlayer()));
-                classSelectors.put(playerName, playerGameClassSelectors);
-            }
+        if (getGameClasses(event.getArena().getGame()).size() > 0) {
+            classSelectorMenus.put(event.getPlayer().getName(), getClassSelector(event.getArena().getGame(), event.getPlayer()));
         }
     }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerLeaveEvent event) {
+        String playerName = event.getPlayer().getName();
+        if (classSelectorMenus.containsKey(playerName)) {
+            classSelectorMenus.get(playerName).destroy();
+            classSelectorMenus.remove(playerName);
+        }
+    }
+    */
 }
