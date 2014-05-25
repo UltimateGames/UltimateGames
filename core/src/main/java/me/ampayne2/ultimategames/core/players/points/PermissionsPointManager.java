@@ -46,7 +46,7 @@ public class PermissionsPointManager implements PointManager {
 
     @Override
     public boolean hasPerkSelected(Game game, String playerName, String valueName) {
-        return false;
+        return hasPerkSelected(game, playerName, valueName, false);
     }
 
     @Override
