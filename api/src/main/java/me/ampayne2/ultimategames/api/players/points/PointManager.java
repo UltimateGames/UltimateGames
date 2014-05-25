@@ -38,7 +38,7 @@ public interface PointManager {
     /**
      * Checks if a player has a certain perk.
      *
-     * @param game       The game of the point.
+     * @param game       The game of the perk.
      * @param playerName The name of the player.
      * @param valueName  The name of the perk.
      * @return True if the player has the perk, else false.
@@ -48,11 +48,32 @@ public interface PointManager {
     /**
      * Checks if a player has a certain perk.
      *
-     * @param game         The game of the point.
+     * @param game         The game of the perk.
      * @param playerName   The name of the player.
      * @param valueName    The name of the perk.
      * @param defaultValue The default perk state.
      * @return True if the player has the perk, else the default value.
      */
     boolean hasPerk(Game game, String playerName, String valueName, boolean defaultValue);
+
+    /**
+     * Checks if a player has a certain perk selected.
+     *
+     * @param game       The game of the perk.
+     * @param playerName The name of the player.
+     * @param valueName  The name of the perk.
+     * @return True if the player has the perk selected, else false.
+     */
+    boolean hasPerkSelected(Game game, String playerName, String valueName);
+
+    /**
+     * Checks if a player has a certain perk selected.
+     *
+     * @param game         The game of the perk.
+     * @param playerName   The name of the player.
+     * @param valueName    The name of the perk.
+     * @param defaultValue The default perk state.
+     * @return True if the player has the perk selected, else the default value.
+     */
+    boolean hasPerkSelected(Game game, String playerName, String valueName, boolean defaultValue);
 }

@@ -43,4 +43,14 @@ public class PermissionsPointManager implements PointManager {
     public boolean hasPerk(Game game, String playerName, String valueName, boolean defaultValue) {
         return hasPerk(game, playerName, valueName) || defaultValue;
     }
+
+    @Override
+    public boolean hasPerkSelected(Game game, String playerName, String valueName) {
+        return false;
+    }
+
+    @Override
+    public boolean hasPerkSelected(Game game, String playerName, String valueName, boolean defaultValue) {
+        return defaultValue;
+    }
 }
