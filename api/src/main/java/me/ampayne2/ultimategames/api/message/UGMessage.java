@@ -95,7 +95,10 @@ public enum UGMessage implements Message {
     ERROR_NUMBERTOOHIGH("Error.NumberTooHigh", "&4Value must be no greater than &b%s&4."),
     ERROR_NUMBERTOOLOW("Error.NumberTooLow", "&4Value must be no lower than &b%s&4."),
     ERROR_BOOLEANFORMAT("Error.BooleanFormat", "&4Value must be &bTrue&4 or &bFalse&4."),
-    ERROR_RADIUSTYPEFORMAT("Error.RadiusTypeFormat", "&4Value must be &bRectangle&b, &bCircle&4, &bCube&4 or &bSphere&4.");
+    ERROR_RADIUSTYPEFORMAT("Error.RadiusTypeFormat", "&4Value must be &bRectangle&b, &bCircle&4, &bCube&4 or &bSphere&4."),
+
+    ARENA_SELECT_LOBBY("Arena.Select.Lobby", "Punch two corners of a region to create the Arena lobby of your current arena."),
+    ARENA_LOBBY_SETSPAWN("Arena.Lobby.SetSpawn", "Arena lobby spawn point set!");
 
     private String message;
     private final String path;

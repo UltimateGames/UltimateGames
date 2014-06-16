@@ -20,6 +20,7 @@ package me.ampayne2.ultimategames.core.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
+import me.ampayne2.ultimategames.api.arenas.Region;
 import me.ampayne2.ultimategames.api.config.ConfigType;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.games.PlayerType;
@@ -56,6 +57,8 @@ public class UArena implements Listener, Arena {
     private boolean allowExplosionBlockBreaking;
     private boolean allowMobSpawning;
     private URegion region;
+    private URegion lobbyRegion;
+    private Location lobbySpawnPoint;
     private Map<String, Location> lastLocations = new HashMap<>();
     private static final int DEFAULT_MIN_PLAYERS = 4;
     private static final int DEFAULT_MAX_PLAYERS = 8;
@@ -117,6 +120,8 @@ public class UArena implements Listener, Arena {
             ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
         } else {
             region = URegion.fromList(section.getStringList("Region"));
+            lobbyRegion = URegion.fromList(section.getStringList("LobbyRegion"));
+            lobbySpawnPoint = (Location) section.get("LobbySpawnPoint");
         }
 
         if (section.contains("Allow")) {
@@ -178,6 +183,10 @@ public class UArena implements Listener, Arena {
             return false;
         } else {
             players.add(playerName);
+            if (lobbyRegion != null && lobbySpawnPoint != null) {
+                //We teleport the player to the lobby
+                Bukkit.getPlayer(playerName).teleport(lobbySpawnPoint);
+            }
             ultimateGames.getSignManager().updateSignsOfArena(this, SignType.LOBBY);
             return true;
         }
@@ -277,6 +286,33 @@ public class UArena implements Listener, Arena {
         return location.getWorld().equals(region.getWorld()) && location.getX() >= region.getMinX() && location.getX() <= region.getMaxX() && location.getZ() >= region.getMinZ() && location.getZ() <= region.getMaxZ();
     }
 
+    @Override
+    public Region getLobbyRegion() {
+        return lobbyRegion;
+    }
+
+    @Override
+    public boolean locationIsInLobby(Location location) {
+        return location.getWorld().equals(lobbyRegion.getWorld()) && location.getX() >= lobbyRegion.getMinX() && location.getX() <= lobbyRegion.getMaxX() && location.getZ() >= lobbyRegion.getMinZ() && location.getZ() <= lobbyRegion.getMaxZ();
+    }
+
+    @Override
+    public void setLobbyRegion(Region region) {
+        lobbyRegion = (URegion) region;
+        save();
+    }
+
+    @Override
+    public Location getLobbySpawnPoint() {
+        return lobbySpawnPoint;
+    }
+
+    @Override
+    public void setLobbySpawnPoint(Location location) {
+        lobbySpawnPoint = location;
+        save();
+    }
+
     /**
      * Sets the status of the arena.
      *
@@ -305,15 +341,29 @@ public class UArena implements Listener, Arena {
         Player player = event.getPlayer();
         String playerName = player.getName();
         if (!(from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) && players.contains(playerName)) {
-            if ((to.getX() < region.getMinX() || to.getX() > region.getMaxX() || to.getZ() < region.getMinZ() || to.getZ() > region.getMaxZ()) && lastLocations.containsKey(playerName)) {
-                Location lastLocation = lastLocations.get(playerName);
-                lastLocation.setPitch(to.getPitch());
-                lastLocation.setYaw(to.getYaw());
-                UGUtils.teleportEntity(player, lastLocation);
-                ultimateGames.getMessenger().sendMessage(player, UGMessage.ARENA_LEAVE_REGION);
+            //We first check if we have a lobby region
+            if (lobbyRegion != null && !getStatus().equals(ArenaStatus.RUNNING)) {
+                if ((to.getX() < lobbyRegion.getMinX() || to.getX() > lobbyRegion.getMaxX() || to.getZ() < lobbyRegion.getMinZ() || to.getZ() > lobbyRegion.getMaxZ()) && lastLocations.containsKey(playerName)) {
+                    Location lastLocation = lastLocations.get(playerName);
+                    lastLocation.setPitch(to.getPitch());
+                    lastLocation.setYaw(to.getYaw());
+                    UGUtils.teleportEntity(player, lastLocation);
+                    ultimateGames.getMessenger().sendMessage(player, UGMessage.ARENA_LEAVE_REGION);
+                } else {
+                    lastLocations.put(playerName, to);
+                    game.getGamePlugin().onPlayerMove(this, event);
+                }
             } else {
-                lastLocations.put(playerName, to);
-                game.getGamePlugin().onPlayerMove(this, event);
+                if ((to.getX() < region.getMinX() || to.getX() > region.getMaxX() || to.getZ() < region.getMinZ() || to.getZ() > region.getMaxZ()) && lastLocations.containsKey(playerName)) {
+                    Location lastLocation = lastLocations.get(playerName);
+                    lastLocation.setPitch(to.getPitch());
+                    lastLocation.setYaw(to.getYaw());
+                    UGUtils.teleportEntity(player, lastLocation);
+                    ultimateGames.getMessenger().sendMessage(player, UGMessage.ARENA_LEAVE_REGION);
+                } else {
+                    lastLocations.put(playerName, to);
+                    game.getGamePlugin().onPlayerMove(this, event);
+                }
             }
         }
     }
@@ -348,6 +398,8 @@ public class UArena implements Listener, Arena {
         section.set("Max-Players", maxPlayers);
         section.set("Min-Players", minPlayers);
         section.set("Region", region.toList());
+        section.set("LobbyRegion", lobbyRegion.toList());
+        section.set("LobbySpawnPoint", lobbySpawnPoint);
 
         ConfigurationSection allow = section.contains("Allow") ? section.getConfigurationSection("Allow") : section.createSection("Allow");
         allow.set("Explosion-Damage", allowExplosionDamage);

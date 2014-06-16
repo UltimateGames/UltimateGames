@@ -131,6 +131,28 @@ public interface Arena {
     boolean locationIsInArena(Location location);
 
     /**
+     * Get the lobby region of the arena (Arena lobbies)
+     *
+     * @return The region
+     */
+    Region getLobbyRegion();
+
+
+    /**
+     * Checks to see if a location is inside the lobby arena.
+     * @param location The location
+     * @return If the location is inside the lobby area or not.
+     */
+    boolean locationIsInLobby(Location location);
+
+    void setLobbyRegion(Region region);
+
+    Location getLobbySpawnPoint();
+
+    void setLobbySpawnPoint(Location location);
+
+
+    /**
      * Gets the ConfigurationSection of the arena.
      *
      * @return The arena's ConfigurationSection.
