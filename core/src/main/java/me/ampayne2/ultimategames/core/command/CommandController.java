@@ -75,7 +75,8 @@ public class CommandController implements TabExecutor, Listener {
                         .addChildCommand(new AddSpawn(ultimateGames))
                         .addChildCommand(new AddZone(ultimateGames))
                         .addChildCommand(new SetSpectatorSpawn(ultimateGames)))
-                        .addChildCommand(new SetArenaLobby(ultimateGames));
+                        .addChildCommand(new SetArenaLobby(ultimateGames))
+                        .addChildCommand(new SetArenaLobbySpawnPoint(ultimateGames));
 
         ultimateGames.getCommand(mainCommand.getName()).setExecutor(this);
         ultimateGames.getServer().getPluginManager().registerEvents(this, ultimateGames);
