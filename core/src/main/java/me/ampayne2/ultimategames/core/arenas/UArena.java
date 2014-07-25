@@ -120,8 +120,10 @@ public class UArena implements Listener, Arena {
             ultimateGames.getConfigManager().getConfigAccessor(ConfigType.ARENA).saveConfig();
         } else {
             region = URegion.fromList(section.getStringList("Region"));
-            lobbyRegion = URegion.fromList(section.getStringList("LobbyRegion"));
-            lobbySpawnPoint = (Location) section.get("LobbySpawnPoint");
+            if (section.contains("LobbyRegion")) {
+                lobbyRegion = URegion.fromList(section.getStringList("LobbyRegion"));
+                lobbySpawnPoint = (Location) section.get("LobbySpawnPoint");
+            }
         }
 
         if (section.contains("Allow")) {
@@ -398,8 +400,10 @@ public class UArena implements Listener, Arena {
         section.set("Max-Players", maxPlayers);
         section.set("Min-Players", minPlayers);
         section.set("Region", region.toList());
-        section.set("LobbyRegion", lobbyRegion.toList());
-        section.set("LobbySpawnPoint", lobbySpawnPoint);
+        if (lobbyRegion != null) {
+            section.set("LobbyRegion", lobbyRegion.toList());
+            section.set("LobbySpawnPoint", lobbySpawnPoint);
+        }
 
         ConfigurationSection allow = section.contains("Allow") ? section.getConfigurationSection("Allow") : section.createSection("Allow");
         allow.set("Explosion-Damage", allowExplosionDamage);
