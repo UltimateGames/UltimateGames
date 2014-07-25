@@ -21,10 +21,10 @@ package me.ampayne2.ultimategames.core.arenas.countdowns;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.arenas.countdowns.Countdown;
-import me.ampayne2.ultimategames.api.effects.GameSound;
 import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.UArena;
+import ninja.amp.ampeffects.effects.sounds.SoundEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -34,8 +34,8 @@ import org.bukkit.entity.Player;
  */
 public class StartingCountdown extends Countdown {
     private final int initialSeconds;
-    private static final GameSound TICK_SOUND = new GameSound(Sound.NOTE_PLING, 1, 1);
-    private static final GameSound FINAL_SOUND = new GameSound(Sound.NOTE_PLING, 1, 5);
+    private static final SoundEffect TICK_SOUND = new SoundEffect(Sound.NOTE_PLING, 1, 1);
+    private static final SoundEffect FINAL_SOUND = new SoundEffect(Sound.NOTE_PLING, 1, 5);
     private static final int TICK_SOUND_THRESHOLD = 5;
     private static final int FINAL_COUNTDOWN_THRESHOLD = 10;
     private static final int END_COUNTDOWN_TIME = 0;
@@ -70,7 +70,7 @@ public class StartingCountdown extends Countdown {
             if (secondsLeft <= TICK_SOUND_THRESHOLD) {
                 for (String playerName : arena.getPlayers()) {
                     Player player = Bukkit.getPlayerExact(playerName);
-                    TICK_SOUND.play(player, player.getLocation());
+                    TICK_SOUND.play(player.getLocation(), player);
                 }
             }
             if (secondsLeft == initialSeconds || secondsLeft <= FINAL_COUNTDOWN_THRESHOLD) {
@@ -81,7 +81,7 @@ public class StartingCountdown extends Countdown {
             ultimateGames.getArenaManager().beginArena(arena);
             for (String playerName : arena.getPlayers()) {
                 Player player = Bukkit.getPlayerExact(playerName);
-                FINAL_SOUND.play(player, player.getLocation());
+                FINAL_SOUND.play(player.getLocation(), player);
             }
         }
         ticksLeft -= TPS;

@@ -156,12 +156,12 @@ public class UScoreboard implements Scoreboard {
 
     @Override
     public int getScore(String name) {
-        return scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name)).getScore();
+        return scoreboard.getObjective(this.name).getScore(name).getScore();
     }
 
     @Override
     public void setScore(String name, int score) {
-        Score scoreboardScore = scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name));
+        Score scoreboardScore = scoreboard.getObjective(this.name).getScore(name);
         if (score == 0 && scoreboardScore.getScore() == 0) {
             scoreboardScore.setScore(1);
         }
@@ -170,7 +170,7 @@ public class UScoreboard implements Scoreboard {
 
     @Override
     public void addScore(String name, int amount) {
-        Score scoreboardScore = scoreboard.getObjective(this.name).getScore(Bukkit.getOfflinePlayer(name));
+        Score scoreboardScore = scoreboard.getObjective(this.name).getScore(name);
         if (scoreboardScore.getScore() + amount == 0) {
             scoreboardScore.setScore(1);
         }
@@ -179,7 +179,7 @@ public class UScoreboard implements Scoreboard {
 
     @Override
     public void resetScore(String name) {
-        scoreboard.resetScores(Bukkit.getOfflinePlayer(name));
+        scoreboard.resetScores(name);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class UScoreboard implements Scoreboard {
     @Override
     public int getScore(Player player) {
         if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
-            return scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(Bukkit.getOfflinePlayer(player.getName())).getScore();
+            return scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(player.getName()).getScore();
         } else {
             return 0;
         }
@@ -223,7 +223,7 @@ public class UScoreboard implements Scoreboard {
     @Override
     public void setScore(Player player, int score) {
         if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
-            Score scoreboardScore = scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(Bukkit.getOfflinePlayer(player.getName()));
+            Score scoreboardScore = scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(player.getName());
             if (score == 0 && scoreboardScore.getScore() == 0) {
                 scoreboardScore.setScore(1);
             }
@@ -234,7 +234,7 @@ public class UScoreboard implements Scoreboard {
     @Override
     public void addScore(Player player, int amount) {
         if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
-            Score scoreboardScore = scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(Bukkit.getOfflinePlayer(player.getName()));
+            Score scoreboardScore = scoreboard.getObjective(PLAYER_OBJ_NAME).getScore(player.getName());
             if (scoreboardScore.getScore() + amount == 0) {
                 scoreboardScore.setScore(1);
             }
@@ -245,7 +245,7 @@ public class UScoreboard implements Scoreboard {
     @Override
     public void resetScore(Player player) {
         if (scoreboard.getObjective(PLAYER_OBJ_NAME) != null) {
-            scoreboard.resetScores(Bukkit.getOfflinePlayer(player.getName()));
+            scoreboard.resetScores(player.getName());
         }
     }
 }

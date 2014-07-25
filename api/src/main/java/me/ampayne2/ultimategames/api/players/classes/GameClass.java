@@ -20,9 +20,9 @@ package me.ampayne2.ultimategames.api.players.classes;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
-import me.ampayne2.ultimategames.api.effects.GameSound;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.message.UGMessage;
+import ninja.amp.ampeffects.effects.sounds.SoundEffect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -44,7 +44,7 @@ public abstract class GameClass {
     private boolean isUnlockable = false;
     private String unlockableString = null;
     private List<String> players = new ArrayList<>();
-    private static final GameSound JOIN_SOUND = new GameSound(Sound.HORSE_ARMOR, 1, 1.5F);
+    private static final SoundEffect JOIN_SOUND = new SoundEffect(Sound.HORSE_ARMOR, 1, 1.5F);
 
     /**
      * Creates a new GameClass.
@@ -150,7 +150,7 @@ public abstract class GameClass {
             }
             if (notify) {
                 ultimateGames.getMessenger().sendMessage(player, resetInventory ? UGMessage.CLASS_JOIN : UGMessage.CLASS_NEXTDEATH, name);
-                JOIN_SOUND.play(player, player.getLocation());
+                JOIN_SOUND.play(player.getLocation(), player);
             }
             return true;
         } else {

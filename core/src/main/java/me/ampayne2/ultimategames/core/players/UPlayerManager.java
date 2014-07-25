@@ -22,7 +22,6 @@ import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.scoreboards.Scoreboard;
 import me.ampayne2.ultimategames.api.arenas.spawnpoints.PlayerSpawnPoint;
 import me.ampayne2.ultimategames.api.config.ConfigType;
-import me.ampayne2.ultimategames.api.effects.GameSound;
 import me.ampayne2.ultimategames.api.events.players.*;
 import me.ampayne2.ultimategames.api.message.UGMessage;
 import me.ampayne2.ultimategames.api.players.ArenaPlayer;
@@ -34,6 +33,7 @@ import me.ampayne2.ultimategames.api.utils.BossBar;
 import me.ampayne2.ultimategames.core.UG;
 import me.ampayne2.ultimategames.core.arenas.UArena;
 import me.ampayne2.ultimategames.core.arenas.scoreboards.UScoreboard;
+import ninja.amp.ampeffects.effects.sounds.SoundEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -59,7 +59,7 @@ public class UPlayerManager implements Listener, PlayerManager {
     private Map<String, ArenaPlayer> players = new HashMap<>();
     private Map<String, ArenaSpectator> spectators = new HashMap<>();
     private static final String LIMBO = "limbo";
-    private static final GameSound JOIN_SOUND = new GameSound(Sound.ENDERMAN_TELEPORT, 10, 1);
+    private static final SoundEffect JOIN_SOUND = new SoundEffect(Sound.ENDERMAN_TELEPORT, 10, 1);
 
     /**
      * Creates a new PlayerManager.
@@ -124,6 +124,7 @@ public class UPlayerManager implements Listener, PlayerManager {
             // Makes the spectator appear as a ghost to other spectators.
             Scoreboard scoreboard = ultimateGames.getScoreboardManager().getScoreboard(arena);
             if (scoreboard != null) {
+                scoreboard.addPlayer(player);
                 ((UScoreboard) scoreboard).makePlayerGhost(player);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
             }

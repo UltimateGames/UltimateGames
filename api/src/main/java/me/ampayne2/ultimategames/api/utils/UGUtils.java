@@ -18,8 +18,8 @@
  */
 package me.ampayne2.ultimategames.api.utils;
 
-import me.ampayne2.ultimategames.api.effects.ParticleEffect;
 import me.ampayne2.ultimategames.api.games.Game;
+import ninja.amp.ampeffects.effects.particles.ParticleEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

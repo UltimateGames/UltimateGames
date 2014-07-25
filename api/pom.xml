@@ -34,6 +34,12 @@
             <artifactId>gson</artifactId>
             <version>2.2.4</version>
         </dependency>
+        <dependency>
+            <groupId>ninja.amp</groupId>
+            <artifactId>ampeffects</artifactId>
+            <version>1.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
