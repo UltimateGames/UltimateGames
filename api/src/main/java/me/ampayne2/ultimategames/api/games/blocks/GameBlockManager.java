@@ -19,7 +19,7 @@
 package me.ampayne2.ultimategames.api.games.blocks;
 
 import me.ampayne2.ultimategames.api.games.Game;
-import org.bukkit.Material;
+import net.canarymod.api.world.blocks.BlockType;
 
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public interface GameBlockManager {
      * @param material The Material.
      * @return True if the Material is registered, else false.
      */
-    boolean isRegistered(Game game, Material material);
+    boolean isRegistered(Game game, BlockType material);
 
     /**
      * Checks if a GameBlock is registered.
@@ -53,7 +53,7 @@ public interface GameBlockManager {
      * @param material The Material of the GameBlock.
      * @return The GameBlock, null if none of the Material exists.
      */
-    GameBlock getGameBlock(Game game, Material material);
+    GameBlock getGameBlock(Game game, BlockType material);
 
     /**
      * Gets the GameBlocks of a game.

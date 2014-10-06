@@ -19,16 +19,14 @@
 package me.ampayne2.ultimategames.api.games.items;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
+import net.canarymod.api.inventory.Item;
 
 /**
  * An easy way to create items that do something when clicked.<br>
  * Must be registered with the {@link GameItemManager}.
  */
 public abstract class GameItem {
-    private final ItemStack item;
+    private final Item item;
     private final boolean singleUse;
 
     /**
@@ -37,7 +35,7 @@ public abstract class GameItem {
      * @param item      The ItemStack of the GameItem.
      * @param singleUse If the GameItem can only be used once.
      */
-    public GameItem(ItemStack item, boolean singleUse) {
+    public GameItem(Item item, boolean singleUse) {
         this.item = item;
         this.singleUse = singleUse;
     }
@@ -47,7 +45,7 @@ public abstract class GameItem {
      *
      * @return The ItemStack.
      */
-    public ItemStack getItem() {
+    public Item getItem() {
         return item.clone();
     }
 
@@ -92,12 +90,12 @@ public abstract class GameItem {
 
         GameItem gameItem = (GameItem) o;
 
-        return item.getType().equals(gameItem.item.getType()) && item.getItemMeta().getDisplayName().equals(gameItem.item.getItemMeta().getDisplayName()) && singleUse == gameItem.singleUse;
+        return item.getType().equals(gameItem.item.getType()) && item.getDisplayName().equals(gameItem.item.getDisplayName()) && singleUse == gameItem.singleUse;
     }
 
     @Override
     public int hashCode() {
-        int result = item.getType().hashCode() + item.getItemMeta().getDisplayName().hashCode();
+        int result = item.getType().hashCode() + item.getDisplayName().hashCode();
         result = 31 * result + (singleUse ? 1 : 0);
         return result;
     }

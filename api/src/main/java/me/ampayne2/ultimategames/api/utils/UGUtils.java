@@ -19,22 +19,30 @@
 package me.ampayne2.ultimategames.api.utils;
 
 import me.ampayne2.ultimategames.api.games.Game;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.Entity;
+import net.canarymod.api.entity.EntityType;
+import net.canarymod.api.entity.FireworkRocket;
+import net.canarymod.api.entity.living.LivingBase;
+import net.canarymod.api.entity.living.Snowman;
+import net.canarymod.api.entity.living.animal.*;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.entity.living.humanoid.Villager;
+import net.canarymod.api.entity.living.monster.*;
+import net.canarymod.api.inventory.Enchantment;
+import net.canarymod.api.inventory.Inventory;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.api.inventory.ItemType;
+import net.canarymod.api.inventory.helper.BookHelper;
+import net.canarymod.api.inventory.helper.FireworkHelper;
+import net.canarymod.api.potion.PotionEffect;
+import net.canarymod.api.potion.PotionEffectType;
+import net.canarymod.api.world.blocks.*;
+import net.canarymod.api.world.position.Location;
+import net.canarymod.chat.Colors;
+import net.canarymod.chat.TextFormat;
+import net.canarymod.plugin.Plugin;
 import ninja.amp.ampeffects.effects.particles.ParticleEffect;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.*;
-import org.bukkit.material.Attachable;
-import org.bukkit.material.MaterialData;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 
@@ -45,7 +53,7 @@ public final class UGUtils {
     private static final long AUTO_RESPAWN_DELAY = 1L;
     private static final double HORIZONTAL_TARGETER_ACCURACY = 1.5;
     private static final double VERTICAL_TARGETER_ACCURACY = 0.5;
-    private static final BlockFace[] FACES = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    private static final BlockFace[] FACES = new BlockFace[]{BlockFace.TOP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
     private static final Random RANDOM = new Random();
 
     private UGUtils() {
@@ -107,8 +115,8 @@ public final class UGUtils {
      * @param chatColor The ChatColor.
      * @return The ChatColor's name.
      */
-    public static String getChatColorName(ChatColor chatColor) {
-        String[] nameParts = chatColor.name().split("_");
+    /*public static String getChatColorName(Colors chatColor) {
+        String[] nameParts = chatColor.toString().split("_");
         String[] capitalizedNameParts = new String[nameParts.length];
         for (int i = 0; i < nameParts.length; i++) {
             String namePart = nameParts[i];
@@ -120,7 +128,7 @@ public final class UGUtils {
             nameBuilder.append(capitalizedNameParts[i]);
         }
         return nameBuilder.toString();
-    }
+    }*/
 
     // Randomization utilities
 
@@ -139,16 +147,16 @@ public final class UGUtils {
      *
      * @return The random color.
      */
-    public static Color randomColor() {
+    public static String randomColor() {
         switch (RANDOM.nextInt(17)) {
             case 0:
-                return Color.AQUA;
+                return Colors.AQUA;
             case 1:
-                return Color.BLACK;
+                return Colors.BLACK;
             case 2:
-                return Color.BLUE;
+                return Colors.BLUE;
             case 3:
-                return Color.FUCHSIA;
+                return Colors.FUCHSIA;
             case 4:
                 return Color.GRAY;
             case 5:
@@ -185,12 +193,12 @@ public final class UGUtils {
      *
      * @return The random firework effect.
      */
-    public static FireworkEffect randomFireworkEffect() {
-        FireworkEffect.Type type = randomEnum(FireworkEffect.Type.class);
-        Color c1 = randomColor();
-        Color c2 = randomColor();
-
-        return FireworkEffect.builder().flicker(RANDOM.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(RANDOM.nextBoolean()).build();
+    public static FireworkHelper randomFireworkEffect() {
+        FireworkHelper.ExplosionType type = randomEnum(FireworkHelper.ExplosionType.class);
+        //Color c1 = randomColor();
+        //Color c2 = randomColor();
+        return null //TODO fix this
+        //return FireworkEffect.builder().flicker(RANDOM.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(RANDOM.nextBoolean()).build();
     }
 
     // Firework utilities
@@ -203,17 +211,16 @@ public final class UGUtils {
      * @param power    Power of the firework.
      * @param detonate If the firework should detonate immediately.
      */
-    public static void spawnFirework(Location location, FireworkEffect effect, int power, boolean detonate) {
-        Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-
-        FireworkMeta fireworkMeta = firework.getFireworkMeta();
+    public static void spawnFirework(Location location, FireworkHelper effect, int power, boolean detonate) {
+        FireworkRocket rocket = (FireworkRocket) Canary.factory().getEntityFactory().newEntity(EntityType.FIREWORKROCKET, location);
+        /*rocket.set
         fireworkMeta.addEffect(effect);
         fireworkMeta.setPower(power);
         firework.setFireworkMeta(fireworkMeta);
 
         if (detonate) {
             firework.detonate();
-        }
+        } *///TODO find how to spawn a entity
     }
 
     /**
@@ -223,7 +230,7 @@ public final class UGUtils {
      * @param effect   Effect to give the firework.
      * @param detonate If the firework should detonate immediately.
      */
-    public static void spawnFirework(Location location, FireworkEffect effect, boolean detonate) {
+    public static void spawnFirework(Location location, FireworkHelper effect, boolean detonate) {
         spawnFirework(location, effect, RANDOM.nextInt(2) + 1, detonate);
     }
 
@@ -256,8 +263,8 @@ public final class UGUtils {
      *
      * @param player The player.
      */
-    public static void autoRespawn(JavaPlugin plugin, final Player player) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+    public static void autoRespawn(Plugin plugin, final Player player) {
+        /**Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
                 if (player.isDead()) {
@@ -279,7 +286,8 @@ public final class UGUtils {
                     }
                 }
             }
-        }, AUTO_RESPAWN_DELAY);
+        }, AUTO_RESPAWN_DELAY);*/ //TODO Find how in Canary (Probably just getNetworkManager().sendPacket(Packet))
+
     }
 
     /**
@@ -291,10 +299,10 @@ public final class UGUtils {
     public static void teleportEntity(Entity entity, Location location) {
         Location entityLocation = entity.getLocation();
 
-        Entity vehicle = entity.getVehicle();
+        Entity vehicle = entity.getRiding();
         if (vehicle != null) {
             // Eject the entity from the vehicle and teleport the vehicle to the correct location.
-            vehicle.eject();
+            vehicle.setRider(null);
             Location vehicleLocation = vehicle.getLocation();
             Location teleportLocation = location.clone().subtract(0, entityLocation.getY() - vehicleLocation.getY(), 0);
             teleportLocation.setPitch(vehicleLocation.getPitch());
@@ -302,10 +310,10 @@ public final class UGUtils {
             teleportEntity(vehicle, teleportLocation);
         }
 
-        Entity passenger = entity.getPassenger();
+        Entity passenger = entity.getRider();
         if (passenger != null) {
             // Eject the passenger from the entity and teleport the passenger to the correct location.
-            entity.eject();
+            entity.setRider(null);
             Location passengerLocation = passenger.getLocation();
             Location teleportLocation = location.clone().add(0, passengerLocation.getY() - entityLocation.getY(), 0);
             teleportLocation.setPitch(passengerLocation.getPitch());
@@ -314,14 +322,14 @@ public final class UGUtils {
         }
 
         // Teleport the entity to the correct location.
-        entity.teleport(location);
+        entity.teleportTo(location);
 
         // Connect the vehicle, entity, and passenger back together if existing.
         if (vehicle != null) {
-            vehicle.setPassenger(entity);
+            vehicle.setRider(entity);
         }
         if (passenger != null) {
-            entity.setPassenger(passenger);
+            entity.setRider(passenger);
         }
     }
 
@@ -335,9 +343,10 @@ public final class UGUtils {
      * @param highlightEntities Whether or not it should 'highlight' each entity with an explosion effect.
      * @return The LivingEntities.
      */
-    public static Collection<LivingEntity> getLivingEntityTargets(Player player, double range, int maxEntities, Boolean goThroughWalls, Boolean highlightPath, Boolean highlightEntities) {
+    public static Collection<LivingBase> getLivingEntityTargets(Player player, double range, int maxEntities, Boolean goThroughWalls, Boolean highlightPath, Boolean highlightEntities) {
         Location location = player.getEyeLocation();
         Vector direction = location.getDirection();
+        player.en
         List<Entity> entities = player.getNearbyEntities(range, range, range);
         Set<LivingEntity> targetedEntities = new HashSet<>();
         int maxWorldHeight = location.getWorld().getMaxHeight();
@@ -346,7 +355,7 @@ public final class UGUtils {
             double locationX = location.getX();
             double locationY = location.getY();
             double locationZ = location.getZ();
-            if ((!goThroughWalls && location.getBlock().getType() != Material.AIR) || locationY < 0 || locationY > maxWorldHeight) {
+            if ((!goThroughWalls && location.getWorld().getBlockAt(location).getType() != Material.AIR) || locationY < 0 || locationY > maxWorldHeight) {
                 break;
             }
             if (highlightPath) {
@@ -434,9 +443,9 @@ public final class UGUtils {
             if (!player.getName().equals(targeter.getName())) {
                 if (nearestPlayer == null) {
                     nearestPlayer = player;
-                    distance = targeter.getLocation().distance(nearestPlayer.getLocation());
+                    distance = targeter.getLocation().getDistance(nearestPlayer.getLocation());
                 } else {
-                    double distanceTo = targeter.getLocation().distance(player.getLocation());
+                    double distanceTo = targeter.getLocation().getDistance(player.getLocation());
                     if (distanceTo < distance) {
                         nearestPlayer = player;
                         distance = distanceTo;
@@ -457,10 +466,8 @@ public final class UGUtils {
      * @param name      The name.
      * @return The ItemStack.
      */
-    public static ItemStack nameItem(ItemStack itemStack, String name) {
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(name);
-        itemStack.setItemMeta(meta);
+    public static Item nameItem(Item itemStack, String name) {
+        itemStack.setDisplayName(name);
         return itemStack;
     }
 
@@ -471,7 +478,7 @@ public final class UGUtils {
      * @param amount    The amount.
      * @return The ItemStack.
      */
-    public static ItemStack setAmount(ItemStack itemStack, int amount) {
+    public static Item setAmount(Item itemStack, int amount) {
         itemStack.setAmount(amount);
         return itemStack;
     }
@@ -483,10 +490,8 @@ public final class UGUtils {
      * @param lore      The lore.
      * @return The ItemStack.
      */
-    public static ItemStack setLore(ItemStack itemStack, String... lore) {
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.setLore(Arrays.asList(lore));
-        itemStack.setItemMeta(meta);
+    public static Item setLore(Item itemStack, String... lore) {
+        itemStack.setLore(lore);
         return itemStack;
     }
 
@@ -494,12 +499,11 @@ public final class UGUtils {
      * Adds an Enchantment to multiple ItemStacks at once.
      *
      * @param enchantment The Enchantment.
-     * @param level       The level of the Enchantment.
      * @param items       The ItemStacks to enchant.
      */
-    public static void enchantItems(Enchantment enchantment, int level, ItemStack... items) {
-        for (ItemStack item : items) {
-            item.addUnsafeEnchantment(enchantment, level);
+    public static void enchantItems(Enchantment enchantment, Item... items) {
+        for (Item item : items) {
+            item.addEnchantments(enchantment);
         }
     }
 
@@ -510,9 +514,9 @@ public final class UGUtils {
      * @param material  The Material.
      * @return The total amount of items.
      */
-    public static int getTotalItems(Inventory inventory, Material material) {
+    public static int getTotalItems(Inventory inventory, ItemType material) {
         int amount = 0;
-        for (ItemStack itemStack : inventory.getContents()) {
+        for (Item itemStack : inventory.getContents()) {
             if (itemStack != null && itemStack.getType().equals(material)) {
                 amount += itemStack.getAmount();
             }
@@ -527,13 +531,13 @@ public final class UGUtils {
      * @param color     The color.
      * @return The colored piece of armor.
      */
-    public static ItemStack colorArmor(ItemStack itemStack, Color color) {
+    public static Item colorArmor(Item itemStack, Color color) {
         if (itemStack.getItemMeta() instanceof LeatherArmorMeta) {
             LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
             meta.setColor(color);
             itemStack.setItemMeta(meta);
         }
-        return itemStack;
+        return itemStack; //TODO Update that
     }
 
     /**
@@ -543,7 +547,9 @@ public final class UGUtils {
      * @return The player skull.
      */
     @SuppressWarnings("deprecation")
-    public static ItemStack getPlayerHead(String playerName) {
+    public static Item getPlayerHead(String playerName) {
+        Item item = Canary.factory().getItemFactory().newItem(397,1);
+        Canary.factory().getEntityFactory().
         ItemStack skull = new ItemStack(397, 1, (short) 3);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwner(playerName);
@@ -559,9 +565,9 @@ public final class UGUtils {
      * @param material The material.
      * @return True if the material has physics, else false.
      */
-    public static Boolean hasPhysics(Material material) {
+    public static Boolean hasPhysics(BlockType material) {
         switch (material) {
-            case ACTIVATOR_RAIL:
+            case ActivatorRail:
             case ANVIL:
             case CARPET:
             case CACTUS:
@@ -651,9 +657,9 @@ public final class UGUtils {
      * @param type   The type of potion effect.
      * @return The PotionEffect, null if player doesn't have the potion effect.
      */
-    public static PotionEffect getActivePotionEffect(LivingEntity entity, PotionEffectType type) {
-        if (entity.hasPotionEffect(type)) {
-            for (PotionEffect effect : entity.getActivePotionEffects()) {
+    public static PotionEffect getActivePotionEffect(LivingBase entity, PotionEffectType type) {
+        if (entity.hasPotionEffect(ype)) {
+            for (PotionEffect effect : entity.getAllActivePotionEffects()) {
                 if (effect.getType().equals(type)) {
                     return effect;
                 }
@@ -669,12 +675,12 @@ public final class UGUtils {
      * @param type     The type of potion effect.
      * @param duration The new duration.
      */
-    public static void setPotionEffectDuration(LivingEntity entity, PotionEffectType type, int duration) {
+    public static void setPotionEffectDuration(LivingBase entity, PotionEffectType type, int duration) {
         if (entity.hasPotionEffect(type)) {
             PotionEffect effect = getActivePotionEffect(entity, type);
             int amplifier = effect.getAmplifier();
             entity.removePotionEffect(type);
-            entity.addPotionEffect(new PotionEffect(type, duration, amplifier));
+            entity.addPotionEffect(Canary.factory().getPotionFactory().newPotionEffect(type, duration, amplifier));
         }
     }
 
@@ -685,12 +691,12 @@ public final class UGUtils {
      * @param type      The type of potion effect.
      * @param amplifier The new amplifier.
      */
-    public static void setPotionEffectAmplifier(LivingEntity entity, PotionEffectType type, int amplifier) {
+    public static void setPotionEffectAmplifier(LivingBase entity, PotionEffectType type, int amplifier) {
         if (entity.hasPotionEffect(type)) {
             PotionEffect effect = getActivePotionEffect(entity, type);
             int duration = effect.getDuration();
             entity.removePotionEffect(type);
-            entity.addPotionEffect(new PotionEffect(type, duration, amplifier));
+            entity.addPotionEffect(Canary.factory().getPotionFactory().newPotionEffect(type, duration, amplifier));
         }
     }
 
@@ -701,15 +707,15 @@ public final class UGUtils {
      * @param type   The type of potion effect.
      * @param amount The amount to increase the amplifier by.
      */
-    public static void increasePotionEffect(LivingEntity entity, PotionEffectType type, int amount) {
+    public static void increasePotionEffect(LivingBase entity, PotionEffectType type, int amount) {
         if (entity.hasPotionEffect(type)) {
             PotionEffect effect = getActivePotionEffect(entity, type);
             int duration = effect.getDuration();
             int amplifier = effect.getAmplifier();
             entity.removePotionEffect(type);
-            entity.addPotionEffect(new PotionEffect(type, duration, amplifier + amount));
+            entity.addPotionEffect(Canary.factory().getPotionFactory().newPotionEffect(type, duration, amplifier + amount));
         } else {
-            entity.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amount - 1));
+            entity.addPotionEffect(Canary.factory().getPotionFactory().newPotionEffect(type, Integer.MAX_VALUE, amount - 1));
         }
     }
 
@@ -719,7 +725,7 @@ public final class UGUtils {
      * @param entity The entity.
      * @param type   The type of potion effect.
      */
-    public static void increasePotionEffect(LivingEntity entity, PotionEffectType type) {
+    public static void increasePotionEffect(LivingBase entity, PotionEffectType type) {
         increasePotionEffect(entity, type, 1);
     }
 
@@ -731,14 +737,14 @@ public final class UGUtils {
      * @param type   The type of potion effect.
      * @param amount The amount to decrease the amplifier by.
      */
-    public static void decreasePotionEffect(LivingEntity entity, PotionEffectType type, int amount) {
+    public static void decreasePotionEffect(LivingBase entity, PotionEffectType type, int amount) {
         if (entity.hasPotionEffect(type)) {
             PotionEffect effect = getActivePotionEffect(entity, type);
             int duration = effect.getDuration();
             int amplifier = effect.getAmplifier();
             entity.removePotionEffect(type);
             if (amplifier - amount >= 0) {
-                entity.addPotionEffect(new PotionEffect(type, duration, amplifier - amount));
+                entity.addPotionEffect(Canary.factory().getPotionFactory().newPotionEffect(type, duration, amplifier - amount));
             }
         }
     }
@@ -750,7 +756,7 @@ public final class UGUtils {
      * @param entity The entity.
      * @param type   The type of potion effect.
      */
-    public static void decreasePotionEffect(LivingEntity entity, PotionEffectType type) {
+    public static void decreasePotionEffect(LivingBase entity, PotionEffectType type) {
         decreasePotionEffect(entity, type, 1);
     }
 
@@ -760,7 +766,7 @@ public final class UGUtils {
      * @param entity The entity.
      * @param type   The type of potion effect.
      */
-    public static void removePotionEffect(LivingEntity entity, PotionEffectType type) {
+    public static void removePotionEffect(LivingBase entity, PotionEffectType type) {
         if (entity.hasPotionEffect(type)) {
             entity.removePotionEffect(type);
         }
@@ -774,15 +780,11 @@ public final class UGUtils {
      * @param game The game.
      * @return The book.
      */
-    public static ItemStack createInstructionBook(Game game) {
-        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
-        BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setTitle(ChatColor.AQUA.toString() + ChatColor.BOLD + game.getName() + " Instructions");
-        meta.setAuthor(game.getAuthor());
-        for (String page : game.getInstructionPages()) {
-            meta.addPage(ChatColor.translateAlternateColorCodes('&', page));
-        }
-        book.setItemMeta(meta);
+    public static Item createInstructionBook(Game game) {
+        Item book = Canary.factory().getItemFactory().newItem(ItemType.WrittenBook,0,1);
+        BookHelper.setTitle(book, Colors.BLUE + TextFormat.BOLD + game.getName() + " Instructions");
+        BookHelper.setAuthor(book, game.getAuthor());
+        BookHelper.addPages(book, game.getInstructionPages().toArray(new String[game.getInstructionPages().size()]));
         return book;
     }
 
@@ -807,12 +809,12 @@ public final class UGUtils {
      */
     public static void radarScan(String playerName, Collection<String> playersToScan, ParticleEffect particleEffect, int speed, int amount) {
         if (playersToScan != null && playerName != null) {
-            Player player = Bukkit.getPlayerExact(playerName);
+            Player player = Canary.getServer().getPlayer(playerName);
             Double playerX = player.getLocation().getX();
-            Double playerY = player.getEyeLocation().getY();
+            Double playerY = player.getLocation().getY() + player.getEyeHeight();
             Double playerZ = player.getLocation().getZ();
             for (String nextPlayerToScan : playersToScan) {
-                Player playerToScan = Bukkit.getPlayerExact(nextPlayerToScan);
+                Player playerToScan = Canary.getServer().getPlayer(nextPlayerToScan);
                 Double playerToScanX = playerToScan.getLocation().getX();
                 Double playerToScanZ = playerToScan.getLocation().getZ();
                 Double x = playerToScanX - playerX;

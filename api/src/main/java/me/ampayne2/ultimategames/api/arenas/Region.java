@@ -18,8 +18,9 @@
  */
 package me.ampayne2.ultimategames.api.arenas;
 
-import org.bukkit.Location;
-import org.bukkit.World;
+
+import net.canarymod.api.world.World;
+import net.canarymod.api.world.position.Location;
 
 /**
  * Represents a rectangular region in a world.

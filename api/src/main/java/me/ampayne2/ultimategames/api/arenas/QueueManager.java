@@ -18,7 +18,8 @@
  */
 package me.ampayne2.ultimategames.api.arenas;
 
-import org.bukkit.entity.Player;
+
+import net.canarymod.api.entity.living.humanoid.Player;
 
 import java.util.List;
 

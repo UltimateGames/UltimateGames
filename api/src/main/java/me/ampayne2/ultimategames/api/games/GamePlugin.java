@@ -22,22 +22,18 @@ import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.signs.Sign;
 import me.ampayne2.ultimategames.api.signs.SignType;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.*;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.chat.MessageReceiver;
+import net.canarymod.hook.entity.DamageHook;
+import net.canarymod.hook.player.*;
+import net.canarymod.plugin.PluginListener;
 
 /**
  * The API used for creating an Ultimate Game.<br>
  * Extend this class, implement all the abstract methods, and override any non-abstract methods you may need.
  */
-public abstract class GamePlugin implements Listener {
+public abstract class GamePlugin implements PluginListener {
 
     /**
      * Called when a game is being loaded.
@@ -204,10 +200,10 @@ public abstract class GamePlugin implements Listener {
      *
      * @param arena   The arena that the command was done in.
      * @param command The command.
-     * @param sender  The sender of the command.
+     * @param caller  The sender of the command.
      * @param args    The arguments.
      */
-    public void onArenaCommand(Arena arena, String command, CommandSender sender, String[] args) {
+    public void onArenaCommand(Arena arena, String command, MessageReceiver caller, String[] args) {
     }
 
     /**
@@ -216,7 +212,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena.
      * @param event The BlockPlaceEvent.
      */
-    public void onBlockPlace(Arena arena, BlockPlaceEvent event) {
+    public void onBlockPlace(Arena arena, BlockPlaceHook event) {
     }
 
     /**
@@ -225,7 +221,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena.
      * @param event The BlockBreakEvent.
      */
-    public void onBlockBreak(Arena arena, BlockBreakEvent event) {
+    public void onBlockBreak(Arena arena, BlockDestroyHook event) {
     }
 
     /**
@@ -234,7 +230,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena that the player died in.
      * @param event The PlayerDeathEvent.
      */
-    public void onPlayerDeath(Arena arena, PlayerDeathEvent event) {
+    public void onPlayerDeath(Arena arena, PlayerDeathHook event) {
     }
 
     /**
@@ -243,7 +239,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the player is respawning in.
      * @param event The PlayerRespawnEvent.
      */
-    public void onPlayerRespawn(Arena arena, PlayerRespawnEvent event) {
+    public void onPlayerRespawn(Arena arena, PlayerRespawnedHook event) {
     }
 
     /**
@@ -252,7 +248,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the entity got damaged in.
      * @param event The EntityDamageEvent.
      */
-    public void onEntityDamage(Arena arena, EntityDamageEvent event) {
+    public void onEntityDamage(Arena arena, DamageHook event) {
     }
 
     /**
@@ -261,7 +257,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the entity got damaged in.
      * @param event The EntityDamageByEntityEvent.
      */
-    public void onEntityDamageByEntity(Arena arena, EntityDamageByEntityEvent event) {
+    public void onEntityDamageByEntity(Arena arena, DamageHook event) {
     }
 
     /**
@@ -297,7 +293,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the player is in.
      * @param event The FoodLevelChangeEvent.
      */
-    public void onPlayerFoodLevelChange(Arena arena, FoodLevelChangeEvent event) {
+    public void onPlayerFoodLevelChange(Arena arena, FoodLevelHook event) {
     }
 
     /**
@@ -306,7 +302,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the player is in.
      * @param event The PlayerPickupItemEvent.
      */
-    public void onItemPickup(Arena arena, PlayerPickupItemEvent event) {
+    public void onItemPickup(Arena arena, ItemPickupHook event) {
     }
 
     /**
@@ -315,7 +311,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the player is in.
      * @param event The PlayerDropItemEvent.
      */
-    public void onItemDrop(Arena arena, PlayerDropItemEvent event) {
+    public void onItemDrop(Arena arena, ItemDropHook event) {
     }
 
     /**
@@ -324,7 +320,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the player is in.
      * @param event The PlayerMoveEvent.
      */
-    public void onPlayerMove(Arena arena, PlayerMoveEvent event) {
+    public void onPlayerMove(Arena arena, PlayerMoveHook event) {
     }
 
     /**
@@ -342,7 +338,7 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the inventory is being opened in.
      * @param event The InventoryOpenEvent.
      */
-    public void onInventoryOpen(Arena arena, InventoryOpenEvent event) {
+    public void onInventoryOpen(Arena arena, InventoryHook event) {
     }
 
     /**
@@ -351,6 +347,6 @@ public abstract class GamePlugin implements Listener {
      * @param arena The arena the item is being consumed in.
      * @param event The PlayerItemConsumeEvent.
      */
-    public void onPlayerItemConsume(Arena arena, PlayerItemConsumeEvent event) {
+    public void onPlayerItemConsume(Arena arena, EatHook event) {
     }
 }

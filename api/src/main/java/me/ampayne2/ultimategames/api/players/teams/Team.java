@@ -19,9 +19,9 @@
 package me.ampayne2.ultimategames.api.players.teams;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.chat.TextFormat;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public interface Team {
      *
      * @return The team's color.
      */
-    ChatColor getColor();
+    TextFormat getColor();
 
     /**
      * Gets the team's colored name.
@@ -123,14 +123,14 @@ public interface Team {
     /**
      * Get the icon of this team.
      *
-     * @return The {@link org.bukkit.inventory.ItemStack} that represents this team.
+     * @return The {@link net.canarymod.api.inventory.Item} that represents this team.
      */
-    ItemStack getTeamIcon();
+    Item getTeamIcon();
 
     /**
      * Set the icon of this team for the team selector menu.
      *
-     * @param icon The {@link org.bukkit.inventory.ItemStack} that represents this team.
+     * @param icon The {@link net.canarymod.api.inventory.Item} that represents this team.
      */
-    void setTeamIcon(ItemStack icon);
+    void setTeamIcon(Item icon);
 }

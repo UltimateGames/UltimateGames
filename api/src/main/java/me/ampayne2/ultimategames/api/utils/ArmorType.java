@@ -18,9 +18,11 @@
  */
 package me.ampayne2.ultimategames.api.utils;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.api.inventory.ItemType;
 
 /**
  * Types of armor.
@@ -40,13 +42,13 @@ public enum ArmorType {
     public boolean canEquip(Player player) {
         switch (this) {
             case HELMET:
-                return player.getInventory().getHelmet() == null;
+                return player.getInventory().getHelmetSlot() == null;
             case CHESTPLATE:
-                return player.getInventory().getChestplate() == null;
+                return player.getInventory().getChestplateSlot() == null;
             case LEGGINGS:
-                return player.getInventory().getLeggings() == null;
+                return player.getInventory().getLeggingsSlot() == null;
             case BOOTS:
-                return player.getInventory().getBoots() == null;
+                return player.getInventory().getBootsSlot() == null;
             default:
                 return false;
         }
@@ -57,8 +59,8 @@ public enum ArmorType {
      *
      * @return The armor itemstack.
      */
-    public ItemStack getArmor(ArmorMaterial material) {
-        return new ItemStack(Material.valueOf(material.name() + "_" + name()));
+    public Item getArmor(ArmorMaterial material) {
+        return Canary.factory().getItemFactory().newItem(material.name() + "_" + name());
     }
 
     /**
@@ -67,9 +69,9 @@ public enum ArmorType {
      * @param material The material.
      * @return True if the material is a piece of armor, else false.
      */
-    public static boolean isArmor(Material material) {
+    public static boolean isArmor(ItemType material) {
         for (ArmorType armorType : ArmorType.class.getEnumConstants()) {
-            if (material.name().contains(armorType.name())) {
+            if (material.getMachineName().contains(armorType.name())) { //TODO wat
                 return true;
             }
         }
@@ -82,9 +84,9 @@ public enum ArmorType {
      * @param material The piece of armor.
      * @return The ArmorType.
      */
-    public static ArmorType getArmorType(Material material) {
+    public static ArmorType getArmorType(ItemType material) {
         for (ArmorType armorType : ArmorType.class.getEnumConstants()) {
-            if (material.name().contains(armorType.name())) {
+            if (material.getMachineName().contains(armorType.name())) {
                 return armorType;
             }
         }

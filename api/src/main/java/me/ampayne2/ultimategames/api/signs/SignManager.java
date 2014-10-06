@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.api.signs;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.games.Game;
-import org.bukkit.Location;
+import net.canarymod.api.world.position.Location;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public interface SignManager {
      * @param sign The sign to check.
      * @return If the sign is an Ultimate Game sign.
      */
-    boolean isSign(org.bukkit.block.Sign sign, SignType signType);
+    boolean isSign(net.canarymod.api.world.blocks.Sign sign, SignType signType);
 
     /**
      * Checks to see if a sign is an Ultimate Game sign.
@@ -44,7 +44,7 @@ public interface SignManager {
      * @param sign The sign to check.
      * @return If the sign is an Ultimate Game sign.
      */
-    boolean isSign(org.bukkit.block.Sign sign);
+    boolean isSign(net.canarymod.api.world.blocks.Sign sign);
 
     /**
      * Gets the redstone output sign at a location.
@@ -62,7 +62,7 @@ public interface SignManager {
      * @param signType The sign's type.
      * @return The UG sign.
      */
-    Sign getSign(org.bukkit.block.Sign sign, SignType signType);
+    Sign getSign(net.canarymod.api.world.blocks.Sign sign, SignType signType);
 
     /**
      * Gets the UGsign of a sign.
@@ -70,7 +70,7 @@ public interface SignManager {
      * @param sign The sign.
      * @return The UG sign.
      */
-    Sign getSign(org.bukkit.block.Sign sign);
+    Sign getSign(net.canarymod.api.world.blocks.Sign sign);
 
     /**
      * Gets the Ultimate Game signs of an arena.<br>

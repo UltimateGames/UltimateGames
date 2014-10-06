@@ -21,17 +21,17 @@ package me.ampayne2.ultimategames.api.arenas.spawnpoints;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.message.UGMessage;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.world.position.Location;
+import net.canarymod.hook.HookHandler;
+import net.canarymod.hook.player.PlayerMoveHook;
+import net.canarymod.plugin.PluginListener;
 
 /**
  * An arena spawnpoint for players.
  */
-public class PlayerSpawnPoint extends SpawnPoint implements Listener {
+public class PlayerSpawnPoint extends SpawnPoint implements PluginListener {
     private final UltimateGames ultimateGames;
     private boolean locked;
     private String playerName;
@@ -48,7 +48,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
         super(arena, location);
         this.ultimateGames = ultimateGames;
         this.locked = locked;
-        Bukkit.getServer().getPluginManager().registerEvents(this, ultimateGames.getPlugin());
+        Canary.hooks().registerListener(this, ultimateGames.getPlugin());
     }
 
     /**
@@ -79,7 +79,7 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
      */
     public void teleportPlayer(Player player) {
         if (player != null) {
-            player.teleport(getLocation());
+            player.teleportTo(getLocation());
             if (locked) {
                 this.playerName = player.getName();
             }
@@ -101,8 +101,8 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
     /**
      * Stops players from attempting to leave spawnpoints.
      */
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
+    @HookHandler
+    public void onPlayerMove(PlayerMoveHook event) {
         if (locked && playerName != null) {
             Location from = event.getFrom();
             Location to = event.getTo();
@@ -113,8 +113,8 @@ public class PlayerSpawnPoint extends SpawnPoint implements Listener {
             Location location = getLocation();
             if (player.getName().equals(playerName) && (Math.abs(to.getX() - location.getX()) >= 1 || Math.abs(to.getZ() - location.getZ()) >= 1)) {
                 location.setPitch(event.getFrom().getPitch());
-                location.setYaw(event.getFrom().getYaw());
-                player.teleport(location);
+                location.setRotation(event.getFrom().getRotation());
+                player.teleportTo(location);
                 ultimateGames.getMessenger().sendMessage(player, UGMessage.SPAWNPOINT_LEAVE);
             }
         }

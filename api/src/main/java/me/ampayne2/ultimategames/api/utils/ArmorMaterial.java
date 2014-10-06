@@ -18,8 +18,9 @@
  */
 package me.ampayne2.ultimategames.api.utils;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import net.canarymod.Canary;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.api.inventory.ItemType;
 
 /**
  * Materials of armor.
@@ -36,8 +37,8 @@ public enum ArmorMaterial {
      *
      * @return The armor itemstack.
      */
-    public ItemStack getArmor(ArmorType type) {
-        return new ItemStack(Material.valueOf(name() + "_" + type.name()));
+    public Item getArmor(ArmorType type) {
+        return Canary.factory().getItemFactory().newItem(name() + "_" + type.name());
     }
 
     /**
@@ -46,9 +47,9 @@ public enum ArmorMaterial {
      * @param material The piece of armor.
      * @return The ArmorMaterial.
      */
-    public static ArmorMaterial getArmorMaterial(Material material) {
+    public static ArmorMaterial getArmorMaterial(ItemType material) {
         for (ArmorMaterial armorMaterial : ArmorMaterial.class.getEnumConstants()) {
-            if (material.name().contains(armorMaterial.name())) {
+            if (material.getMachineName().contains(armorMaterial.name())) {
                 return armorMaterial;
             }
         }

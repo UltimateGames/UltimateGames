@@ -21,7 +21,7 @@ package me.ampayne2.ultimategames.api.arenas.countdowns;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.message.UGMessage;
-import org.bukkit.Bukkit;
+import net.canarymod.Canary;
 
 /**
  * A type of countdown used to end the game.
@@ -101,10 +101,10 @@ public class EndingCountdown extends Countdown {
     public void updateExpDisplay(int secondsLeft) {
         if (expDisplay) {
             for (String playerName : arena.getPlayers()) {
-                Bukkit.getPlayerExact(playerName).setLevel(secondsLeft);
+                Canary.getServer().getPlayer(playerName).setLevel(secondsLeft);
             }
             for (String playerName : arena.getSpectators()) {
-                Bukkit.getPlayerExact(playerName).setLevel(secondsLeft);
+                Canary.getServer().getPlayer(playerName).setLevel(secondsLeft);
             }
         }
     }

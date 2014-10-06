@@ -18,10 +18,10 @@
  */
 package me.ampayne2.ultimategames.api.utils;
 
-import org.bukkit.enchantments.Enchantment;
+import net.canarymod.api.inventory.Enchantment;
+import net.canarymod.api.inventory.Item;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.enchantments.EnchantmentWrapper;
-import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 
@@ -36,7 +36,7 @@ public final class EnchantGlow extends EnchantmentWrapper {
     }
 
     @Override
-    public boolean canEnchantItem(ItemStack item) {
+    public boolean canEnchantItem(Item item) {
         return true;
     }
 
@@ -70,7 +70,7 @@ public final class EnchantGlow extends EnchantmentWrapper {
      *
      * @param item The {@link org.bukkit.inventory.ItemStack}.
      */
-    public static void addGlow(ItemStack item) {
+    public static void addGlow(Item item) {
         item.addEnchantment(glow, 1);
     }
 

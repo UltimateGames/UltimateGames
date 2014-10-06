@@ -19,7 +19,7 @@
 package me.ampayne2.ultimategames.api.games.items;
 
 import me.ampayne2.ultimategames.api.games.Game;
-import org.bukkit.inventory.ItemStack;
+import net.canarymod.api.inventory.Item;
 
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public interface GameItemManager {
      * @param item The ItemStack.
      * @return True if the ItemStack is registered, else false.
      */
-    boolean isRegistered(Game game, ItemStack item);
+    boolean isRegistered(Game game, Item item);
 
     /**
      * Checks if a GameItem is registered.
@@ -53,7 +53,7 @@ public interface GameItemManager {
      * @param item The ItemStack of the GameItem.
      * @return The GameItem, null if none of the ItemStack exists.
      */
-    GameItem getGameItem(Game game, ItemStack item);
+    GameItem getGameItem(Game game, Item item);
 
     /**
      * Gets the GameItems of a game.

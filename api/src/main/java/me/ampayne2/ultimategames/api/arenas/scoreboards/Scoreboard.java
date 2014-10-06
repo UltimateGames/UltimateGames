@@ -19,8 +19,8 @@
 package me.ampayne2.ultimategames.api.arenas.scoreboards;
 
 import me.ampayne2.ultimategames.api.players.teams.Team;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.chat.TextFormat;
 
 /**
  * A wrapper for bukkit scoreboards.
@@ -39,7 +39,7 @@ public interface Scoreboard {
      *
      * @return The bukkit scoreboard.
      */
-    org.bukkit.scoreboard.Scoreboard getScoreboard();
+    net.canarymod.api.scoreboard.Scoreboard getScoreboard();
 
     /**
      * Checks if the ArenaScoreboard has a player.
@@ -79,7 +79,7 @@ public interface Scoreboard {
      * @param player    The player.
      * @param chatColor The color.
      */
-    void setPlayerColor(Player player, ChatColor chatColor);
+    void setPlayerColor(Player player, TextFormat chatColor);
 
     /**
      * Resets a player's name's color by unregistering the player's scoreboard team.<br>

@@ -19,8 +19,7 @@
 package me.ampayne2.ultimategames.api.arenas.zones;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
+import net.canarymod.api.world.position.Location;
 
 /**
  * The base class for a Zone.

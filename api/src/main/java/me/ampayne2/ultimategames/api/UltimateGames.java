@@ -38,7 +38,7 @@ import me.ampayne2.ultimategames.api.rollback.RollbackManager;
 import me.ampayne2.ultimategames.api.signs.SignManager;
 import me.ampayne2.ultimategames.api.webapi.WebHandler;
 import me.ampayne2.ultimategames.api.whitelist.WhitelistManager;
-import org.bukkit.plugin.java.JavaPlugin;
+import net.canarymod.plugin.Plugin;
 
 /**
  * The main UltimateGames API.
@@ -50,7 +50,7 @@ public interface UltimateGames {
      *
      * @return The JavaPlugin.
      */
-    JavaPlugin getPlugin();
+    Plugin getPlugin();
 
     /**
      * Gets the ConfigManager.

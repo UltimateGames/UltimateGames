@@ -21,16 +21,24 @@ package me.ampayne2.ultimategames.api.events.arenas;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import net.canarymod.hook.CancelableHook;
 
-/**
- * An event called before an arena is begun.
- */
-public class ArenaBeginEvent extends CancelableArenaEvent {
+public class CancelableArenaEvent extends CancelableHook {
+    private final Arena arena;
+
     /**
-     * Creates a new ArenaBeginEvent.
+     * Creates an ArenaEvent.
      *
-     * @param arena The arena about to begin.
+     * @param arena The arena associated with the event.
      */
-    public ArenaBeginEvent(Arena arena) {
-        super(arena);
+    public CancelableArenaEvent(Arena arena) {
+        this.arena = arena;
+    }
+
+    /**
+     * Gets the arena of the event.
+     *
+     * @return The arena.
+     */
+    public Arena getArena() {
+        return arena;
     }
 }

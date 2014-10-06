@@ -18,7 +18,8 @@
  */
 package me.ampayne2.ultimategames.api.whitelist;
 
-import org.bukkit.Material;
+
+import net.canarymod.api.world.blocks.BlockType;
 
 /**
  * Manages UltimateGames whitelists.
@@ -30,12 +31,12 @@ public interface WhitelistManager {
      *
      * @return The block place whitelist.
      */
-    Whitelist<Material> getBlockPlaceWhitelist();
+    Whitelist<BlockType> getBlockPlaceWhitelist();
 
     /**
      * Gets the block break whitelist.
      *
      * @return The block break whitelist.
      */
-    Whitelist<Material> getBlockBreakWhitelist();
+    Whitelist<BlockType> getBlockBreakWhitelist();
 }

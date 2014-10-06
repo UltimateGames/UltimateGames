@@ -18,28 +18,20 @@
  */
 package me.ampayne2.ultimategames.api.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-
-import java.util.Arrays;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.inventory.CustomStorageInventory;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.hook.HookHandler;
+import net.canarymod.hook.player.InventoryHook;
+import net.canarymod.plugin.Plugin;
+import net.canarymod.plugin.PluginListener;
+import net.canarymod.plugin.Priority;
 
 /**
  * A utility that allows creating inventories with icons that do stuff.
  */
-public class IconMenu implements Listener {
+public class IconMenu implements PluginListener {
     private String name;
     private int size;
     private OptionClickEventHandler handler;
@@ -47,8 +39,8 @@ public class IconMenu implements Listener {
     private Player player;
 
     private String[] optionNames;
-    private ItemStack[] optionIcons;
-    private static final ItemStack EMPTY_SLOT;
+    private Item[] optionIcons;
+    private static final Item EMPTY_SLOT;
 
     /**
      * Creates a new IconMenu.
@@ -64,8 +56,8 @@ public class IconMenu implements Listener {
         this.handler = handler;
         this.plugin = plugin;
         this.optionNames = new String[size];
-        this.optionIcons = new ItemStack[size];
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.optionIcons = new Item[size];
+        Canary.hooks().registerListener(this, plugin);
     }
 
     /**
@@ -77,7 +69,7 @@ public class IconMenu implements Listener {
      * @param info     The lore to give the ItemStack.
      * @return The IconMenu.
      */
-    public IconMenu setOption(int position, ItemStack icon, String name, String... info) {
+    public IconMenu setOption(int position, Item icon, String name, String... info) {
         optionNames[position] = name;
         optionIcons[position] = setItemNameAndLore(icon, name, info);
         return this;
@@ -107,9 +99,9 @@ public class IconMenu implements Listener {
      * @param player The player.
      */
     public void open(Player player) {
-        Inventory inventory = Bukkit.createInventory(player, size, name);
+        CustomStorageInventory inventory = Canary.factory().getObjectFactory().newCustomStorageInventory(name, size / 9);
         for (int i = 0; i < optionIcons.length; i++) {
-            inventory.setItem(i, optionIcons[i] == null ? EMPTY_SLOT : optionIcons[i]);
+            inventory.setSlot(i, optionIcons[i] == null ? EMPTY_SLOT : optionIcons[i]);
         }
         player.openInventory(inventory);
     }
@@ -128,10 +120,11 @@ public class IconMenu implements Listener {
     /**
      * Prevents the IconMenu from being blocked from opening.
      */
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
-    void onInventoryOpen(InventoryOpenEvent event) {
-        if (event.getInventory().getName().equals(name)) {
-            event.setCancelled(false);
+    @HookHandler(priority = Priority.PASSIVE, ignoreCanceled = true)
+    void onInventoryOpen(InventoryHook event) {
+        if (event.getInventory().getInventoryName().equals(name) && event.isCanceled()) {
+            //TODO : Fix canary so we can uncancel a event
+            //event.setCanceled(false);
         }
     }
 
@@ -139,8 +132,8 @@ public class IconMenu implements Listener {
      * Handles InventoryClickEvents for the IconMenu.
      */
     @SuppressWarnings("deprecation")
-    @EventHandler(priority = EventPriority.MONITOR)
-    void onInventoryClick(InventoryClickEvent event) {
+    @HookHandler(priority = Priority.NORMAL)
+    void onInventoryClick(Click event) {
         if (event.getInventory().getTitle().equals(name) && (player == null || event.getWhoClicked() == player)) {
             event.setCancelled(true);
             if (event.getClick() != ClickType.LEFT) {
@@ -286,11 +279,9 @@ public class IconMenu implements Listener {
      * @param lore The lore.
      * @return The ItemStack.
      */
-    private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
-        ItemMeta im = item.getItemMeta();
-        im.setDisplayName(name);
-        im.setLore(Arrays.asList(lore));
-        item.setItemMeta(im);
+    private Item setItemNameAndLore(Item item, String name, String[] lore) {
+        item.setDisplayName(name);
+        item.setLore(lore);
         return item;
     }
 }

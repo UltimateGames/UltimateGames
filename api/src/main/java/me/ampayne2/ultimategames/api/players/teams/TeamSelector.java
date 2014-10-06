@@ -22,17 +22,17 @@ import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.games.items.GameItem;
 import me.ampayne2.ultimategames.api.utils.EnchantGlow;
-import org.bukkit.ChatColor;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import net.canarymod.Canary;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.chat.Colors;
+import net.canarymod.chat.TextFormat;
 
 /**
  * A team selector GameItem.
  */
 public class TeamSelector extends GameItem {
     private final UltimateGames ultimateGames;
-    private static final ItemStack TEAM_SELECTOR;
+    private static final Item TEAM_SELECTOR;
 
     /**
      * Creates a new team selector item.
@@ -51,10 +51,8 @@ public class TeamSelector extends GameItem {
     }
 
     static {
-        TEAM_SELECTOR = new ItemStack(397, 1, (short) 3);
-        ItemMeta meta = TEAM_SELECTOR.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA.toString() + ChatColor.BOLD + "Team Selector");
-        TEAM_SELECTOR.setItemMeta(meta);
+        TEAM_SELECTOR = Canary.factory().getItemFactory().newItem(397,3,1);
+        TEAM_SELECTOR.setDisplayName(Colors.BLUE + TextFormat.BOLD + "Team Selector");
         EnchantGlow.addGlow(TEAM_SELECTOR);
     }
 }

@@ -21,8 +21,8 @@ package me.ampayne2.ultimategames.api.players.teams;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.utils.IconMenu;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.chat.TextFormat;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public interface TeamManager {
      * @param canSeeFriendlyInvisibles If the team can see friendly invisibles.
      * @return The team.
      */
-    Team createTeam(UltimateGames ultimateGames, String name, Arena arena, ChatColor color, boolean friendlyFire, boolean canSeeFriendlyInvisibles);
+    Team createTeam(UltimateGames ultimateGames, String name, Arena arena, TextFormat color, boolean friendlyFire, boolean canSeeFriendlyInvisibles);
 
     /**
      * Removes a team from the manager.

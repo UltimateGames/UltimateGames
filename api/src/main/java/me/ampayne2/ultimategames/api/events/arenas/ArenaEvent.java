@@ -19,15 +19,13 @@
 package me.ampayne2.ultimategames.api.events.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import net.canarymod.hook.Hook;
 
 /**
  * Base for any arena event.
  */
-public abstract class ArenaEvent extends Event {
+public abstract class ArenaEvent extends Hook {
     private final Arena arena;
-    private static final HandlerList HANDLERS = new HandlerList();
 
     /**
      * Creates an ArenaEvent.
@@ -45,23 +43,5 @@ public abstract class ArenaEvent extends Event {
      */
     public Arena getArena() {
         return arena;
-    }
-
-    /**
-     * Gets the ArenaEvent's Handlers.
-     *
-     * @return The Handlers.
-     */
-    public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    /**
-     * Gets the ArenaEvent's HandlerList.
-     *
-     * @return The HandlerList.
-     */
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
     }
 }

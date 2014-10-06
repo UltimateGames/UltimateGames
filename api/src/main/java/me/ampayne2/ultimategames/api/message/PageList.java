@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.api.message;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.utils.UGUtils;
-import org.bukkit.ChatColor;
+import net.canarymod.chat.TextFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class PageList {
         int pageAmount = getPageAmount();
         pageNumber = UGUtils.clamp(pageNumber, 1, pageAmount);
         Messenger messenger = ultimateGames.getMessenger();
-        messenger.sendRawMessage(recipient, ChatColor.DARK_GRAY + "<-------<| " + ChatColor.AQUA + name + ": Page " + pageNumber + "/" + pageAmount + " " + ChatColor.DARK_GRAY + "|>------->");
+        messenger.sendRawMessage(recipient, TextFormat.GRAY + "<-------<| " + TextFormat.BLUE + name + ": Page " + pageNumber + "/" + pageAmount + " " + TextFormat.GRAY + "|>------->");
         int startIndex = messagesPerPage * (pageNumber - 1);
         for (String string : strings.subList(startIndex, Math.min(startIndex + messagesPerPage, strings.size()))) {
             messenger.sendRawMessage(recipient, string);

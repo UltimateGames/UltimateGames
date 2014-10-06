@@ -18,23 +18,23 @@
  */
 package me.ampayne2.ultimategames.api.arenas;
 
-import org.bukkit.ChatColor;
+import net.canarymod.chat.TextFormat;
 
 /**
  * An enum of the possible statuses of an arena.
  */
 public enum ArenaStatus {
-    OPEN(ChatColor.GREEN, "Open"),
-    STARTING(ChatColor.DARK_GRAY, "Starting"),
-    RUNNING(ChatColor.DARK_GRAY, "Running"),
-    ENDING(ChatColor.DARK_GRAY, "Ending"),
-    ARENA_STOPPED(ChatColor.BLACK, "Stopped"),
-    GAME_STOPPED(ChatColor.BLACK, "Stopped");
+    OPEN(TextFormat.GREEN, "Open"),
+    STARTING(TextFormat.GRAY, "Starting"),
+    RUNNING(TextFormat.GRAY, "Running"),
+    ENDING(TextFormat.GRAY, "Ending"),
+    ARENA_STOPPED(TextFormat.BLACK, "Stopped"),
+    GAME_STOPPED(TextFormat.BLACK, "Stopped");
 
-    private final ChatColor color;
+    private final String color;
     private final String displayName;
 
-    private ArenaStatus(ChatColor color, String displayName) {
+    private ArenaStatus(String color, String displayName) {
         this.color = color;
         this.displayName = displayName;
     }
@@ -42,9 +42,9 @@ public enum ArenaStatus {
     /**
      * Gets the display color of the ArenaStatus.
      *
-     * @return The {@link org.bukkit.ChatColor}.
+     * @return The color in a string
      */
-    public ChatColor getColor() {
+    public String getColor() {
         return color;
     }
 

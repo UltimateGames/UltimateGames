@@ -19,17 +19,18 @@
 package me.ampayne2.ultimategames.api.games.blocks;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.inventory.ItemStack;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.api.inventory.ItemType;
+import net.canarymod.api.world.blocks.Block;
+import net.canarymod.hook.player.BlockPlaceHook;
+import org.apache.commons.lang3.Validate;
 
 /**
  * An easy way to create blocks that do something when placed.<br>
  * Must be registered with the {@link me.ampayne2.ultimategames.api.games.blocks.GameBlockManager}.
  */
 public abstract class GameBlock {
-    private final ItemStack item;
+    private final Item item;
     private final boolean canBeBroken;
 
     /**
@@ -37,9 +38,9 @@ public abstract class GameBlock {
      *
      * @param item The ItemStack of the GameBlock.
      */
-    public GameBlock(ItemStack item, boolean canBeBroken) {
+    public GameBlock(Item item, boolean canBeBroken) {
         Validate.notNull(item, "ItemStack cannot be null");
-        Validate.isTrue(item.getType().isBlock(), "ItemStack type must be a block");
+        Validate.isTrue(item.getBaseItem() instanceof Block, "ItemStack type must be a block");
 
         this.item = item;
         this.canBeBroken = canBeBroken;
@@ -50,7 +51,7 @@ public abstract class GameBlock {
      *
      * @return The ItemStack.
      */
-    public ItemStack getItem() {
+    public Item getItem() {
         return item.clone();
     }
 
@@ -59,7 +60,7 @@ public abstract class GameBlock {
      *
      * @return The Material.
      */
-    public Material getMaterial() {
+    public ItemType getMaterial() {
         return item.getType();
     }
 
@@ -79,7 +80,7 @@ public abstract class GameBlock {
      * @param event The BlockPlaceEvent.
      * @return True if the block was placed successfully, else false.
      */
-    public abstract boolean place(Arena arena, BlockPlaceEvent event);
+    public abstract boolean place(Arena arena, BlockPlaceHook event);
 
     @Override
     public boolean equals(Object o) {
@@ -92,12 +93,12 @@ public abstract class GameBlock {
 
         GameBlock gameBlock = (GameBlock) o;
 
-        return item.getType().equals(gameBlock.item.getType()) && item.getItemMeta().getDisplayName().equals(gameBlock.item.getItemMeta().getDisplayName()) && canBeBroken == gameBlock.canBeBroken;
+        return item.getType().equals(gameBlock.item.getType()) && item.getDisplayName().equals(gameBlock.item.getDisplayName()) && canBeBroken == gameBlock.canBeBroken;
     }
 
     @Override
     public int hashCode() {
-        int result = item.getType().hashCode() + item.getItemMeta().getDisplayName().hashCode();
+        int result = item.getType().hashCode() + item.getDisplayName().hashCode();
         result = 31 * result + (canBeBroken ? 1 : 0);
         return result;
     }

@@ -23,7 +23,7 @@ import me.ampayne2.ultimategames.api.arenas.Arena;
 /**
  * An event called after an arena stops.
  */
-public class ArenaStopEvent extends ArenaEvent {
+public class ArenaStopEvent extends CancelableArenaEvent {
 
     /**
      * Creates a new ArenaStopEvent.

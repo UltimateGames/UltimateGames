@@ -22,11 +22,11 @@ import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.message.UGMessage;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.inventory.Item;
+import net.canarymod.api.inventory.ItemType;
 import ninja.amp.ampeffects.effects.sounds.SoundEffect;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public abstract class GameClass {
     private final Game game;
     private final String name;
     private final boolean canSwitchToWithoutDeath;
-    private ItemStack icon = new ItemStack(Material.IRON_CHESTPLATE);
+    private Item icon = Canary.factory().getItemFactory().newItem(ItemType.IronChestplate);
     private boolean isUnlockable = false;
     private String unlockableString = null;
     private List<String> players = new ArrayList<>();
@@ -186,10 +186,10 @@ public abstract class GameClass {
     /**
      * Set the Class icon of this class when using the menu.
      *
-     * @param icon The {@link org.bukkit.inventory.ItemStack} that represents this class
+     * @param icon The {@link net.canarymod.api.inventory.Item} that represents this class
      */
-    public void setClassIcon(ItemStack icon) {
-        ItemStack newIcon = icon.clone();
+    public void setClassIcon(Item icon) {
+        Item newIcon = icon.clone();
         newIcon.setAmount(1);
         this.icon = newIcon;
     }
@@ -197,9 +197,9 @@ public abstract class GameClass {
     /**
      * Get the class icon of this class.
      *
-     * @return The {@link org.bukkit.inventory.ItemStack} that represents this class
+     * @return The {@link net.canarymod.api.inventory.Item} that represents this class
      */
-    public ItemStack getClassIcon() {
+    public Item getClassIcon() {
         return icon;
     }
 

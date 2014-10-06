@@ -19,8 +19,8 @@
 package me.ampayne2.ultimategames.api.arenas.spawnpoints;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.world.position.Location;
 
 /**
  * An arena spawn point for spectators.
@@ -43,6 +43,6 @@ public class SpectatorSpawnPoint extends SpawnPoint {
      * @param player The player to teleport.
      */
     public void teleportPlayer(Player player) {
-        player.teleport(getLocation());
+        player.teleportTo(getLocation());
     }
 }

@@ -20,18 +20,21 @@ package me.ampayne2.ultimategames.api.arenas.countdowns;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.canarymod.Canary;
+import net.visualillusionsent.utils.TaskManager;
+
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The base class for a countdown.
  */
-public abstract class Countdown extends BukkitRunnable {
+public abstract class Countdown implements Runnable {
     protected final UltimateGames ultimateGames;
     protected final Arena arena;
     protected int ticksLeft;
     protected long period;
-    private Integer taskId = null;
+    private ScheduledFuture taskId = null;
 
     /**
      * Creates a new Countdown.
@@ -55,7 +58,7 @@ public abstract class Countdown extends BukkitRunnable {
      */
     public boolean start() {
         if (taskId == null) {
-            taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(ultimateGames.getPlugin(), this, 0, period);
+            taskId = TaskManager.scheduleContinuedTask(this, 0, period, TimeUnit.SECONDS);
             return true;
         } else {
             return false;
@@ -67,7 +70,7 @@ public abstract class Countdown extends BukkitRunnable {
      */
     public void stop() {
         if (taskId != null) {
-            Bukkit.getScheduler().cancelTask(taskId);
+            TaskManager.removeTask(taskId);
             taskId = null;
         }
     }

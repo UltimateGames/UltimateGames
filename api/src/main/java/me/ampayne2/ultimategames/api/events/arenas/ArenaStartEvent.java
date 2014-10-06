@@ -19,13 +19,11 @@
 package me.ampayne2.ultimategames.api.events.arenas;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.event.Cancellable;
 
 /**
  * An event called before an arena starts.
  */
-public class ArenaStartEvent extends ArenaEvent implements Cancellable {
-    private boolean cancelled;
+public class ArenaStartEvent extends CancelableArenaEvent {
 
     /**
      * Creates a new ArenaStartEvent.
@@ -34,15 +32,5 @@ public class ArenaStartEvent extends ArenaEvent implements Cancellable {
      */
     public ArenaStartEvent(Arena arena) {
         super(arena);
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
     }
 }

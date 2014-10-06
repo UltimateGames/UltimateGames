@@ -18,7 +18,8 @@
  */
 package me.ampayne2.ultimategames.api.games;
 
-import org.bukkit.Location;
+
+import net.canarymod.api.world.position.Location;
 
 /**
  * Temporary LobbyManager.

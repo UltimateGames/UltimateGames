@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.api.players.classes;
 
 import me.ampayne2.ultimategames.api.games.Game;
 import me.ampayne2.ultimategames.api.utils.IconMenu;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 import java.util.List;
 

@@ -20,21 +20,22 @@ package me.ampayne2.ultimategames.api.players.trackers;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.hook.HookHandler;
+import net.canarymod.hook.player.DisconnectionHook;
+import net.canarymod.plugin.PluginListener;
+import net.canarymod.plugin.Priority;
+import net.visualillusionsent.utils.TaskManager;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The base class for a tracker.
  */
-public abstract class Tracker implements Runnable, Listener {
+public abstract class Tracker implements Runnable, PluginListener {
     private final UltimateGames ultimateGames;
     private final Player player;
     private final Arena arena;
-    private final int taskId;
 
     /**
      * Creates a new Tracker.
@@ -47,8 +48,7 @@ public abstract class Tracker implements Runnable, Listener {
         this.ultimateGames = ultimateGames;
         this.player = player;
         this.arena = arena;
-        taskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(ultimateGames.getPlugin(), this, 0, 5);
-        Bukkit.getPluginManager().registerEvents(this, ultimateGames.getPlugin());
+        TaskManager.scheduleContinuedTask(this,0,5 * 20, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class Tracker implements Runnable, Listener {
      * Stops the tracker from tracking.
      */
     public void stop() {
-        Bukkit.getServer().getScheduler().cancelTask(taskId);
+        TaskManager.removeTask(this);
     }
 
     /**
@@ -84,8 +84,8 @@ public abstract class Tracker implements Runnable, Listener {
     /**
      * Stops the tracker when the tracking player disconnects.
      */
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    @HookHandler(priority = Priority.PASSIVE, ignoreCanceled = true)
+    public void onPlayerQuit(DisconnectionHook event) {
         if (event.getPlayer().equals(player)) {
             stop();
         }

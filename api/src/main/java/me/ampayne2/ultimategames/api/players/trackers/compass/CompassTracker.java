@@ -21,8 +21,8 @@ package me.ampayne2.ultimategames.api.players.trackers.compass;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.players.trackers.Tracker;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.world.position.Location;
 
 /**
  * A tracker that tracks a location with a compass.
@@ -58,7 +58,7 @@ public class CompassTracker extends Tracker {
     public void run() {
         Location location = getTarget();
         if (location != null) {
-            getPlayer().setCompassTarget(location);
+            getPlayer().setCompassTarget((int)location.getX(), (int)location.getY(), (int)location.getZ());
         }
     }
 
