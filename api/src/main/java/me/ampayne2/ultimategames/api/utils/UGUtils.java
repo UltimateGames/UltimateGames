@@ -197,7 +197,7 @@ public final class UGUtils {
         FireworkHelper.ExplosionType type = randomEnum(FireworkHelper.ExplosionType.class);
         //Color c1 = randomColor();
         //Color c2 = randomColor();
-        return null //TODO fix this
+        return null; //TODO fix this
         //return FireworkEffect.builder().flicker(RANDOM.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(RANDOM.nextBoolean()).build();
     }
 
@@ -346,7 +346,6 @@ public final class UGUtils {
     public static Collection<LivingBase> getLivingEntityTargets(Player player, double range, int maxEntities, Boolean goThroughWalls, Boolean highlightPath, Boolean highlightEntities) {
         Location location = player.getEyeLocation();
         Vector direction = location.getDirection();
-        player.en
         List<Entity> entities = player.getNearbyEntities(range, range, range);
         Set<LivingEntity> targetedEntities = new HashSet<>();
         int maxWorldHeight = location.getWorld().getMaxHeight();
@@ -549,8 +548,7 @@ public final class UGUtils {
     @SuppressWarnings("deprecation")
     public static Item getPlayerHead(String playerName) {
         Item item = Canary.factory().getItemFactory().newItem(397,1);
-        Canary.factory().getEntityFactory().
-        ItemStack skull = new ItemStack(397, 1, (short) 3);
+        Item skull = new ItemStack(397, 1, (short) 3);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwner(playerName);
         skull.setItemMeta(meta);

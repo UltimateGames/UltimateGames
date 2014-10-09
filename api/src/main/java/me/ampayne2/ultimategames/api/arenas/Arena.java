@@ -19,8 +19,7 @@
 package me.ampayne2.ultimategames.api.arenas;
 
 import me.ampayne2.ultimategames.api.games.Game;
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
+import net.canarymod.api.world.position.Location;
 
 import java.util.List;
 

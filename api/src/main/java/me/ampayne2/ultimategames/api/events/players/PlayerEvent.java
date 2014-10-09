@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.api.events.players;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.events.arenas.ArenaEvent;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
  * Base class for any player event.

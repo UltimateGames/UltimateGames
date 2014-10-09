@@ -20,18 +20,15 @@ package me.ampayne2.ultimategames.api.games.items;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.inventory.Item;
 
 /**
  * A GameItem that throws an Item entity.<br>
  * Must be registered with the {@link GameItemManager}.
  */
 public abstract class ThrowableGameItem extends GameItem {
-    private final ItemStack item;
+    private final Item item;
     private final int velocity;
 
     /**
@@ -40,7 +37,7 @@ public abstract class ThrowableGameItem extends GameItem {
      * @param item The ItemStack of the ThrowableGameItem.
      * @param velocity The velocity of the ThrowableGameItem.
      */
-    public ThrowableGameItem(ItemStack item, int velocity) {
+    public ThrowableGameItem(Item item, int velocity) {
         super(item, true);
         this.item = item.clone();
         this.item.setAmount(1);
@@ -52,7 +49,7 @@ public abstract class ThrowableGameItem extends GameItem {
      *
      * @param item The ItemStack of the ThrowableGameItem.
      */
-    public ThrowableGameItem(ItemStack item) {
+    public ThrowableGameItem(Item item) {
         super(item, true);
         this.item = item.clone();
         this.item.setAmount(1);

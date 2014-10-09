@@ -18,9 +18,9 @@
  */
 package me.ampayne2.ultimategames.api.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.world.position.Location;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -59,7 +59,7 @@ public class BossBar {
                 ReflectionUtil.sendPacket(player, DRAGONS.get(player).getDestroyPacket());
                 DRAGONS.remove(player);
             } catch (Exception e) {
-                Bukkit.getLogger().log(Level.SEVERE, "Failed to remove a UG Boss Bar from a player.");
+                //Bukkit.getLogger().log(Level.SEVERE, "Failed to remove a UG Boss Bar from a player.");
             }
         }
     }
@@ -102,7 +102,7 @@ public class BossBar {
      * Removes the status bar for all players on the server.  See {@link #removeStatusBar(Player)}.
      */
     public static void removeAllStatusBars() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Canary.getServer().getPlayerList()) {
             removeStatusBar(player);
         }
     }
@@ -244,12 +244,12 @@ public class BossBar {
      * the key type for a Map, namely that Player references can be quite large and we don't want to
      * keep them around after they're gone unless necessary.
      * <br><br>
-     * This class is externally typed with {@link org.bukkit.entity.Player} as the key type, but internally
+     * This class is externally typed with {@link net.canarymod.api.entity.living.humanoid.Player} as the key type, but internally
      * uses {@link java.lang.String} as the key type, using the player's name.
      * <br><br>
      * In addition to this memory-saving measure, this map also allows the contents to be accessed through
      * either the player's name or the player object itself, meaning no more hassle with {@link Player#getName()}
-     * or {@link Bukkit#getPlayer(String)} when you want to pull out of a map.
+     * or {@link net.canarymod.Canary} when you want to pull out of a map.
      *
      * @param <V> whatever you want to store
      * @author AmoebaMan
@@ -283,7 +283,7 @@ public class BossBar {
         public Set<Entry<Player, V>> entrySet() {
             Set<Entry<Player, V>> toReturn = new HashSet<>();
             for (String playerName : contents.keySet()) {
-                toReturn.add(new PlayerEntry(Bukkit.getPlayerExact(playerName), contents.get(playerName)));
+                toReturn.add(new PlayerEntry(Canary.getServer().getPlayer(playerName), contents.get(playerName)));
             }
             return toReturn;
         }
@@ -305,7 +305,7 @@ public class BossBar {
         public Set<Player> keySet() {
             Set<Player> toReturn = new HashSet<>();
             for (String playerName : contents.keySet()) {
-                toReturn.add(Bukkit.getPlayerExact(playerName));
+                toReturn.add(Canary.getServer().getPlayer(playerName));
             }
             return toReturn;
         }

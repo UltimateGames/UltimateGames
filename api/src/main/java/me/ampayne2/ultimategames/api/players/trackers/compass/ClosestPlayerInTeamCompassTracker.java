@@ -21,9 +21,9 @@ package me.ampayne2.ultimategames.api.players.trackers.compass;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.players.teams.Team;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.world.position.Location;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -51,7 +51,7 @@ public class ClosestPlayerInTeamCompassTracker extends ClosestPlayerCompassTrack
     public Location getTarget() {
         Set<Player> players = new HashSet<>();
         for (String playerName : team.getPlayers()) {
-            players.add(Bukkit.getPlayerExact(playerName));
+            players.add(Canary.getServer().getPlayer(playerName));
         }
         super.setTargetPlayers(players);
         return super.getTarget();

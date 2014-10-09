@@ -20,7 +20,7 @@ package me.ampayne2.ultimategames.api.players.classes;
 
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.games.Game;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
  * A tiered GameClass. Resets inventories based on the player's highest unlocked tier.

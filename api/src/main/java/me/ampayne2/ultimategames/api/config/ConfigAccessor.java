@@ -18,7 +18,6 @@
  */
 package me.ampayne2.ultimategames.api.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * Used to access a YamlConfiguration file.

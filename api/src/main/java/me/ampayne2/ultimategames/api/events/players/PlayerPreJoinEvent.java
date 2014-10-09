@@ -19,14 +19,12 @@
 package me.ampayne2.ultimategames.api.events.players;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
  * An event called before a player joins.
  */
-public class PlayerPreJoinEvent extends PlayerEvent implements Cancellable {
-    private boolean cancelled;
+public class PlayerPreJoinEvent extends CancelablePlayerEvent {
 
     /**
      * Creates a new PlayerPreJoinEvent.
@@ -36,15 +34,5 @@ public class PlayerPreJoinEvent extends PlayerEvent implements Cancellable {
      */
     public PlayerPreJoinEvent(Player player, Arena arena) {
         super(player, arena);
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
     }
 }

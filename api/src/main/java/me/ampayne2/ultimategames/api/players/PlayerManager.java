@@ -19,7 +19,7 @@
 package me.ampayne2.ultimategames.api.players;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
  * Manages players and spectators in UltimateGames.

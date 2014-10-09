@@ -19,8 +19,8 @@
 package me.ampayne2.ultimategames.api.players;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
  * Represents a player spectating an arena.
@@ -46,7 +46,7 @@ public class ArenaSpectator {
      * @return The player.
      */
     public Player getPlayer() {
-        return Bukkit.getPlayerExact(playerName);
+        return Canary.getServer().getPlayer(playerName);
     }
 
     /**

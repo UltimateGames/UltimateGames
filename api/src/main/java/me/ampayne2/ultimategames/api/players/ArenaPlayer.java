@@ -21,8 +21,8 @@ package me.ampayne2.ultimategames.api.players;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.message.UGMessage;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import net.canarymod.Canary;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
  * Represents a player in an arena.
@@ -51,7 +51,7 @@ public class ArenaPlayer {
      * @return The player.
      */
     public Player getPlayer() {
-        return Bukkit.getPlayerExact(playerName);
+        return Canary.getServer().getPlayer(playerName);
     }
 
     /**

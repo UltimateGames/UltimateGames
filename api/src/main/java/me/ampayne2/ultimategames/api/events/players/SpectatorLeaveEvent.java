@@ -19,7 +19,7 @@
 package me.ampayne2.ultimategames.api.events.players;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
-import org.bukkit.entity.Player;
+import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
  * An event called after a spectator leaves.

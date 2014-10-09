@@ -21,11 +21,11 @@ package me.ampayne2.ultimategames.api.players.trackers.compass;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.utils.UGUtils;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerQuitEvent;
+import net.canarymod.api.entity.living.humanoid.Player;
+import net.canarymod.api.world.position.Location;
+import net.canarymod.hook.HookHandler;
+import net.canarymod.hook.player.DisconnectionHook;
+import net.canarymod.plugin.Priority;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -88,8 +88,8 @@ public class ClosestPlayerCompassTracker extends PlayerCompassTracker {
      * Removes a player from the collection of tracked players when the player disconnects.
      */
     @Override
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onTargetPlayerQuit(PlayerQuitEvent event) {
+    @HookHandler(priority = Priority.PASSIVE, ignoreCanceled = true)
+    public void onTargetPlayerQuit(DisconnectionHook event) {
         if (targetPlayers.contains(event.getPlayer())) {
             targetPlayers.remove(event.getPlayer());
         }

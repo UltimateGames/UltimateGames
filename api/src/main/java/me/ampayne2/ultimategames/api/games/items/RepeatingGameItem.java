@@ -21,10 +21,7 @@ package me.ampayne2.ultimategames.api.games.items;
 import me.ampayne2.ultimategames.api.UltimateGames;
 import me.ampayne2.ultimategames.api.arenas.Arena;
 import me.ampayne2.ultimategames.api.arenas.ArenaStatus;
-import org.bukkit.Bukkit;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
+import net.canarymod.api.inventory.Item;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,7 +42,7 @@ public class RepeatingGameItem extends GameItem {
      * @param item            The ItemStack of the RepeatingGameItem.
      * @param repeatingPeriod The minimum amount of ticks before the GameItem can be used again.
      */
-    public RepeatingGameItem(UltimateGames ultimateGames, ItemStack item, long repeatingPeriod) {
+    public RepeatingGameItem(UltimateGames ultimateGames, Item item, long repeatingPeriod) {
         super(item, false);
         this.ultimateGames = ultimateGames;
         this.repeatingPeriod = repeatingPeriod;

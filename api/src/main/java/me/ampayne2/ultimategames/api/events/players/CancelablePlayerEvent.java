@@ -19,20 +19,32 @@
 package me.ampayne2.ultimategames.api.events.players;
 
 import me.ampayne2.ultimategames.api.arenas.Arena;
+import me.ampayne2.ultimategames.api.events.arenas.ArenaEvent;
 import net.canarymod.api.entity.living.humanoid.Player;
 
 /**
- * An event called after a spectator joins.
+ * Base class for any player event.
  */
-public class SpectatorPostJoinEvent extends PlayerEvent {
+public class CancelablePlayerEvent extends ArenaEvent {
+    private final Player player;
 
     /**
-     * Creates a new SpectatorPostJoinEvent.
+     * Creates a new PlayerEvent.
      *
-     * @param player The spectator who joined.
-     * @param arena  The arena the spectator joined.
+     * @param player The player associated with the event.
+     * @param arena  The arena associated with the event.
      */
-    public SpectatorPostJoinEvent(Player player, Arena arena) {
-        super(player, arena);
+    public CancelablePlayerEvent(Player player, Arena arena) {
+        super(arena);
+        this.player = player;
+    }
+
+    /**
+     * Gets the player associated with the event.
+     *
+     * @return The player associated with the event.
+     */
+    public Player getPlayer() {
+        return player;
     }
 }

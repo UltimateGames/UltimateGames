@@ -110,7 +110,6 @@ public class IconMenu implements PluginListener {
      * Destroys the IconMenu.
      */
     public void destroy() {
-        HandlerList.unregisterAll(this);
         handler = null;
         plugin = null;
         optionNames = null;
@@ -160,10 +159,8 @@ public class IconMenu implements PluginListener {
     }
 
     static {
-        EMPTY_SLOT = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GRAY.getData());
-        ItemMeta meta = EMPTY_SLOT.getItemMeta();
-        meta.setDisplayName(" ");
-        EMPTY_SLOT.setItemMeta(meta);
+        EMPTY_SLOT = new Item(Material.STAINED_GLASS_PANE, 1, DyeColor.GRAY.getData());
+        EMPTY_SLOT.setDisplayName(" ");
     }
 
     /**
